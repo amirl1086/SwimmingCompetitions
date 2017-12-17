@@ -15,6 +15,8 @@
 		30046C891FCDE28E0082B7B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30046C871FCDE28E0082B7B5 /* LaunchScreen.storyboard */; };
 		30046C941FCDE28F0082B7B5 /* SwimmingCompetitionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30046C931FCDE28F0082B7B5 /* SwimmingCompetitionsTests.swift */; };
 		30046C9F1FCDE28F0082B7B5 /* SwimmingCompetitionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30046C9E1FCDE28F0082B7B5 /* SwimmingCompetitionsUITests.swift */; };
+		30AAA9B71FE5D58000BE3CED /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AAA9B61FE5D58000BE3CED /* LoginController.swift */; };
+		30AAA9B91FE5D5BC00BE3CED /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AAA9B81FE5D5BC00BE3CED /* RegisterController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		30046C9A1FCDE28F0082B7B5 /* SwimmingCompetitionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwimmingCompetitionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30046C9E1FCDE28F0082B7B5 /* SwimmingCompetitionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwimmingCompetitionsUITests.swift; sourceTree = "<group>"; };
 		30046CA01FCDE28F0082B7B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30AAA9B61FE5D58000BE3CED /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		30AAA9B81FE5D5BC00BE3CED /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,8 +103,13 @@
 		30046C7A1FCDE28E0082B7B5 /* SwimmingCompetitions */ = {
 			isa = PBXGroup;
 			children = (
+				30AAA9B21FE5D49200BE3CED /* AdminController */,
+				30AAA9B31FE5D4B000BE3CED /* UserController */,
+				30AAA9B51FE5D50400BE3CED /* SharedController */,
 				30046C7B1FCDE28E0082B7B5 /* AppDelegate.swift */,
 				30046C7D1FCDE28E0082B7B5 /* ViewController.swift */,
+				30AAA9B61FE5D58000BE3CED /* LoginController.swift */,
+				30AAA9B81FE5D5BC00BE3CED /* RegisterController.swift */,
 				30046C7F1FCDE28E0082B7B5 /* Main.storyboard */,
 				30046C851FCDE28E0082B7B5 /* Assets.xcassets */,
 				30046C871FCDE28E0082B7B5 /* LaunchScreen.storyboard */,
@@ -126,6 +135,27 @@
 				30046CA01FCDE28F0082B7B5 /* Info.plist */,
 			);
 			path = SwimmingCompetitionsUITests;
+			sourceTree = "<group>";
+		};
+		30AAA9B21FE5D49200BE3CED /* AdminController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AdminController;
+			sourceTree = "<group>";
+		};
+		30AAA9B31FE5D4B000BE3CED /* UserController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UserController;
+			sourceTree = "<group>";
+		};
+		30AAA9B51FE5D50400BE3CED /* SharedController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SharedController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,7 +292,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30AAA9B91FE5D5BC00BE3CED /* RegisterController.swift in Sources */,
 				30046C841FCDE28E0082B7B5 /* SwimmingCompetitions.xcdatamodeld in Sources */,
+				30AAA9B71FE5D58000BE3CED /* LoginController.swift in Sources */,
 				30046C7E1FCDE28E0082B7B5 /* ViewController.swift in Sources */,
 				30046C7C1FCDE28E0082B7B5 /* AppDelegate.swift in Sources */,
 			);
@@ -431,9 +463,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4KXQ38ULTS;
 				INFOPLIST_FILE = SwimmingCompetitions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitions;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SCA.SwimmingCompetitions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -445,9 +478,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4KXQ38ULTS;
 				INFOPLIST_FILE = SwimmingCompetitions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitions;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SCA.SwimmingCompetitions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
