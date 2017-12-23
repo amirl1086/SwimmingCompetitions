@@ -1,0 +1,813 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
+		3047BC781FE832EC00995F92 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* MainViewController.swift */; };
+		3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */; };
+		30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A861FE72BB900201A20 /* AppDelegate.swift */; };
+		30FE9A891FE72BB900201A20 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A881FE72BB900201A20 /* ViewController.swift */; };
+		30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A8A1FE72BB900201A20 /* Main.storyboard */; };
+		30FE9A8F1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A8D1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld */; };
+		30FE9A911FE72BBA00201A20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A901FE72BBA00201A20 /* Assets.xcassets */; };
+		30FE9A941FE72BBA00201A20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A921FE72BBA00201A20 /* LaunchScreen.storyboard */; };
+		30FE9A9F1FE72BBA00201A20 /* SwimmingCompetitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A9E1FE72BBA00201A20 /* SwimmingCompetitionTests.swift */; };
+		30FE9AAA1FE72BBA00201A20 /* SwimmingCompetitionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9AA91FE72BBA00201A20 /* SwimmingCompetitionUITests.swift */; };
+		30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9AB71FE72C5200201A20 /* LoginViewController.swift */; };
+		30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */; };
+		4933978ADAB38422CCF4ECA1 /* Pods_SwimmingCompetitionTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC09AC82057228EA0CA2027 /* Pods_SwimmingCompetitionTests.framework */; };
+		54A9FEB75435DDBD36B3F537 /* Pods_SwimmingCompetitionUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA3B8D4F64D8725A21CB637 /* Pods_SwimmingCompetitionUITests.framework */; };
+		C291A424C3F23E908C2CA705 /* Pods_SwimmingCompetition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE09322C0564CDF88455E6D /* Pods_SwimmingCompetition.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30FE9A9B1FE72BBA00201A20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30FE9A7B1FE72BB900201A20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 30FE9A821FE72BB900201A20;
+			remoteInfo = SwimmingCompetition;
+		};
+		30FE9AA61FE72BBA00201A20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30FE9A7B1FE72BB900201A20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 30FE9A821FE72BB900201A20;
+			remoteInfo = SwimmingCompetition;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		102184E7B2AF81E8E9EEB52F /* Pods-SwimmingCompetitionTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionTests/Pods-SwimmingCompetitionTests.release.xcconfig"; sourceTree = "<group>"; };
+		2EA3B8D4F64D8725A21CB637 /* Pods_SwimmingCompetitionUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwimmingCompetitionUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests.release.xcconfig"; sourceTree = "<group>"; };
+		3019617B1FE8076C00046300 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3047BC771FE832EC00995F92 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableTextField.swift; sourceTree = "<group>"; };
+		30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwimmingCompetition.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30FE9A861FE72BB900201A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		30FE9A881FE72BB900201A20 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		30FE9A8B1FE72BB900201A20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		30FE9A8E1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SwimmingCompetition.xcdatamodel; sourceTree = "<group>"; };
+		30FE9A901FE72BBA00201A20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		30FE9A931FE72BBA00201A20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		30FE9A951FE72BBA00201A20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30FE9A9A1FE72BBA00201A20 /* SwimmingCompetitionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwimmingCompetitionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		30FE9A9E1FE72BBA00201A20 /* SwimmingCompetitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwimmingCompetitionTests.swift; sourceTree = "<group>"; };
+		30FE9AA01FE72BBA00201A20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30FE9AA51FE72BBA00201A20 /* SwimmingCompetitionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwimmingCompetitionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		30FE9AA91FE72BBA00201A20 /* SwimmingCompetitionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwimmingCompetitionUITests.swift; sourceTree = "<group>"; };
+		30FE9AAB1FE72BBA00201A20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30FE9AB71FE72C5200201A20 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		4CE09322C0564CDF88455E6D /* Pods_SwimmingCompetition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwimmingCompetition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		608A4C19B180D4D0E46171FF /* Pods-SwimmingCompetition.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetition.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition.release.xcconfig"; sourceTree = "<group>"; };
+		651582A68AE3BA876E0FAE57 /* Pods-SwimmingCompetitionTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionTests/Pods-SwimmingCompetitionTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A77BA3703E5E947ACC27C0F1 /* Pods-SwimmingCompetitionUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FF3D52F2F160B790E8FED680 /* Pods-SwimmingCompetition.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetition.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition.debug.xcconfig"; sourceTree = "<group>"; };
+		FFC09AC82057228EA0CA2027 /* Pods_SwimmingCompetitionTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwimmingCompetitionTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		30FE9A801FE72BB900201A20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C291A424C3F23E908C2CA705 /* Pods_SwimmingCompetition.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9A971FE72BBA00201A20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4933978ADAB38422CCF4ECA1 /* Pods_SwimmingCompetitionTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9AA21FE72BBA00201A20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54A9FEB75435DDBD36B3F537 /* Pods_SwimmingCompetitionUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3047BC761FE8322900995F92 /* UserViewConrollers */ = {
+			isa = PBXGroup;
+			children = (
+				3047BC771FE832EC00995F92 /* MainViewController.swift */,
+			);
+			path = UserViewConrollers;
+			sourceTree = "<group>";
+		};
+		30FE9A7A1FE72BB900201A20 = {
+			isa = PBXGroup;
+			children = (
+				30FE9A851FE72BB900201A20 /* SwimmingCompetition */,
+				30FE9A9D1FE72BBA00201A20 /* SwimmingCompetitionTests */,
+				30FE9AA81FE72BBA00201A20 /* SwimmingCompetitionUITests */,
+				30FE9A841FE72BB900201A20 /* Products */,
+				6C3FA779B773142E539348C1 /* Pods */,
+				3ED0778AC59C18DF601A8EAE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		30FE9A841FE72BB900201A20 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */,
+				30FE9A9A1FE72BBA00201A20 /* SwimmingCompetitionTests.xctest */,
+				30FE9AA51FE72BBA00201A20 /* SwimmingCompetitionUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		30FE9A851FE72BB900201A20 /* SwimmingCompetition */ = {
+			isa = PBXGroup;
+			children = (
+				3047BC761FE8322900995F92 /* UserViewConrollers */,
+				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
+				30FE9A881FE72BB900201A20 /* ViewController.swift */,
+				30FE9AB71FE72C5200201A20 /* LoginViewController.swift */,
+				30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */,
+				30FE9A8A1FE72BB900201A20 /* Main.storyboard */,
+				30FE9A901FE72BBA00201A20 /* Assets.xcassets */,
+				30FE9A921FE72BBA00201A20 /* LaunchScreen.storyboard */,
+				30FE9A951FE72BBA00201A20 /* Info.plist */,
+				30FE9A8D1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld */,
+				3019617B1FE8076C00046300 /* GoogleService-Info.plist */,
+				3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */,
+			);
+			path = SwimmingCompetition;
+			sourceTree = "<group>";
+		};
+		30FE9A9D1FE72BBA00201A20 /* SwimmingCompetitionTests */ = {
+			isa = PBXGroup;
+			children = (
+				30FE9A9E1FE72BBA00201A20 /* SwimmingCompetitionTests.swift */,
+				30FE9AA01FE72BBA00201A20 /* Info.plist */,
+			);
+			path = SwimmingCompetitionTests;
+			sourceTree = "<group>";
+		};
+		30FE9AA81FE72BBA00201A20 /* SwimmingCompetitionUITests */ = {
+			isa = PBXGroup;
+			children = (
+				30FE9AA91FE72BBA00201A20 /* SwimmingCompetitionUITests.swift */,
+				30FE9AAB1FE72BBA00201A20 /* Info.plist */,
+			);
+			path = SwimmingCompetitionUITests;
+			sourceTree = "<group>";
+		};
+		3ED0778AC59C18DF601A8EAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4CE09322C0564CDF88455E6D /* Pods_SwimmingCompetition.framework */,
+				FFC09AC82057228EA0CA2027 /* Pods_SwimmingCompetitionTests.framework */,
+				2EA3B8D4F64D8725A21CB637 /* Pods_SwimmingCompetitionUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6C3FA779B773142E539348C1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FF3D52F2F160B790E8FED680 /* Pods-SwimmingCompetition.debug.xcconfig */,
+				608A4C19B180D4D0E46171FF /* Pods-SwimmingCompetition.release.xcconfig */,
+				651582A68AE3BA876E0FAE57 /* Pods-SwimmingCompetitionTests.debug.xcconfig */,
+				102184E7B2AF81E8E9EEB52F /* Pods-SwimmingCompetitionTests.release.xcconfig */,
+				A77BA3703E5E947ACC27C0F1 /* Pods-SwimmingCompetitionUITests.debug.xcconfig */,
+				2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		30FE9A821FE72BB900201A20 /* SwimmingCompetition */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30FE9AAE1FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetition" */;
+			buildPhases = (
+				8C45348B9048E647177A3C53 /* [CP] Check Pods Manifest.lock */,
+				30FE9A7F1FE72BB900201A20 /* Sources */,
+				30FE9A801FE72BB900201A20 /* Frameworks */,
+				30FE9A811FE72BB900201A20 /* Resources */,
+				26B1B1FBC531388EA106CC1D /* [CP] Embed Pods Frameworks */,
+				72C756772A1ED88C1DBEB805 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwimmingCompetition;
+			productName = SwimmingCompetition;
+			productReference = 30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */;
+			productType = "com.apple.product-type.application";
+		};
+		30FE9A991FE72BBA00201A20 /* SwimmingCompetitionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30FE9AB11FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetitionTests" */;
+			buildPhases = (
+				4EAFA52BC6A189E92A4E21B5 /* [CP] Check Pods Manifest.lock */,
+				30FE9A961FE72BBA00201A20 /* Sources */,
+				30FE9A971FE72BBA00201A20 /* Frameworks */,
+				30FE9A981FE72BBA00201A20 /* Resources */,
+				389CA1D0FED4D84C93A15561 /* [CP] Embed Pods Frameworks */,
+				364F4D8D4C96FBE5DB275D82 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				30FE9A9C1FE72BBA00201A20 /* PBXTargetDependency */,
+			);
+			name = SwimmingCompetitionTests;
+			productName = SwimmingCompetitionTests;
+			productReference = 30FE9A9A1FE72BBA00201A20 /* SwimmingCompetitionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		30FE9AA41FE72BBA00201A20 /* SwimmingCompetitionUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30FE9AB41FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetitionUITests" */;
+			buildPhases = (
+				EF9AD4FE1962C57FA6D287AA /* [CP] Check Pods Manifest.lock */,
+				30FE9AA11FE72BBA00201A20 /* Sources */,
+				30FE9AA21FE72BBA00201A20 /* Frameworks */,
+				30FE9AA31FE72BBA00201A20 /* Resources */,
+				47DECD9DF090D281D0983B5B /* [CP] Embed Pods Frameworks */,
+				7293F10C016C81E2526DDE90 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				30FE9AA71FE72BBA00201A20 /* PBXTargetDependency */,
+			);
+			name = SwimmingCompetitionUITests;
+			productName = SwimmingCompetitionUITests;
+			productReference = 30FE9AA51FE72BBA00201A20 /* SwimmingCompetitionUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		30FE9A7B1FE72BB900201A20 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0910;
+				LastUpgradeCheck = 0910;
+				ORGANIZATIONNAME = Aviel;
+				TargetAttributes = {
+					30FE9A821FE72BB900201A20 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+					30FE9A991FE72BBA00201A20 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 30FE9A821FE72BB900201A20;
+					};
+					30FE9AA41FE72BBA00201A20 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 30FE9A821FE72BB900201A20;
+					};
+				};
+			};
+			buildConfigurationList = 30FE9A7E1FE72BB900201A20 /* Build configuration list for PBXProject "SwimmingCompetition" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 30FE9A7A1FE72BB900201A20;
+			productRefGroup = 30FE9A841FE72BB900201A20 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				30FE9A821FE72BB900201A20 /* SwimmingCompetition */,
+				30FE9A991FE72BBA00201A20 /* SwimmingCompetitionTests */,
+				30FE9AA41FE72BBA00201A20 /* SwimmingCompetitionUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		30FE9A811FE72BB900201A20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30FE9A941FE72BBA00201A20 /* LaunchScreen.storyboard in Resources */,
+				3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */,
+				30FE9A911FE72BBA00201A20 /* Assets.xcassets in Resources */,
+				30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9A981FE72BBA00201A20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9AA31FE72BBA00201A20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		26B1B1FBC531388EA106CC1D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		364F4D8D4C96FBE5DB275D82 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetitionTests/Pods-SwimmingCompetitionTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		389CA1D0FED4D84C93A15561 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetitionTests/Pods-SwimmingCompetitionTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		47DECD9DF090D281D0983B5B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4EAFA52BC6A189E92A4E21B5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SwimmingCompetitionTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7293F10C016C81E2526DDE90 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		72C756772A1ED88C1DBEB805 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8C45348B9048E647177A3C53 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SwimmingCompetition-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EF9AD4FE1962C57FA6D287AA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SwimmingCompetitionUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		30FE9A7F1FE72BB900201A20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */,
+				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
+				30FE9A891FE72BB900201A20 /* ViewController.swift in Sources */,
+				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,
+				3047BC781FE832EC00995F92 /* MainViewController.swift in Sources */,
+				30FE9A8F1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld in Sources */,
+				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9A961FE72BBA00201A20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30FE9A9F1FE72BBA00201A20 /* SwimmingCompetitionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30FE9AA11FE72BBA00201A20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30FE9AAA1FE72BBA00201A20 /* SwimmingCompetitionUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		30FE9A9C1FE72BBA00201A20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 30FE9A821FE72BB900201A20 /* SwimmingCompetition */;
+			targetProxy = 30FE9A9B1FE72BBA00201A20 /* PBXContainerItemProxy */;
+		};
+		30FE9AA71FE72BBA00201A20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 30FE9A821FE72BB900201A20 /* SwimmingCompetition */;
+			targetProxy = 30FE9AA61FE72BBA00201A20 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		30FE9A8A1FE72BB900201A20 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				30FE9A8B1FE72BB900201A20 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		30FE9A921FE72BBA00201A20 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				30FE9A931FE72BBA00201A20 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		30FE9AAC1FE72BBA00201A20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		30FE9AAD1FE72BBA00201A20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		30FE9AAF1FE72BBA00201A20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF3D52F2F160B790E8FED680 /* Pods-SwimmingCompetition.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SwimmingCompetition/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.swimmingcompetitions;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		30FE9AB01FE72BBA00201A20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 608A4C19B180D4D0E46171FF /* Pods-SwimmingCompetition.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SwimmingCompetition/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.swimmingcompetitions;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		30FE9AB21FE72BBA00201A20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 651582A68AE3BA876E0FAE57 /* Pods-SwimmingCompetitionTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SwimmingCompetitionTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwimmingCompetition.app/SwimmingCompetition";
+			};
+			name = Debug;
+		};
+		30FE9AB31FE72BBA00201A20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 102184E7B2AF81E8E9EEB52F /* Pods-SwimmingCompetitionTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SwimmingCompetitionTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwimmingCompetition.app/SwimmingCompetition";
+			};
+			name = Release;
+		};
+		30FE9AB51FE72BBA00201A20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A77BA3703E5E947ACC27C0F1 /* Pods-SwimmingCompetitionUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SwimmingCompetitionUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitionUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SwimmingCompetition;
+			};
+			name = Debug;
+		};
+		30FE9AB61FE72BBA00201A20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SwimmingCompetitionUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = SCA.SwimmingCompetitionUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SwimmingCompetition;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		30FE9A7E1FE72BB900201A20 /* Build configuration list for PBXProject "SwimmingCompetition" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30FE9AAC1FE72BBA00201A20 /* Debug */,
+				30FE9AAD1FE72BBA00201A20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30FE9AAE1FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetition" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30FE9AAF1FE72BBA00201A20 /* Debug */,
+				30FE9AB01FE72BBA00201A20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30FE9AB11FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetitionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30FE9AB21FE72BBA00201A20 /* Debug */,
+				30FE9AB31FE72BBA00201A20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30FE9AB41FE72BBA00201A20 /* Build configuration list for PBXNativeTarget "SwimmingCompetitionUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30FE9AB51FE72BBA00201A20 /* Debug */,
+				30FE9AB61FE72BBA00201A20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		30FE9A8D1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				30FE9A8E1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodel */,
+			);
+			currentVersion = 30FE9A8E1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodel */;
+			path = SwimmingCompetition.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 30FE9A7B1FE72BB900201A20 /* Project object */;
+}

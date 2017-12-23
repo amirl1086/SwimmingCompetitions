@@ -1,0 +1,6 @@
+framework module Pods_SwimmingCompetitionUITests {
+  umbrella header "Pods-SwimmingCompetitionUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
