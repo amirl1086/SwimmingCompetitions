@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "197819058733",
+    "project_id": "firebase-swimmingcompetitions"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197819058733:android:9866709c2cc66dff",
+        "android_client_info": {
+          "package_name": "com.app.swimmingcompetitions.swimmingcompetitions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197819058733-33l7850i92luq9rc1n301d5a2kc3c4p4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
+            "certificate_hash": "b5e96c9fa5b44baf8d3935f7453c1e10c97a99bc"
+          }
+        },
+        {
+          "client_id": "197819058733-b8hjad78jmlhrric8jm24kl97u23kfpm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA8to75wVUo6KETyggJ2TAsJKweSwjOrE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
