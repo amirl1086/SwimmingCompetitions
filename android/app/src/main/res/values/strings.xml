@@ -3,4 +3,14 @@
     <string name="log_in_header">תחרויות שחייה</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="log_in_log_in_text">הכנס</string>
+
+    <string name="fb_project_id">firebase-swimmingcompetitions</string>
+    <string name="log_in_register">הרשם</string>
+
+    <string name="register_welcome">ברוך הבא למסך ההרשמה לאפליקציה לתחרויות שחייה</string>
+    <string name="register_first_name">שם פרטי</string>
+    <string name="register_last_name">שם משפחה</string>
+    <string name="register_email">אימייל</string>
+    <string name="register_password">סיסמא</string>
+    <string name="register_register_btn">הירשם</string>
 </resources>

@@ -100,6 +100,11 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
         startActivity(intent);
     }
 
+    public void switchToRegisterActivity() {
+        //Intent intent = new Intent(this, RegisterActivity.class);
+        //startActivity(intent);
+    }
+
     public void firebaseRegister(View view) {
         logInButton = (Button) findViewById(R.id.log_in_btn);
         logInMail   = (EditText) findViewById(R.id.edit_email);

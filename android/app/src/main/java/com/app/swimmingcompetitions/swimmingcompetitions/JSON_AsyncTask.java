@@ -1,5 +1,6 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
@@ -28,7 +29,10 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
         //try {
             //setup the connection
         try {
-            URL url = new URL("http://10.0.2.2:8080" + params[1]);
+            //set up the url
+            URL url = new URL("https://us-central1-" + "firebase-swimmingcompetitions" + ".cloudfunctions.net" + params[1]);
+
+            //initialize the connection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(10000);
