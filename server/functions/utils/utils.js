@@ -1,3 +1,3 @@
 
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+var functions = require('firebase-functions');
+var admin = require('firebase-admin');
