@@ -38,4 +38,4 @@ Thumbs.db
 
 # MISC #
 ########
-./server/functions/node_moduls
+server/functions/node_modules/*

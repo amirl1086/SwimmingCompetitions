@@ -31,6 +31,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
         try {
             //set up the url
             URL url = new URL("https://us-central1-" + "firebase-swimmingcompetitions" + ".cloudfunctions.net" + params[1]);
+            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + params[1]);
 
             //initialize the connection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -49,6 +50,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             JSONObject request = new JSONObject();
             for (int i = 2; i < params.length; i += 2) {
                 request.put(params[i], params[i + 1]);
+                System.out.println("key: " + params[i] + ", value: " + params[i + 1]);
             }
 
             //write data into server

@@ -56,6 +56,26 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
         String logInMailText = logInMail.getText().toString();
         String logInPasswordText = logInPassword.getText().toString();
 
+
+        /*this.firebaseAuth.createUserWithEmailAndPassword(logInMailText, logInPasswordText)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            //Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(LogInActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
+                        }
+                    }
+                });*/
+
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
 
@@ -117,3 +137,5 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
                 });
     }
 }
+
+
