@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -20,6 +19,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     //delegate the response from the server to the caller requesting function
     public AsyncResponse delegate;
 
+    @Override
     protected String doInBackground(String... params) {
 
         StringBuilder result = new StringBuilder();
@@ -30,14 +30,14 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             //setup the connection
         try {
             //set up the url
-            URL url = new URL("https://us-central1-" + "firebase-swimmingcompetitions" + ".cloudfunctions.net" + params[1]);
-            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + params[1]);
+            URL url = new URL("https://us-central1-" + "firebase-swimmingcompetitions" + ".cloudfunctions.net" + params[0]);
+            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + params[0]);
 
             //initialize the connection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(10000);
-            urlConnection.setRequestMethod(params[0]);
+            urlConnection.setRequestMethod(params[1]);
             urlConnection.setDoOutput(true);    //enable output (body extra)
             urlConnection.setRequestProperty("Content-Type", "application/json");   //set header
             urlConnection.connect();
@@ -48,7 +48,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
 
             //insert all parameters into JSON object
             JSONObject request = new JSONObject();
-            for (int i = 2; i < params.length; i += 2) {
+            for (int i = 2; i < params.length; i += 2) { //first two places are reserved for url method and http method
                 request.put(params[i], params[i + 1]);
                 System.out.println("key: " + params[i] + ", value: " + params[i + 1]);
             }
@@ -64,11 +64,12 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             while ((line = bufferedReader.readLine()) != null) {
                 result.append(line).append("\n");
             }
+            return result.toString();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            return null;
         }
-        return result.toString();
     }
 
     @Override

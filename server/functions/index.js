@@ -21,47 +21,21 @@ admin.initializeApp({
   databaseURL: "https://fir-swimmingcompetitions.firebaseio.com"
 });
 
+var authentication = require('./auth/auth.js');
+
+
 
 /*AUTHENTICATION FUNCTIONS LISTENERS*/
 exports.addNewUser = functions.https.onRequest(function(request, response) {
-	var reqBody = request.body;
+	console.log('exports.addNewUser body ', reqBody);
 
-	console.log('addNewUser body ', reqBody);
-
-	var newUser = {
-		firstName: reqBody.firstName,
-		lastName: reqBody.lastName,
-		email: reqBody.email,
-		password: reqBody.password
-	};
-
-	firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password).then(function(firebaseUser) {
-		console.log('createUserWithEmailAndPassword user: ', firebaseUser);
-		response.send(firebaseUser);
-	}).catch(function(error) {
-		console.log('createUserWithEmailAndPassword error: ', error);
-		response.send(null);
-	});
-  	
+	authentication.addNewUser(request.body, response);
 });
 
 
 exports.logIn = functions.https.onRequest(function(request, response) {
-	var reqBody = request.body;
-
-	console.log('logIn body ', request.body);
-
-	var logInUser = {
-		email: reqBody.email,
-		password: reqBody.password
-	};
-
-	firebase.auth().signInWithEmailAndPassword(logInUser.email, logInUser.password).then(function(firebaseUser) {
-		console.log('createUserWithEmailAndPassword user: ', firebaseUser);
-		response.send(firebaseUser);
-	}).catch(function(error) {
-	  	console.log('signInWithEmailAndPassword error: ', error);
-		response.send(null);
-	});
+	console.log('exports.logIn body ', request.body);
+	
+	authentication.logIn(request.body, response);
 });
 

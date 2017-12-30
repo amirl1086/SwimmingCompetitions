@@ -1,17 +1,14 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,6 +22,7 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
     public FirebaseUser currentUser;
 
     private Button logInButton;
+    private Button registerButton;
     private EditText logInMail;
     private EditText logInPassword;
 
@@ -33,109 +31,64 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_log_in);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
+        logInButton = (Button)findViewById(R.id.log_in_btn);
+        logInMail   = (EditText)findViewById(R.id.edit_email);
+        logInPassword   = (EditText)findViewById(R.id.edit_password);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        //FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         //updateUI(currentUser);
     }
 
 
     public void firebaseLogIn(final View view) {
-        logInButton = (Button)findViewById(R.id.log_in_btn);
-        logInMail   = (EditText)findViewById(R.id.edit_email);
-        logInPassword   = (EditText)findViewById(R.id.edit_password);
-
         String logInMailText = logInMail.getText().toString();
         String logInPasswordText = logInPassword.getText().toString();
-
-
-        /*this.firebaseAuth.createUserWithEmailAndPassword(logInMailText, logInPasswordText)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LogInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
-                });*/
 
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
 
-        jsonAsyncTaskPost.execute("POST", "/logIn", "email", logInMailText, "password", logInPasswordText);
-
+        jsonAsyncTaskPost.execute("/logIn", "POST", "email", logInMailText, "password", logInPasswordText);
     }
 
     @Override
     public void processFinish(String result) {
-        System.out.println("result " + result);
-        if(result != null && !result.isEmpty()) {
-            try {
-                JSONObject resultObj = new JSONObject(result);
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONObject dataObj = response.getJSONObject("data");
+            if(response != null && response.getBoolean("success")) {
+                switchToMainMenuActivity(dataObj.getString("uid"));
             }
-            catch (JSONException e) {
-                e.printStackTrace();
-            }
+            else {
 
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void switchToMainMenuActivity() {
+    public void switchToMainMenuActivity(String userId) {
         Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.putExtra("userId", userId);
         startActivity(intent);
     }
 
-    public void switchToRegisterActivity() {
-        //Intent intent = new Intent(this, RegisterActivity.class);
-        //startActivity(intent);
+    public void switchToPreRegisterActivity(final View view) {
+        Intent intent = new Intent(this, PreRegisterActivity.class);
+        startActivity(intent);
     }
 
-    public void firebaseRegister(View view) {
-        logInButton = (Button) findViewById(R.id.log_in_btn);
-        logInMail   = (EditText) findViewById(R.id.edit_email);
-        logInPassword   = (EditText) findViewById(R.id.edit_password);
-
-        String logInMailText = logInMail.getText().toString();
-        String logInPasswordText = logInMail.getText().toString();
-
-
-        this.firebaseAuth.createUserWithEmailAndPassword(logInMailText, logInPasswordText)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LogInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
-                });
-    }
 }
 
 

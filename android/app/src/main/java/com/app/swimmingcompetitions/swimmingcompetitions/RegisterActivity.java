@@ -1,28 +1,27 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
+import java.util.Calendar;
+import java.util.Date;
 
-import java.util.List;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements AsyncResponse {
 
-    private Button registerButton;
-    private EditText registerMail;
-    private EditText registerPassword;
-    private EditText registerFirstName;
-    private EditText registerLastName;
+
+    private EditText firstName;
+    private EditText lastName;
+    private Button birthDateButton;
+    private EditText gender;
+    private EditText eMail;
+    private EditText password;
+    private EditText passwordConfirmation;
 
     private JSON_AsyncTask jsonAsyncTaskPost;
 
@@ -30,25 +29,40 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Bundle extras = getIntent().getExtras();
+        String registerType = extras.getString("registerType");
+
+        firstName = (EditText) findViewById(R.id.register_first_name);
+        lastName = (EditText) findViewById(R.id.register_last_name);
+        birthDateButton = (Button)  findViewById(R.id.register_birth_date);
+        gender = (EditText) findViewById(R.id.register_gender);
+
+        if(registerType.equals("parent")) {
+            birthDateButton.setVisibility(View.GONE);
+            gender.setVisibility(View.GONE);
+        }
+        else {
+            System.out.println("student: " + registerType);
+        }
+
+        eMail = (EditText) findViewById(R.id.edit_email);
+        password = (EditText) findViewById(R.id.edit_password);
+        passwordConfirmation = (EditText) findViewById(R.id.register_last_name);
     }
 
-    public void firebaseLogIn(final View view) {
-        registerButton = (Button)findViewById(R.id.register_btn);
-        registerMail   = (EditText)findViewById(R.id.register_email);
-        registerPassword   = (EditText)findViewById(R.id.register_password);
-        registerFirstName   = (EditText)findViewById(R.id.register_first_name);
-        registerLastName   = (EditText)findViewById(R.id.register_last_name);
 
-        Map<String, List<String>> httpData;
-        String logInMailText = registerMail.getText().toString();
-        String logInPasswordText = registerPassword.getText().toString();
-        String registerFirstNameText = registerFirstName.getText().toString();
-        String registerLastNameText = registerLastName.getText().toString();
+    public void createFirebaseUser(View view) {
+        String firstNameText = firstName.getText().toString();
+        String lastNameText = lastName.getText().toString();
 
-        jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
 
-        jsonAsyncTaskPost.execute("POST", "/addNewUser", "email", logInMailText);
+        String registerMailText = eMail.getText().toString();
+        String registerPasswordText = password.getText().toString();
+
+    }
+
+    public void setDate(View view) {
 
     }
 

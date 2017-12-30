@@ -13,4 +13,13 @@
     <string name="register_email">אימייל</string>
     <string name="register_password">סיסמא</string>
     <string name="register_register_btn">הירשם</string>
+    <string name="register_i_am_parent_btn">אני הורה</string>
+    <string name="register_i_am_student_btn">אני חניך</string>
+
+    <string name="server_url">https://us-central1-firebase_db_url.cloudfunctions.net</string>
+    <string name="firebase_db_url">firebase-swimmingcompetitions</string>
+    <string name="register_birth_date">שנת לידה</string>
+    <string name="register_password_confirmation">אימות סיסמא</string>
+    <string name="register_token">מפתח מוצר</string>
+    <string name="register_gender">מין</string>
 </resources>
