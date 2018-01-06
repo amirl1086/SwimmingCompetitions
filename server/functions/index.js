@@ -24,6 +24,7 @@ admin.initializeApp({
 });
 
 var authentication = require('./auth/auth.js');
+var firebaseDB_Service = require('./auth/firebaseDB_Service.js');
 
 
 
@@ -39,5 +40,11 @@ exports.logIn = functions.https.onRequest(function(request, response) {
 	console.log('exports.logIn body ', request.body);
 	
 	authentication.logIn(request.body, response);
+});
+
+exports.setNewCompetition = functions.https.onRequest(function(request, response) {
+	console.log('exports.setNewCompetition body ', request.body);
+	
+	firebaseDB_Service.setNewCompetition(request.body, response);
 });
 

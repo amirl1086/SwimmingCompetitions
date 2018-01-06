@@ -8,7 +8,6 @@
     <string name="date_view_set">The Date is: </string>
 
 
-
     <string name="app_name">SwimmingCompetitions</string>
     <string name="log_in_header">תחרויות שחייה</string>
     <string name="title_activity_register">RegisterActivity</string>
@@ -32,4 +31,17 @@
     <string name="register_password_confirmation">אימות סיסמא</string>
     <string name="register_token">מפתח מוצר</string>
     <string name="register_gender">מין</string>
+    <string name="menu_edit_competition_btn">ערוך תחרות קיימת</string>
+    <string name="menu_new_competition_btn">קבע תחרות חדשה</string>
+    <string name="menu_settings_btn">הגדרות</string>
+    <string name="menu_img_pics_btn">תמונות וסרטונים</string>
+    <string name="menu_statistics_btn">סטטיסטיקות</string>
+    <string name="menu_realtime_view_btn">צפייה בזמן אמת</string>
+    <string name="menu_view_competitions_btn">תחרויות</string>
+    <string name="menu_personal_results_btn">תוצאות אישיות</string>
+    <string name="competition_name">שם התחרות</string>
+    <string name="set_date">קבע תאריך</string>
+    <string name="add_iterations">הוסף מקצה</string>
+    <string name="iteration_list">רשימת המקצים</string>
+    <string name="date_of_competition">תאריך התחרות</string>
 </resources>
