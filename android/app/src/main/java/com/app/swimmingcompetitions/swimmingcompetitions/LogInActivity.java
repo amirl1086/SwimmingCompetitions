@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +19,6 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
     public FirebaseAuth firebaseAuth;
     public FirebaseUser currentUser;
 
-    private Button logInButton;
     private Button registerButton;
     private EditText logInMail;
     private EditText logInPassword;
@@ -31,12 +28,8 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_log_in);
 
-        logInButton = (Button)findViewById(R.id.log_in_btn);
         logInMail   = (EditText)findViewById(R.id.edit_email);
         logInPassword   = (EditText)findViewById(R.id.edit_password);
     }
@@ -56,8 +49,19 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
 
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
+        JSONObject logInData = new JSONObject();
 
-        jsonAsyncTaskPost.execute("/logIn", "POST", "email", logInMailText, "password", logInPasswordText);
+        try {
+            logInData.put("urlSuffix", "/logIn");
+            logInData.put("httpMethod", "POST");
+            logInData.put("email", logInMailText);
+            logInData.put("password", logInPasswordText);
+        }
+        catch (JSONException e) {
+            showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
+        }
+
+        jsonAsyncTaskPost.execute(logInData.toString());
     }
 
     @Override
@@ -66,21 +70,25 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
             JSONObject response = new JSONObject(result);
             JSONObject dataObj = response.getJSONObject("data");
             if(response != null && response.getBoolean("success")) {
-                switchToMainMenuActivity(dataObj.getString("uid"));
+                switchToMainMenuActivity(dataObj);
             }
             else {
-
+                showToast("LogInActivity processFinish: Error loging in");
             }
         }
         catch (JSONException e) {
-            e.printStackTrace();
+            showToast("LogInActivity processFinish: Error parsing JSONObject");
         }
 
     }
 
-    public void switchToMainMenuActivity(String userId) {
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void switchToMainMenuActivity(JSONObject user) {
         Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("userId", userId);
+        intent.putExtra("currentUser", user.toString());
         startActivity(intent);
     }
 

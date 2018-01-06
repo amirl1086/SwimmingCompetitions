@@ -4,6 +4,8 @@ const firebase = require('firebase');
 const functions = require('firebase-functions');
 const serviceAccount = require("./firebase-swimmingcompetitions-firebase-adminsdk-by0h1-3444f4cabe.json");
 
+
+/* APP SETTINGS INITIALIZING */
 var config = {
 	apiKey: "AIzaSyAJiubD80W9a1s8K9tx3yILgLZwPJZMziE",
     authDomain: "firebase-swimmingcompetitions.firebaseapp.com",
@@ -25,11 +27,11 @@ var authentication = require('./auth/auth.js');
 
 
 
-/*AUTHENTICATION FUNCTIONS LISTENERS*/
+/* AUTHENTICATION FUNCTIONS LISTENERS */
 exports.addNewUser = functions.https.onRequest(function(request, response) {
-	console.log('exports.addNewUser body ', reqBody);
+	console.log('exports.addNewUser body ', request.body);
 
-	authentication.addNewUser(request.body, response);
+	authentication.addNewFirebaseUser(request.body, response);
 });
 
 

@@ -2,36 +2,32 @@
 const firebase = require('firebase');
 
 var utilities = require('./../utils/utils.js');
+var firebaseDB_Service = require('./../utils/firebaseDB_Service.js');
 
 module.exports =  {
 
 	logIn: function(params, response) {
-		
-		var userCredentials = {
-			email: params.email,
-			password: params.password
-		};
+		console.log('logIn params ', params);
 
-		firebase.auth().signInWithEmailAndPassword(userCredentials.email, userCredentials.password).then(function(firebaseUser) {
+		firebase.auth().signInWithEmailAndPassword(params.email, params.password).then(function(firebaseUser) {
 			utilities.sendResponse(response, null, firebaseUser);
 		}).catch(function(error) {
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	addNewUser: function(params, response) {
-		var newUser = {
-			firstName: reqBody.firstName,
-			lastName: reqBody.lastName,
-			email: reqBody.email,
-			password: reqBody.password
-		};
+	addNewFirebaseUser: function(params, response) {
+		console.log('addNewFirebaseUser params ', params);
 
-		firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password).then(function(firebaseUser) {
-			utilities.sendResponse(response, null, firebaseUser);
+		firebase.auth().createUserWithEmailAndPassword(params.email, params.password).then(function(firebaseUser) {
+			console.log('addNewFirebaseUser createUserWithEmailAndPassword success ', firebaseUser);
+
+			firebaseDB_Service.addNewUser(firebaseUser, params, response);
 		}).catch(function(error) {
+			console.log('addNewFirebaseUser createUserWithEmailAndPassword error ', error);
+
 			utilities.sendResponse(response, error, null);
 		});
-	}
+	},
 
 };

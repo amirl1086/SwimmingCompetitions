@@ -2,6 +2,7 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -29,15 +30,21 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
         //try {
             //setup the connection
         try {
+            JSONObject data = new JSONObject(params[0]);
+
             //set up the url
-            URL url = new URL("https://us-central1-" + "firebase-swimmingcompetitions" + ".cloudfunctions.net" + params[0]);
-            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + params[0]);
+            String urlAddress = "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net" + data.getString("urlSuffix");
+            URL url = new URL(urlAddress);
+            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + data.getString("urlSuffix"));
+            data.remove("urlSuffix");
 
             //initialize the connection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(10000);
-            urlConnection.setRequestMethod(params[1]);
+            urlConnection.setRequestMethod(data.getString("httpMethod"));
+            data.remove("httpMethod");
+
             urlConnection.setDoOutput(true);    //enable output (body extra)
             urlConnection.setRequestProperty("Content-Type", "application/json");   //set header
             urlConnection.connect();
@@ -46,15 +53,8 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             OutputStream outputStream = urlConnection.getOutputStream();
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
-            //insert all parameters into JSON object
-            JSONObject request = new JSONObject();
-            for (int i = 2; i < params.length; i += 2) { //first two places are reserved for url method and http method
-                request.put(params[i], params[i + 1]);
-                System.out.println("key: " + params[i] + ", value: " + params[i + 1]);
-            }
-
             //write data into server
-            bufferedWriter.write(request.toString());
+            bufferedWriter.write(data.toString());
             bufferedWriter.flush();
 
             //read response from server
