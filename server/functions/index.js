@@ -1,35 +1,50 @@
 
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
-const functions = require('firebase-functions');
-
-// The Firebase Admin SDK to access the Firebase Realtime Database. 
 const admin = require('firebase-admin');
-//admin.initializeApp(functions.config().firebase);
+const firebase = require('firebase');
+const functions = require('firebase-functions');
+const serviceAccount = require("./firebase-swimmingcompetitions-firebase-adminsdk-by0h1-3444f4cabe.json");
 
 
-var serviceAccount = require("../firebase-swimmingcompetitions-firebase-adminsdk-by0h1-3444f4cabe.json");
+/* APP SETTINGS INITIALIZING */
+var config = {
+	apiKey: "AIzaSyAJiubD80W9a1s8K9tx3yILgLZwPJZMziE",
+    authDomain: "firebase-swimmingcompetitions.firebaseapp.com",
+    databaseURL: "https://fir-swimmingcompetitions.firebaseio.com",
+    projectId: "firebase-swimmingcompetitions",
+    /*storageBucket: "firebase-swimmingcompetitions.appspot.com",*/
+    messagingSenderId: "197819058733"
+
+}
+
+firebase.initializeApp(config);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://fir-swimmingcompetitions.firebaseio.com"
 });
 
-// Take the text parameter passed to this HTTP endpoint and insert it into the
-// Realtime Database under the path /messages/:pushId/original
-exports.addNewUser = functions.https.onRequest(function(request, result) {
-  // Grab the text parameter.
-  console.log('REQ : \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n', request, '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-  console.log('REQ QUERY: \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n', request.query, '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+var authentication = require('./auth/auth.js');
+var firebaseDB_Service = require('./auth/firebaseDB_Service.js');
 
-  // Push the new message into the Realtime Database using the Firebase Admin SDK.
-  admin.database().ref('/user').push('test').then(function(fbResult) {
-    // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-    console.log('FB RESULT : \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n', fbResult, '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-  });
+
+
+/* AUTHENTICATION FUNCTIONS LISTENERS */
+exports.addNewUser = functions.https.onRequest(function(request, response) {
+	console.log('exports.addNewUser body ', request.body);
+
+	authentication.addNewFirebaseUser(request.body, response);
 });
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+
+
+exports.logIn = functions.https.onRequest(function(request, response) {
+	console.log('exports.logIn body ', request.body);
+	
+	authentication.logIn(request.body, response);
+});
+
+exports.setNewCompetition = functions.https.onRequest(function(request, response) {
+	console.log('exports.setNewCompetition body ', request.body);
+	
+	firebaseDB_Service.setNewCompetition(request.body, response);
+});
+

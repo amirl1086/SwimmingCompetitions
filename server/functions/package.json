@@ -2,15 +2,17 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "serve": "firebase serve --only functions",
+    "serve": "firebase serve --only hosting,functions",
     "shell": "firebase experimental:functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "dependencies": {
-    "firebase-admin": "~5.4.2",
-    "firebase-functions": "^0.7.1"
+    "grpc": "^1.8.0",
+    "firebase-admin": "^5.6.0",
+    "firebase": "^4.8.1",
+    "firebase-functions": "^0.7.5"
   },
   "private": true
 }

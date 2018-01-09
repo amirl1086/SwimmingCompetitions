@@ -4,108 +4,102 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity">
-
-    <Button
-        android:id="@+id/competitions_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="תחרויות"
-        app:layout_constraintEnd_toStartOf="@+id/personal_results_btn"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity"
+    android:background="@drawable/swimming_pool_background">
 
     <Button
         android:id="@+id/personal_results_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
-        android:text="תוצאות אישיות"
+        android:text="@string/menu_personal_results_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="32dp" />
 
     <Button
-        android:id="@+id/statistics_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:id="@+id/competitions_btn"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:text="סטטיסטיקות"
+        android:text="@string/menu_view_competitions_btn"
+        app:layout_constraintEnd_toStartOf="@+id/personal_results_btn"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/competitions_btn" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="32dp" />
 
     <Button
         android:id="@+id/real_time_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
-        android:text="צפייה בזמן אמת"
+        android:text="@string/menu_realtime_view_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toEndOf="@+id/statistics_btn"
-        app:layout_constraintTop_toBottomOf="@+id/personal_results_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/personal_results_btn"
+        android:layout_marginRight="32dp" />
+
+    <Button
+        android:id="@+id/statistics_btn"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/menu_statistics_btn"
+        app:layout_constraintEnd_toStartOf="@+id/real_time_btn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/competitions_btn"
+        android:layout_marginLeft="32dp" />
+
+    <Button
+        android:id="@+id/img_pics_btn"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/menu_img_pics_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/real_time_btn"
+        android:layout_marginRight="32dp" />
 
     <Button
         android:id="@+id/settings_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:text="הגדרות"
-        app:layout_constraintEnd_toStartOf="@+id/pics_videos_btn"
-        app:layout_constraintHorizontal_bias="0.666"
+        android:text="@string/menu_settings_btn"
+        app:layout_constraintEnd_toStartOf="@+id/img_pics_btn"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statistics_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/statistics_btn"
+        android:layout_marginLeft="32dp" />
 
     <Button
-        android:id="@+id/pics_videos_btn"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:id="@+id/set_new_competition_btn"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
-        android:text="תמונות וסרטונים"
+        android:text="@string/menu_new_competition_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/real_time_btn" />
-
-<!--    <Button
-        android:id="@+id/button7"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/img_pics_btn"
+        android:layout_marginRight="32dp" android:onClick="openNewCompetitionActivity" />
 
     <Button
-        android:id="@+id/button8"
-        android:layout_width="170dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:id="@+id/edit_competition_btn"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toEndOf="@+id/button7"
-        app:layout_constraintTop_toBottomOf="@+id/button6"
-        app:layout_constraintVertical_bias="0.0" />-->
-
+        android:text="@string/menu_edit_competition_btn"
+        app:layout_constraintEnd_toStartOf="@+id/set_new_competition_btn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_btn"
+        android:layout_marginLeft="32dp" />
 </android.support.constraint.ConstraintLayout>

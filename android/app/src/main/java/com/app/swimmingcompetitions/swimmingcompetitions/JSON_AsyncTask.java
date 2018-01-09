@@ -1,12 +1,13 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -19,6 +20,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     //delegate the response from the server to the caller requesting function
     public AsyncResponse delegate;
 
+    @Override
     protected String doInBackground(String... params) {
 
         StringBuilder result = new StringBuilder();
@@ -28,11 +30,21 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
         //try {
             //setup the connection
         try {
-            URL url = new URL("http://10.0.2.2:8080" + params[1]);
+            JSONObject data = new JSONObject(params[0]);
+
+            //set up the url
+            String urlAddress = "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net" + data.getString("urlSuffix");
+            URL url = new URL(urlAddress);
+            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + data.getString("urlSuffix"));
+            data.remove("urlSuffix");
+
+            //initialize the connection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(10000);
-            urlConnection.setRequestMethod(params[0]);
+            urlConnection.setRequestMethod(data.getString("httpMethod"));
+            data.remove("httpMethod");
+
             urlConnection.setDoOutput(true);    //enable output (body extra)
             urlConnection.setRequestProperty("Content-Type", "application/json");   //set header
             urlConnection.connect();
@@ -41,14 +53,8 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             OutputStream outputStream = urlConnection.getOutputStream();
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
-            //insert all parameters into JSON object
-            JSONObject request = new JSONObject();
-            for (int i = 2; i < params.length; i += 2) {
-                request.put(params[i], params[i + 1]);
-            }
-
             //write data into server
-            bufferedWriter.write(request.toString());
+            bufferedWriter.write(data.toString());
             bufferedWriter.flush();
 
             //read response from server
@@ -58,11 +64,12 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             while ((line = bufferedReader.readLine()) != null) {
                 result.append(line).append("\n");
             }
+            return result.toString();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            return null;
         }
-        return result.toString();
     }
 
     @Override
