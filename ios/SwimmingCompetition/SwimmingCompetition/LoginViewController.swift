@@ -8,17 +8,42 @@
 
 import UIKit
 import Firebase
+import Alamofire
+import SwiftyJSON
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //The input email and password for login
     @IBOutlet weak var emailTextFiled: UITextField!
     @IBOutlet weak var passwordTextFiled: UITextField!
-    
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    var mainView = MainViewController()
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextFiled.delegate = self
+        passwordTextFiled.delegate = self
+        errorLabel.isHidden = true
+        
+        activateSpinner(isActivate: false)
+        
         // Do any additional setup after loading the view, typically from a nib.
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
+        
+        
+    }
+  
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToMain" {
+            let nextView = segue.destination as! MainViewController
+            let user = self.user
+            nextView.user = user
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -26,19 +51,87 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+   
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextFiled {
+            passwordTextFiled.becomeFirstResponder()
+        } else if textField == passwordTextFiled {
+            textField.resignFirstResponder()
+            loginButton(self)
+        }
+        return true
+    }
+    
+    @IBAction func emailTextFieldBeginEditing(_ sender: Any) {
+        self.errorLabel.isHidden = true
+    }
+   
     @IBAction func loginButton(_ sender: AnyObject) {
-        //Check the validation of the authentication and sign in to the main page
-        Auth.auth().signIn(withEmail: emailTextFiled.text!, password: passwordTextFiled.text!, completion: {(user, error) in
-            //If the login failed
-            if error != nil {
-                print(error!)
-            }
-            //If the login succeed
-            else {
+        self.errorLabel.isHidden = true
+        activateSpinner(isActivate: true)
+        let parameters = [
+            "email": emailTextFiled.text!,
+            "password": passwordTextFiled.text!
+        ]
+        
+        Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
+            response in
+            
+            if response.succeed {
+                self.activateSpinner(isActivate: false)
+                self.user = User(json: response.data)
                 self.performSegue(withIdentifier: "goToMain", sender: self)
             }
-        })
-
+            else {
+                self.spinner.isHidden = true
+                let message = response.data["message"] as? String
+                self.errorLabel.text = message
+                self.errorLabel.isHidden = false
+            }
+            
+        }
+        print("helllo")
+       /*Service().connectToServer(path: "logIn", method: .post, params: parameters) { (response, success) in
+            if response.isEmpty && !success {
+                self.activateSpinner(isActivate: false)
+                self.errorLabel.text = "שגיאה! בדוק את חיבור הרשת"
+                self.errorLabel.isHidden = false
+            } else {
+                self.activateSpinner(isActivate: false)
+                if success {
+                    
+                    //self.mainView.userType = response["data"]["type"].stringValue
+                    
+                    self.performSegue(withIdentifier: "goToMain", sender: self)
+                    
+                } else {
+                    self.errorLabel.text = response["data"]["message"].stringValue
+                    self.errorLabel.isHidden = false
+                }
+            }
+            
+        }*/
+        
+     
     }
+    
+    func activateSpinner(isActivate: Bool) {
+        if isActivate {
+            self.spinner.isHidden = false
+            spinner.startAnimating()
+        }
+        else {
+            self.spinner.isHidden = true
+            self.spinner.stopAnimating()
+        }
+        
+    }
+    
+  
     
 }
