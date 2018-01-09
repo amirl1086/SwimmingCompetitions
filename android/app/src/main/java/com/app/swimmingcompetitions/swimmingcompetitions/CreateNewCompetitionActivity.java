@@ -6,16 +6,25 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class CreateNewCompetitionActivity extends AppCompatActivity {
 
+    private ArrayList<String> iterations;
+    private ArrayAdapter listAdapter;
+
     private Calendar calendar;
     private TextView dateView;
     private int year, month, day;
+    private NumberPicker numberPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +32,19 @@ public class CreateNewCompetitionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_competition);
 
         dateView = (TextView) findViewById(R.id.competition_date);
+
+        numberPicker = findViewById(R.id.meters_picker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(1000);
+
+        ListView listView = (ListView) findViewById(R.id.iterations_list) ;
+        String[] items = {"apple", "banana", "grape", "avielIsGay"};
+
+        iterations = new ArrayList<String>(Arrays.asList(items));
+        listAdapter = new ArrayAdapter<String>(this, R.layout.iteration_list_item, R.id.iteration_item, items);
+        listView.setAdapter(listAdapter);
+
+        //ArrayAdapter adapter = new ArrayAdapter<String>(this, an)
     }
 
     public void setDate(View view) {
@@ -51,5 +73,13 @@ public class CreateNewCompetitionActivity extends AppCompatActivity {
     public void openNewIterationActivity(View view) {
         Intent intent = new Intent(this, NewIterationActivity.class);
         startActivity(intent);
+    }
+
+    public class Competition {
+
+    }
+
+    public class Iteration {
+
     }
 }

@@ -96,7 +96,6 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             registerData.put("gender", genderText);
             registerData.put("birthDate", birthDateText);
             registerData.put("type", registerType);
-
         }
         catch(JSONException e) {
             showToast("RegisterActivity, createFirebaseUser: Error creating JSONObject");

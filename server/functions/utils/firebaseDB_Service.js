@@ -8,7 +8,6 @@ module.exports = {
 
 	addNewUser: function(firebaseUser, userParams, callback) {
 		var db = admin.database();
-		var uid = firebaseUser.getToken();
 		var usersRef = db.ref('users/' + firebaseUser.uid);
 
 		usersRef.set({
@@ -21,7 +20,9 @@ module.exports = {
 		});
 
 		usersRef.on('value', function(snapshot) {
-			callback(snapshot.val());
+			console.log('firebase finished inserting new user')
+			//add the uid to the currentUser
+			callback(attachUidToUser(snapshot));
 		});
 	},
 
@@ -30,7 +31,8 @@ module.exports = {
 		var userRef = db.ref('users/' + uid);
 
 		userRef.on("value", function(snapshot) {
-			callback(snapshot.val());
+			//add the uid to the currentUser
+			callback(attachUidToUser(snapshot));
 		});
 	},
 
@@ -43,4 +45,14 @@ module.exports = {
 		});
 	}
 
+	
+
+};
+
+var attachUidToUser = function(snapshot) {
+	var currentUser = snapshot.val();
+
+	//add the uid to the currentUser
+	var userWithUid = Object.assign({}, snapshot.val(), { 'uid': snapshot.key });
+	return userWithUid;
 }

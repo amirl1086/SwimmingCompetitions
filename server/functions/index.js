@@ -24,7 +24,7 @@ admin.initializeApp({
 });
 
 var authentication = require('./auth/auth.js');
-var firebaseDB_Service = require('./auth/firebaseDB_Service.js');
+var firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 
 
