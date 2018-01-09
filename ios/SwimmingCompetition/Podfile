@@ -8,6 +8,10 @@ target 'SwimmingCompetition' do
   # Pods for SwimmingCompetition
     pod 'Firebase/Core'
     pod 'Firebase/Auth'
+    pod 'Firebase/Database'
+    pod 'SwiftyJSON'
+    pod 'Alamofire'
+
 
   target 'SwimmingCompetitionTests' do
     inherit! :search_paths
