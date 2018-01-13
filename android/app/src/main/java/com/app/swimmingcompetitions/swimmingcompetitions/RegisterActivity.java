@@ -20,21 +20,20 @@ import java.util.Calendar;
 
 public class RegisterActivity extends AppCompatActivity implements AsyncResponse {
 
+    private JSON_AsyncTask jsonAsyncTaskPost;
+
     private EditText firstName;
     private EditText lastName;
-    private Button birthDateButton;
     private EditText gender;
     private EditText eMail;
     private EditText password;
     private EditText passwordConfirmation;
-
+    private Button birthDateButton;
     private Calendar calendar;
     private TextView dateView;
     private int year, month, day;
-
     private String registerType;
 
-    private JSON_AsyncTask jsonAsyncTaskPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +45,13 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
 
         firstName = (EditText) findViewById(R.id.register_first_name);
         lastName = (EditText) findViewById(R.id.register_last_name);
-        birthDateButton = (Button)  findViewById(R.id.register_birth_date);
+        birthDateButton = (Button) findViewById(R.id.register_birth_date);
         gender = (EditText) findViewById(R.id.register_gender);
 
-        if(registerType.equals("parent")) {
+        if (registerType.equals("parent")) {
             birthDateButton.setVisibility(View.GONE);
             gender.setVisibility(View.GONE);
-        }
-        else { //initialize date picker for date of birth
+        } else { //initialize date picker for date of birth
             dateView = (TextView) findViewById(R.id.birth_date_view);
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
@@ -74,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         String lastNameText = lastName.getText().toString();
         String genderText = "", birthDateText = "";
 
-        if(registerType.equals("student")) {
+        if (registerType.equals("student")) {
             birthDateText = dateView.getText().toString();
             genderText = gender.getText().toString();
         }
@@ -96,8 +94,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             registerData.put("gender", genderText);
             registerData.put("birthDate", birthDateText);
             registerData.put("type", registerType);
-        }
-        catch(JSONException e) {
+        } catch (JSONException e) {
             showToast("RegisterActivity, createFirebaseUser: Error creating JSONObject");
         }
 
@@ -131,14 +128,12 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         try {
             JSONObject response = new JSONObject(result);
             JSONObject dataObj = response.getJSONObject("data");
-            if(response != null && response.getBoolean("success")) {
+            if (response != null && response.getBoolean("success")) {
                 switchToMainMenuActivity(dataObj);
-            }
-            else {
+            } else {
                 showToast("LogInActivity processFinish: Error registering");
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             showToast("RegisterActivity, processFinish: Error parsing JSONObject");
         }
     }

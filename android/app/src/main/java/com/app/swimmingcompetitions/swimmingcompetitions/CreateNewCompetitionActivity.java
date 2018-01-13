@@ -8,43 +8,69 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class CreateNewCompetitionActivity extends AppCompatActivity {
+public class CreateNewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
 
-    private ArrayList<String> iterations;
-    private ArrayAdapter listAdapter;
+    private Competition newCompetition;
+    private JSON_AsyncTask jsonAsyncTaskPost;
+
+    private String[] swimmingStyles;
+    private ArrayAdapter spinnerListAdapter;
+    private Spinner spinner;
+
+    private EditText competitionName;
+    private TextView dateView;
 
     private Calendar calendar;
-    private TextView dateView;
     private int year, month, day;
-    private NumberPicker numberPicker;
+    private NumberPicker iterationLength;
+    private NumberPicker numOfParticipants;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_competition);
 
+        competitionName = (EditText) findViewById(R.id.competition_name);
+
+        //set up datepickers
         dateView = (TextView) findViewById(R.id.competition_date);
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        showDate(year, month + 1, day);
 
-        numberPicker = findViewById(R.id.meters_picker);
-        numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(1000);
+        //set up number pickers
+        iterationLength = findViewById(R.id.iteration_length);
+        iterationLength.setMinValue(1);
+        iterationLength.setMaxValue(1000);
 
-        ListView listView = (ListView) findViewById(R.id.iterations_list) ;
-        String[] items = {"apple", "banana", "grape", "avielIsGay"};
+        numOfParticipants = findViewById(R.id.num_of_participants);
+        numOfParticipants.setMinValue(1);
+        numOfParticipants.setMaxValue(1000);
 
-        iterations = new ArrayList<String>(Arrays.asList(items));
-        listAdapter = new ArrayAdapter<String>(this, R.layout.iteration_list_item, R.id.iteration_item, items);
-        listView.setAdapter(listAdapter);
+        //set up spinner picker
+        swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
+        spinner = (Spinner) findViewById(R.id.swimming_style_spinner);
+        spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swimmingStyles);
 
-        //ArrayAdapter adapter = new ArrayAdapter<String>(this, an)
+        spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinner.setAdapter(spinnerListAdapter);
     }
 
     public void setDate(View view) {
@@ -70,16 +96,66 @@ public class CreateNewCompetitionActivity extends AppCompatActivity {
         dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
     }
 
-    public void openNewIterationActivity(View view) {
-        Intent intent = new Intent(this, NewIterationActivity.class);
+    public void addNewCompetition(View view) {
+        String competitionNameText = competitionName.getText().toString();
+        String activityDateText = dateView.getText().toString();
+        String swimmingStyleText = spinner.getSelectedItem().toString();
+        int numOfParticipantsNum = numOfParticipants.getValue();
+        int iterationLengthNum = iterationLength.getValue();
+
+        jsonAsyncTaskPost = new JSON_AsyncTask();
+        jsonAsyncTaskPost.delegate = this;
+        JSONObject data = new JSONObject();
+
+        //set up action params
+        try {
+            data.put("urlSuffix", "/setNewCompetition");
+            data.put("httpMethod", "POST");
+            data.put("name", competitionNameText);
+            data.put("activityDate", activityDateText);
+            data.put("swimmingStyle", swimmingStyleText);
+            data.put("numOfParticipants", numOfParticipantsNum);
+            data.put("length", iterationLengthNum);
+        } catch (JSONException e) {
+            showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
+        }
+
+        //call the server
+        jsonAsyncTaskPost.execute(data.toString());
+    }
+
+    @Override
+    public void processFinish(String result) {
+        try {
+            if (result != null) {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
+
+                String id = dataObj.getString("id");
+                String name = dataObj.getString("name");
+                String activityDate = dataObj.getString("activityDate");
+                String swimmingStyle = dataObj.getString("swimmingStyle");
+                Integer numOfParticipants = dataObj.getInt("numOfParticipants");
+                Integer length = dataObj.getInt("length");
+
+                newCompetition = new Competition(id, name, activityDate, swimmingStyle, numOfParticipants, length);
+
+                switchToViewCompetitionsActivity();
+            } else {
+                showToast("LogInActivity processFinish: Error loging in");
+            }
+        } catch (JSONException e) {
+            showToast("LogInActivity processFinish: Error parsing JSONObject");
+        }
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void switchToViewCompetitionsActivity() {
+        Intent intent = new Intent(this, ViewCompetitionsActivity.class);
+        intent.putExtra("newCompetition", newCompetition);
         startActivity(intent);
-    }
-
-    public class Competition {
-
-    }
-
-    public class Iteration {
-
     }
 }

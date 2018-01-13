@@ -10,47 +10,57 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity implements AsyncResponse {
 
-    /*public Button personalResultsBtn;
-    public Button viewCompetitionsBtn;
-    public Button realTimeBtn;
-    public Button statisticsBtn;
-    public Button imagesAndPicturesBtn;
-    public Button settingsBtn;*/
+    private User currentUser = null;
 
-    public Button setNewCompetitionBtn;
-    public Button editCompetitionBtn;
+    private Button personalResultsBtn;
+    private Button viewCompetitionsBtn;
+    private Button realTimeBtn;
+    private Button statisticsBtn;
+    private Button imagesAndPicturesBtn;
+    private Button settingsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        setNewCompetitionBtn = (Button)  findViewById(R.id.set_new_competition_btn);
-        editCompetitionBtn = (Button)  findViewById(R.id.edit_competition_btn);
-
-        JSONObject currentUser;
         Intent intent = getIntent();
-        try {
-            currentUser = new JSONObject(intent.getStringExtra("currentUser"));
-            String type = currentUser.getString("type");
-            if(!type.equals("coach")) {
-                setNewCompetitionBtn.setVisibility(View.GONE);
-                editCompetitionBtn.setVisibility(View.GONE);
-            }
-        }
-        catch (JSONException e) {
-            showToast("MainMenuActivity onCreate: Error parsing JSONObject");
-        }
+        currentUser = (User) intent.getSerializableExtra("currentUser");
     }
 
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void openNewCompetitionActivity(View view) {
-        Intent intent = new Intent(this, CreateNewCompetitionActivity.class);
+    public void openViewCompetitionsActivity(View view) {
+        Intent intent = new Intent(this, ViewCompetitionsActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
+    }
+
+    @Override
+    public void processFinish(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            if (response != null && response.getBoolean("success")) {
+                JSONObject userData = response.getJSONObject("data");
+
+                String uid = userData.getString("uid");
+                String firstName = userData.getString("firstName");
+                String lastName = userData.getString("lastName");
+                String birthDate = userData.getString("birthDate");
+                String email = userData.getString("email");
+                String gender = userData.getString("gender");
+                String type = userData.getString("type");
+
+                currentUser = new User(uid, firstName, lastName, birthDate, email, gender, type);
+            } else {
+                showToast("LogInActivity processFinish: Error loging in");
+            }
+        } catch (JSONException e) {
+            showToast("LogInActivity processFinish: Error parsing JSONObject");
+        }
     }
 }

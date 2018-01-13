@@ -21,6 +21,18 @@ module.exports =  {
 		);
 	},
 
+	getUser: function(uid, response) {
+		firebaseDB_Service.getUser(uid, function(currentUser) {
+			if(currentUser && currentUser.uid) {
+				utilities.sendResponse(response, null, currentUser);
+			}
+			else {
+				utilities.sendResponse(response, currentUser, null);
+			}
+		});
+
+	},
+
 	addNewFirebaseUser: function(params, response) {
 		//create new user in with credantials
 		firebase.auth().createUserWithEmailAndPassword(params.email, params.password)
