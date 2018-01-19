@@ -11,6 +11,7 @@ import Firebase
 
 class RegisterViewController: UIViewController {
     
+    //===== Text fields =====//
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var birthDate: UITextField!
@@ -19,16 +20,18 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var passwordConfirmation: UITextField!
     @IBOutlet weak var productNumber: UITextField!
-    var userType = String()
+    //========================//
     @IBOutlet weak var confirmButton: UIButton!
+    
+    var userType = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         
+        //go to for change the register view
         changeRegisterView()
-        print(userType)
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,6 +39,7 @@ class RegisterViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //function for change the register view accorting to user type
     func changeRegisterView() {
         if userType == "parent" {
             
@@ -51,7 +55,6 @@ class RegisterViewController: UIViewController {
             confirmButton.frame.origin = CGPoint(x: 150, y: 300)
             
         }
-        
     }
     
     //Button to register and create the user
@@ -68,14 +71,10 @@ class RegisterViewController: UIViewController {
             "type": userType
         ]
         
+        //connect to the server and add a new user
         Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
             print(response)
         }
-        
-       /* Service().connectToServer(path: "addNewUser", method: .post, params: parameters) { (response, success) in
-            print(response)
-        }*/
-       
     }
     
 }

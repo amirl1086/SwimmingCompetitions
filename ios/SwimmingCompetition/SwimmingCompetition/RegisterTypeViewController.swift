@@ -10,6 +10,7 @@ import UIKit
 
 class RegisterTypeViewController: UIViewController {
     
+    //user type
     var type = String()
     
     override func viewDidLoad() {
@@ -23,19 +24,24 @@ class RegisterTypeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //pass the type to the next controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let passData = segue.destination as! RegisterViewController
         passData.userType = type
         
     }
+    
+    //===== Buttons for select register type =====//
     @IBAction func userButton(_ sender: Any) {
         type = "user"
-        self.performSegue(withIdentifier: "goToRegister", sender: self)     }
+        self.performSegue(withIdentifier: "goToRegister", sender: self)
+    }
     
     @IBAction func parentButton(_ sender: Any) {
         type = "parent"
-        self.performSegue(withIdentifier: "goToRegister", sender: self)    }
-    
+        self.performSegue(withIdentifier: "goToRegister", sender: self)
+    }
+    //=============================================//
    
     
 }
