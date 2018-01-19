@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,7 +30,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="32dp" />
+        android:layout_marginLeft="32dp"
+        android:onClick="openViewCompetitionsActivity"/>
 
     <Button
         android:id="@+id/real_time_btn"
@@ -77,29 +79,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statistics_btn"
-        android:layout_marginLeft="32dp" />
-
-    <Button
-        android:id="@+id/set_new_competition_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_new_competition_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_pics_btn"
-        android:layout_marginRight="32dp" android:onClick="openNewCompetitionActivity" />
-
-    <Button
-        android:id="@+id/edit_competition_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_edit_competition_btn"
-        app:layout_constraintEnd_toStartOf="@+id/set_new_competition_btn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_btn"
         android:layout_marginLeft="32dp" />
 </android.support.constraint.ConstraintLayout>

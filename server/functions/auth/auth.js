@@ -10,6 +10,8 @@ module.exports =  {
 		firebase.auth().signInWithEmailAndPassword(params.email, params.password)
 			.then(function(firebaseUser) {
 				firebaseDB_Service.getUser(firebaseUser.uid, function(currentUser) {
+					//will run after firebase finished retrieving new user
+					console.log('logIn currentUser: ', currentUser);
 					utilities.sendResponse(response, null, currentUser);
 				});
 			})
@@ -19,11 +21,27 @@ module.exports =  {
 		);
 	},
 
+	getUser: function(uid, response) {
+		firebaseDB_Service.getUser(uid, function(currentUser) {
+			if(currentUser && currentUser.uid) {
+				utilities.sendResponse(response, null, currentUser);
+			}
+			else {
+				utilities.sendResponse(response, currentUser, null);
+			}
+		});
+
+	},
+
 	addNewFirebaseUser: function(params, response) {
+		//create new user in with credantials
 		firebase.auth().createUserWithEmailAndPassword(params.email, params.password)
+			//firebaseUser is the actual object from firebase
 			.then(function(firebaseUser) {
-				firebaseDB_Service.addNewUser(firebaseUser, params, function(currentUser) {
-					utilities.sendResponse(response, null, currentUser);
+				firebaseDB_Service.addNewUser(firebaseUser, params, function(currentUser) { 
+					//will run after firebase finished inserting new user
+					console.log('addNewFirebaseUser currentUser: ', currentUser);
+					utilities.sendResponse(response, null, currentUser); 
 				});
 			})
 			.catch(function(error) {

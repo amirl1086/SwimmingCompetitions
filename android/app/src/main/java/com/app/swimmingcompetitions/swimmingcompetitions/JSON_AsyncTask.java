@@ -24,11 +24,10 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
 
         StringBuilder result = new StringBuilder();
-        //create data and send into server
         BufferedWriter bufferedWriter = null;
-        BufferedReader bufferedReader =  null;
-        //try {
-            //setup the connection
+        BufferedReader bufferedReader = null;
+
+        //setup the connection
         try {
             JSONObject data = new JSONObject(params[0]);
 
@@ -65,8 +64,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
                 result.append(line).append("\n");
             }
             return result.toString();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }

@@ -13,7 +13,7 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="log_in_log_in_text">הכנס</string>
 
-    <string name="fb_project_id">firebase-swimmingcompetitions</string>
+    <string name="firebase_db_url">firebase-swimmingcompetitions</string>
     <string name="log_in_register">הרשם</string>
 
     <string name="register_welcome">ברוך הבא למסך ההרשמה לאפליקציה לתחרויות שחייה</string>
@@ -26,7 +26,6 @@
     <string name="register_i_am_student_btn">אני חניך</string>
 
     <string name="server_url">https://us-central1-firebase_db_url.cloudfunctions.net</string>
-    <string name="firebase_db_url">firebase-swimmingcompetitions</string>
     <string name="register_birth_date">בחר תאריך לידה</string>
     <string name="register_password_confirmation">אימות סיסמא</string>
     <string name="register_token">מפתח מוצר</string>
@@ -41,7 +40,12 @@
     <string name="menu_personal_results_btn">תוצאות אישיות</string>
     <string name="competition_name">שם התחרות</string>
     <string name="set_date">קבע תאריך</string>
-    <string name="add_iterations">הוסף מקצה</string>
+    <string name="add_iterations">הוסף תחרות</string>
     <string name="iteration_list">רשימת המקצים</string>
     <string name="date_of_competition">תאריך התחרות</string>
+    <string name="add_new_competition">הוסף תחרות חדשה</string>
+    <string name="add_competition_text_btn">הוסף תחרות</string>
+    <string name="list_of_competitions_txt">רשימת תחרויות</string>
+    <string name="iteration_length_text">אורך המקצים</string>
+    <string name="num_of_participants">מספר משתתפים לכל מקצה</string>
 </resources>

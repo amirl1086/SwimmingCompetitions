@@ -13,7 +13,6 @@ var config = {
     projectId: "firebase-swimmingcompetitions",
     /*storageBucket: "firebase-swimmingcompetitions.appspot.com",*/
     messagingSenderId: "197819058733"
-
 }
 
 firebase.initializeApp(config);
@@ -24,17 +23,23 @@ admin.initializeApp({
 });
 
 var authentication = require('./auth/auth.js');
-var firebaseDB_Service = require('./auth/firebaseDB_Service.js');
+var firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 
 
 /* AUTHENTICATION FUNCTIONS LISTENERS */
+/* ================================== */
 exports.addNewUser = functions.https.onRequest(function(request, response) {
 	console.log('exports.addNewUser body ', request.body);
 
 	authentication.addNewFirebaseUser(request.body, response);
 });
 
+exports.getUser = functions.https.onRequest(function(request, response) {
+	console.log('exports.getUser body ', request.body);
+
+	authentication.getUser(request.body.currentUserUid, response);
+});
 
 exports.logIn = functions.https.onRequest(function(request, response) {
 	console.log('exports.logIn body ', request.body);
@@ -42,9 +47,22 @@ exports.logIn = functions.https.onRequest(function(request, response) {
 	authentication.logIn(request.body, response);
 });
 
+/* ================================== */
+
+
+
+
+/* COMPETITIONS FUNCTIONS LISTENERS */
+/* ================================ */
+exports.getCompetitions = functions.https.onRequest(function(request, response) {
+	console.log('exports.getCompetitions body ', request.body);
+	
+	firebaseDB_Service.getCompetitions(request.body.currentUser.uid, response);
+});
+
 exports.setNewCompetition = functions.https.onRequest(function(request, response) {
 	console.log('exports.setNewCompetition body ', request.body);
 	
 	firebaseDB_Service.setNewCompetition(request.body, response);
 });
-
+/* ================================ */
