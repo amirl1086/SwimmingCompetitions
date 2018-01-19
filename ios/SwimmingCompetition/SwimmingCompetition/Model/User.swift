@@ -16,6 +16,7 @@ struct User {
     let gender: String
     let email:String
     let type:String
+    let uid:String
     
     init?(json: JSON) {
         guard let firstName = json["firstName"] as? String,
@@ -23,7 +24,8 @@ struct User {
         let birthDate = json["birthDate"] as? String,
         let gender = json["gender"] as? String,
         let email = json["email"] as? String,
-        let type = json["type"] as? String
+        let type = json["type"] as? String,
+        let uid = json["uid"] as? String
         else {return nil}
         
         self.firstName = firstName 
@@ -32,6 +34,7 @@ struct User {
         self.gender = gender
         self.email = email
         self.type = type
+        self.uid = uid
         
     }
     

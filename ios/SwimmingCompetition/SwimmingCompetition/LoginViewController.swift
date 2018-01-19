@@ -79,6 +79,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             "password": passwordTextFiled.text!
         ]
         
+
         Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
             response in
             

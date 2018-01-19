@@ -8,19 +8,16 @@
 
 import UIKit
 import Firebase
-
+import SwiftyJSON
 class MainViewController: UIViewController {
 
     var user: User!
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-    
+        
     }
     
     
@@ -29,7 +26,13 @@ class MainViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextView = segue.destination as! CompetitionsViewController
+        let user = self.user
+        nextView.user = user
+    }
     
+    //===== The buttons of the menu =====//
     @IBAction func competitions(_ sender: UIButton) {
     }
     @IBAction func personalScores(_ sender: UIButton) {
@@ -42,9 +45,7 @@ class MainViewController: UIViewController {
     }
     @IBAction func files(_ sender: UIButton) {
     }
-    
-    
-
+    //====================================//
+  
 }
-
 

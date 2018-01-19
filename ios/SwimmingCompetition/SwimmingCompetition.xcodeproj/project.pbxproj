@@ -11,10 +11,13 @@
 		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
+		3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068F8D820061DBD009518AD /* CompetitionsViewController.swift */; };
+		3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */; };
 		306C95991FF269AF00A0D266 /* stll-swimming-logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */; };
 		306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306C959C1FF27C6200A0D266 /* RoundButton.swift */; };
 		3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */; };
 		3096CDD11FF855A00045E0D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3096CDD01FF855A00045E0D6 /* User.swift */; };
+		30C13D842011D71D000AAE4E /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C13D832011D71D000AAE4E /* Competition.swift */; };
 		30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A861FE72BB900201A20 /* AppDelegate.swift */; };
 		30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A881FE72BB900201A20 /* MainViewController.swift */; };
 		30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A8A1FE72BB900201A20 /* Main.storyboard */; };
@@ -56,10 +59,13 @@
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
 		30541B602002D9940080CC58 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
+		3068F8D820061DBD009518AD /* CompetitionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsViewController.swift; sourceTree = "<group>"; };
+		3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCompetitionViewController.swift; sourceTree = "<group>"; };
 		306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
 		306C959C1FF27C6200A0D266 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 		3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableTextField.swift; sourceTree = "<group>"; };
 		3096CDD01FF855A00045E0D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		30C13D832011D71D000AAE4E /* Competition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
 		30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwimmingCompetition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FE9A861FE72BB900201A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30FE9A881FE72BB900201A20 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				3096CDD01FF855A00045E0D6 /* User.swift */,
+				30C13D832011D71D000AAE4E /* Competition.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -160,6 +167,8 @@
 				30D9EBEF2001BEFC00A89A92 /* Model */,
 				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
+				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				3068F8D820061DBD009518AD /* CompetitionsViewController.swift */,
 				30FE9AB71FE72C5200201A20 /* LoginViewController.swift */,
 				30FE9A881FE72BB900201A20 /* MainViewController.swift */,
 				30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */,
@@ -521,9 +530,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
+				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,
 				30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */,
+				30C13D842011D71D000AAE4E /* Competition.swift in Sources */,
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
 				30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */,
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,

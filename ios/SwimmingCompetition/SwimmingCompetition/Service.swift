@@ -32,31 +32,11 @@ class Service {
         }
     }
     
-    /*func connectToServer(path: String, method: HTTPMethod, params: [String: String], completed: @escaping (JSON, Bool) -> Void) {
-        guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else { return }
-       
-        
-        Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
-            if response.result.isSuccess {
-                print(response)
-                
-                DispatchQueue.main.async {
-                    completed(JSON(response.result.value!), succeed)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completed(JSON.null, false)
-                }
-            }
-           
-            
-        }
-        return 
-    }*/
     
     
     
 }
+
 
 struct responseData {
     let data:JSON
