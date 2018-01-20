@@ -15,9 +15,13 @@ class AddCompetitionViewController: UIViewController {
     let rangePicker:[Int] = Array(0...100)
     let datePicker = UIDatePicker()
    
+    @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var styleTextField: UITextField!
     @IBOutlet weak var agesTextField: UITextField!
     @IBOutlet weak var dateTextField: UITextField!
+    
+    var range: Int = 0
+    var style: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,19 +47,36 @@ class AddCompetitionViewController: UIViewController {
         dateTextField.inputView = datePicker
     }
     
+    @IBAction func addCompetitionButton(_ sender: Any) {
+        let parameters = [
+            "activityDate": self.dateTextField.text!,
+            "length": self.range,
+            "name": self.nameTextField.text!,
+            "numOfParticipants": self.agesTextField.text!,
+            "swimmingStyle": self.style
+            ] as [String : Any]
+        
+        Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
+            
+        }
+       
+    }
 }
 
 extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 2
+        if pickerView == self.styleTextField.inputView {
+            return 2
+        }
+        return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == self.styleTextField.inputView {
             if component == 0 {
-                return rangePicker.count
+                return stylePicker.count
             }
-            return stylePicker.count
+            return rangePicker.count
         }
         
         return rangePicker.count
@@ -64,9 +85,9 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == self.styleTextField.inputView {
             if component == 0 {
-                return String(rangePicker[row])
+                return stylePicker[row]
             }
-            return stylePicker[row]
+            return String(rangePicker[row])
         }
         return String(rangePicker[row])
         
@@ -74,26 +95,28 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == self.styleTextField.inputView {
-            var age = rangePicker[pickerView.selectedRow(inComponent: 0)]
-            var style = stylePicker[pickerView.selectedRow(inComponent: 1)]
+            var style = stylePicker[pickerView.selectedRow(inComponent: 0)]
+            var range = rangePicker[pickerView.selectedRow(inComponent: 1)]
             if component == 0 {
-                age = rangePicker[row]
-            }
-            else {
                 style = stylePicker[row]
             }
-            styleTextField.text = "\(age) מטר \(style)"
+            else {
+                range = rangePicker[row]
+            }
+            self.range = range as! Int
+            self.style = style
+            styleTextField.text = "\(range) מטר \(style)"
         }
         else {
-            var fromAge = rangePicker[pickerView.selectedRow(inComponent: 1)]
+            /*var fromAge = rangePicker[pickerView.selectedRow(inComponent: 1)]
             var toAge = rangePicker[pickerView.selectedRow(inComponent: 0)]
             if component == 1 {
                 fromAge = rangePicker[row]
             }
             else {
                 toAge = rangePicker[row]
-            }
-            agesTextField.text = "\(fromAge) - \(toAge)"
+            }*/
+            agesTextField.text = String(rangePicker[row])
         }
     }
     
@@ -104,6 +127,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     func toolBar() {
+        datePicker.datePickerMode = .date
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.doneClicked))
@@ -115,8 +139,9 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     @objc func doneClicked() {
-      
-            dateTextField.text = "\(datePicker.date)"
+        let formatDate = DateFormatter()
+        formatDate.dateFormat = "dd/MM/YYYY"
+        dateTextField.text = formatDate.string(from: datePicker.date)
         
         view.endEditing(true)
     }

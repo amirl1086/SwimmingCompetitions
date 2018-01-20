@@ -13,15 +13,15 @@ struct Competition {
     let name:String
     let activityDate:String
     let swimmingStyle:String
-    let length: String
-    let numOfParticipants:String
+    let length: Int
+    let numOfParticipants:Int
     
     init?(json: JSON) {
         guard let name = json["name"] as? String,
             let activityDate = json["activityDate"] as? String,
             let swimmingStyle = json["swimmingStyle"] as? String,
-            let length = json["length"] as? String,
-            let numOfParticipants = json["numOfParticipants"] as? String
+            let length = json["length"] as? Int,
+            let numOfParticipants = json["numOfParticipants"] as? Int
             else {return nil}
         
         self.name = name
