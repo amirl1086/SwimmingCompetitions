@@ -22,6 +22,8 @@ class CompetitionsViewController: UIViewController {
         addButtonView()
         getCompetitionsData()
         
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -50,7 +52,7 @@ class CompetitionsViewController: UIViewController {
             for data in response.data {
                 var competition : Competition!
                 let compData = response.data[data.0] as! JSON
-                competition = Competition(json: compData)
+                competition = Competition(json: compData, id: data.0)
                 compArray.append(competition)
             }
             self.competitions = compArray
@@ -73,7 +75,7 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = competitions[indexPath.row].name
         return cell
     }
@@ -82,4 +84,16 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
         performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
     }
     
+}
+
+class cellTableCompetition: UITableViewCell {
+    
+    	
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
 }

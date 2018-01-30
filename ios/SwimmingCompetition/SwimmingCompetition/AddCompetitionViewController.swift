@@ -10,6 +10,7 @@ import UIKit
 
 class AddCompetitionViewController: UIViewController {
     
+    //The picker view object
     var pickerView = UIPickerView()
     let stylePicker = ["חזה","גב","חתירה","חופשי"]
     let rangePicker:[Int] = Array(0...100)
@@ -26,6 +27,9 @@ class AddCompetitionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         toolBar()
+        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,13 +54,26 @@ class AddCompetitionViewController: UIViewController {
     @IBAction func addCompetitionButton(_ sender: Any) {
         let parameters = [
             "activityDate": self.dateTextField.text!,
-            "length": self.range,
+            "length": Float(self.range),
             "name": self.nameTextField.text!,
             "numOfParticipants": self.agesTextField.text!,
             "swimmingStyle": self.style
             ] as [String : Any]
         
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
+            print(response.data)
+            var message = ""
+            if response.succeed {
+                message = "התחרות נוספה בהצלחה"
+            }
+            else {
+                message = "התחרות לא נוספה"
+            }
+            let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
             
         }
        

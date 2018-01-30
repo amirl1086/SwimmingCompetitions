@@ -15,7 +15,8 @@ class RegisterTypeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        //The background image
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
     }
     
@@ -24,7 +25,7 @@ class RegisterTypeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    //pass the type to the next controller
+    //pass the type of user to the next controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let passData = segue.destination as! RegisterViewController
         passData.userType = type

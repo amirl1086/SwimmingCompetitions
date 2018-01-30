@@ -65,4 +65,10 @@ exports.setNewCompetition = functions.https.onRequest(function(request, response
 	
 	firebaseDB_Service.setNewCompetition(request.body, response);
 });
+
+exports.joinToCompetition = functions.https.onRequest(function(request, response) {
+	console.log('exports.joinToCompetition body ', request.body);
+	
+	firebaseDB_Service.joinToCompetition(request.body, response);
+});
 /* ================================ */

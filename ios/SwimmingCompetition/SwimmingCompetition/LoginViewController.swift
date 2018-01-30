@@ -13,6 +13,7 @@ import SwiftyJSON
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var logo: UIImageView!
     //The input email and password for login
     @IBOutlet weak var emailTextFiled: UITextField!
     @IBOutlet weak var passwordTextFiled: UITextField!
@@ -23,7 +24,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.logo.image = UIImage(named: "ios2.png")
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
         errorLabel.isHidden = true
@@ -96,29 +97,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             
         }
-        print("helllo")
-       /*Service().connectToServer(path: "logIn", method: .post, params: parameters) { (response, success) in
-            if response.isEmpty && !success {
-                self.activateSpinner(isActivate: false)
-                self.errorLabel.text = "שגיאה! בדוק את חיבור הרשת"
-                self.errorLabel.isHidden = false
-            } else {
-                self.activateSpinner(isActivate: false)
-                if success {
-                    
-                    //self.mainView.userType = response["data"]["type"].stringValue
-                    
-                    self.performSegue(withIdentifier: "goToMain", sender: self)
-                    
-                } else {
-                    self.errorLabel.text = response["data"]["message"].stringValue
-                    self.errorLabel.isHidden = false
-                }
-            }
-            
-        }*/
-        
-     
     }
     
     func activateSpinner(isActivate: Bool) {

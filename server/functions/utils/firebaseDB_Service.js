@@ -66,7 +66,28 @@ module.exports = {
 		}, function(error) {
 			utilities.sendResponse(response, error, null);
 		});
-	}
+	},
+	
+	joinToCompetition: function(params, response) {
+		var db = admin.database();
+		var competitionsRef = db.ref('competitions/' + params.competitionId + "/participants").push();
+
+		competitionsRef.set({
+			'firstName': params.firstName,
+			'lastName': params.lastName,
+			'birthDate': params.birthDate,
+			'gender': params.gender,
+			'competed': params.competed,
+			'score': params.score
+		});
+
+		competitionsRef.on('value', function(snapshot) {
+			utilities.sendResponse(response, null, attachIdToObject(snapshot));
+		}, function(error) {
+			utilities.sendResponse(response, error, null);
+		});
+	},
+	
 
 };
 
@@ -78,6 +99,6 @@ var attachUidToUser = function(snapshot) {
 
 var attachIdToObject = function(snapshot) {
 	var resObj = snapshot.val();
-	var resObjId = Object.assign({}, resObj, { 'id': snapshot.getKey() }); //add the id to the object
+	var resObjId = Object.assign({}, resObj, { 'id': snapshot.key }); //add the id to the object
 	return resObjId;
 }
