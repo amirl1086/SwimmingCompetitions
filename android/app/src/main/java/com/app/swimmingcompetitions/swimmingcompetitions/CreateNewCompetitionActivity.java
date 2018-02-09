@@ -2,6 +2,7 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,17 +10,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class CreateNewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
@@ -35,7 +34,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
     private TextView dateView;
 
     private Calendar calendar;
-    private int year, month, day;
+    private int year, month, day, minutes, hours;
     private NumberPicker iterationLength;
     private NumberPicker numOfParticipants;
 
@@ -45,7 +44,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_competition);
 
-        competitionName = (EditText) findViewById(R.id.competition_name);
+        competitionName = (EditText) findViewById(R.id.competition_list_item_name);
 
         //set up datepickers
         dateView = (TextView) findViewById(R.id.competition_date);
@@ -89,8 +88,31 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
             showDate(arg1, arg2 + 1, arg3);
+            showTimePicker();
         }
     };
+
+    private void showTimePicker() {
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        this.hours = c.get(Calendar.HOUR_OF_DAY);
+        this.minutes = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        this.hours = hourOfDay;
+                        this.minutes = minute;
+
+                        et_show_date_time.setText(date_time+" "+hourOfDay + ":" + minute);
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
+    }
 
     private void showDate(int year, int month, int day) {
         dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
@@ -103,19 +125,14 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         int numOfParticipantsNum = numOfParticipants.getValue();
         int iterationLengthNum = iterationLength.getValue();
 
+        this.newCompetition = new Competition("", competitionNameText, activityDateText, swimmingStyleText, numOfParticipantsNum, 5, 8, iterationLengthNum);
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
-        JSONObject data = new JSONObject();
+        JSONObject data = null;
 
         //set up action params
         try {
-            data.put("urlSuffix", "/setNewCompetition");
-            data.put("httpMethod", "POST");
-            data.put("name", competitionNameText);
-            data.put("activityDate", activityDateText);
-            data.put("swimmingStyle", swimmingStyleText);
-            data.put("numOfParticipants", numOfParticipantsNum);
-            data.put("length", iterationLengthNum);
+            data = this.newCompetition.getJSON_Object();
         } catch (JSONException e) {
             showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
         }
@@ -132,13 +149,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
                 JSONObject dataObj = response.getJSONObject("data");
 
                 String id = dataObj.getString("id");
-                String name = dataObj.getString("name");
-                String activityDate = dataObj.getString("activityDate");
-                String swimmingStyle = dataObj.getString("swimmingStyle");
-                Integer numOfParticipants = dataObj.getInt("numOfParticipants");
-                Integer length = dataObj.getInt("length");
-
-                newCompetition = new Competition(id, name, activityDate, swimmingStyle, numOfParticipants, length);
+                this.newCompetition.setId(id);
 
                 switchToViewCompetitionsActivity();
             } else {
@@ -155,7 +166,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
     public void switchToViewCompetitionsActivity() {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
-        intent.putExtra("newCompetition", newCompetition);
+        intent.putExtra("newCompetition", this.newCompetition);
         startActivity(intent);
     }
 }

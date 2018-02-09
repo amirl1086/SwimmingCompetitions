@@ -19,7 +19,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
     private User currentUser = null;
     private JSON_AsyncTask jsonAsyncTaskPost;
 
-    private ArrayAdapter competitionsListAdapter;
+    private CompetitionAdapter competitionsListAdapter;
     private ArrayList<Competition> competitions;
 
     @Override
@@ -28,7 +28,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
         setContentView(R.layout.activity_view_competitions);
 
         Intent intent = getIntent();
-        if(intent.hasExtra("currentUser")) {
+        if (intent.hasExtra("currentUser")) {
             currentUser = (User) intent.getSerializableExtra("currentUser");
 
             JSONObject data = new JSONObject();
@@ -45,12 +45,9 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
             jsonAsyncTaskPost = new JSON_AsyncTask();
             jsonAsyncTaskPost.delegate = this;
             jsonAsyncTaskPost.execute(data.toString());
-        }
-        else if(intent.hasExtra("newCompetition")) {
+        } else if (intent.hasExtra("newCompetition")) {
 
         }
-
-
 
 
     }
@@ -65,43 +62,28 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
     @Override
     public void processFinish(String result) {
         try {
-            if(result != null) {
+            if (result != null) {
                 JSONObject response = new JSONObject(result);
 
                 if (response.getBoolean("success")) {
                     ArrayList<String> displayCompetitions = new ArrayList<String>();
                     competitions = new ArrayList<Competition>();
 
-                    if(response.get("data") != null) {
+                    if (response.get("data") != null) {
                         JSONObject dataObj = response.getJSONObject("data");
                         Iterator<String> competitionIds = dataObj.keys();
 
                         while (competitionIds.hasNext()) {
                             String currentId = (String) competitionIds.next();
                             JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
-                            String name = currentCompetition.getString("name");
-                            String activityDate = currentCompetition.getString("activityDate");
-                            String swimmingStyle = currentCompetition.getString("swimmingStyle");
-                            int numOfParticipants = currentCompetition.getInt("numOfParticipants");
-                            int length = currentCompetition.getInt("length");
 
-                            Competition currCompetition = new Competition(currentId, name, activityDate, swimmingStyle, numOfParticipants, length);
-                            competitions.add(currCompetition);
-                        }
-
-                        //set up list view
-                        for (int i = 0; i < competitions.size(); i++) {
-                            Competition currCompetition = competitions.get(i);
-                            displayCompetitions.add("תחרות " + currCompetition.getName() + "\n" +
-                                    ",מתקיימת בתאריך: " + currCompetition.getActivityDate() + "\n" +
-                                    ",סגנון שחייה: " + currCompetition.getSwimmingStyle() + "\n" +
-                                    ",מספר משתתפים למקצה: " + currCompetition.getNumOfParticipants() + "\n" +
-                                    ",אורך המקצים: " + currCompetition.getLength() + "\n");
+                            competitions.add(new Competition(currentId, currentCompetition));
                         }
                     }
 
+                    competitionsListAdapter = new CompetitionAdapter(this, competitions);
                     ListView listView = (ListView) findViewById(R.id.competitions_list);
-                    competitionsListAdapter = new ArrayAdapter<String>(this, R.layout.competition_list_item, R.id.competition_item, displayCompetitions);
+                    //competitionsListAdapter = new ArrayAdapter<String>(this, R.layout.competition_list_item, R.id.competition_item, displayCompetitions);
                     listView.setAdapter(competitionsListAdapter);
 
                 } else {

@@ -8,11 +8,12 @@
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.CreateNewCompetitionActivity">
 
 
+
+
     <EditText
-        android:id="@+id/competition_name"
+        android:id="@+id/competition_list_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
@@ -22,81 +23,55 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/swimming_style_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/competition_date"
         android:layout_width="129dp"
         android:layout_height="28dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginTop="8dp"
         android:hint="@string/date_of_competition"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/iteration_length"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.627"
-        android:layout_marginRight="44dp" />
+        tools:layout_editor_absoluteX="197dp"
+        tools:layout_editor_absoluteY="77dp" />
 
     <Button
         android:id="@+id/set_date_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="8dp"
         android:onClick="setDate"
         android:text="@string/set_date"
-        app:layout_constraintBottom_toTopOf="@+id/num_of_participants_text"
-        app:layout_constraintEnd_toStartOf="@+id/competition_date"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.752"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="52dp" />
+        tools:layout_editor_absoluteX="73dp"
+        tools:layout_editor_absoluteY="69dp" />
 
     <TextView
         android:id="@+id/iteration_length_text"
         android:layout_width="102dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="60dp"
         android:text="@string/iteration_length_text"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/iteration_length"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="60dp" />
+        tools:layout_editor_absoluteX="242dp"
+        tools:layout_editor_absoluteY="181dp" />
 
     <TextView
         android:id="@+id/num_of_participants_text"
         android:layout_width="140dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:text="@string/num_of_participants"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/num_of_participants"
-        app:layout_constraintEnd_toStartOf="@+id/iteration_length"
-        app:layout_constraintHorizontal_bias="0.439"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="181dp" />
 
     <NumberPicker
         android:id="@+id/iteration_length"

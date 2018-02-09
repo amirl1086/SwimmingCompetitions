@@ -13,31 +13,44 @@ public class Competition implements Serializable {
     private String swimmingStyle;
     private Date activityDate;
     private Integer numOfParticipants;
+    private Integer fromAge;
+    private Integer toAge;
     private Integer length;
 
 
-    public Competition(String id, String name, String activityDate, String swimmingStyle, Integer numOfParticipants, Integer length) {
+    public Competition(String id, String name, String activityDate, String swimmingStyle, Integer numOfParticipants, Integer fromAge, Integer toAge, Integer length) {
         this.id = id;
         this.name = name;
         this.activityDate = new Date(activityDate);
         this.numOfParticipants = numOfParticipants;
         this.swimmingStyle = swimmingStyle;
         this.length = length;
+        this.fromAge = fromAge;
+        this.toAge = toAge;
     }
 
-    public JSONObject getJSON_Object() {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("id", this.getId());
-            data.put("name", this.getName());
-            data.put("swimmingStyle", this.getSwimmingStyle());
-            data.put("activityDate", this.getActivityDate().toString());
-            data.put("numOfParticipantsInIteration", this.getNumOfParticipants());
-            data.put("length", this.getLength());
-            return data;
-        } catch (JSONException e) {
-            return null;
-        }
+    public Competition(String id, JSONObject data) throws JSONException {
+        this.id = id;
+        this.name = data.getString("name");
+        String activityDate = data.getString("activityDate");
+        this.activityDate = new Date(activityDate);
+        this.numOfParticipants = Integer.valueOf(data.getString("numOfParticipants"));
+        this.swimmingStyle = data.getString("swimmingStyle");
+        this.length = Integer.valueOf(data.getString("length"));
+        this.fromAge = Integer.valueOf(data.getString("fromAge"));
+        this.toAge = Integer.valueOf(data.getString("toAge"));
+    }
+
+
+    public JSONObject getJSON_Object() throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("id", this.getId());
+        data.put("name", this.getName());
+        data.put("swimmingStyle", this.getSwimmingStyle());
+        data.put("activityDate", this.getActivityDate().toString());
+        data.put("numOfParticipantsInIteration", this.getNumOfParticipants());
+        data.put("length", this.getLength());
+        return data;
     }
 
     public String getSwimmingStyle() {
@@ -49,23 +62,23 @@ public class Competition implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Date getActivityDate() {
-        return activityDate;
+        return this.activityDate;
     }
 
     public Integer getNumOfParticipants() {
-        return numOfParticipants;
+        return this.numOfParticipants;
     }
 
     public Integer getLength() {
-        return length;
+        return this.length;
     }
 
     public void setId(String id) {
@@ -86,5 +99,9 @@ public class Competition implements Serializable {
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public String getAgesString() {
+        return this.fromAge.toString() + " - " + this.toAge.toString();
     }
 }

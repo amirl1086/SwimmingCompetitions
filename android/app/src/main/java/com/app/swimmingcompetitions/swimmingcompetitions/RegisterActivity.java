@@ -41,45 +41,45 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         setContentView(R.layout.activity_register);
 
         Bundle extras = getIntent().getExtras();
-        registerType = extras.getString("registerType");
+        this.registerType = extras.getString("registerType");
 
-        firstName = (EditText) findViewById(R.id.register_first_name);
-        lastName = (EditText) findViewById(R.id.register_last_name);
-        birthDateButton = (Button) findViewById(R.id.register_birth_date);
-        gender = (EditText) findViewById(R.id.register_gender);
+        this.firstName = (EditText) findViewById(R.id.register_first_name);
+        this.lastName = (EditText) findViewById(R.id.register_last_name);
+        this.birthDateButton = (Button) findViewById(R.id.register_birth_date);
+        this.gender = (EditText) findViewById(R.id.register_gender);
 
-        if (registerType.equals("parent")) {
-            birthDateButton.setVisibility(View.GONE);
-            gender.setVisibility(View.GONE);
+        if (this.registerType.equals("parent")) {
+            this.birthDateButton.setVisibility(View.GONE);
+            this.gender.setVisibility(View.GONE);
         } else { //initialize date picker for date of birth
-            dateView = (TextView) findViewById(R.id.birth_date_view);
-            calendar = Calendar.getInstance();
-            year = calendar.get(Calendar.YEAR);
+            this.dateView = (TextView) findViewById(R.id.birth_date_view);
+            this.calendar = Calendar.getInstance();
+            this.year = calendar.get(Calendar.YEAR);
 
-            month = calendar.get(Calendar.MONTH);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
+            this.month = calendar.get(Calendar.MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
             showDate(year, month + 1, day);
         }
 
-        eMail = (EditText) findViewById(R.id.register_email);
-        password = (EditText) findViewById(R.id.register_password);
-        passwordConfirmation = (EditText) findViewById(R.id.register_password_confirmation);
+        this.eMail = (EditText) findViewById(R.id.register_email);
+        this.password = (EditText) findViewById(R.id.register_password);
+        this.passwordConfirmation = (EditText) findViewById(R.id.register_password_confirmation);
     }
 
 
     public void createFirebaseUser(View view) {
-        String firstNameText = firstName.getText().toString();
-        String lastNameText = lastName.getText().toString();
+        String firstNameText = this.firstName.getText().toString();
+        String lastNameText = this.lastName.getText().toString();
         String genderText = "", birthDateText = "";
 
-        if (registerType.equals("student")) {
+        if (this.registerType.equals("student")) {
             birthDateText = dateView.getText().toString();
             genderText = gender.getText().toString();
         }
 
-        String eMailText = eMail.getText().toString();
-        String passwordText = password.getText().toString();
-        String passwordConfirmationText = passwordConfirmation.getText().toString();
+        String eMailText = this.eMail.getText().toString();
+        String passwordText = this.password.getText().toString();
+        String passwordConfirmationText = this.passwordConfirmation.getText().toString();
 
         JSONObject registerData = new JSONObject();
 
@@ -93,15 +93,15 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             registerData.put("lastName", lastNameText);
             registerData.put("gender", genderText);
             registerData.put("birthDate", birthDateText);
-            registerData.put("type", registerType);
+            registerData.put("type", this.registerType);
         } catch (JSONException e) {
             showToast("RegisterActivity, createFirebaseUser: Error creating JSONObject");
         }
 
-        jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
+        this.jsonAsyncTaskPost = new JSON_AsyncTask();
+        this.jsonAsyncTaskPost.delegate = this;
 
-        jsonAsyncTaskPost.execute(registerData.toString());
+        this.jsonAsyncTaskPost.execute(registerData.toString());
     }
 
     public void setDate(View view) {
@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == R.integer.dialog_id) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
+            return new DatePickerDialog(this, this.myDateListener, this.year, this.month, this.day);
         }
         return null;
     }
@@ -149,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     }
 
     private void showDate(int year, int month, int day) {
-        dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
     }
 
 }
