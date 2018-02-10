@@ -1,9 +1,11 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
 
     private User currentUser = null;
     private JSON_AsyncTask jsonAsyncTaskPost;
+    private ListView listView;
 
     private CompetitionAdapter competitionsListAdapter;
     private ArrayList<Competition> competitions;
@@ -29,33 +32,23 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser")) {
-            currentUser = (User) intent.getSerializableExtra("currentUser");
-
-            JSONObject data = new JSONObject();
-            //get competitions list set up action params
-            try {
-                data.put("urlSuffix", "/getCompetitions");
-                data.put("httpMethod", "GET");
-                JSONObject currentUserJson = currentUser.getJSON_Object();
-                data.put("currentUser", currentUserJson);
-            } catch (JSONException e) {
-                showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
-            }
-
-            jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
-            jsonAsyncTaskPost.execute(data.toString());
-        } else if (intent.hasExtra("newCompetition")) {
-
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
         }
 
+        JSONObject data = new JSONObject();
+        //get competitions list set up action params
+        try {
+            data.put("urlSuffix", "/getCompetitions");
+            data.put("httpMethod", "GET");
+            JSONObject currentUserJson = this.currentUser.getJSON_Object();
+            data.put("currentUser", currentUserJson);
+        } catch (JSONException e) {
+            showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
+        }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+        jsonAsyncTaskPost = new JSON_AsyncTask();
+        jsonAsyncTaskPost.delegate = this;
+        jsonAsyncTaskPost.execute(data.toString());
 
     }
 
@@ -74,7 +67,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                         Iterator<String> competitionIds = dataObj.keys();
 
                         while (competitionIds.hasNext()) {
-                            String currentId = (String) competitionIds.next();
+                            String currentId = competitionIds.next();
                             JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
 
                             competitions.add(new Competition(currentId, currentCompetition));
@@ -82,9 +75,17 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                     }
 
                     competitionsListAdapter = new CompetitionAdapter(this, competitions);
-                    ListView listView = (ListView) findViewById(R.id.competitions_list);
-                    //competitionsListAdapter = new ArrayAdapter<String>(this, R.layout.competition_list_item, R.id.competition_item, displayCompetitions);
-                    listView.setAdapter(competitionsListAdapter);
+                    this.listView = (ListView) findViewById(R.id.competitions_list);
+                    this.listView.setAdapter(competitionsListAdapter);
+
+                    this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            System.out.println(i);
+                        }
+
+                    });
 
                 } else {
                     showToast("ViewCompetitionsActivity processFinish: Error loging in");
@@ -101,7 +102,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
 
     public void openCreateNewCompetitionActivity(View view) {
         Intent intent = new Intent(this, CreateNewCompetitionActivity.class);
-        intent.putExtra("User", currentUser);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 }

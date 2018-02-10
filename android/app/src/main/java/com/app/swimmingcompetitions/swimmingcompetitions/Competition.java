@@ -12,21 +12,21 @@ public class Competition implements Serializable {
     private String name;
     private String swimmingStyle;
     private Date activityDate;
-    private Integer numOfParticipants;
-    private Integer fromAge;
-    private Integer toAge;
-    private Integer length;
+    private String numOfParticipants;
+    private String fromAge;
+    private String toAge;
+    private String length;
 
 
     public Competition(String id, String name, String activityDate, String swimmingStyle, Integer numOfParticipants, Integer fromAge, Integer toAge, Integer length) {
         this.id = id;
         this.name = name;
         this.activityDate = new Date(activityDate);
-        this.numOfParticipants = numOfParticipants;
+        this.numOfParticipants = String.valueOf(numOfParticipants);
         this.swimmingStyle = swimmingStyle;
-        this.length = length;
-        this.fromAge = fromAge;
-        this.toAge = toAge;
+        this.length = String.valueOf(length);
+        this.fromAge = String.valueOf(fromAge);
+        this.toAge = String.valueOf(toAge);
     }
 
     public Competition(String id, JSONObject data) throws JSONException {
@@ -34,11 +34,11 @@ public class Competition implements Serializable {
         this.name = data.getString("name");
         String activityDate = data.getString("activityDate");
         this.activityDate = new Date(activityDate);
-        this.numOfParticipants = Integer.valueOf(data.getString("numOfParticipants"));
+        this.numOfParticipants = data.getString("numOfParticipants");
         this.swimmingStyle = data.getString("swimmingStyle");
-        this.length = Integer.valueOf(data.getString("length"));
-        this.fromAge = Integer.valueOf(data.getString("fromAge"));
-        this.toAge = Integer.valueOf(data.getString("toAge"));
+        this.length = data.getString("length");
+        this.fromAge = data.getString("fromAge");
+        this.toAge = data.getString("toAge");
     }
 
 
@@ -48,8 +48,10 @@ public class Competition implements Serializable {
         data.put("name", this.getName());
         data.put("swimmingStyle", this.getSwimmingStyle());
         data.put("activityDate", this.getActivityDate().toString());
-        data.put("numOfParticipantsInIteration", this.getNumOfParticipants());
+        data.put("numOfParticipants", this.getNumOfParticipants());
         data.put("length", this.getLength());
+        data.put("fromAge", this.getFromAge());
+        data.put("toAge", this.getToAge());
         return data;
     }
 
@@ -73,11 +75,11 @@ public class Competition implements Serializable {
         return this.activityDate;
     }
 
-    public Integer getNumOfParticipants() {
+    public String getNumOfParticipants() {
         return this.numOfParticipants;
     }
 
-    public Integer getLength() {
+    public String getLength() {
         return this.length;
     }
 
@@ -94,14 +96,22 @@ public class Competition implements Serializable {
     }
 
     public void setNumOfParticipants(Integer numOfParticipants) {
-        this.numOfParticipants = numOfParticipants;
+        this.numOfParticipants = String.valueOf(numOfParticipants);
     }
 
     public void setLength(Integer length) {
-        this.length = length;
+        this.length =  String.valueOf(length);
     }
 
     public String getAgesString() {
         return this.fromAge.toString() + " - " + this.toAge.toString();
+    }
+
+    public String getFromAge() {
+        return this.fromAge;
+    }
+
+    public String getToAge() {
+        return this.toAge;
     }
 }

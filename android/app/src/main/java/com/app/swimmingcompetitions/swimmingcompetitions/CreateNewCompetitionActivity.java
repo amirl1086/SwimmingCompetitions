@@ -4,9 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,11 +22,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateNewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
 
     private Competition newCompetition;
     private JSON_AsyncTask jsonAsyncTaskPost;
+    private Boolean isTimePickerOpen;
+    private User currentUser;
 
     private String[] swimmingStyles;
     private ArrayAdapter spinnerListAdapter;
@@ -32,11 +37,14 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
     private EditText competitionName;
     private TextView dateView;
+    private TextView timeView;
 
     private Calendar calendar;
     private int year, month, day, minutes, hours;
     private NumberPicker iterationLength;
     private NumberPicker numOfParticipants;
+    private NumberPicker fromAge;
+    private NumberPicker toAge;
 
 
     @Override
@@ -44,32 +52,71 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_competition);
 
-        competitionName = (EditText) findViewById(R.id.competition_list_item_name);
+        Intent intent = getIntent();
+        if (intent.hasExtra("currentUser")) {
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
+        }
+
+        this.isTimePickerOpen = false;
+        this.competitionName = (EditText) findViewById(R.id.competition_list_item_name);
 
         //set up datepickers
-        dateView = (TextView) findViewById(R.id.competition_date);
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDate(year, month + 1, day);
+        this.dateView = (TextView) findViewById(R.id.competition_date);
+        this.timeView = (TextView) findViewById(R.id.competition_time);
+        this.calendar = Calendar.getInstance();
+        this.year = this.calendar.get(Calendar.YEAR);
+        this.month = this.calendar.get(Calendar.MONTH);
+        this.day = this.calendar.get(Calendar.DAY_OF_MONTH);
+        this.hours = this.calendar.get(Calendar.HOUR_OF_DAY);
+        this.minutes = this.calendar.get(Calendar.MINUTE);
+        //showDate(year, this.month + 1, this.day);
 
         //set up number pickers
-        iterationLength = findViewById(R.id.iteration_length);
-        iterationLength.setMinValue(1);
-        iterationLength.setMaxValue(1000);
+        this.fromAge = findViewById(R.id.from_age);
+        this.toAge = findViewById(R.id.to_age);
+        this.fromAge.setMinValue(4);
+        this.fromAge.setMaxValue(18);
+        this.toAge.setMinValue(4);
+        this.toAge.setMaxValue(18);
 
-        numOfParticipants = findViewById(R.id.num_of_participants);
-        numOfParticipants.setMinValue(1);
-        numOfParticipants.setMaxValue(1000);
+        this.iterationLength = findViewById(R.id.iteration_length);
+        this.iterationLength.setMinValue(1);
+        this.iterationLength.setMaxValue(1000);
 
-        //set up spinner picker
-        swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
-        spinner = (Spinner) findViewById(R.id.swimming_style_spinner);
-        spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swimmingStyles);
+        this.numOfParticipants = findViewById(R.id.num_of_participants);
+        this.numOfParticipants.setMinValue(1);
+        this.numOfParticipants.setMaxValue(12);
 
-        spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(spinnerListAdapter);
+        //set up spinner picker for swimming style
+        this.swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
+        this.spinner = (Spinner) findViewById(R.id.swimming_style_spinner);
+        this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swimmingStyles) {
+
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0) {
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+
+        this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        this.spinner.setAdapter(spinnerListAdapter);
     }
 
     public void setDate(View view) {
@@ -86,46 +133,51 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            showDate(arg1, arg2 + 1, arg3);
-            showTimePicker();
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            if(!isTimePickerOpen) {
+                showDate(year, month + 1, day);
+                showTimePicker();
+            }
         }
     };
 
     private void showTimePicker() {
-        // Get Current Time
-        final Calendar c = Calendar.getInstance();
-        this.hours = c.get(Calendar.HOUR_OF_DAY);
-        this.minutes = c.get(Calendar.MINUTE);
-
+        this.isTimePickerOpen = true;
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        this.hours = hourOfDay;
-                        this.minutes = minute;
-
-                        et_show_date_time.setText(date_time+" "+hourOfDay + ":" + minute);
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+                        showTime(hourOfDay, minutes);
+                        isTimePickerOpen = false;
                     }
-                }, mHour, mMinute, false);
+                }, this.hours, this.minutes, false);
         timePickerDialog.show();
     }
 
     private void showDate(int year, int month, int day) {
-        dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+    }
+
+    private void showTime(int hourOfDay, int minutes) {
+        this.timeView.setText(new StringBuilder().append(hourOfDay).append(":").append(minutes));
     }
 
     public void addNewCompetition(View view) {
-        String competitionNameText = competitionName.getText().toString();
-        String activityDateText = dateView.getText().toString();
-        String swimmingStyleText = spinner.getSelectedItem().toString();
-        int numOfParticipantsNum = numOfParticipants.getValue();
-        int iterationLengthNum = iterationLength.getValue();
+        DateUtils dateUtils = new DateUtils();
+        String competitionNameText = this.competitionName.getText().toString();
+        String activityDateText = this.dateView.getText().toString();
+        String activityTimeText = this.timeView.getText().toString();
+        String swimmingStyleText = this.spinner.getSelectedItem().toString();
+        Date selectedDatetime = dateUtils.createNewDate(activityDateText, activityTimeText);
 
-        this.newCompetition = new Competition("", competitionNameText, activityDateText, swimmingStyleText, numOfParticipantsNum, 5, 8, iterationLengthNum);
+        int numOfParticipantsNum = this.numOfParticipants.getValue();
+        int iterationLengthNum = this.iterationLength.getValue();
+        int fromAge = this.fromAge.getValue();
+        int toAge = this.toAge.getValue();
+
+        this.newCompetition = new Competition("", competitionNameText, selectedDatetime.toString(), swimmingStyleText, numOfParticipantsNum, fromAge, toAge, iterationLengthNum);
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
         JSONObject data = null;
@@ -133,6 +185,8 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         //set up action params
         try {
             data = this.newCompetition.getJSON_Object();
+            data.put("urlSuffix", "/setNewCompetition");
+            data.put("httpMethod", "POST");
         } catch (JSONException e) {
             showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
         }
@@ -153,7 +207,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
                 switchToViewCompetitionsActivity();
             } else {
-                showToast("LogInActivity processFinish: Error loging in");
+                showToast("CreateNewCompetitionActivity processFinish: Error saving competition");
             }
         } catch (JSONException e) {
             showToast("LogInActivity processFinish: Error parsing JSONObject");
@@ -166,7 +220,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
     public void switchToViewCompetitionsActivity() {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
-        intent.putExtra("newCompetition", this.newCompetition);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 }

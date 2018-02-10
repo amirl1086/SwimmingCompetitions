@@ -3,7 +3,7 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HebrewDate {
+public class DateUtils {
 
     private String[] months = {"ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"};
     private String[] days = {"ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"};
@@ -26,6 +26,20 @@ public class HebrewDate {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
+    }
+
+    public Date createNewDate(String date, String time) {
+
+        String[] dateArr = date.split("/");
+        int day = Integer.valueOf(dateArr[0]);
+        int month = Integer.valueOf(dateArr[1]) - 1;
+        int year = Integer.valueOf(dateArr[2]);
+
+        String[] timeArr = time.split(":");
+        int hours =Integer.valueOf(timeArr[0]);
+        int minutes = Integer.valueOf(timeArr[1]);
+
+        return new Date(year, month, day, hours, minutes);
     }
 
 

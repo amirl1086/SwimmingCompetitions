@@ -42,10 +42,16 @@
     <string name="set_date">קבע תאריך</string>
     <string name="add_iterations">הוסף תחרות</string>
     <string name="iteration_list">רשימת המקצים</string>
-    <string name="date_of_competition">תאריך התחרות</string>
+    <string name="date_of_competition">תאריך</string>
     <string name="add_new_competition">הוסף תחרות חדשה</string>
     <string name="add_competition_text_btn">הוסף תחרות</string>
     <string name="list_of_competitions_txt">רשימת תחרויות</string>
     <string name="iteration_length_text">אורך המקצים</string>
     <string name="num_of_participants">מספר משתתפים לכל מקצה</string>
+    <string name="take_place_in_date">מתקיימת ב:</string>
+    <string name="in_time">בשעה:</string>
+    <string name="time_of_competition">שעה</string>
+    <string name="pick_age_range">בחר טווח גילאים</string>
+    <string name="from">מ -</string>
+    <string name="to">עד -</string>
 </resources>

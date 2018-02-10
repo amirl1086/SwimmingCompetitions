@@ -40,17 +40,22 @@ module.exports = {
 
 	setNewCompetition: function(competitionParams, response) {
 		var db = admin.database();
-		var competitionsRef = db.ref('competitions').push();
+		var newCompetitionKey = db.ref('competitions').push().key;
 
-		competitionsRef.set({
+		var newCompetitionRef = db.ref('competitions/' + newCompetitionKey);
+		console.log('competitionParams ', competitionParams);
+
+		newCompetitionRef.update({
 			'name': competitionParams.name,
 			'activityDate': competitionParams.activityDate,
 			'swimmingStyle': competitionParams.swimmingStyle,
 			'numOfParticipants': competitionParams.numOfParticipants,
-			'length': competitionParams.length
+			'length': competitionParams.length,
+			'toAge': competitionParams.toAge,
+			'fromAge': competitionParams.fromAge
 		});
 
-		competitionsRef.on('value', function(snapshot) {
+		newCompetitionRef.on('value', function(snapshot) {
 			utilities.sendResponse(response, null, attachIdToObject(snapshot));
 		}, function(error) {
 			utilities.sendResponse(response, error, null);

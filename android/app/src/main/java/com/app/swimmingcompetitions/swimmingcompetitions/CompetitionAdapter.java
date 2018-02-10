@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.app.swimmingcompetitions.swimmingcompetitions.Competition;
-import com.app.swimmingcompetitions.swimmingcompetitions.R;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,11 +31,11 @@ public class CompetitionAdapter extends ArrayAdapter<Competition> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
-        HebrewDate hebrewDate = new HebrewDate();
+        DateUtils hebrewDate = new DateUtils();
 
-        if(listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent,false);
-
+        if(listItem == null) {
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
+        }
         Competition currentCompetition = competitions.get(position);
 
         TextView competitionName = (TextView) listItem.findViewById(R.id.competition_list_item_name);
