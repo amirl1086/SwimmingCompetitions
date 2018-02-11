@@ -31,7 +31,7 @@ public class CompetitionAdapter extends ArrayAdapter<Competition> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
-        DateUtils hebrewDate = new DateUtils();
+        DateUtils dateUtils = new DateUtils();
 
         if(listItem == null) {
             listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
@@ -42,8 +42,8 @@ public class CompetitionAdapter extends ArrayAdapter<Competition> {
         competitionName.setText(currentCompetition.getName());
 
         TextView competitionDate = (TextView) listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = hebrewDate.dateToCalendar(currentCompetition.getActivityDate());
-        competitionDate.setText(hebrewDate.getHebrewDate(calendar));
+        Calendar calendar = dateUtils.dateToCalendar(currentCompetition.getActivityDate());
+        competitionDate.setText(dateUtils.getCompleteHebrewDate(calendar));
 
         TextView competitionAges = (TextView) listItem.findViewById(R.id.competition_list_item_ages);
         competitionAges.setText(currentCompetition.getAgesString());

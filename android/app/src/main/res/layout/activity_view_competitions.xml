@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/swimming_pool_background"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
 
 
@@ -45,6 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/competitions_list"
-        android:onClick="openCreateNewCompetitionActivity"/>
+        android:onClick="switchToCreateNewCompetitionActivity"/>
 
 </android.support.constraint.ConstraintLayout>

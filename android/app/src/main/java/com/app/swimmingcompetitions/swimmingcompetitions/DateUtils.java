@@ -8,7 +8,7 @@ public class DateUtils {
     private String[] months = {"ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"};
     private String[] days = {"ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"};
 
-    public String getHebrewDate(Calendar calendar) {
+    public String getCompleteHebrewDate(Calendar calendar) {
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
@@ -22,10 +22,26 @@ public class DateUtils {
         return "מתקיימת ביום " + hebrewDayOfWeek + ", ה - " + monthDay + " ל" + hebrewMonth + ", " + year + ", בשעה - " + hours + ":" + minutes;
     }
 
+    public String getHebrewDate(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String hebrewMonth = this.months[month];
+        String hebrewDayOfWeek = this.days[day];
+
+        return "יום " + hebrewDayOfWeek + ", ה - " + monthDay + " ל" + hebrewMonth + ", " + year;
+    }
+
     public Calendar dateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
+    }
+
+    public String getTime(Calendar calendar) {
+        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     public Date createNewDate(String date, String time) {

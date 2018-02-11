@@ -33,23 +33,21 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
+            JSONObject data = new JSONObject();
+            //get competitions list set up action params
+            try {
+                data.put("urlSuffix", "/getCompetitions");
+                data.put("httpMethod", "GET");
+                JSONObject currentUserJson = this.currentUser.getJSON_Object();
+                data.put("currentUser", currentUserJson);
+            } catch (JSONException e) {
+                showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
+            }
+
+            jsonAsyncTaskPost = new JSON_AsyncTask();
+            jsonAsyncTaskPost.delegate = this;
+            jsonAsyncTaskPost.execute(data.toString());
         }
-
-        JSONObject data = new JSONObject();
-        //get competitions list set up action params
-        try {
-            data.put("urlSuffix", "/getCompetitions");
-            data.put("httpMethod", "GET");
-            JSONObject currentUserJson = this.currentUser.getJSON_Object();
-            data.put("currentUser", currentUserJson);
-        } catch (JSONException e) {
-            showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
-        }
-
-        jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
-        jsonAsyncTaskPost.execute(data.toString());
-
     }
 
     @Override
@@ -81,8 +79,9 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                     this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            System.out.println(i);
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Competition selectedCompetition = competitions.get(position);
+                            switchToViewCompetitionActivity(selectedCompetition);
                         }
 
                     });
@@ -100,9 +99,16 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void openCreateNewCompetitionActivity(View view) {
+    public void switchToCreateNewCompetitionActivity(View view) {
         Intent intent = new Intent(this, CreateNewCompetitionActivity.class);
         intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewCompetitionActivity(Competition competition) {
+        Intent intent = new Intent(this, ViewCompetitionActivity.class);
+        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("selectedCompetition", competition);
         startActivity(intent);
     }
 }
