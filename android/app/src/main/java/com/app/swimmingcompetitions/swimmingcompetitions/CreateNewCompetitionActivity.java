@@ -117,6 +117,13 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
         this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
+
+        if(intent.hasExtra("selectedCompetition")) {
+
+        }
+        else {
+
+        }
     }
 
     public void setDate(View view) {

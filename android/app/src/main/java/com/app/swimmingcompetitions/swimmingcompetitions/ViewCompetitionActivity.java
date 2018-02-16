@@ -3,6 +3,7 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,7 +12,7 @@ import java.util.Calendar;
 public class ViewCompetitionActivity extends AppCompatActivity {
 
     private User currentUser = null;
-    private Competition competition;
+    private Competition selectedCompetition;
 
     private TextView competitionName;
     private TextView date;
@@ -33,7 +34,7 @@ public class ViewCompetitionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
-            this.competition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
 
             this.competitionName = (TextView) findViewById(R.id.competition_name);
             this.date = (TextView) findViewById(R.id.date_of_competition);
@@ -42,15 +43,22 @@ public class ViewCompetitionActivity extends AppCompatActivity {
             this.style = (TextView) findViewById(R.id.style_of_competition);
             this.ages = (TextView) findViewById(R.id.ages_range_of_competition);
             this.participantsForIteration = (TextView) findViewById(R.id.num_of_participants_for_competition);
-            Calendar calendar = dateUtils.dateToCalendar(this.competition.getActivityDate());
+            Calendar calendar = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
 
             this.date.setText(dateUtils.getHebrewDate(calendar));
-            this.competitionName.setText(competition.getName());
+            this.competitionName.setText(selectedCompetition.getName());
             this.time.setText(dateUtils.getTime(calendar));
-            this.distance.setText(competition.getLength());
-            this.style.setText(competition.getSwimmingStyle());
-            this.ages.setText(competition.getAgesString());
-            this.participantsForIteration.setText(competition.getNumOfParticipants());
+            this.distance.setText(selectedCompetition.getLength());
+            this.style.setText(selectedCompetition.getSwimmingStyle());
+            this.ages.setText(selectedCompetition.getAgesString());
+            this.participantsForIteration.setText(selectedCompetition.getNumOfParticipants());
         }
+    }
+
+    public void switchToIterationsActivity(final View view) {
+        Intent intent = new Intent(this, IterationsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
+        startActivity(intent);
     }
 }

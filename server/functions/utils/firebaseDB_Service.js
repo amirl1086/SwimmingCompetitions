@@ -67,6 +67,7 @@ module.exports = {
 		var competitionsRef = db.ref('competitions/');
 
 		competitionsRef.on('value', function(snapshot) {
+			console.log('getCompetitions ', snapshot.val());
 			utilities.sendResponse(response, null, snapshot.val());
 		}, function(error) {
 			utilities.sendResponse(response, error, null);

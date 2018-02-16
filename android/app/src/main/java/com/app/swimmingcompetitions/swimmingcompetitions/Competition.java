@@ -1,16 +1,20 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 public class Competition implements Serializable {
 
     private String id;
     private String name;
     private String swimmingStyle;
+    private ArrayList<Participant> participants;
     private Date activityDate;
     private String numOfParticipants;
     private String fromAge;
@@ -39,6 +43,20 @@ public class Competition implements Serializable {
         this.length = data.getString("length");
         this.fromAge = data.getString("fromAge");
         this.toAge = data.getString("toAge");
+        this.participants = new ArrayList<Participant>();
+
+        if(data.has("participants")) {
+            JSONObject dataObj = data.getJSONObject("participants");
+            Iterator<String> participantIds = dataObj.keys();
+
+            while (participantIds.hasNext()) {
+                String currentId = participantIds.next();
+                JSONObject participantJson = new JSONObject(dataObj.get(currentId).toString());
+                Participant participant = new Participant(currentId, participantJson);
+                this.participants.add(participant);
+            }
+        }
+
     }
 
 
@@ -113,5 +131,19 @@ public class Competition implements Serializable {
 
     public String getToAge() {
         return this.toAge;
+    }
+
+    public ArrayList<Participant> getNewParticipants() {
+        ArrayList<Participant> newParticipants = new ArrayList<Participant>();
+        for(Participant participant : this.getParticipants()) {
+            if(!participant.isCompeted()) {
+                newParticipants.add(participant);
+            }
+        }
+        return newParticipants;
+    }
+
+    public ArrayList<Participant> getParticipants() {
+        return this.participants;
     }
 }
