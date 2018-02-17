@@ -14,7 +14,7 @@ public class Competition implements Serializable {
     private String id;
     private String name;
     private String swimmingStyle;
-    private ArrayList<Participant> participants;
+    private String participants;
     private Date activityDate;
     private String numOfParticipants;
     private String fromAge;
@@ -43,20 +43,24 @@ public class Competition implements Serializable {
         this.length = data.getString("length");
         this.fromAge = data.getString("fromAge");
         this.toAge = data.getString("toAge");
-        this.participants = new ArrayList<Participant>();
 
         if(data.has("participants")) {
-            JSONObject dataObj = data.getJSONObject("participants");
-            Iterator<String> participantIds = dataObj.keys();
-
-            while (participantIds.hasNext()) {
-                String currentId = participantIds.next();
-                JSONObject participantJson = new JSONObject(dataObj.get(currentId).toString());
-                Participant participant = new Participant(currentId, participantJson);
-                this.participants.add(participant);
-            }
+            this.participants = data.getString("participants");
         }
+    }
 
+    public ArrayList<Participant> getParticipants() throws JSONException {
+        JSONObject dataObj = new JSONObject(this.participants);
+        Iterator<String> participantIds = dataObj.keys();
+        ArrayList<Participant> participants = new ArrayList<>();
+
+        while (participantIds.hasNext()) {
+            String currentId = participantIds.next();
+            JSONObject participantJson = new JSONObject(dataObj.get(currentId).toString());
+            Participant participant = new Participant(currentId, participantJson);
+            participants.add(participant);
+        }
+        return participants;
     }
 
 
@@ -73,6 +77,32 @@ public class Competition implements Serializable {
         return data;
     }
 
+    public ArrayList<Participant> getNewParticipants(ArrayList<Participant> participants) throws JSONException{
+        ArrayList<Participant> newParticipants = new ArrayList<>();
+
+        for(Participant participant : participants) {
+            if(!participant.isCompeted()) {
+                newParticipants.add(participant);
+            }
+        }
+
+        return newParticipants;
+    }
+
+    public void setParticipants(ArrayList<Participant> participants) throws JSONException{
+        JSONObject participantsMap = new JSONObject();
+        for(Participant participant : participants) {
+            JSONObject participantJson = new JSONObject(participant.toString());
+            participantsMap.put(participant.getId(), participantJson);
+        }
+        this.participants = participantsMap.toString();
+    }
+
+
+
+
+
+    /* GETTERS AND SETTERS */
     public String getSwimmingStyle() {
         return swimmingStyle;
     }
@@ -93,8 +123,8 @@ public class Competition implements Serializable {
         return this.activityDate;
     }
 
-    public String getNumOfParticipants() {
-        return this.numOfParticipants;
+    public int getNumOfParticipants() {
+        return Integer.valueOf(this.numOfParticipants);
     }
 
     public String getLength() {
@@ -133,17 +163,5 @@ public class Competition implements Serializable {
         return this.toAge;
     }
 
-    public ArrayList<Participant> getNewParticipants() {
-        ArrayList<Participant> newParticipants = new ArrayList<Participant>();
-        for(Participant participant : this.getParticipants()) {
-            if(!participant.isCompeted()) {
-                newParticipants.add(participant);
-            }
-        }
-        return newParticipants;
-    }
 
-    public ArrayList<Participant> getParticipants() {
-        return this.participants;
-    }
 }

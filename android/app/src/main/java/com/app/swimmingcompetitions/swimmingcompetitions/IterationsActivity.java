@@ -1,153 +1,260 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class IterationsActivity extends AppCompatActivity {
+public class IterationsActivity extends AppCompatActivity implements AsyncResponse {
 
+    private JSON_AsyncTask jsonAsyncTaskPost;
     private User currentUser;
     private Competition selectedCompetition;
-    ArrayList<Participant> currentParticipants;
+    private ArrayList<Participant> allParticipants;
+    private ArrayList<Participant> currentParticipants;
 
     private TextView timeView;
     private Button start, reset, endIterationButton;
 
-    private long millisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
-    private int Seconds, Minutes, MilliSeconds ;
+    private long millisecondTime, startTime, timeBuff, updateTime = 0L ;
+    private int seconds, minutes, milliSeconds;
     private Handler handler;
 
-    private LinearLayout buttonsLayout;
+    private GridLayout buttonsLayout;
+    private GridLayout participantNamesLayout;
+    private GridLayout participantResultsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_iterations);
 
-        DateUtils dateUtils = new DateUtils();
-
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
 
-            this.buttonsLayout = (LinearLayout) findViewById(R.id.buttons_layout);
+            try {
+                this.allParticipants = this.selectedCompetition.getParticipants();
+                this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
+            }
+            catch (JSONException e) {
+                showToast("IterationsActivity processFinish: Error loging in");
+            }
 
-            int totalWidth = this.buttonsLayout.getWidth();
-            int totalHeight = this.buttonsLayout.getHeight();
-            int numOfParticipants = Integer.valueOf(this.selectedCompetition.getNumOfParticipants());
+            this.buttonsLayout = findViewById(R.id.buttons_layout);
+            this.participantNamesLayout = findViewById(R.id.participant_names_layout);
+            this.participantResultsLayout = findViewById(R.id.participant_results_layout);
 
-            this.currentParticipants = this.selectedCompetition.getNewParticipants();
+            this.buttonsLayout.post(new Runnable(){
+                //layout is ready, set the buttons according to the device width
+                public void run(){
+                    setParticipantsView();
+                }
+            });
 
-            for(int i = 0; i < numOfParticipants; i++){
-                Button button = new Button(this);
-                button.setWidth(totalWidth / numOfParticipants);
-                Participant participant = currentParticipants.get(i);
-                button.setText(participant.getFirstName() + participant.getLastName());
-                button.setTag(participant.getId());
+            this.timeView = findViewById(R.id.time_view);
+            this.start = findViewById(R.id.start_time_btn);
+            this.reset = findViewById(R.id.reset_btn);
+            this.endIterationButton = findViewById(R.id.end_iteration_btn);
 
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Participant selectedParticipant = null;
-                        for(Participant participant : currentParticipants) {
-                            if(participant.getId() == view.getTag()) {
-                                selectedParticipant = participant;
-                            }
-                        }
+            this.handler = new Handler();
 
-                        selectedParticipant.setCompeted(true);
-                        selectedParticipant.setScore((double) (Seconds + (60 * Minutes) + (1000 * MilliSeconds)));
-                    }
-                });
+            this.start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startClicked(view);
+                }
+            });
+            this.reset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    resetClicked(view);
+                }
+            });
+            this.endIterationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    endIterationClicked(view);
+                }
+            });
+        }
+    }
 
-                this.buttonsLayout.addView(button);
+    private void endIterationClicked(View view) {
+        this.jsonAsyncTaskPost = new JSON_AsyncTask();
+        jsonAsyncTaskPost.delegate = this;
+        JSONObject logInData = new JSONObject();
+
+        //set up action params
+        try {
+            logInData.put("urlSuffix", "/setIterationResults");
+            logInData.put("httpMethod", "POST");
+            this.selectedCompetition.setParticipants(this.allParticipants);
+            logInData.put("selectedCompetition", this.selectedCompetition);
+        }
+        catch (JSONException e) {
+            showToast("IterationsActivity endIterationClicked: Error creating JSONObject");
+        }
+
+        //call the server
+        jsonAsyncTaskPost.execute(logInData.toString());
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetClicked(View view) {
+        millisecondTime = 0L ;
+        startTime = 0L ;
+        timeBuff = 0L ;
+        updateTime = 0L ;
+        seconds = 0 ;
+        minutes = 0 ;
+        milliSeconds = 0 ;
+        timeView.setText("00:00");
+        start.setText("התחל");
+        endIterationButton.setEnabled(true);
+
+        int numOfParticipants = this.selectedCompetition.getNumOfParticipants();
+
+        for(int i = 0; i < numOfParticipants; i++){
+            Participant participant = allParticipants.get(i);
+            participant.setListviewIndex(i);
+
+            TextView resultView = findViewById(participant.getListviewIndex());
+            resultView.setText("00:00");
+        }
+    }
+
+    private void startClicked(View view) {
+        String mode = (String) start.getText();
+        if(mode.equals("התחל")) {
+            startTime = SystemClock.uptimeMillis();
+            handler.postDelayed(runnable, 0);
+            reset.setEnabled(false);
+            start.setText("עצור");
+            endIterationButton.setEnabled(false);
+        }
+        else if(mode.equals("עצור")) {
+            timeBuff += millisecondTime;
+            handler.removeCallbacks(runnable);
+            reset.setEnabled(true);
+            start.setText("המשך");
+            endIterationButton.setEnabled(true);
+        }
+        else if(mode.equals("המשך")) {
+            startTime = SystemClock.uptimeMillis();
+            handler.postDelayed(runnable, 0);
+            reset.setEnabled(false);
+            start.setText("עצור");
+        }
+    }
+
+    private void setParticipantsView() {
+        int totalWidth = buttonsLayout.getWidth();
+        int numOfParticipants = this.selectedCompetition.getNumOfParticipants();
+
+        for(int i = 0; i < numOfParticipants; i++){
+            Participant participant = this.allParticipants.get(i);
+            participant.setListviewIndex(i);
+
+            TextView nameView = getTextView(participant.getFirstName() + " " + participant.getLastName(), totalWidth / numOfParticipants, 18,  Color.BLACK, Gravity.CENTER);
+            this.participantNamesLayout.addView(nameView);
+
+            TextView resultView = getTextView("00:00", totalWidth / numOfParticipants, 18,  Color.BLACK, Gravity.CENTER);
+            resultView.setId(i);
+            this.participantResultsLayout.addView(resultView);
+        }
+
+        for(int i = 0; i < numOfParticipants; i++){
+            final Participant participant = allParticipants.get(i);
+
+            Button button = new Button(this);
+            button.setWidth(totalWidth / numOfParticipants);
+            button.setText("עצור");
+            button.setTag(participant.getId());
+            button.setGravity(Gravity.CENTER);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) { participantFinishedIteration(view);
+                }
+            });
+
+            this.buttonsLayout.addView(button);
+        }
+    }
+
+    private void participantFinishedIteration(View view) {
+        Participant selectedParticipant = null;
+        for(Participant participant : allParticipants) {
+            if(participant.getId() == view.getTag()) {
+                selectedParticipant = participant;
             }
         }
 
-        this.timeView = (TextView)findViewById(R.id.time_view);
-        this.start = (Button)findViewById(R.id.start_time_btn);
-        this.reset = (Button)findViewById(R.id.reset_btn);
-        this.endIterationButton = (Button)findViewById(R.id.end_iteration_btn);
+        selectedParticipant.setCompeted(true);
+        selectedParticipant.setScore(seconds + (60 * minutes) + (0.001 * milliSeconds));
 
-        this.handler = new Handler();
+        TextView resultView = findViewById(selectedParticipant.getListviewIndex());
+        String result = "";
 
+        if(minutes > 0 && minutes < 10) {
+            result += "0" + minutes;
+        }
+        else {
+            result += minutes;
+        }
+        if(seconds < 10) {
+            result += "0" + seconds + ":" + milliSeconds;
+        }
+        else {
+            result += seconds + ":" + milliSeconds;
+        }
+        resultView.setText(result);
+    }
 
-
-        this.start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String mode = (String) start.getText();
-                if(mode.equals("התחל")) {
-                    StartTime = SystemClock.uptimeMillis();
-                    handler.postDelayed(runnable, 0);
-                    reset.setEnabled(false);
-                    start.setText("עצור");
-                    endIterationButton.setEnabled(false);
-                }
-                else if(mode.equals("עצור")) {
-                    TimeBuff += millisecondTime;
-                    handler.removeCallbacks(runnable);
-                    reset.setEnabled(true);
-                    start.setText("המשך");
-                }
-                else if(mode.equals("המשך")) {
-                    StartTime = SystemClock.uptimeMillis();
-                    handler.postDelayed(runnable, 0);
-                    reset.setEnabled(false);
-                    start.setText("עצור");
-                }
-
-            }
-        });
-
-        this.reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                millisecondTime = 0L ;
-                StartTime = 0L ;
-                TimeBuff = 0L ;
-                UpdateTime = 0L ;
-                Seconds = 0 ;
-                Minutes = 0 ;
-                MilliSeconds = 0 ;
-                timeView.setText("00:00:00");
-                start.setText("התחל");
-                endIterationButton.setEnabled(true);
-            }
-        });
-
-        this.endIterationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
+    private TextView getTextView(String text, int width, int textSize, int color, int alignment) {
+        TextView textView = new TextView(this);
+        textView.setWidth(width);
+        textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        textView.setTextColor(color);
+        textView.setGravity(alignment);
+        return textView;
     }
 
     public Runnable runnable = new Runnable() {
         public void run() {
-            millisecondTime = SystemClock.uptimeMillis() - StartTime;
-            UpdateTime = TimeBuff + millisecondTime;
-            Seconds = (int) (UpdateTime / 1000);
-            Minutes = Seconds / 60;
-            Seconds = Seconds % 60;
-            MilliSeconds = (int) (UpdateTime % 1000);
-            timeView.setText("" + Minutes + ":" + String.format("%02d", Seconds) + ":" + String.format("%03d", MilliSeconds));
+            millisecondTime = SystemClock.uptimeMillis() - startTime;
+            updateTime = timeBuff + millisecondTime;
+            seconds = (int) (updateTime / 1000);
+            minutes = seconds / 60;
+            seconds = seconds % 60;
+            milliSeconds = (int) (updateTime % 1000);
+            timeView.setText("" + minutes + ":" + String.format("%02d", seconds) + ":" + String.format("%03d", milliSeconds));
             handler.postDelayed(this, 0);
         }
     };
+
+    @Override
+    public void processFinish(String result) {
+
+    }
 }

@@ -66,4 +66,5 @@
     <string name="reset_stopper">איפוס</string>
     <string name="start_timer">התחל</string>
     <string name="end_iteration">סיים מקצה</string>
+    <string name="timer_reset_time">00:00:00</string>
 </resources>

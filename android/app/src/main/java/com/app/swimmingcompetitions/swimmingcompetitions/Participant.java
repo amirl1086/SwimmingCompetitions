@@ -8,6 +8,7 @@ import java.util.Date;
 
 class Participant {
     private String id;
+    private int listviewIndex;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -78,5 +79,13 @@ class Participant {
 
     public void setCompeted(Boolean competed) {
         this.competed = competed;
+    }
+
+    public void setListviewIndex(int i) {
+        this.listviewIndex = i;
+    }
+
+    public int getListviewIndex() {
+        return this.listviewIndex;
     }
 }
