@@ -62,4 +62,9 @@
     <string name="participants_for_iteration">מספר משתתפים בכל מקצה:</string>
     <string name="register">הרשם</string>
     <string name="register_temp_user">רשום משתתף זמני</string>
+    <string name="start_competition">התחל תחרות</string>
+    <string name="reset_stopper">איפוס</string>
+    <string name="start_timer">התחל</string>
+    <string name="end_iteration">סיים מקצה</string>
+    <string name="timer_reset_time">00:00:00</string>
 </resources>

@@ -83,7 +83,7 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     }
 
     public void processFinished(String result) {
-        System.out.println("result " + result);
+        System.out.println("processFinished result " + result);
         delegate.processFinish(result);
     }
 }

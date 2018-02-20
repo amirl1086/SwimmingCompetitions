@@ -57,8 +57,7 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                 JSONObject response = new JSONObject(result);
 
                 if (response.getBoolean("success")) {
-                    ArrayList<String> displayCompetitions = new ArrayList<String>();
-                    competitions = new ArrayList<Competition>();
+                    competitions = new ArrayList<>();
 
                     if (response.get("data") != null) {
                         JSONObject dataObj = response.getJSONObject("data");
@@ -73,17 +72,15 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                     }
 
                     competitionsListAdapter = new CompetitionAdapter(this, competitions);
-                    this.listView = (ListView) findViewById(R.id.competitions_list);
+                    this.listView = findViewById(R.id.competitions_list);
                     this.listView.setAdapter(competitionsListAdapter);
 
                     this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                             Competition selectedCompetition = competitions.get(position);
                             switchToViewCompetitionActivity(selectedCompetition);
                         }
-
                     });
 
                 } else {
