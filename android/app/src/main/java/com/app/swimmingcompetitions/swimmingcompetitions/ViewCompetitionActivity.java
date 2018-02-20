@@ -52,7 +52,7 @@ public class ViewCompetitionActivity extends AppCompatActivity {
             distance.setText(selectedCompetition.getLength());
             style.setText(selectedCompetition.getSwimmingStyle());
             ages.setText(selectedCompetition.getAgesString());
-            participantsForIteration.setText(selectedCompetition.getNumOfParticipants());
+            participantsForIteration.setText(String.valueOf(selectedCompetition.getNumOfParticipants()));
         }
     }
 

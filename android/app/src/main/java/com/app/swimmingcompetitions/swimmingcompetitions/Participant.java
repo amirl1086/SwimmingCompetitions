@@ -4,15 +4,18 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
-class Participant {
+class Participant implements Serializable {
     private String id;
     private int listviewIndex;
     private String firstName;
+    private String gender;
     private String lastName;
     private Date birthDate;
     private Double score;
+
     private Boolean competed;
 
     public Participant(String id, String firstName, String lastName, String birthDate, String score, String competed) {
@@ -87,5 +90,30 @@ class Participant {
 
     public int getListviewIndex() {
         return this.listviewIndex;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Boolean getCompeted() {
+        return competed;
+    }
+
+    public JSONObject getJSON_Object() throws JSONException{
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("id", this.id);
+        jsonObject.put("firstName", this.firstName);
+        jsonObject.put("lastName", this.lastName);
+        jsonObject.put("birthDate", this.birthDate);
+        jsonObject.put("score", this.score);
+        jsonObject.put("competed", this.competed);
+
+        return jsonObject;
     }
 }
