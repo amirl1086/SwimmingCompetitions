@@ -72,9 +72,9 @@ exports.joinToCompetition = functions.https.onRequest(function(request, response
 	firebaseDB_Service.joinToCompetition(request.body, response);
 });
 
-exports.setIterationResults = functions.https.onRequest(function(request, response) {
-	console.log('exports.setIterationResults body ', request.body);
+exports.setCompetitionResults = functions.https.onRequest(function(request, response) {
+	console.log('exports.setCompetitionResults body ', JSON.parse(request.body));
 	
-	firebaseDB_Service.setIterationResults(request.body, response);
+	firebaseDB_Service.setCompetitionResults(JSON.parse(request.body), response);
 });
 /* ================================ */

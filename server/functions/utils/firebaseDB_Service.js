@@ -76,7 +76,7 @@ module.exports = {
 	
 	joinToCompetition: function(params, response) {
 		var db = admin.database();
-		var competitionsRef = db.ref('competitions/' + params.competitionId + "/participants").push();
+		var competitionsRef = db.ref('competitions/' + params.competitionId + '/participants').push();
 
 		competitionsRef.set({
 			'firstName': params.firstName,
@@ -93,6 +93,35 @@ module.exports = {
 			utilities.sendResponse(response, error, null);
 		});
 	},
+
+	setCompetitionResults: function(params, response) {
+		var db = admin.database();
+		var participantsResults = JSON.parse(params.competition.participants);
+		var personalResults = [];
+
+		for(key in participantsResults) {
+			var currentParticipant = JSON.parse(participantsResults[key]);
+			var personalResult = {
+				'id': currentParticipant.id,
+				'firstName': currentParticipant.firstName,
+				'lastName': currentParticipant.lastName,
+				'birthDate': currentParticipant.birthDate,
+				'gender': currentParticipant.gender,
+				'score': currentParticipant.score
+			}
+			personalResults.push(personalResult);
+		}
+		
+		var presonalResultsRef = db.ref('personalResults/' + params.id + '/').push();
+
+		presonalResultsRef.set(personalResults);
+
+		presonalResultsRef.on('value', function(snapshot) {
+			utilities.sendResponse(response, null, snapshot.val());
+		}, function(error) {
+			utilities.sendResponse(response, error, null);
+		});
+	}
 	
 
 };

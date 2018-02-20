@@ -14,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,11 +51,12 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
 
             try {
                 this.allParticipants = this.selectedCompetition.getParticipants();
-                this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
             }
             catch (JSONException e) {
-                showToast("IterationsActivity processFinish: Error loging in");
+                showToast("IterationsActivity onCreate: Error getting participants");
             }
+
+            this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
 
             this.buttonsLayout = findViewById(R.id.buttons_layout);
             this.participantNamesLayout = findViewById(R.id.participant_names_layout);
@@ -96,23 +98,37 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
     }
 
     private void endIterationClicked(View view) {
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
-        JSONObject logInData = new JSONObject();
 
-        //set up action params
-        try {
-            logInData.put("urlSuffix", "/setIterationResults");
-            logInData.put("httpMethod", "POST");
-            this.selectedCompetition.setParticipants(this.allParticipants);
-            logInData.put("selectedCompetition", this.selectedCompetition);
+        this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
+
+        if(this.currentParticipants.size() == 0) { //competition is over
+            try {
+                this.selectedCompetition.setParticipants(this.allParticipants);
+
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                jsonAsyncTaskPost.delegate = this;
+                JSONObject data = new JSONObject();
+                //set up action params
+
+                data.put("urlSuffix", "/setCompetitionResults");
+                data.put("httpMethod", "POST");
+                data.put("competition", this.selectedCompetition.getJSON_Object().toString());
+
+                jsonAsyncTaskPost.execute(data.toString());
+            }
+            catch (JSONException e) {
+                showToast("IterationsActivity endIterationClicked: Error creating JSONObject");
+            }
+
+            //call the server
+
+
         }
-        catch (JSONException e) {
-            showToast("IterationsActivity endIterationClicked: Error creating JSONObject");
+        else {
+            resetClicked(view);
+            setParticipantsView();
         }
 
-        //call the server
-        jsonAsyncTaskPost.execute(logInData.toString());
     }
 
     public void showToast(String message) {
@@ -167,11 +183,15 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
     }
 
     private void setParticipantsView() {
+        this.buttonsLayout.removeAllViews();
+        this.participantNamesLayout.removeAllViews();
+        this.participantResultsLayout.removeAllViews();
+
         int totalWidth = buttonsLayout.getWidth();
-        int numOfParticipants = this.selectedCompetition.getNumOfParticipants();
+        int numOfParticipants = this.currentParticipants.size();
 
         for(int i = 0; i < numOfParticipants; i++){
-            Participant participant = this.allParticipants.get(i);
+            Participant participant = this.currentParticipants.get(i);
             participant.setListviewIndex(i);
 
             TextView nameView = getTextView(participant.getFirstName() + " " + participant.getLastName(), totalWidth / numOfParticipants, 18,  Color.BLACK, Gravity.CENTER);
@@ -183,7 +203,7 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
         }
 
         for(int i = 0; i < numOfParticipants; i++){
-            final Participant participant = allParticipants.get(i);
+            Participant participant = currentParticipants.get(i);
 
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
@@ -216,16 +236,13 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
         String result = "";
 
         if(minutes > 0 && minutes < 10) {
-            result += "0" + minutes;
-        }
-        else {
-            result += minutes;
+            result += /*"0" +*/ minutes + ":";
         }
         if(seconds < 10) {
-            result += "0" + seconds + ":" + milliSeconds;
+            result += /*"0" + */(seconds + ":" + milliSeconds);
         }
         else {
-            result += seconds + ":" + milliSeconds;
+            result += (seconds + ":" + milliSeconds);
         }
         resultView.setText(result);
     }
@@ -255,6 +272,6 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
 
     @Override
     public void processFinish(String result) {
-
+        System.out.print("hello");
     }
 }
