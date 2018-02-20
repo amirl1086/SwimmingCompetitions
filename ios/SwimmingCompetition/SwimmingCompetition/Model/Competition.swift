@@ -16,21 +16,36 @@ struct Competition {
     let length: String
     let numOfParticipants:String
     let id: String
+    var participants = [Participant]()
     
-    init?(json: JSON, id: String) {
-        guard let name = json["name"] as? String,
-            let activityDate = json["activityDate"] as? String,
-            let swimmingStyle = json["swimmingStyle"] as? String,
-            let length = json["length"] as? String,
-            let numOfParticipants = json["numOfParticipants"] as? String,
+    
+    init(json: JSON, id: String) {
+            let name = json["name"] as? String
+            let activityDate = json["activityDate"] as? String
+            let swimmingStyle = json["swimmingStyle"] as? String
+            let length = json["length"] as? String
+            let numOfParticipants = json["numOfParticipants"] as? String
             let id = id as? String
-            else {return nil}
+            let participants = json["participants"] as? JSON
+            //else{return nil}
         
-        self.name = name
-        self.activityDate = activityDate
-        self.swimmingStyle = swimmingStyle
-        self.length = length
-        self.numOfParticipants = numOfParticipants
-        self.id = id
+        
+        self.name = name!
+        self.activityDate = activityDate!
+        self.swimmingStyle = swimmingStyle!
+        self.length = length!
+        self.numOfParticipants = numOfParticipants!
+        self.id = id!
+        
+        print("heyyyyyyyyy")
+        if participants != nil {
+            for part in participants! {
+                var participant : Participant!
+                let data = participants![part.0] as! JSON
+                participant = Participant(json: data, id: part.0)
+                self.participants.append(participant)
+            }
+        }
+      
     }
 }

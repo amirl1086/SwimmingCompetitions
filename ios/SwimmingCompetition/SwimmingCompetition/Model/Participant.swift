@@ -14,8 +14,8 @@ struct Participant {
     let lastName:String
     let gender:String
     let birthDate: String
-    let competed:String
-    let score:String
+    var competed:String
+    var score:String
     let uid: String
     
     init?(json: JSON, id: String) {
