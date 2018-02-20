@@ -46,11 +46,11 @@ class CompetitionDetailsViewController: UIViewController {
             "competitionId": self.competition.id,
             "firstName": "aviel",
             "lastName": "sh",
-            "birthDate": "11",
+            "birthDate": "11/05/1988",
             "gender": "male",
             "competed": false,
             "score": 0
-            ] as [String : Any]
+            ] as [String : AnyObject]
         
         Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters) { (response) in
             print(response.data)

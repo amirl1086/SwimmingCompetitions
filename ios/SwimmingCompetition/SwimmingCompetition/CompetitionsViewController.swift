@@ -46,7 +46,7 @@ class CompetitionsViewController: UIViewController {
     }
     
     func getCompetitionsData() {
-        let parameters = ["currentUser": ["uid":user.uid]]
+        let parameters = ["currentUser": ["uid":user.uid]] as [String: AnyObject]
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
             for data in response.data {

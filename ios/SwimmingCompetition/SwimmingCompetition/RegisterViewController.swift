@@ -69,7 +69,7 @@ class RegisterViewController: UIViewController {
             "password": password.text!,
             "passwordConfirmation": passwordConfirmation.text!,
             "type": userType
-        ]
+        ] as [String: AnyObject]
         
         //connect to the server and add a new user
         Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in

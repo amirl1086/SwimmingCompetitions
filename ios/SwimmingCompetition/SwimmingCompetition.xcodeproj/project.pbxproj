@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		300613B91FF428BF0016E325 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300613B81FF428BF0016E325 /* Service.swift */; };
 		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
+		3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3027DA97203C9D3F009D8A17 /* Participant.swift */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
 		305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */; };
@@ -58,6 +59,7 @@
 		2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests.release.xcconfig"; sourceTree = "<group>"; };
 		300613B81FF428BF0016E325 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		3019617B1FE8076C00046300 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3027DA97203C9D3F009D8A17 /* Participant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
 		30541B602002D9940080CC58 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				3096CDD01FF855A00045E0D6 /* User.swift */,
 				30C13D832011D71D000AAE4E /* Competition.swift */,
+				3027DA97203C9D3F009D8A17 /* Participant.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -536,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */,
 				305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */,
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,

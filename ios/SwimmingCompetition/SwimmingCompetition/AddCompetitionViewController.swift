@@ -58,7 +58,7 @@ class AddCompetitionViewController: UIViewController {
             "name": self.nameTextField.text!,
             "numOfParticipants": self.agesTextField.text!,
             "swimmingStyle": self.style
-            ] as [String : Any]
+            ] as [String : AnyObject]
         
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
             print(response.data)

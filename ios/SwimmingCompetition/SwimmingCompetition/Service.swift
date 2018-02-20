@@ -19,7 +19,7 @@ class Service {
     
     private init() {}
     
-    func connectToServer(path: String, method: HTTPMethod, params: [String: Any], completion: @escaping (responseData) -> Void) {
+    func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else { return }
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
             guard let json = response.result.value as? JSON else{ return}

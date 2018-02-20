@@ -11,20 +11,31 @@ import UIKit
 class IterationViewController: UIViewController {
 
     @IBOutlet weak var timeLabel: UILabel!
+    var resetButton: UIButton!
     
     var competition: Competition!
     var buttonsArray = [UIButton!]()
     var labelsArray = [UILabel!]()
     
     var timer = Timer()
+    var validTimer = false
     var minutes: Int = 0
     var seconds: Int = 0
     var fractions: Int = 0
+    
     
     var iterationNumber:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        resetButton = UIButton(frame: CGRect(x: (self.view.frame.width/2)-(50), y: 250, width: 100, height: 50))
+        resetButton.backgroundColor = .yellow
+        resetButton.setTitleColor(.black, for: .normal)
+        resetButton.setTitle("אפס", for: .normal)
+        resetButton.addTarget(self, action: #selector(resetTimer), for: .touchUpInside)
+        self.view.addSubview(resetButton)
+        resetButton.isHidden = true
+        timeLabel.text = "00:00:00"
         iterationNumber = Int(competition.numOfParticipants)!
         createButtonsLabels()
         // Do any additional setup after loading the view.
@@ -38,10 +49,34 @@ class IterationViewController: UIViewController {
     }
    
     @IBAction func startButton(_ sender: UIButton) {
-        for i in 0...iterationNumber-1 {
-            buttonsArray[i].isEnabled = true
+        if !validTimer {
+            validTimer = true
+            sender.backgroundColor = .red
+            sender.setTitle("עצור", for: .normal)
+            for i in 0...iterationNumber-1 {
+                buttonsArray[i].isEnabled = true
+            }
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+            resetButton.isHidden = true
         }
-        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        else {
+            validTimer = false
+            timer.invalidate()
+            sender.backgroundColor = .green
+            sender.setTitle("המשך", for: .normal)
+            
+            resetButton.isHidden = false
+        }
+        
+    }
+    
+    @objc func resetTimer() {
+        validTimer = false
+        minutes = 0
+        seconds = 0
+        fractions = 0
+        self.timeLabel.text = "00:00:00"
+        resetButton.isHidden = true
     }
     
     @objc func updateTimer() {
@@ -83,16 +118,17 @@ class IterationViewController: UIViewController {
             button.backgroundColor = .red
             button.tag = i
             button.setTitle("עצור", for: .normal)
-            button.addTarget(self, action: #selector(d), for: .touchUpInside)
+            button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
             button.isEnabled = false
             self.view.addSubview(button)
             buttonsArray.append(button)
 
             start += width + 10
+            
         }
     }
     
-    @objc func d(sender: UIButton!) {
+    @objc func stopUserTimeButton(sender: UIButton!) {
         self.labelsArray[sender.tag].text = "\(self.timeLabel.text!)"
         sender.isEnabled = false
     }
@@ -105,5 +141,7 @@ class IterationViewController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
+   
     
 }
