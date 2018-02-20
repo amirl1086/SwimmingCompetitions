@@ -78,7 +78,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let parameters = [
             "email": emailTextFiled.text!,
             "password": passwordTextFiled.text!
-        ]
+        ] as [String: AnyObject]
         
 
         Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
