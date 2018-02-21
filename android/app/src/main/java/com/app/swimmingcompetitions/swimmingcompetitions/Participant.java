@@ -18,10 +18,11 @@ class Participant implements Serializable {
 
     private Boolean competed;
 
-    public Participant(String id, String firstName, String lastName, String birthDate, String score, String competed) {
+    public Participant(String id, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
         this.birthDate = new Date(birthDate);
         this.score = Double.valueOf(score);
         this.competed = Boolean.valueOf(competed);
@@ -32,6 +33,7 @@ class Participant implements Serializable {
         this.firstName = data.getString("firstName");
         this.lastName = data.getString("lastName");
         this.birthDate = new Date(data.getString("birthDate"));
+        this.gender = data.getString("gender");
         this.score = Double.valueOf(data.getString("score"));
         this.competed = Boolean.valueOf(data.getString("competed"));
     }
@@ -110,6 +112,7 @@ class Participant implements Serializable {
         jsonObject.put("id", this.id);
         jsonObject.put("firstName", this.firstName);
         jsonObject.put("lastName", this.lastName);
+        jsonObject.put("gender", this.gender);
         jsonObject.put("birthDate", this.birthDate);
         jsonObject.put("score", this.score);
         jsonObject.put("competed", this.competed);

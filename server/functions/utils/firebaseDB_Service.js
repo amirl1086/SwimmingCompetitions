@@ -96,23 +96,23 @@ module.exports = {
 
 	setCompetitionResults: function(params, response) {
 		var db = admin.database();
-		var participantsResults = JSON.parse(params.competition.participants);
-		var personalResults = [];
+		var currentCompetition = JSON.parse(params.competition);
+		var participantsResults = JSON.parse(currentCompetition.participants);
+
+		var personalResults = {};
 
 		for(key in participantsResults) {
 			var currentParticipant = JSON.parse(participantsResults[key]);
-			var personalResult = {
-				'id': currentParticipant.id,
+			personalResults[currentParticipant.id] = {
 				'firstName': currentParticipant.firstName,
 				'lastName': currentParticipant.lastName,
 				'birthDate': currentParticipant.birthDate,
 				'gender': currentParticipant.gender,
 				'score': currentParticipant.score
-			}
-			personalResults.push(personalResult);
+			};
 		}
 		
-		var presonalResultsRef = db.ref('personalResults/' + params.id + '/').push();
+		var presonalResultsRef = db.ref('personalResults/' + currentCompetition.id + '/');
 
 		presonalResultsRef.set(personalResults);
 
