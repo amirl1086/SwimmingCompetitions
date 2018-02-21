@@ -30,12 +30,20 @@ class Participant implements Serializable {
 
     public Participant(String id, JSONObject data) throws JSONException {
         this.id = id;
-        this.firstName = data.getString("firstName");
-        this.lastName = data.getString("lastName");
-        this.birthDate = new Date(data.getString("birthDate"));
-        this.gender = data.getString("gender");
-        this.score = Double.valueOf(data.getString("score"));
-        this.competed = Boolean.valueOf(data.getString("competed"));
+        if(data.has("firstName")) {
+            this.firstName = data.getString("firstName");
+        }
+        if(data.has("lastName")) {
+            this.lastName = data.getString("lastName");
+        }
+        if(data.has("birthDate")) {
+            this.birthDate = new Date(data.getString("birthDate"));
+        }
+        if(data.has("gender")) {
+            this.gender = data.getString("gender");
+        }
+        this.score = 0.0;
+        this.competed = false;
     }
 
     public String getId() {

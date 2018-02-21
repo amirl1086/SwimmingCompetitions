@@ -225,6 +225,7 @@
         app:layout_constraintBottom_toTopOf="@+id/start_competition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
+        android:onClick="registerTempUserToCompetition"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_edit_btn" />
 

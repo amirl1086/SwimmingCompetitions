@@ -26,6 +26,16 @@ public class User implements Serializable {
         this.type = type;
     }
 
+    public User(JSONObject userJson) throws JSONException{
+        this.uid = userJson.getString("uid");
+        this.firstName = userJson.getString("firstName");
+        this.lastName = userJson.getString("lastName");
+        this.birthDate = userJson.getString("birthDate");
+        this.email = userJson.getString("email");
+        this.gender = userJson.getString("gender");
+        this.type = userJson.getString("type");
+    }
+
     public JSONObject getJSON_Object() {
         try {
             JSONObject data = new JSONObject();

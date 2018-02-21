@@ -3,6 +3,10 @@ const admin = require('firebase-admin');
 
 var utilities = require('./utils.js');
 
+var moment = require('moment');
+
+console.log('moment ', moment);
+
 
 module.exports = {
 
@@ -20,7 +24,7 @@ module.exports = {
 		});
 
 		usersRef.on('value', function(snapshot) {
-			console.log('firebase finished inserting new user')
+			console.log('firebase finished inserting new user ', snapshot)
 			//add the uid to the currentUser
 			callback(attachUidToUser(snapshot));
 		});
@@ -76,16 +80,28 @@ module.exports = {
 	
 	joinToCompetition: function(params, response) {
 		var db = admin.database();
-		var competitionsRef = db.ref('competitions/' + params.competitionId + '/participants').push();
+		var competitionsRef, newParticipant = {};
 
-		competitionsRef.set({
-			'firstName': params.firstName,
-			'lastName': params.lastName,
-			'birthDate': params.birthDate,
-			'gender': params.gender,
-			'competed': params.competed,
-			'score': params.score
-		});
+		if(params.uid) {
+			competitionsRef = db.ref('competitions/' + params.competitionId + '/participants/' + params.uid);
+		}
+		else {
+			competitionsRef = db.ref('competitions/' + params.competitionId + '/participants').push();
+
+			newParticipant = {
+				'firstName': params.firstName,
+				'lastName': params.lastName,
+				'birthDate': params.birthDate,
+				'gender': params.gender
+			};
+		}
+
+		newParticipant = Object.assign({
+			'score': params.score || '0', 
+			'competed': params.competed || 'false'
+		}, newParticipant);
+
+		competitionsRef.set(newParticipant);
 
 		competitionsRef.on('value', function(snapshot) {
 			utilities.sendResponse(response, null, attachIdToObject(snapshot));
@@ -117,6 +133,11 @@ module.exports = {
 		presonalResultsRef.set(personalResults);
 
 		presonalResultsRef.on('value', function(snapshot) {
+			var results = snapshot;
+
+			console.log('setCompetitionResults snapshot ', snapshot.val());
+
+			//var resultsAgeMap = sortPersonalResults(currentCompetition, results);
 			utilities.sendResponse(response, null, snapshot.val());
 		}, function(error) {
 			utilities.sendResponse(response, error, null);
@@ -136,4 +157,41 @@ var attachIdToObject = function(snapshot) {
 	var resObj = snapshot.val();
 	var resObjId = Object.assign({}, resObj, { 'id': snapshot.key }); //add the id to the object
 	return resObjId;
+}
+
+var sortPersonalResults = function(currentCompetition, results) {
+
+	//map results by age
+	var resultsMap = Object.keys(results).reduce(function(totalResults, key) {
+		var personalResult = results[key];
+		var participantAge = Math.floor(moment(new Date()).diff(personalResult.birthDate,"DD/MM/YYYY"), 'years', true);
+		if(!totalResults[participantAge]) {
+			totalResults[participantAge] = { 'males' : [], 'females' : [] };
+		}
+		personalResult.gender === 'זכר' ? totalResults[participantAge].males.push(personalResult) : totalResults[participantAge].females.push(personalResult);
+		return totalResults;
+	}, {});
+
+	//order results by gender
+	Object.keys(resultsMap).forEach(function(resultsByAge) {
+		var currentAgeResults = resultsMap[resultsByAge];
+		arraySortByScore(currentAgeResults.males);
+		arraySortByScore(currentAgeResults.females);
+	});
+	return resultsMap;
+}
+
+var arraySortByScore = function(arrayList) {
+	var today = moment(new Date());
+	arrayList.sort(function(itemA, itemB) {
+		itemAage = Math.floor(today.diff(itemA.birthDate, "DD/MM/YYYY"), 'years', true);
+		itemBage = Math.floor(today.diff(itemB.birthDate, "DD/MM/YYYY"), 'years', true);
+	    if (itemAage < itemBage) {
+	        return -1;
+	    }
+	    else if (itemAage > itemBage) {
+	        return 1;
+	    }
+	    return 0;
+	});
 }
