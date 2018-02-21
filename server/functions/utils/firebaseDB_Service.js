@@ -137,8 +137,8 @@ module.exports = {
 
 			console.log('setCompetitionResults snapshot ', snapshot.val());
 
-			//var resultsAgeMap = sortPersonalResults(currentCompetition, results);
-			utilities.sendResponse(response, null, snapshot.val());
+			var resultsAgeMap = sortPersonalResults(currentCompetition, results);
+			utilities.sendResponse(response, null, resultsAgeMap);
 		}, function(error) {
 			utilities.sendResponse(response, error, null);
 		});
@@ -163,17 +163,23 @@ var sortPersonalResults = function(currentCompetition, results) {
 
 	//map results by age
 	var resultsMap = Object.keys(results).reduce(function(totalResults, key) {
+		console.log('totalResults ', totalResults);
+		console.log('key ', key);
 		var personalResult = results[key];
+		console.log('personalResult ', personalResult);
 		var participantAge = Math.floor(moment(new Date()).diff(personalResult.birthDate,"DD/MM/YYYY"), 'years', true);
+		console.log('participantAge ', participantAge);
 		if(!totalResults[participantAge]) {
 			totalResults[participantAge] = { 'males' : [], 'females' : [] };
 		}
+		console.log('personalResult.gender ', personalResult.gender);
 		personalResult.gender === 'זכר' ? totalResults[participantAge].males.push(personalResult) : totalResults[participantAge].females.push(personalResult);
 		return totalResults;
 	}, {});
 
 	//order results by gender
 	Object.keys(resultsMap).forEach(function(resultsByAge) {
+		console.log('resultsByAge ', resultsByAge);
 		var currentAgeResults = resultsMap[resultsByAge];
 		arraySortByScore(currentAgeResults.males);
 		arraySortByScore(currentAgeResults.females);
@@ -186,6 +192,8 @@ var arraySortByScore = function(arrayList) {
 	arrayList.sort(function(itemA, itemB) {
 		itemAage = Math.floor(today.diff(itemA.birthDate, "DD/MM/YYYY"), 'years', true);
 		itemBage = Math.floor(today.diff(itemB.birthDate, "DD/MM/YYYY"), 'years', true);
+		console.log('itemAage ', itemAage);
+		console.log('itemBage ', itemBage);
 	    if (itemAage < itemBage) {
 	        return -1;
 	    }
