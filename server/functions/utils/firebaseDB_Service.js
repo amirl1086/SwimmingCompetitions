@@ -133,11 +133,9 @@ module.exports = {
 		presonalResultsRef.set(personalResults);
 
 		presonalResultsRef.on('value', function(snapshot) {
-			var results = snapshot;
+			console.log('setCompetitionResults snapshot ', JSON.stringify(snapshot.val()));
 
-			console.log('setCompetitionResults snapshot ', snapshot.val());
-
-			var resultsAgeMap = sortPersonalResults(currentCompetition, results);
+			var resultsAgeMap = sortPersonalResults(currentCompetition, snapshot.val());
 			utilities.sendResponse(response, null, resultsAgeMap);
 		}, function(error) {
 			utilities.sendResponse(response, error, null);
@@ -160,27 +158,26 @@ var attachIdToObject = function(snapshot) {
 }
 
 var sortPersonalResults = function(currentCompetition, results) {
-
+	var today = moment(new Date());
 	//map results by age
 	var resultsMap = Object.keys(results).reduce(function(totalResults, key) {
-		console.log('totalResults ', totalResults);
-		console.log('key ', key);
 		var personalResult = results[key];
-		console.log('personalResult ', personalResult);
-		var participantAge = Math.floor(moment(new Date()).diff(personalResult.birthDate,"DD/MM/YYYY"), 'years', true);
-		console.log('participantAge ', participantAge);
+
+		var compare = moment(personalResult.birthDate);
+		var participantAge = Math.round(today.diff(compare, 'years', true));
+
 		if(!totalResults[participantAge]) {
 			totalResults[participantAge] = { 'males' : [], 'females' : [] };
 		}
-		console.log('personalResult.gender ', personalResult.gender);
+		personalResult.userId = key;
 		personalResult.gender === 'זכר' ? totalResults[participantAge].males.push(personalResult) : totalResults[participantAge].females.push(personalResult);
 		return totalResults;
 	}, {});
 
 	//order results by gender
 	Object.keys(resultsMap).forEach(function(resultsByAge) {
-		console.log('resultsByAge ', resultsByAge);
 		var currentAgeResults = resultsMap[resultsByAge];
+
 		arraySortByScore(currentAgeResults.males);
 		arraySortByScore(currentAgeResults.females);
 	});
@@ -190,14 +187,10 @@ var sortPersonalResults = function(currentCompetition, results) {
 var arraySortByScore = function(arrayList) {
 	var today = moment(new Date());
 	arrayList.sort(function(itemA, itemB) {
-		itemAage = Math.floor(today.diff(itemA.birthDate, "DD/MM/YYYY"), 'years', true);
-		itemBage = Math.floor(today.diff(itemB.birthDate, "DD/MM/YYYY"), 'years', true);
-		console.log('itemAage ', itemAage);
-		console.log('itemBage ', itemBage);
-	    if (itemAage < itemBage) {
+	    if (parseFloat(itemA.score) < parseFloat(itemB.score)) {
 	        return -1;
 	    }
-	    else if (itemAage > itemBage) {
+	    else if (parseFloat(itemA.score) > parseFloat(itemB.score)) {
 	        return 1;
 	    }
 	    return 0;

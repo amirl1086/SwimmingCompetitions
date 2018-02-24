@@ -208,7 +208,7 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setText("עצור");
-            button.setTag(participant.getId());
+            button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -224,13 +224,14 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
     private void participantFinishedIteration(View view) {
         Participant selectedParticipant = null;
         for(Participant participant : allParticipants) {
-            if(participant.getId() == view.getTag()) {
+            if(participant.getUserId() == view.getTag()) {
                 selectedParticipant = participant;
             }
         }
 
         selectedParticipant.setCompeted(true);
-        selectedParticipant.setScore(seconds + (60 * minutes) + (0.001 * milliSeconds));
+        Double score = seconds + (60 * minutes) + (0.001 * milliSeconds);
+        selectedParticipant.setScore(score.toString());
 
         TextView resultView = findViewById(selectedParticipant.getListviewIndex());
         String result = "";
@@ -272,6 +273,23 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
 
     @Override
     public void processFinish(String result) {
-        System.out.print("hello");
+
+        JSONObject dataObj = null;
+        try {
+            JSONObject response = new JSONObject(result);
+            dataObj = response.getJSONObject("data");
+            switchToViewResultsActivity(dataObj);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void switchToViewResultsActivity(JSONObject dataObj) {
+        Intent intent = new Intent(this, ViewCompetitionResultsActivity.class);
+        intent.putExtra("competitionResults", dataObj.toString());
+        intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
     }
 }

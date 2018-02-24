@@ -14,16 +14,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Created by amirl on 2/24/2018.
+ */
 
-public class CompetitionAdapter extends ArrayAdapter<Competition> {
-
+public class PersonalResultAdapter extends ArrayAdapter<PersonalResult> {
     private Context mContext;
-    private List<Competition> competitions = new ArrayList<>();
+    private ArrayList<PersonalResult> personalResults = new ArrayList<>();
 
-    public CompetitionAdapter(@NonNull Context context, @LayoutRes ArrayList<Competition> list) {
+    public PersonalResultAdapter(@NonNull Context context, @LayoutRes ArrayList<PersonalResult> list) {
         super(context, 0, list);
         this.mContext = context;
-        competitions = list;
+        this.personalResults = list;
     }
 
 
@@ -36,23 +38,30 @@ public class CompetitionAdapter extends ArrayAdapter<Competition> {
         if(listItem == null) {
             listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
         }
-        Competition currentCompetition = competitions.get(position);
+        PersonalResult currentResult = personalResults.get(position);
 
-        TextView competitionName = listItem.findViewById(R.id.competition_list_item_name);
-        competitionName.setText(currentCompetition.getName());
+
+
+
+
+
+
+
+        /*TextView competitionName = listItem.findViewById(R.id.competition_list_item_name);
+        competitionName.setText(currentResult.getName());
 
         TextView competitionDate = listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = dateUtils.dateToCalendar(currentCompetition.getActivityDate());
+        Calendar calendar = dateUtils.dateToCalendar(currentResult.getActivityDate());
         competitionDate.setText(dateUtils.getCompleteHebrewDate(calendar));
 
         TextView competitionAges = listItem.findViewById(R.id.competition_list_item_ages);
-        competitionAges.setText(currentCompetition.getAgesString());
+        competitionAges.setText(currentResult.getAgesString());
 
         TextView competitionStyle = listItem.findViewById(R.id.competition_list_item_style);
-        competitionStyle.setText(currentCompetition.getSwimmingStyle());
+        competitionStyle.setText(currentResult.getSwimmingStyle());
 
         TextView competitionLength = listItem.findViewById(R.id.competition_list_item_length);
-        competitionLength.setText(currentCompetition.getLength().toString());
+        competitionLength.setText(currentResult.getLength().toString());*/
 
         return listItem;
     }
