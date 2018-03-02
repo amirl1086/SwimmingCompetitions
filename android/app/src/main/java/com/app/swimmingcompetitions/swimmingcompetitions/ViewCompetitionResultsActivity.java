@@ -27,8 +27,6 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_competition_results);
 
         this.resultsGrid = findViewById(R.id.results_grid);
-        this.resultsGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-        this.resultsGrid.setColumnCount(column);
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("competitionResults")) {
@@ -61,8 +59,9 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
                     }
 
                     TextView maleResults = new TextView(this);
+                    TextView femaleResults = new TextView(this);
                     maleResults.setText("בנים: מקום ראשון - " + maleParticipants.get(0).toString() + ", מקום שני - " + maleParticipants.get(1).toString() + ", מקום שלישי - " + maleParticipants.get(2).toString());
-                    maleResults.setText("בנות: מקום ראשון - " + femaleParticipants.get(0).toString() + ", מקום שני - " + femaleParticipants.get(1).toString() + ", מקום שלישי - " + femaleParticipants.get(2).toString());
+                    femaleResults.setText("בנות: מקום ראשון - " + femaleParticipants.get(0).toString() + ", מקום שני - " + femaleParticipants.get(1).toString() + ", מקום שלישי - " + femaleParticipants.get(2).toString());
 /*
                     Iterator<String> maleUsersIds = malesResults.keys();
                     Iterator<String> femaleUsersIds = malesResults.keys();
