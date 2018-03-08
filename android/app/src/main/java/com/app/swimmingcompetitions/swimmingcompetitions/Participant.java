@@ -52,8 +52,7 @@ class Participant implements Serializable {
     }
 
     public Participant(JSONObject data) throws JSONException {
-        String userId = data.getString("userId");
-        new Participant(userId, data);
+        this(data.getString("userId"), data);
     }
 
     public String getUserId() {

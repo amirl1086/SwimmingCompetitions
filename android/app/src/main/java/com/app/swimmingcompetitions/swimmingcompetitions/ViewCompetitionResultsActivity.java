@@ -5,7 +5,10 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,49 +22,87 @@ import java.util.Iterator;
 
 public class ViewCompetitionResultsActivity extends AppCompatActivity {
 
-    private RelativeLayout resultsGrid;
+    private User currentUser;
+    private ListView listView;
+    private ResultAdapter resultsListAdapter;
+    private ArrayList<JSONObject> results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_competition_results);
 
-        this.resultsGrid = findViewById(R.id.results_grid);
+        this.listView = findViewById(R.id.results_list_items);
+        this.results = new ArrayList<>();
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("competitionResults")) {
             JSONObject dataObj = null;
             try {
+                this.currentUser = (User) intent.getSerializableExtra("currentUser");
+
                 dataObj = new JSONObject(intent.getStringExtra("competitionResults"));
+                System.out.println(intent.getStringExtra("competitionResults"));
                 Iterator<String> agesKeys = dataObj.keys();
 
                 while (agesKeys.hasNext()) {
                     String currentAge = agesKeys.next();
                     JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
-                    JSONArray malesResults = new JSONArray(currentResult.getString("males"));
+
+                    results.add(currentResult);
+
+
+
+
+
+
+
+/*                    JSONArray malesResults = new JSONArray(currentResult.getString("males"));
                     JSONArray femalesResults = new JSONArray(currentResult.getString("females"));
 
-                    ArrayList<Participant> maleParticipants = new ArrayList<>();
-                    ArrayList<Participant> femaleParticipants = new ArrayList<>();
+                    if(malesResults.length() > 0 || femalesResults.length() > 0) {
+                        ArrayList<Participant> maleParticipants = new ArrayList<>();
+                        ArrayList<Participant> femaleParticipants = new ArrayList<>();
 
-                    TextView ageText = new TextView(this);
-                    ageText.setText("עבור גילאי " + currentAge + ":");
-                    this.resultsGrid.addView(ageText);
+                        LinearLayout currentLayout = new LinearLayout(this);
+                        TextView ageText = new TextView(this);
+                        ageText.setText("עבור גילאי " + currentAge + ":");
+                        currentLayout.addView(ageText);
 
-                    for(int i = 0; i < malesResults.length(); i++) {
-                        Object maleResult = malesResults.get(i);
+                        for(int i = 0; i < malesResults.length(); i++) {
+                            Object maleResult = malesResults.get(i);
 
-                        maleParticipants.add(new Participant(new JSONObject(malesResults.get(i).toString())));
-                    }
+                            maleParticipants.add(new Participant(new JSONObject(malesResults.get(i).toString())));
+                        }
 
-                    for(int i = 0; i < femalesResults.length(); i++) {
-                        femaleParticipants.add(new Participant(new JSONObject(femalesResults.get(i).toString())));
-                    }
+                        for(int i = 0; i < femalesResults.length(); i++) {
+                            femaleParticipants.add(new Participant(new JSONObject(femalesResults.get(i).toString())));
+                        }
 
-                    TextView maleResults = new TextView(this);
-                    TextView femaleResults = new TextView(this);
-                    maleResults.setText("בנים: מקום ראשון - " + maleParticipants.get(0).toString() + ", מקום שני - " + maleParticipants.get(1).toString() + ", מקום שלישי - " + maleParticipants.get(2).toString());
-                    femaleResults.setText("בנות: מקום ראשון - " + femaleParticipants.get(0).toString() + ", מקום שני - " + femaleParticipants.get(1).toString() + ", מקום שלישי - " + femaleParticipants.get(2).toString());
+                        TextView maleResults = new TextView(this);
+                        TextView femaleResults = new TextView(this);
+                        String maleResultsStr = "";
+                        String femaleResultsStr = "";
+
+                        if(maleParticipants.size() > 0) {
+                            maleResultsStr += "בנים: ";
+                            for (int i = 0; i < maleParticipants.size(); i++) {
+                                maleResultsStr += (places[i] + maleParticipants.get(0).toString());
+                            }
+                            maleResults.setText(maleResultsStr);
+                            currentLayout.addView(maleResults);
+                        }
+
+                        if(femaleParticipants.size() > 0) {
+                            femaleResultsStr += "בנות: ";
+                            for (int i = 0; i < femaleParticipants.size(); i++) {
+                                femaleResultsStr += (places[i] + femaleParticipants.get(0).toString());
+                            }
+                            femaleResults.setText(femaleResultsStr);
+                            currentLayout.addView(femaleResults);
+                        }
+                        this.resultsGrid.addView(currentLayout);
+                    }*/
 /*
                     Iterator<String> maleUsersIds = malesResults.keys();
                     Iterator<String> femaleUsersIds = malesResults.keys();
@@ -79,6 +120,10 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
                     }*/
 
                 }
+
+                this.resultsListAdapter = new ResultAdapter(this, results);
+                this.listView.setAdapter(this.resultsListAdapter);
+
 
             }
             catch (JSONException e) {

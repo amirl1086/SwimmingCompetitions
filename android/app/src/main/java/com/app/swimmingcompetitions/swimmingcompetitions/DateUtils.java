@@ -58,5 +58,21 @@ public class DateUtils {
         return new Date(year, month, day, hours, minutes);
     }
 
+    public String getAge(Date birthDate){
+        Calendar dob = this.dateToCalendar(birthDate);
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
+    }
+
 
 }

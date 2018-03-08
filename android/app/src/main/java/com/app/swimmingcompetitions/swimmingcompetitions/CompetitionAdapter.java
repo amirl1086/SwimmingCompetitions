@@ -52,7 +52,7 @@ public class CompetitionAdapter extends ArrayAdapter<Competition> {
         competitionStyle.setText(currentCompetition.getSwimmingStyle());
 
         TextView competitionLength = listItem.findViewById(R.id.competition_list_item_length);
-        competitionLength.setText(currentCompetition.getLength().toString());
+        competitionLength.setText(currentCompetition.getLength());
 
         return listItem;
     }
