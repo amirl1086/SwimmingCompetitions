@@ -209,20 +209,6 @@ class IterationViewController: UIViewController {
         
     }
     func done() {
-        
-        
-        let b = ["22" : [
-            "score":"1.2",
-            "id":"22",
-            "gender":"fff",
-            "lastName":"ee",
-            "birthDate":"1/2/13",
-            "competed":true,
-        "firstName":"rr"]] as [String:AnyObject]
-        
-        let a = ["22":b
-        ] as [String:AnyObject]
-        
         let send = [
             "competition": [
                 "id":"eeee",
@@ -233,32 +219,24 @@ class IterationViewController: UIViewController {
                 "toAge":"3",
                 "lengh":"20",
                 "swimmingStyle": "ff",
-                "participants":"{\"22\":{\"score\":\"1.2\",\"id\":\"22\",\"gender\":\"fff\",\"lastName\":\"ee\",\"birthDate\":\"1/2/13\",\"competed\":\"true\",\"firstName\":\"hh\"}}"]
-                ]as [String:AnyObject]
-        
-        let parameters = [
-            "competition":[
-                "id":"22",
                 "participants":[
-                    
-                        "11":[
-                            "id":"11",
-                            "score":"1.2",
-                            "gender":"ff",
-                            "lastName":"ee",
-                            "birthDate":"1/2/13",
-                            "competed":"true",
-                            "firstName":"rr"]
-                    
+                    "22": [
+                        "score":"1.2",
+                        "id":"22",
+                        "gender":"ff",
+                        "lastName":"ggg",
+                        "birthDate":"1/2/13",
+                        "competed":true,
+                        "firstName":"rrr"]
                 ]
             ]
-        ] as [String:AnyObject]
+            ] as [String:AnyObject]
         
-        let s = ["competition":"{\"id\":\"eee\",\"numOfParticipants\":\"2\",\"activityDate\":\"2/3/12\",\"name\":\"ff\",\"fromAge\":\"1\",\"toAge\":\"3\",\"length\":\"20\",\"swimmingStyle\":\"ff\",\"participants\":\"{\"22\":\"{\"score\":\"1.2\",\"id\":\"22\",\"gender\":\"fff\",\"lastName\":\"ee\",\"birthDate\":\"1/2/13\",\"competed\":\"true\",\"firstName\":\"hh\"}\"}\"}"] as [String:AnyObject]
-        print(send as! JSON)
-        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: parameters) { (a) in
+        let s = ["c":"[\"a\":\"a\",\"b\":\"b\",\"c\":\"[\"a\":[\"e\":\"e\",\"j\":\"j\"]]\",\"[\"a\":[\"e\":\"e\",\"j\":\"j\"]]\"]"] as [String:String]
+        print(s as! JSON)
+        /*Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: send) { (a) in
             print(a)
-        }
+        }*/
     }
    
     
