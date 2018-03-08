@@ -3,12 +3,16 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +28,6 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
 
     private EditText firstName;
     private EditText lastName;
-    private EditText gender;
     private EditText eMail;
     private EditText password;
     private EditText passwordConfirmation;
@@ -33,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     private TextView dateView;
     private int year, month, day;
     private String registerType;
+    private Spinner spinner;
+    private ArrayAdapter<String> spinnerListAdapter;
+    private String[] genders;
 
 
     @Override
@@ -43,16 +49,46 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         Bundle extras = getIntent().getExtras();
         this.registerType = extras.getString("registerType");
 
-        this.firstName = (EditText) findViewById(R.id.register_first_name);
-        this.lastName = (EditText) findViewById(R.id.register_last_name);
-        this.birthDateButton = (Button) findViewById(R.id.register_birth_date);
-        this.gender = (EditText) findViewById(R.id.register_gender);
+        this.firstName = findViewById(R.id.register_first_name);
+        this.lastName = findViewById(R.id.register_last_name);
+        this.birthDateButton = findViewById(R.id.register_birth_date);
+
+        //set up spinner picker for swimming style
+        this.genders = new String[]{"בחר מין", "זכר", "נקבה"};
+        this.spinner = findViewById(R.id.register_gender);
+        this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
+
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0) {
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+
+        this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        this.spinner.setAdapter(spinnerListAdapter);
 
         if (this.registerType.equals("parent")) {
             this.birthDateButton.setVisibility(View.GONE);
-            this.gender.setVisibility(View.GONE);
+            this.spinner.setVisibility(View.GONE);
         } else { //initialize date picker for date of birth
-            this.dateView = (TextView) findViewById(R.id.birth_date_view);
+            this.dateView = findViewById(R.id.birth_date_view);
             this.calendar = Calendar.getInstance();
             this.year = calendar.get(Calendar.YEAR);
 
@@ -61,9 +97,9 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             showDate(year, month + 1, day);
         }
 
-        this.eMail = (EditText) findViewById(R.id.register_email);
-        this.password = (EditText) findViewById(R.id.register_password);
-        this.passwordConfirmation = (EditText) findViewById(R.id.register_password_confirmation);
+        this.eMail = findViewById(R.id.register_email);
+        this.password = findViewById(R.id.register_password);
+        this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
     }
 
 
@@ -74,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
 
         if (this.registerType.equals("student")) {
             birthDateText = dateView.getText().toString();
-            genderText = gender.getText().toString();
+            genderText = spinner.getSelectedItem().toString();
         }
 
         String eMailText = this.eMail.getText().toString();
@@ -118,8 +154,8 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
 
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            showDate(arg1, arg2 + 1, arg3);
+        public void onDateSet(DatePicker arg0, int year, int month, int day) {
+            showDate(year, month + 1, day);
         }
     };
 
@@ -128,8 +164,9 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         try {
             JSONObject response = new JSONObject(result);
             JSONObject dataObj = response.getJSONObject("data");
-            if (response != null && response.getBoolean("success")) {
-                switchToMainMenuActivity(dataObj);
+            if (response.getBoolean("success")) {
+                User currentUser = new User(dataObj);
+                switchToMainMenuActivity(currentUser);
             } else {
                 showToast("LogInActivity processFinish: Error registering");
             }
@@ -142,9 +179,9 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void switchToMainMenuActivity(JSONObject user) {
+    public void switchToMainMenuActivity(User currentUser) {
         Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("currentUser", user.toString());
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

@@ -7,18 +7,16 @@ var firebaseDB_Service = require('./../utils/firebaseDB_Service.js');
 module.exports =  {
 
 	logIn: function(params, response) {
-		firebase.auth().signInWithEmailAndPassword(params.email, params.password)
-			.then(function(firebaseUser) {
-				firebaseDB_Service.getUser(firebaseUser.uid, function(currentUser) {
-					//will run after firebase finished retrieving new user
-					console.log('logIn currentUser: ', currentUser);
-					utilities.sendResponse(response, null, currentUser);
-				});
-			})
-			.catch(function(error) {
-				utilities.sendResponse(response, error, null);
-			}
-		);
+		firebase.auth().signInWithEmailAndPassword(params.email, params.password).then(function(firebaseUser) {
+			firebaseDB_Service.getUser(firebaseUser.uid, function(currentUser) {
+				//will run after firebase finished retrieving new user
+				console.log('logIn currentUser: ', currentUser);
+				utilities.sendResponse(response, null, currentUser);
+			});
+		})
+		.catch(function(error) {
+			utilities.sendResponse(response, error, null);
+		});
 	},
 
 	getUser: function(uid, response) {
@@ -35,19 +33,19 @@ module.exports =  {
 
 	addNewFirebaseUser: function(params, response) {
 		//create new user in with credantials
-		firebase.auth().createUserWithEmailAndPassword(params.email, params.password)
-			//firebaseUser is the actual object from firebase
-			.then(function(firebaseUser) {
-				firebaseDB_Service.addNewUser(firebaseUser, params, function(currentUser) { 
-					//will run after firebase finished inserting new user
-					console.log('addNewFirebaseUser currentUser: ', currentUser);
-					utilities.sendResponse(response, null, currentUser); 
-				});
-			})
-			.catch(function(error) {
-				utilities.sendResponse(response, error, null);
-			}
-		);
-	},
+		console.log('addNewFirebaseUser params: ', params);
+		firebase.auth().createUserWithEmailAndPassword(params.email, params.password).then(function(firebaseUser) {
+			console.log('addNewFirebaseUser firebaseUser: ', firebaseUser);
+			firebaseDB_Service.addNewUser(firebaseUser, params, function(currentUser) { 
+				//will run after firebase finished inserting new user
+				console.log('addNewFirebaseUser currentUser: ', currentUser);
+				utilities.sendResponse(response, null, currentUser); 
+			});
+		})
+		.catch(function(error) {
+			console.log('addNewFirebaseUser error: ', error);
+			utilities.sendResponse(response, error, null);
+		});
+	}
 
 };
