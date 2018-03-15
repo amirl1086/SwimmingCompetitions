@@ -1,112 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/swimming_pool_background"
+    android:background="@drawable/iteration_screen"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="15dp"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.IterationsActivity">
 
-
-    <TextView
-        android:id="@+id/time_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/timer_reset_time"
-        android:textColor="#009688"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_time_btn" />
-
-    <Button
-        android:id="@+id/start_time_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/time_view"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/start_timer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/reset_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/start_time_btn"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/reset_stopper"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_view" />
-
-    <Button
-        android:id="@+id/end_iteration_btn"
-        android:layout_width="230dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/start_time_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:text="@string/end_iteration"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttons_layout" />
-
-    <GridLayout
-        android:id="@+id/participant_names_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reset_btn" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <GridLayout
-        android:id="@+id/buttons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/participant_names_layout" />
+        <Button
+            android:id="@+id/start_time_btn"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:text="@string/start_timer"
+            android:textSize="25sp"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
 
-    <GridLayout
-        android:id="@+id/participant_results_layout"
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="124dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reset_btn" />
+        <TextView
+            android:id="@+id/time_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/timer_reset_time"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:textColor="#1a0f30"
+            android:textSize="50sp"
+            android:textStyle="bold" />
 
-</android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/reset_btn"
+            android:layout_width="150dp"
+            android:layout_marginTop="25dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/reset_stopper"
+            android:textSize="25sp"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+
+        <GridLayout
+            android:id="@+id/participant_names_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal" />
+
+        <GridLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal" />
+
+        <GridLayout
+            android:id="@+id/participant_results_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"/>
+
+        <Button
+            android:id="@+id/end_iteration_btn"
+            android:layout_marginTop="25dp"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/end_iteration"
+            android:textSize="25sp"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+    </LinearLayout>
+</ScrollView>

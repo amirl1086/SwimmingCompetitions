@@ -22,6 +22,20 @@ public class DateUtils {
         return "מתקיימת ביום " + hebrewDayOfWeek + ", ה - " + monthDay + " ל" + hebrewMonth + ", " + year + ", בשעה - " + hours + ":" + minutes;
     }
 
+    public String getCompleteDate(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int hours = calendar.get(Calendar.HOUR);
+        int minutes = calendar.get(Calendar.MINUTE);
+
+        String hebrewMonth = this.months[month];
+        String hebrewDayOfWeek = this.days[day];
+
+        return "מתקיימת ב: " + getDate(calendar) + ", בשעה - " + hours + ":" + minutes;
+    }
+
     public String getHebrewDate(Calendar calendar) {
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
@@ -56,6 +70,14 @@ public class DateUtils {
         int minutes = Integer.valueOf(timeArr[1]);
 
         return new Date(year, month, day, hours, minutes);
+    }
+
+    public String getDate(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return day + "/" + month + "/" + year;
     }
 
     public String getAge(Date birthDate){

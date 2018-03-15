@@ -28,7 +28,8 @@
         <activity android:name=".ViewCompetitionActivity" />
         <activity android:name=".IterationsActivity" />
         <activity android:name=".RegisterTempUserActivity" />
-        <activity android:name=".ViewCompetitionResultsActivity"></activity>
+        <activity android:name=".ViewCompetitionResultsActivity" />
+        <activity android:name=".ViewPersonalResultsActivity" />
     </application>
 
 </manifest>

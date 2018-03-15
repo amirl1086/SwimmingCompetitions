@@ -1,51 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/swimming_pool_background"
+    android:background="@drawable/abstract_swimming_pool"
+    android:orientation="vertical"
+    android:padding="15sp"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
-
 
     <TextView
         android:id="@+id/list_header"
-        android:layout_width="131dp"
-        android:layout_height="29dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:text="@string/list_of_competitions_txt"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/competitions_list"
-        android:layout_width="368dp"
-        android:layout_height="442dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_header" />
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15sp"
+        android:layout_marginTop="15sp"
+        android:layout_weight="1"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1dp" />
 
     <Button
         android:id="@+id/add_competition_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:onClick="switchToCreateNewCompetitionActivity"
         android:text="@string/add_competition_text_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/competitions_list"
-        android:onClick="switchToCreateNewCompetitionActivity"/>
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:theme="@style/ThemeOverlay.TransparentButton" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

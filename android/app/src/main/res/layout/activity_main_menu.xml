@@ -1,83 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity"
-    android:background="@drawable/swimming_pool_background">
+    android:background="@drawable/abstract_swimming_pool"
+    android:orientation="vertical"
+    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity">
 
-    <Button
-        android:id="@+id/personal_results_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_personal_results_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="32dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_margin="15sp"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/competitions_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_view_competitions_btn"
-        app:layout_constraintEnd_toStartOf="@+id/personal_results_btn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="32dp"
-        android:onClick="openViewCompetitionsActivity"/>
+        <Button
+            android:id="@+id/personal_results_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/menu_personal_results_btn"
+            android:onClick="openViewResultsActivity"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
 
-    <Button
-        android:id="@+id/real_time_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_realtime_view_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/personal_results_btn"
-        android:layout_marginRight="32dp" />
+        <Button
+            android:id="@+id/competitions_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="openViewCompetitionsActivity"
+            android:text="@string/menu_view_competitions_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
 
-    <Button
-        android:id="@+id/statistics_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_statistics_btn"
-        app:layout_constraintEnd_toStartOf="@+id/real_time_btn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/competitions_btn"
-        android:layout_marginLeft="32dp" />
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/img_pics_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_img_pics_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/real_time_btn"
-        android:layout_marginRight="32dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_margin="15sp"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/settings_btn"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/menu_settings_btn"
-        app:layout_constraintEnd_toStartOf="@+id/img_pics_btn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statistics_btn"
-        android:layout_marginLeft="32dp" />
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/real_time_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/menu_realtime_view_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+        <Button
+            android:id="@+id/statistics_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="openViewCompetitionsActivity"
+            android:text="@string/menu_statistics_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_margin="15sp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/img_pics_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/menu_img_pics_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+        <Button
+            android:id="@+id/settings_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="openViewCompetitionsActivity"
+            android:text="@string/menu_settings_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+    </RelativeLayout>
+
+</LinearLayout>

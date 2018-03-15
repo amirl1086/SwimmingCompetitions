@@ -48,83 +48,11 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
                 while (agesKeys.hasNext()) {
                     String currentAge = agesKeys.next();
                     JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
-
                     results.add(currentResult);
-
-
-
-
-
-
-
-/*                    JSONArray malesResults = new JSONArray(currentResult.getString("males"));
-                    JSONArray femalesResults = new JSONArray(currentResult.getString("females"));
-
-                    if(malesResults.length() > 0 || femalesResults.length() > 0) {
-                        ArrayList<Participant> maleParticipants = new ArrayList<>();
-                        ArrayList<Participant> femaleParticipants = new ArrayList<>();
-
-                        LinearLayout currentLayout = new LinearLayout(this);
-                        TextView ageText = new TextView(this);
-                        ageText.setText("עבור גילאי " + currentAge + ":");
-                        currentLayout.addView(ageText);
-
-                        for(int i = 0; i < malesResults.length(); i++) {
-                            Object maleResult = malesResults.get(i);
-
-                            maleParticipants.add(new Participant(new JSONObject(malesResults.get(i).toString())));
-                        }
-
-                        for(int i = 0; i < femalesResults.length(); i++) {
-                            femaleParticipants.add(new Participant(new JSONObject(femalesResults.get(i).toString())));
-                        }
-
-                        TextView maleResults = new TextView(this);
-                        TextView femaleResults = new TextView(this);
-                        String maleResultsStr = "";
-                        String femaleResultsStr = "";
-
-                        if(maleParticipants.size() > 0) {
-                            maleResultsStr += "בנים: ";
-                            for (int i = 0; i < maleParticipants.size(); i++) {
-                                maleResultsStr += (places[i] + maleParticipants.get(0).toString());
-                            }
-                            maleResults.setText(maleResultsStr);
-                            currentLayout.addView(maleResults);
-                        }
-
-                        if(femaleParticipants.size() > 0) {
-                            femaleResultsStr += "בנות: ";
-                            for (int i = 0; i < femaleParticipants.size(); i++) {
-                                femaleResultsStr += (places[i] + femaleParticipants.get(0).toString());
-                            }
-                            femaleResults.setText(femaleResultsStr);
-                            currentLayout.addView(femaleResults);
-                        }
-                        this.resultsGrid.addView(currentLayout);
-                    }*/
-/*
-                    Iterator<String> maleUsersIds = malesResults.keys();
-                    Iterator<String> femaleUsersIds = malesResults.keys();
-
-                    while (maleUsersIds.hasNext()) {
-                        String currentMaleId = maleUsersIds.next();
-
-                        maleParticipants.add(new Participant(currentMaleId, new JSONObject(malesResults.getString(currentMaleId))));
-                    }
-
-                    while (femaleUsersIds.hasNext()) {
-                        String currentFemaleId = femaleUsersIds.next();
-
-                        femaleParticipants.add(new Participant(currentFemaleId, new JSONObject(malesResults.getString(currentFemaleId))));
-                    }*/
-
                 }
 
                 this.resultsListAdapter = new ResultAdapter(this, results);
                 this.listView.setAdapter(this.resultsListAdapter);
-
-
             }
             catch (JSONException e) {
                 e.printStackTrace();

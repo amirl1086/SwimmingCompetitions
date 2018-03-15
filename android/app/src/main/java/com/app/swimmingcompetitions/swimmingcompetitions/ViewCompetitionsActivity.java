@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ViewCompetitionsActivity extends AppCompatActivity implements AsyncResponse {
+public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser = null;
     private JSON_AsyncTask jsonAsyncTaskPost;
@@ -40,9 +40,12 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                 data.put("httpMethod", "GET");
                 JSONObject currentUserJson = this.currentUser.getJSON_Object();
                 data.put("currentUser", currentUserJson);
-            } catch (JSONException e) {
+            }
+            catch (JSONException e) {
                 showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
             }
+
+            showProgressDialog();
 
             jsonAsyncTaskPost = new JSON_AsyncTask();
             jsonAsyncTaskPost.delegate = this;
@@ -83,13 +86,17 @@ public class ViewCompetitionsActivity extends AppCompatActivity implements Async
                         }
                     });
 
-                } else {
+                }
+                else {
                     showToast("ViewCompetitionsActivity processFinish: Error loging in");
                 }
+
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             showToast("ViewCompetitionsActivity processFinish: Error parsing JSONObject");
         }
+        hideProgressDialog();
     }
 
     public void showToast(String message) {
