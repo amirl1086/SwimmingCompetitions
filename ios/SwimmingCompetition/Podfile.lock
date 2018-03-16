@@ -44,6 +44,7 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - SwiftyJSON (4.0.0)
+  - TextFieldEffects (1.4.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - SwiftyJSON
+  - TextFieldEffects
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
@@ -65,7 +67,8 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+  TextFieldEffects: 4ee41b5216e674d55fb6ac25107bf1af7629176f
 
-PODFILE CHECKSUM: e3bcc42ff6a436eb758bea9ffe91ea565572c128
+PODFILE CHECKSUM: a6eb1a2c2b637ed0f4ab84062973b55334e96e91
 
 COCOAPODS: 1.4.0.rc.1

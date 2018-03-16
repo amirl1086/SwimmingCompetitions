@@ -14,7 +14,9 @@ class IterationViewController: UIViewController {
     var subviews: [UIView] = []
     
     @IBOutlet weak var timeLabel: UILabel!
-    var resetButton: UIButton!
+    @IBOutlet weak var resetButtonOutlet: UIButton!
+    @IBOutlet weak var endIterationButtonOutlet: UIButton!
+    
     
     var competition: Competition!
     var participantsIndex = [Int]()
@@ -32,17 +34,9 @@ class IterationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        resetButton = UIButton(frame: CGRect(x: (self.view.frame.width/2)-(50), y: 250, width: 100, height: 50))
-        resetButton.backgroundColor = .yellow
-        resetButton.setTitleColor(.black, for: .normal)
-        resetButton.setTitle("אפס", for: .normal)
-        resetButton.addTarget(self, action: #selector(resetTimer), for: .touchUpInside)
-      
-        timeLabel.text = "00:00:00"
         iterationNumber = Int(competition.numOfParticipants)!
     
         startNewIteration()
-        // Do any additional setup after loading the view.
         
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)    }
@@ -51,39 +45,37 @@ class IterationViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-   
+    @IBAction func endIterationButton(_ sender: Any) {
+        startNewIteration()
+    }
+    
     @IBAction func startButton(_ sender: UIButton) {
-        /*if !validTimer {
+        if !validTimer {
             validTimer = true
             sender.backgroundColor = .red
             sender.setTitle("עצור", for: .normal)
-            for i in 0...iterationNumber-1 {
-                buttonsArray[i].isEnabled = true
-            }
+
             timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-            resetButton.removeFromSuperview()
+            resetButtonOutlet.isEnabled = false
         }
         else {
             validTimer = false
             timer.invalidate()
             sender.backgroundColor = .green
             sender.setTitle("המשך", for: .normal)
+            resetButtonOutlet.isEnabled = true
             
-            self.view.addSubview(resetButton)
             
-        }*/
-        done()
+        }
+        
     }
     
-    @objc func resetTimer() {
+    @IBAction func resetButton(_ sender: Any) {
         validTimer = false
         minutes = 0
         seconds = 0
         fractions = 0
-        timeLabel.removeFromSuperview()
-        timeLabel.text = "00:00:00"
-        self.view.addSubview(timeLabel)
-        resetButton.removeFromSuperview()
+        self.timeLabel.text = "00:00:00"
     }
     
     @objc func updateTimer() {
@@ -111,7 +103,7 @@ class IterationViewController: UIViewController {
             let name = UILabel(frame: CGRect(x: start, y: 400, width: width, height: 30))
             name.text = "מתחרה \(i+1)"
             name.textAlignment = .center
-            self.view.addSubview(name)
+            
             let time = UILabel(frame: CGRect(x: start, y: 440, width: width, height: 30))
             time.text = "00:00:00"
             time.textAlignment = .center
@@ -128,12 +120,16 @@ class IterationViewController: UIViewController {
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
             button.isEnabled = false
             self.view.addSubview(button)
-
+            print("hetttttttttt")
+            print(participantsIndex.count)
+            print(i)
             if participantsIndex.count > i {
                 name.text = self.competition.participants[participantsIndex[i]].firstName
                 time.tag = participantsIndex[i]
                 button.tag = participantsIndex[i]
+                button.isEnabled = true
             }
+            self.view.addSubview(name)
             subviews.append(name)
             subviews.append(time)
             subviews.append(button)
@@ -149,7 +145,7 @@ class IterationViewController: UIViewController {
         self.labelsArray[sender.tag].text = "\(self.timeLabel.text!)"
         competition.participants[sender.tag].competed = "1"
         competition.participants[sender.tag].score = "\(self.timeLabel.text!)"
-        sender.isEnabled = false
+        //sender.isEnabled = false
         var i = 0
         for button in buttonsArray {
             if (button?.isEnabled)! == false {
@@ -157,11 +153,7 @@ class IterationViewController: UIViewController {
             }
         }
         if i == iterationNumber {
-            let button = UIButton(frame: CGRect(x: 50, y: 600, width: 200, height: 50))
-            button.backgroundColor = .gray
-            button.setTitle("סיים מקצה", for: .normal)
-            button.addTarget(self, action: #selector(startNewIteration), for: .touchUpInside)
-            self.view.addSubview(button)
+            self.endIterationButtonOutlet.isEnabled = true
         }
     }
     
@@ -174,14 +166,20 @@ class IterationViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func startNewIteration() {
+    func startNewIteration() {
+        if participantsIndex.count != 0 {
+            iterationIsDone()
+        }
         
         participantsIndex.removeAll()
+        print("participant Index")
+        print(participantsIndex)
         for (index, part) in self.competition.participants.enumerated() {
             if self.participantsIndex.count == iterationNumber {
                 break
             }
-            if part.competed == "0" {
+            
+            if (part.competed == "0" || part.competed == "false") {
                 self.participantsIndex.append(index)
             }
         }
@@ -189,7 +187,8 @@ class IterationViewController: UIViewController {
         for view in subviews {
             view.removeFromSuperview()
         }
-        
+        subviews.removeAll()
+        print(participantsIndex)
         createButtonsLabels()
         print("========start==========")
         /*let a:JSON = ["competition":competition] as Dictionary<String,Any>
@@ -208,55 +207,34 @@ class IterationViewController: UIViewController {
         print("========end==========")
         
     }
-    func done() {
+    func iterationIsDone() {
+        
+        var sendString = "{\"id\":\"\(self.competition.id)\",\"participants\":\"{"
+        
+        for i in 0...self.participantsIndex.count-1 {
+            print("im here")
+            print(participantsIndex.count)
+            let id = self.competition.participants[participantsIndex[i]].uid
+            let firstName = self.competition.participants[participantsIndex[i]].firstName
+            let lastName = self.competition.participants[participantsIndex[i]].lastName
+            let birthDate = self.competition.participants[participantsIndex[i]].birthDate
+            let gender = self.competition.participants[participantsIndex[i]].gender
+            let score = self.competition.participants[participantsIndex[i]].score
+            let competed = self.competition.participants[participantsIndex[i]].competed
+            
+            sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
+            if i != self.participantsIndex.count-1 {
+                sendString += ","
+            }
+        }
+        
+        sendString += "}\"}" as String
         
         
-        let b = ["22" : [
-            "score":"1.2",
-            "id":"22",
-            "gender":"fff",
-            "lastName":"ee",
-            "birthDate":"1/2/13",
-            "competed":true,
-        "firstName":"rr"]] as [String:AnyObject]
+        let param = ["competition":sendString] as [String:AnyObject]
         
-        let a = ["22":b
-        ] as [String:AnyObject]
         
-        let send = [
-            "competition": [
-                "id":"eeee",
-                "numOfParticipants":"2",
-                "activityDate":"2/3/12",
-                "name":"ff",
-                "fromAge":"1",
-                "toAge":"3",
-                "lengh":"20",
-                "swimmingStyle": "ff",
-                "participants":"{\"22\":{\"score\":\"1.2\",\"id\":\"22\",\"gender\":\"fff\",\"lastName\":\"ee\",\"birthDate\":\"1/2/13\",\"competed\":\"true\",\"firstName\":\"hh\"}}"]
-                ]as [String:AnyObject]
-        
-        let parameters = [
-            "competition":[
-                "id":"22",
-                "participants":[
-                    
-                        "11":[
-                            "id":"11",
-                            "score":"1.2",
-                            "gender":"ff",
-                            "lastName":"ee",
-                            "birthDate":"1/2/13",
-                            "competed":"true",
-                            "firstName":"rr"]
-                    
-                ]
-            ]
-        ] as [String:AnyObject]
-        
-        let s = ["competition":"{\"id\":\"eee\",\"numOfParticipants\":\"2\",\"activityDate\":\"2/3/12\",\"name\":\"ff\",\"fromAge\":\"1\",\"toAge\":\"3\",\"length\":\"20\",\"swimmingStyle\":\"ff\",\"participants\":\"{\"22\":\"{\"score\":\"1.2\",\"id\":\"22\",\"gender\":\"fff\",\"lastName\":\"ee\",\"birthDate\":\"1/2/13\",\"competed\":\"true\",\"firstName\":\"hh\"}\"}\"}"] as [String:AnyObject]
-        print(send as! JSON)
-        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: parameters) { (a) in
+        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: param) { (a) in
             print(a)
         }
     }

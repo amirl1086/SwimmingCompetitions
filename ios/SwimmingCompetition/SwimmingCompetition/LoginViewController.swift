@@ -17,7 +17,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //The input email and password for login
     @IBOutlet weak var emailTextFiled: UITextField!
     @IBOutlet weak var passwordTextFiled: UITextField!
-    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     var mainView = MainViewController()
     var user: User!
@@ -27,13 +26,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.logo.image = UIImage(named: "ios2.png")
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
-        errorLabel.isHidden = true
         
         activateSpinner(isActivate: false)
         
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
         
         
@@ -67,13 +65,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
-    
-    @IBAction func emailTextFieldBeginEditing(_ sender: Any) {
-        self.errorLabel.isHidden = true
-    }
    
     @IBAction func loginButton(_ sender: AnyObject) {
-        self.errorLabel.isHidden = true
+       
         activateSpinner(isActivate: true)
         let parameters = [
             "email": emailTextFiled.text!,
@@ -91,9 +85,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             else {
                 self.spinner.isHidden = true
-                let message = response.data["message"] as? String
-                self.errorLabel.text = message
-                self.errorLabel.isHidden = false
+                let alert = Service.shared.errorMessage(data: response.data)
+                self.present(alert, animated: true, completion: nil)
             }
             
         }

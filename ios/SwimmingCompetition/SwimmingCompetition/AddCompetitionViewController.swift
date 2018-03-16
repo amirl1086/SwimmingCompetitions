@@ -18,11 +18,14 @@ class AddCompetitionViewController: UIViewController {
    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var styleTextField: UITextField!
-    @IBOutlet weak var agesTextField: UITextField!
+    @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var dateTextField: UITextField!
+    @IBOutlet weak var agesTextField: UITextField!
     
     var range: Int = 0
     var style: String = ""
+    var fromAge: Int = 0
+    var toAge: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,10 +45,16 @@ class AddCompetitionViewController: UIViewController {
         styleTextField.inputView = pickerView
     }
     
+    @IBAction func numberTextBegin(_ sender: UITextField) {
+        self.pickerViewStart()
+        numberTextField.inputView = pickerView
+    }
+    
     @IBAction func agesTextBegin(_ sender: UITextField) {
         self.pickerViewStart()
         agesTextField.inputView = pickerView
     }
+    
     
     @IBAction func dateTextBegin(_ sender: UITextField) {
         dateTextField.inputView = datePicker
@@ -56,8 +65,10 @@ class AddCompetitionViewController: UIViewController {
             "activityDate": self.dateTextField.text!,
             "length": Float(self.range),
             "name": self.nameTextField.text!,
-            "numOfParticipants": self.agesTextField.text!,
-            "swimmingStyle": self.style
+            "numOfParticipants": self.numberTextField.text!,
+            "swimmingStyle": self.style,
+            "fromAge": self.fromAge,
+            "toAge": self.toAge
             ] as [String : AnyObject]
         
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
@@ -72,17 +83,26 @@ class AddCompetitionViewController: UIViewController {
             let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
+                let gotoMain = MainViewController()
+                self.navigationController?.pushViewController(gotoMain, animated: true)
             }))
             self.present(alert, animated: true, completion: nil)
             
         }
+        
+       /* let alert = UIAlertController(title: "", message: "message", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)*/
        
     }
 }
 
 extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        if pickerView == self.styleTextField.inputView {
+        if (pickerView == self.styleTextField.inputView || pickerView == self.agesTextField.inputView) {
             return 2
         }
         return 1
@@ -120,20 +140,26 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
             else {
                 range = rangePicker[row]
             }
-            self.range = range as! Int
+            self.range = range
             self.style = style
             styleTextField.text = "\(range) מטר \(style)"
         }
-        else {
-            /*var fromAge = rangePicker[pickerView.selectedRow(inComponent: 1)]
+        else if pickerView == self.agesTextField.inputView {
+            var fromAge = rangePicker[pickerView.selectedRow(inComponent: 1)]
             var toAge = rangePicker[pickerView.selectedRow(inComponent: 0)]
+            
             if component == 1 {
                 fromAge = rangePicker[row]
             }
             else {
                 toAge = rangePicker[row]
-            }*/
-            agesTextField.text = String(rangePicker[row])
+            }
+            self.fromAge = fromAge
+            self.toAge = toAge
+            agesTextField.text = "מגיל \(fromAge) עד גיל \(toAge)"
+        }
+        else {
+            numberTextField.text = String(rangePicker[row])
         }
     }
     
@@ -145,14 +171,17 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     
     func toolBar() {
         datePicker.datePickerMode = .date
+        
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.doneClicked))
+        
         toolBar.setItems([doneButton], animated: false)
         
         styleTextField.inputAccessoryView = toolBar
-        agesTextField.inputAccessoryView = toolBar
+        numberTextField.inputAccessoryView = toolBar
         dateTextField.inputAccessoryView = toolBar
+        agesTextField.inputAccessoryView = toolBar
     }
     
     @objc func doneClicked() {
