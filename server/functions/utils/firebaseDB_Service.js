@@ -102,29 +102,27 @@ module.exports = {
 	getPersonalResults: function(params, response) {
 		var uid = params.uid;
 		var db = admin.database();
-		var personalResultsRef = db.ref('personalResults/');
-
-		personalResultsRef.on('value', function(snapshot) {
-			var competitions = snapshot.val();
-			var 
-			for(competitionId in competitions) {
-				if(competitions[competitionId].child(uid).exists()) {
-
-				}
-			}
-		})
 
 		authentication.getUser(uid, null, function(currentUser) {
-			if(currentUser.type === 'coach') {
+			var personalResultsRef = db.ref('personalResults/');
 
-			}
-			else {
-				competitionsRef = db.ref('competitions/');
-			}
-		})
-
-		var competitionsRef = db.ref('competitions/' + params.competitionId);
-	}
+			personalResultsRef.on('value', function(snapshot) {
+				if(currentUser.type === 'coach') {
+					utilities.sendResponse(response, null, snapshot.val());
+				}
+				else {
+					var competitions = snapshot.val();
+					var selectedCompetitions = [];
+					for(competitionId in competitions) {
+						if(competitions[competitionId].child(uid).exists()) {
+							selectedCompetitions.push(competitions[competitionId]);
+						}
+					}
+					utilities.sendResponse(response, null, selectedCompetitions);
+				}
+			});
+		});
+	},
 	
 	joinToCompetition: function(params, response) {
 		var db = admin.database();
@@ -187,7 +185,7 @@ module.exports = {
 				console.log('setCompetitionResults snapshot ', JSON.stringify(snapshot.val()));
 
 				//get next participants
-				int numOfParticipants = 0;
+				var numOfParticipants = 0;
 				competition.currentParticipants = competition.participants.find(function(participant) {
 					if(!participant.competed && numOfParticipants < competition.numOfParticipants) {
 						numOfParticipants++;
