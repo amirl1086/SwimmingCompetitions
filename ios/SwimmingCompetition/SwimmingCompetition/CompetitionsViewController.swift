@@ -10,6 +10,7 @@ import UIKit
 
 class CompetitionsViewController: UIViewController {
     
+   
     @IBOutlet weak var tableView: UITableView!
     var user: User!
     var competitions = [Competition]()
@@ -22,8 +23,9 @@ class CompetitionsViewController: UIViewController {
         addButtonView()
         getCompetitionsData()
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.tableView.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        
+        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -76,9 +78,20 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = competitions[indexPath.row].name
+        let cell = tableView.dequeueReusableCell(withIdentifier: "competitionCell", for: indexPath) as! CompetitionTableViewCell
+        cell.name.text = competitions[indexPath.row].name
+        cell.date.text = "מתקיים בתאריך: \(competitions[indexPath.row].activityDate)"
+        cell.ages.text = "לגילאי \(competitions[indexPath.row].fromAge) עד \(competitions[indexPath.row].toAge)"
+        cell.layer.backgroundColor = UIColor.clear.cgColor
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = .clear
+        
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

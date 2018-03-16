@@ -16,6 +16,8 @@ struct Competition {
     let length: String
     let numOfParticipants:String
     let id: String
+    let fromAge: String
+    let toAge: String
     var participants = [Participant]()
     
     
@@ -25,6 +27,8 @@ struct Competition {
             let swimmingStyle = json["swimmingStyle"] as? String
             let length = json["length"] as? String
             let numOfParticipants = json["numOfParticipants"] as? String
+            let fromAge = json["fromAge"] as? String
+            let toAge = json["toAge"] as? String
             let id = id as? String
             let participants = json["participants"] as? JSON
             //else{return nil}
@@ -35,9 +39,10 @@ struct Competition {
         self.swimmingStyle = swimmingStyle!
         self.length = length!
         self.numOfParticipants = numOfParticipants!
+        self.fromAge = fromAge!
+        self.toAge = toAge!
         self.id = id!
         
-        print("heyyyyyyyyy")
         if participants != nil {
             for part in participants! {
                 var participant : Participant!
