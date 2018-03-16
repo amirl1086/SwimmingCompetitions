@@ -15,6 +15,7 @@ public class Competition implements Serializable {
     private String name;
     private String swimmingStyle;
     private String participants;
+    private String currentParticipants;
     private Date activityDate;
     private String numOfParticipants;
     private String fromAge;
@@ -46,6 +47,10 @@ public class Competition implements Serializable {
 
         if(data.has("participants")) {
             this.participants = data.getString("participants");
+        }
+
+        if(data.has("currentParticipants")) {
+            this.currentParticipants = data.getString("currentParticipants");
         }
     }
 
@@ -82,7 +87,10 @@ public class Competition implements Serializable {
     }
 
     public ArrayList<Participant> getParticipants() throws JSONException {
-        JSONObject dataObj = new JSONObject(this.participants);
+        return getParticipants(new JSONObject(this.participants));
+    }
+
+    public ArrayList<Participant> getParticipants(JSONObject dataObj) throws JSONException {
         Iterator<String> participantIds = dataObj.keys();
         ArrayList<Participant> participants = new ArrayList<>();
 
@@ -93,6 +101,10 @@ public class Competition implements Serializable {
             participants.add(participant);
         }
         return participants;
+    }
+
+    public ArrayList<Participant> getCurrentParticipants() throws JSONException {
+        return getParticipants(new JSONObject(this.currentParticipants));
     }
 
     public void setParticipants(ArrayList<Participant> participants) throws JSONException{
