@@ -77,4 +77,10 @@ exports.setCompetitionResults = functions.https.onRequest(function(request, resp
 	
 	firebaseDB_Service.setCompetitionResults(request.body, response);
 });
+
+exports.initCompetitionForIteration = functions.https.onRequest(function(request, response) {
+	console.log('exports.initCompetitionForIteration body ', request.body);
+	
+	firebaseDB_Service.initCompetitionForIteration(request.body, response);
+});
 /* ================================ */

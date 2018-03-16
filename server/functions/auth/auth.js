@@ -19,16 +19,26 @@ module.exports =  {
 		});
 	},
 
-	getUser: function(uid, response) {
+	getUser: function(uid, response, callback) {
 		firebaseDB_Service.getUser(uid, function(currentUser) {
 			if(currentUser && currentUser.uid) {
-				utilities.sendResponse(response, null, currentUser);
+				if(callback) {
+					callback(currentUser);
+				}
+				else {
+					utilities.sendResponse(response, null, currentUser);
+				}
+				
 			}
 			else {
-				utilities.sendResponse(response, currentUser, null);
+				if(callback) {
+					return null;
+				}
+				else {
+					utilities.sendResponse(response, currentUser, null);
+				}
 			}
 		});
-
 	},
 
 	addNewFirebaseUser: function(params, response) {

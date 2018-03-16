@@ -2,6 +2,7 @@
 const admin = require('firebase-admin');
 
 var utilities = require('./utils.js');
+var authentication = require('../auth/auth.js');
 
 var moment = require('moment');
 
@@ -66,6 +67,7 @@ module.exports = {
 		});
 	},
 
+
 	getCompetitions: function(uid, response) {
 		var db = admin.database();
 		var competitionsRef = db.ref('competitions/');
@@ -77,6 +79,52 @@ module.exports = {
 			utilities.sendResponse(response, error, null);
 		});
 	},
+
+	initCompetitionForIteration: function(params, response) {
+		var db = admin.database();
+		var competitionsRef = db.ref('competitions/' + params.competitionId);
+
+		competitionsRef.on('value', function(snapshot) {
+			var competition = snapshot.val();
+			competition.currentParticipants = [];
+
+			for(var i = 0; i < competition.numOfParticipants; i++) {
+				competition.currentParticipants.push(competition.participants[i]);
+				competition.participants[i].competed = true;
+			}
+
+			utilities.sendResponse(response, null, snapshot.val());
+		}, function(error) {
+			utilities.sendResponse(response, error, null);
+		});
+	},
+
+	getPersonalResults: function(params, response) {
+		var uid = params.uid;
+		var db = admin.database();
+		var personalResultsRef = db.ref('personalResults/');
+
+		personalResultsRef.on('value', function(snapshot) {
+			var competitions = snapshot.val();
+			var 
+			for(competitionId in competitions) {
+				if(competitions[competitionId].child(uid).exists()) {
+
+				}
+			}
+		})
+
+		authentication.getUser(uid, null, function(currentUser) {
+			if(currentUser.type === 'coach') {
+
+			}
+			else {
+				competitionsRef = db.ref('competitions/');
+			}
+		})
+
+		var competitionsRef = db.ref('competitions/' + params.competitionId);
+	}
 	
 	joinToCompetition: function(params, response) {
 		var db = admin.database();
@@ -113,33 +161,54 @@ module.exports = {
 	setCompetitionResults: function(params, response) {
 		var db = admin.database();
 		var currentCompetition = JSON.parse(params.competition);
-		var participantsResults = JSON.parse(currentCompetition.participants);
 
-		var personalResults = {};
+		updateCompetition(currentCompetition, function(competition) {
+			//var participantsResults = JSON.parse(currentCompetition.participants);
+			var participantsResults = JSON.parse(competition.currentParticipants);
 
-		for(key in participantsResults) {
-			var currentParticipant = JSON.parse(participantsResults[key]);
-			personalResults[currentParticipant.id] = {
-				'firstName': currentParticipant.firstName,
-				'lastName': currentParticipant.lastName,
-				'birthDate': currentParticipant.birthDate,
-				'gender': currentParticipant.gender,
-				'score': currentParticipant.score
-			};
-		}
+			var personalResults = {};
+
+			for(key in participantsResults) {
+				var currentParticipant = JSON.parse(participantsResults[key]);
+				personalResults[currentParticipant.id] = {
+					'firstName': currentParticipant.firstName,
+					'lastName': currentParticipant.lastName,
+					'birthDate': currentParticipant.birthDate,
+					'gender': currentParticipant.gender,
+					'score': currentParticipant.score
+				};
+			}
+			
+			var presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
+
+			presonalResultsRef.update(personalResults);
+
+			presonalResultsRef.on('value', function(snapshot) {
+				console.log('setCompetitionResults snapshot ', JSON.stringify(snapshot.val()));
+
+				//get next participants
+				int numOfParticipants = 0;
+				competition.currentParticipants = competition.participants.find(function(participant) {
+					if(!participant.competed && numOfParticipants < competition.numOfParticipants) {
+						numOfParticipants++;
+						participant.competed = true;
+						return true;
+					}
+				});
+
+				if(competition.currentParticipants.length === 0) {
+					var resultsAgeMap = sortPersonalResults(competition, snapshot.val());
+					utilities.sendResponse(response, null, resultsAgeMap);
+				}
+				else {
+					utilities.sendResponse(response, null, competition);
+				}
+				
+			}, function(error) {
+				utilities.sendResponse(response, error, null);
+			});
+		})
 		
-		var presonalResultsRef = db.ref('personalResults/' + currentCompetition.id + '/');
-
-		presonalResultsRef.set(personalResults);
-
-		presonalResultsRef.on('value', function(snapshot) {
-			console.log('setCompetitionResults snapshot ', JSON.stringify(snapshot.val()));
-
-			var resultsAgeMap = sortPersonalResults(currentCompetition, snapshot.val());
-			utilities.sendResponse(response, null, resultsAgeMap);
-		}, function(error) {
-			utilities.sendResponse(response, error, null);
-		});
 	}
 	
 
@@ -194,5 +263,17 @@ var arraySortByScore = function(arrayList) {
 	        return 1;
 	    }
 	    return 0;
+	});
+}
+
+var updateCompetition = function(competition, callback) {
+	var db = admin.database();
+	var competitionsRef = db.ref('competitions/' + competition.id + '/');
+	competitionsRef.update(competition);
+
+	competitionsRef.on('value', function(snapshot) {
+		callback(snapshot.val());
+	}, function(error) {
+		callback(null);
 	});
 }

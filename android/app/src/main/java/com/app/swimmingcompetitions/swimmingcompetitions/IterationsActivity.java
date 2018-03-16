@@ -210,6 +210,7 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+            button.setHeight(35);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);
