@@ -10,7 +10,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainMenuActivity extends AppCompatActivity implements AsyncResponse {
+public class MainMenuActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser = null;
 
@@ -46,21 +46,19 @@ public class MainMenuActivity extends AppCompatActivity implements AsyncResponse
             JSONObject response = new JSONObject(result);
             if (response != null && response.getBoolean("success")) {
                 JSONObject userData = response.getJSONObject("data");
-
-                String uid = userData.getString("uid");
-                String firstName = userData.getString("firstName");
-                String lastName = userData.getString("lastName");
-                String birthDate = userData.getString("birthDate");
-                String email = userData.getString("email");
-                String gender = userData.getString("gender");
-                String type = userData.getString("type");
-
-                currentUser = new User(uid, firstName, lastName, birthDate, email, gender, type);
-            } else {
+                currentUser = new User(userData);
+            }
+            else {
                 showToast("LogInActivity processFinish: Error loging in");
             }
         } catch (JSONException e) {
             showToast("LogInActivity processFinish: Error parsing JSONObject");
         }
+    }
+
+    public void openViewResultsActivity(View view) {
+        Intent intent = new Intent(this, ViewPersonalResultsActivity.class);
+        intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
     }
 }

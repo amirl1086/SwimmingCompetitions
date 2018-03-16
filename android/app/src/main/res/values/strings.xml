@@ -55,9 +55,8 @@
     <string name="from">מ -</string>
     <string name="to">עד -</string>
     <string name="take_place_on_date">מתקיימת בתאריך:</string>
-    <string name="on_time">בשעה:</string>
     <string name="distance_and_style">מרחק וסגנון שחייה:</string>
-    <string name="meters">מטרים</string>
+    <string name="meters">מטרים,</string>
     <string name="ages">גילאים:</string>
     <string name="participants_for_iteration">מספר משתתפים בכל מקצה:</string>
     <string name="register">הרשם</string>

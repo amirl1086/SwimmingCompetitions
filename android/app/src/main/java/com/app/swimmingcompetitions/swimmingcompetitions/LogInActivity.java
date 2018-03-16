@@ -1,27 +1,25 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class LogInActivity extends AppCompatActivity implements AsyncResponse {
+public class LogInActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser = null;
     private JSON_AsyncTask jsonAsyncTaskPost;
 
     private EditText logInMail;
     private EditText logInPassword;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +52,12 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
             logInData.put("httpMethod", "POST");
             logInData.put("email", logInMailText);
             logInData.put("password", logInPasswordText);
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
         }
 
+        showProgressDialog();
         //call the server
         jsonAsyncTaskPost.execute(logInData.toString());
     }
@@ -69,25 +69,19 @@ public class LogInActivity extends AppCompatActivity implements AsyncResponse {
                 JSONObject response = new JSONObject(result);
                 if(response.getBoolean("success")) {
                     JSONObject userData = response.getJSONObject("data");
-
-                    String uid = userData.getString("uid");
-                    String firstName = userData.getString("firstName");
-                    String lastName = userData.getString("lastName");
-                    String birthDate = userData.getString("birthDate");
-                    String email = userData.getString("email");
-                    String gender = userData.getString("gender");
-                    String type = userData.getString("type");
-
-                    currentUser = new User(uid, firstName, lastName, birthDate, email, gender, type);
+                    currentUser = new User(userData);
 
                     switchToMainMenuActivity();
                 }
-            } else {
+            }
+            else {
                 showToast("LogInActivity processFinish: Error loging in");
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             showToast("LogInActivity processFinish: Error parsing JSONObject");
         }
+        hideProgressDialog();
     }
 
     public void showToast(String message) {

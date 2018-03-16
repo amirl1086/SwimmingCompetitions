@@ -195,9 +195,11 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
             participant.setListviewIndex(i);
 
             TextView nameView = getTextView(participant.getFirstName() + " " + participant.getLastName(), totalWidth / numOfParticipants, 18,  Color.BLACK, Gravity.CENTER);
+            nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
             this.participantNamesLayout.addView(nameView);
 
             TextView resultView = getTextView("00:00", totalWidth / numOfParticipants, 18,  Color.BLACK, Gravity.CENTER);
+            resultView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
             resultView.setId(i);
             this.participantResultsLayout.addView(resultView);
         }
@@ -207,6 +209,8 @@ public class IterationsActivity extends AppCompatActivity implements AsyncRespon
 
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+            button.setHeight(35);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);

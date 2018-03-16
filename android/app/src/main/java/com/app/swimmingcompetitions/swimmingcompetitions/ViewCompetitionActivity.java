@@ -91,7 +91,7 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
             participantsForIteration = findViewById(R.id.num_of_participants_for_competition);
             calendar = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
 
-            date.setText(dateUtils.getHebrewDate(calendar));
+            date.setText(dateUtils.getDate(calendar));
             competitionName.setText(selectedCompetition.getName());
             time.setText(dateUtils.getTime(calendar));
             distance.setText(selectedCompetition.getLength());

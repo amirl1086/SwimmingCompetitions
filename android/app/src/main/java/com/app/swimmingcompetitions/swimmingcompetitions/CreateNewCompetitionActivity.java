@@ -90,6 +90,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         //set up spinner picker for swimming style
         this.swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
         this.spinner = (Spinner) findViewById(R.id.swimming_style_spinner);
+
         this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swimmingStyles) {
 
             @Override
@@ -119,9 +120,6 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         this.spinner.setAdapter(spinnerListAdapter);
 
         if(intent.hasExtra("editMode")) {
-
-        }
-        else {
 
         }
     }

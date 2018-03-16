@@ -40,29 +40,6 @@ public class PersonalResultAdapter extends ArrayAdapter<PersonalResult> {
         }
         PersonalResult currentResult = personalResults.get(position);
 
-
-
-
-
-
-
-
-        /*TextView competitionName = listItem.findViewById(R.id.competition_list_item_name);
-        competitionName.setText(currentResult.getName());
-
-        TextView competitionDate = listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = dateUtils.dateToCalendar(currentResult.getActivityDate());
-        competitionDate.setText(dateUtils.getCompleteHebrewDate(calendar));
-
-        TextView competitionAges = listItem.findViewById(R.id.competition_list_item_ages);
-        competitionAges.setText(currentResult.getAgesString());
-
-        TextView competitionStyle = listItem.findViewById(R.id.competition_list_item_style);
-        competitionStyle.setText(currentResult.getSwimmingStyle());
-
-        TextView competitionLength = listItem.findViewById(R.id.competition_list_item_length);
-        competitionLength.setText(currentResult.getLength().toString());*/
-
         return listItem;
     }
 }

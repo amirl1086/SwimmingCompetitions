@@ -1,106 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:padding="15dp"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.RegisterTempUserActivity"
-    android:background="@drawable/swimming_pool_background">
+    android:background="@drawable/abstract_swimming_pool">
 
 
-    <EditText
-        android:id="@+id/temp_register_first_name"
-        android:layout_width="348dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/register_first_name"
-        android:inputType="textPersonName"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <EditText
+            android:id="@+id/temp_register_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="@string/register_first_name"
+            android:textSize="22sp"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <EditText
         android:id="@+id/temp_register_last_name"
-        android:layout_width="348dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:textSize="22sp"
         android:hint="@string/register_last_name"
         android:inputType="textPersonName"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temp_register_first_name" />
+        android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/temp_birth_date_view"
-        android:layout_width="137dp"
-        android:layout_height="47dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="8dp"
-        android:paddingTop="5dp"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/temp_register_gender"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.71"
-        app:layout_constraintStart_toEndOf="@+id/temp_register_birth_date"
-        app:layout_constraintTop_toBottomOf="@+id/temp_register_last_name"
-        app:layout_constraintVertical_bias="0.55" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-    <Button
-        android:id="@+id/temp_register_birth_date"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="@string/register_birth_date"
-        android:onClick="setDate"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/temp_register_gender"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temp_register_last_name"
-        app:layout_constraintVertical_bias="0.09" />
+        <TextView
+            android:id="@+id/temp_birth_date_view"
+            android:textSize="22sp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/temp_register_birth_date"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:hint="@string/register_birth_date"
+            android:onClick="setDate"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/temp_register_gender"
-        android:layout_width="190dp"
-        android:layout_height="28dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="92dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="88dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temp_register_last_name" />
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="22sp" />
 
     <Button
         android:id="@+id/temp_register_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="20dp"
         android:onClick="registerTempUser"
         android:text="@string/register_temp_user_btn"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temp_register_gender"
-        app:layout_constraintVertical_bias="0.015" />
+        android:textSize="25sp"
+        android:theme="@style/ThemeOverlay.TransparentButton"/>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
