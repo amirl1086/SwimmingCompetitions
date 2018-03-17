@@ -14,30 +14,31 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ViewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
-
-    private JSON_AsyncTask jsonAsyncTaskPost;
+public class ViewCompetitionActivity extends LoadingDialog {
+/*
+    private JSON_AsyncTask jsonAsyncTaskPost;*/
     private User currentUser = null;
     private Competition selectedCompetition;
-
-    private Button registerEditBtn;
-    private Button registerTempUserBtn;
-    private Button startCompetitionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_competition);
 
-        TextView competitionName;
-        TextView date;
-        TextView time;
-        TextView distance;
-        TextView style;
-        TextView ages;
-        TextView participantsForIteration;
-        Calendar calendar;
+        TextView competitionName = findViewById(R.id.competition_name);
+        TextView date = findViewById(R.id.date_of_competition);
+        TextView time = findViewById(R.id.time_of_competition);
+        TextView distance = findViewById(R.id.distance_of_competition);
+        TextView style = findViewById(R.id.style_of_competition);
+        TextView ages = findViewById(R.id.ages_range_of_competition);
+        TextView participantsForIteration = findViewById(R.id.num_of_participants_for_competition);
+
+        Button registerEditBtn = findViewById(R.id.register_edit_btn);
+        Button startCompetitionBtn = findViewById(R.id.start_competition);
+        /*Button registerTempUserBtn = findViewById(R.id.register_temporary_user_btn);*/
+
         DateUtils dateUtils = new DateUtils();
+        Calendar calendar;
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
@@ -50,7 +51,7 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
                     Participant newParticipant = new Participant(newParticipantJson.getString("id"), newParticipantJson);
                     ArrayList<Participant> participants = this.selectedCompetition.getParticipants();
                     participants.add(newParticipant);
-                    this.selectedCompetition.setParticipants(participants);
+                    this.selectedCompetition.setAllParticipants(participants);
                 }
                 catch (JSONException e) {
                     showToast("ViewCompetitionActivity onCreate: Error adding new participant");
@@ -58,13 +59,10 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
 
             }
 
-            this.registerEditBtn = findViewById(R.id.register_edit_btn);
-            this.registerTempUserBtn = findViewById(R.id.register_temporary_user_btn);
-            this.startCompetitionBtn = findViewById(R.id.start_competition);
 
             if(this.currentUser.getType().equals("coach")) {
-                this.registerEditBtn.setText("ערוך תחרות");
-                this.registerEditBtn.setOnClickListener(new View.OnClickListener() {
+                registerEditBtn.setText("ערוך תחרות");
+                registerEditBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switchToCreateNewCompetitionActivityEditMode();
@@ -72,25 +70,17 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
                 });
             }
             else {
-                this.startCompetitionBtn.setVisibility(View.INVISIBLE);
+                startCompetitionBtn.setVisibility(View.INVISIBLE);
 
-                this.registerEditBtn.setOnClickListener(new View.OnClickListener() {
+                registerEditBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        registerUserToCompetition();
+                        switchToRegisterUserToCompetitionActivity(view);
                     }
                 });
             }
 
-            competitionName = findViewById(R.id.competition_name);
-            date = findViewById(R.id.date_of_competition);
-            time = findViewById(R.id.time_of_competition);
-            distance = findViewById(R.id.distance_of_competition);
-            style = findViewById(R.id.style_of_competition);
-            ages = findViewById(R.id.ages_range_of_competition);
-            participantsForIteration = findViewById(R.id.num_of_participants_for_competition);
             calendar = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
-
             date.setText(dateUtils.getDate(calendar));
             competitionName.setText(selectedCompetition.getName());
             time.setText(dateUtils.getTime(calendar));
@@ -101,14 +91,14 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
         }
     }
 
-    public void registerTempUserToCompetition(View view) {
+    public void switchToRegisterUserToCompetitionActivity(View view) {
         Intent intent = new Intent(this, RegisterTempUserActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
     }
 
-    public void registerUserToCompetition() {
+/*    public void registerUserToCompetition() {
         try {
             this.jsonAsyncTaskPost = new JSON_AsyncTask();
             jsonAsyncTaskPost.delegate = this;
@@ -124,7 +114,7 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
         catch (Exception e) {
             showToast("ViewCompetitionActivity registerUserToCompetition: Error calling joinToCompetition");
         }
-    }
+    }*/
 
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -145,18 +135,19 @@ public class ViewCompetitionActivity extends AppCompatActivity implements AsyncR
         startActivity(intent);
     }
 
-    @Override
+/*    @Override
     public void processFinish(String result) {
         try {
             JSONObject response = new JSONObject(result);
             JSONObject dataObj = response.getJSONObject("data");
-            if (response.getBoolean("success")) {
+            if(response.getBoolean("success")) {
                 //switchToMainMenuActivity(dataObj);
-            } else {
+            }
+            else {
                 showToast("LogInActivity processFinish: Error registering");
             }
         } catch (JSONException e) {
             showToast("RegisterActivity, processFinish: Error parsing JSONObject");
         }
-    }
+    }*/
 }

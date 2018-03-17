@@ -54,12 +54,17 @@ public class Competition implements Serializable {
         }
     }
 
+    public Competition(JSONObject data) throws JSONException{
+        this(data.getString("id"), data);
+    }
+
     public JSONObject getJSON_Object() throws JSONException {
         JSONObject data = new JSONObject();
 
         data.put("id", this.id);
         data.put("name", this.name);
         data.put("participants", this.participants);
+        data.put("currentParticipants", this.currentParticipants);
         data.put("swimmingStyle", this.swimmingStyle);
         data.put("activityDate", this.activityDate.toString());
         data.put("numOfParticipants", this.numOfParticipants);
@@ -70,7 +75,7 @@ public class Competition implements Serializable {
         return data;
     }
 
-
+/*
     public ArrayList<Participant> getNewParticipants(ArrayList<Participant> participants) {
         ArrayList<Participant> newParticipants = new ArrayList<>();
 
@@ -84,7 +89,7 @@ public class Competition implements Serializable {
         }
 
         return newParticipants;
-    }
+    }*/
 
     public ArrayList<Participant> getParticipants() throws JSONException {
         return getParticipants(new JSONObject(this.participants));
@@ -107,13 +112,21 @@ public class Competition implements Serializable {
         return getParticipants(new JSONObject(this.currentParticipants));
     }
 
-    public void setParticipants(ArrayList<Participant> participants) throws JSONException{
+    public void setCurrentParticipants(ArrayList<Participant> participants) throws JSONException{
+        this.currentParticipants = getParticipantsStr(participants);
+    }
+
+    public void setAllParticipants(ArrayList<Participant> participants) throws JSONException{
+        this.participants = getParticipantsStr(participants);
+    }
+
+    public String getParticipantsStr(ArrayList<Participant> participants) throws JSONException{
         JSONObject participantsMap = new JSONObject();
         for(Participant participant : participants) {
             JSONObject participantJson = participant.getJSON_Object();
             participantsMap.put(participant.getUserId(), participantJson.toString());
         }
-        this.participants = participantsMap.toString();
+        return participantsMap.toString();
     }
 
 

@@ -1,13 +1,8 @@
 
 const admin = require('firebase-admin');
-
 var utilities = require('./utils.js');
 var authentication = require('../auth/auth.js');
-
 var moment = require('moment');
-
-console.log('moment ', moment);
-
 
 module.exports = {
 
@@ -181,31 +176,41 @@ module.exports = {
 
 			presonalResultsRef.update(personalResults);
 
-			presonalResultsRef.on('value', function(snapshot) {
-				console.log('setCompetitionResults snapshot ', JSON.stringify(snapshot.val()));
+			presonalResultsRef.on('value', 
+				function(snapshot) {
+					var competedParticipants = snapshot.val();
 
-				//get next participants
-				var numOfParticipants = 0;
-				competition.currentParticipants = competition.participants.find(function(participant) {
-					if(!participant.competed && numOfParticipants < competition.numOfParticipants) {
-						numOfParticipants++;
-						participant.competed = true;
-						return true;
+					var participants = competition.participants;
+					var newParticipants = {};
+
+					var numOfParticipants = 0;
+					for(key in participants) {
+						var newParticipant = participants[key];
+						if(!competedParticipants[key] && numOfParticipants < parseInt(competition.numOfParticipants)) {
+
+							newParticipants[key] = newParticipant;
+							numOfParticipants++;
+						}
 					}
-				});
 
-				if(competition.currentParticipants.length === 0) {
-					var resultsAgeMap = sortPersonalResults(competition, snapshot.val());
-					utilities.sendResponse(response, null, resultsAgeMap);
+					if(Object.keys(newParticipants).length === 0) {
+						//TODO - maybe needs to query all results
+						var resultsAgeMap = sortPersonalResults(competition, snapshot.val());
+						resultsAgeMap.type = 'resultsMap';
+						utilities.sendResponse(response, null, resultsAgeMap);
+					}
+					else {
+						competition.currentParticipants = newParticipants;
+						console.log('competition ', competition);
+						competition.type = 'newIteration';
+						utilities.sendResponse(response, null, competition);
+					}
+					
+				}, function(error) {
+					utilities.sendResponse(response, error, null);
 				}
-				else {
-					utilities.sendResponse(response, null, competition);
-				}
-				
-			}, function(error) {
-				utilities.sendResponse(response, error, null);
-			});
-		})
+			);
+		});
 		
 	}
 	
@@ -267,6 +272,15 @@ var arraySortByScore = function(arrayList) {
 var updateCompetition = function(competition, callback) {
 	var db = admin.database();
 	var competitionsRef = db.ref('competitions/' + competition.id + '/');
+
+	console.log('competition ', competition);
+	competition.participants = JSON.parse(competition.participants);
+
+	for(key in competition.participants) {
+		competition.participants[key] = JSON.parse(competition.participants[key]);
+	}
+	delete competition.currentCompetition;
+
 	competitionsRef.update(competition);
 
 	competitionsRef.on('value', function(snapshot) {
