@@ -92,7 +92,10 @@ public class Competition implements Serializable {
     }*/
 
     public ArrayList<Participant> getParticipants() throws JSONException {
-        return getParticipants(new JSONObject(this.participants));
+        if(this.participants != null) {
+            return getParticipants(new JSONObject(this.participants));
+        }
+        return null;
     }
 
     public ArrayList<Participant> getParticipants(JSONObject dataObj) throws JSONException {

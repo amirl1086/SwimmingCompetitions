@@ -1,6 +1,7 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ViewCompetitionActivity extends LoadingDialog {
-/*
-    private JSON_AsyncTask jsonAsyncTaskPost;*/
+public class ViewCompetitionActivity extends LoadingDialog implements AsyncResponse {
+
+    private JSON_AsyncTask jsonAsyncTaskPost;
     private User currentUser = null;
     private Competition selectedCompetition;
 
@@ -35,7 +36,7 @@ public class ViewCompetitionActivity extends LoadingDialog {
 
         Button registerEditBtn = findViewById(R.id.register_edit_btn);
         Button startCompetitionBtn = findViewById(R.id.start_competition);
-        /*Button registerTempUserBtn = findViewById(R.id.register_temporary_user_btn);*/
+        Button registerTempUserBtn = findViewById(R.id.register_temporary_user_btn);
 
         DateUtils dateUtils = new DateUtils();
         Calendar calendar;
@@ -98,24 +99,6 @@ public class ViewCompetitionActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-/*    public void registerUserToCompetition() {
-        try {
-            this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
-
-            JSONObject data = new JSONObject();
-            data.put("urlSuffix", "/joinToCompetition");
-            data.put("httpMethod", "POST");
-            data.put("uid", this.currentUser.getUid());
-            data.put("competitionId", this.selectedCompetition.getId());
-
-            jsonAsyncTaskPost.execute(data.toString());
-        }
-        catch (Exception e) {
-            showToast("ViewCompetitionActivity registerUserToCompetition: Error calling joinToCompetition");
-        }
-    }*/
-
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -135,7 +118,25 @@ public class ViewCompetitionActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-/*    @Override
+    public void registerTempUserToCompetition(View view) {
+        try {
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            jsonAsyncTaskPost.delegate = this;
+
+            JSONObject data = new JSONObject();
+            data.put("urlSuffix", "/joinToCompetition");
+            data.put("httpMethod", "POST");
+            data.put("uid", this.currentUser.getUid());
+            data.put("competitionId", this.selectedCompetition.getId());
+
+            jsonAsyncTaskPost.execute(data.toString());
+        }
+        catch (Exception e) {
+            showToast("ViewCompetitionActivity registerUserToCompetition: Error calling joinToCompetition");
+        }
+    }
+
+    @Override
     public void processFinish(String result) {
         try {
             JSONObject response = new JSONObject(result);
@@ -149,5 +150,5 @@ public class ViewCompetitionActivity extends LoadingDialog {
         } catch (JSONException e) {
             showToast("RegisterActivity, processFinish: Error parsing JSONObject");
         }
-    }*/
+    }
 }
