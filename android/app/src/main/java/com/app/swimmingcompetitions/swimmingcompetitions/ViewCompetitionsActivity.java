@@ -45,7 +45,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                 showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
             }
 
-            showProgressDialog();
+            showProgressDialog("טוען תחרויות...");
 
             jsonAsyncTaskPost = new JSON_AsyncTask();
             jsonAsyncTaskPost.delegate = this;
@@ -60,7 +60,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                 JSONObject response = new JSONObject(result);
 
                 if (response.getBoolean("success")) {
-                    competitions = new ArrayList<>();
+                    this.competitions = new ArrayList<>();
 
                     if (response.get("data") != null) {
                         JSONObject dataObj = response.getJSONObject("data");
@@ -70,13 +70,13 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                             String currentId = competitionIds.next();
                             JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
 
-                            competitions.add(new Competition(currentId, currentCompetition));
+                            this.competitions.add(new Competition(currentId, currentCompetition));
                         }
                     }
 
-                    competitionsListAdapter = new CompetitionAdapter(this, competitions);
+                    this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, competitions);
                     this.listView = findViewById(R.id.competitions_list);
-                    this.listView.setAdapter(competitionsListAdapter);
+                    this.listView.setAdapter(this.competitionsListAdapter);
 
                     this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -85,7 +85,6 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                             switchToViewCompetitionActivity(selectedCompetition);
                         }
                     });
-
                 }
                 else {
                     showToast("ViewCompetitionsActivity processFinish: Error loging in");

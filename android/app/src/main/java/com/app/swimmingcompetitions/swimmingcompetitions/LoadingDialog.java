@@ -10,10 +10,10 @@ import android.app.ProgressDialog;
 public class LoadingDialog extends AppCompatActivity {
     public ProgressDialog mProgressDialog;
 
-    public void showProgressDialog() {
+    public void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("טוען נתונים...");
+            mProgressDialog.setMessage(message);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setIndeterminate(true);
         }

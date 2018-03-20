@@ -15,9 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ViewCompetitionActivity extends LoadingDialog implements AsyncResponse {
+public class ViewCompetitionActivity extends LoadingDialog {
 
-    private JSON_AsyncTask jsonAsyncTaskPost;
+    /*private JSON_AsyncTask jsonAsyncTaskPost;*/
     private User currentUser = null;
     private Competition selectedCompetition;
 
@@ -36,7 +36,6 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
 
         Button registerEditBtn = findViewById(R.id.register_edit_btn);
         Button startCompetitionBtn = findViewById(R.id.start_competition);
-        Button registerTempUserBtn = findViewById(R.id.register_temporary_user_btn);
 
         DateUtils dateUtils = new DateUtils();
         Calendar calendar;
@@ -59,7 +58,6 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 }
 
             }
-
 
             if(this.currentUser.getType().equals("coach")) {
                 registerEditBtn.setText("ערוך תחרות");
@@ -117,7 +115,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
     }
-
+/*
     public void registerTempUserToCompetition(View view) {
         try {
             this.jsonAsyncTaskPost = new JSON_AsyncTask();
@@ -150,5 +148,5 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         } catch (JSONException e) {
             showToast("RegisterActivity, processFinish: Error parsing JSONObject");
         }
-    }
+    }*/
 }

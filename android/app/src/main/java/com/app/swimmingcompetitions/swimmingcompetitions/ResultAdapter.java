@@ -8,36 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-/**
- * Created by amirl on 3/7/2018.
- */
-
 public class ResultAdapter extends ArrayAdapter<JSONObject> {
+
     private Context mContext;
+    private int mResource;
     private List<JSONObject> personalResults = new ArrayList<>();
     private String[] places = {"1 - ", ", 2 - ", ", 3 - "};
 
-    public ResultAdapter(@NonNull Context context, @LayoutRes ArrayList<JSONObject> list) {
-        super(context, 0, list);
+    public ResultAdapter(Context context, int resource, ArrayList<JSONObject> list) {
+        super(context, resource, list);
         this.mContext = context;
-        personalResults = list;
+        this.mResource = resource;
+        this.personalResults = list;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
         DateUtils dateUtils = new DateUtils();
 

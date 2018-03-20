@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreateNewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
+public class CreateNewCompetitionActivity extends LoadingDialog implements AsyncResponse {
 
     private Competition newCompetition;
     private Competition selectedCompetition;
@@ -120,7 +120,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
             @Override
             public boolean isEnabled(int position){
-                return position == 0;
+                return position != 0;
             }
 
             @Override
@@ -209,6 +209,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         jsonAsyncTaskPost.delegate = this;
         JSONObject data = null;
 
+        showProgressDialog("שומר תחרות...");
         //set up action params
         try {
             data = this.newCompetition.getJSON_Object();
@@ -236,6 +237,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
             } else {
                 showToast("CreateNewCompetitionActivity processFinish: Error saving competition");
             }
+            hideProgressDialog();
         } catch (JSONException e) {
             showToast("LogInActivity processFinish: Error parsing JSONObject");
         }

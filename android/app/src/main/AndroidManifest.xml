@@ -30,6 +30,7 @@
         <activity android:name=".RegisterTempUserActivity" />
         <activity android:name=".ViewCompetitionResultsActivity" />
         <activity android:name=".ViewPersonalResultsActivity" />
+        <activity android:name=".ViewCompetitionParticipantsActivity"></activity>
     </application>
 
 </manifest>

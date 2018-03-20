@@ -192,7 +192,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:onClick="registerTempUserToCompetition"
+            android:onClick="switchToRegisterUserToCompetitionActivity"
             android:text="@string/register_temp_user"
             android:textAlignment="center"
             android:textColor="@color/black"

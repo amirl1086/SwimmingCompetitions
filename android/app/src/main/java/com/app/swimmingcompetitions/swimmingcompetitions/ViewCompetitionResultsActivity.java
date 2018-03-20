@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,11 +38,10 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("competitionResults")) {
-            JSONObject dataObj = null;
             try {
                 this.currentUser = (User) intent.getSerializableExtra("currentUser");
 
-                dataObj = new JSONObject(intent.getStringExtra("competitionResults"));
+                JSONObject dataObj = new JSONObject(intent.getStringExtra("competitionResults"));
                 System.out.println(intent.getStringExtra("competitionResults"));
                 Iterator<String> agesKeys = dataObj.keys();
 
@@ -51,12 +51,16 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
                     results.add(currentResult);
                 }
 
-                this.resultsListAdapter = new ResultAdapter(this, results);
+                this.resultsListAdapter = new ResultAdapter(this, R.layout.result_list_item, results);
                 this.listView.setAdapter(this.resultsListAdapter);
             }
             catch (JSONException e) {
-                e.printStackTrace();
+                showToast("ViewCompetitionResultsActivity onCreate: Failed setting up results, message " + e.getMessage());
             }
         }
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

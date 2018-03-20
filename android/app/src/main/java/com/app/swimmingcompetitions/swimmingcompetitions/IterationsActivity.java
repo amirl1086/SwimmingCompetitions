@@ -150,7 +150,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             data.put("httpMethod", "POST");
             data.put("competition", this.selectedCompetition.getJSON_Object().toString());
 
-            showProgressDialog();
+            showProgressDialog("שומר תוצאות...");
 
             jsonAsyncTaskPost.execute(data.toString());
         }
@@ -306,6 +306,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                 JSONObject dataObj = response.getJSONObject("data");
                 if(response.getBoolean("success")) {
                     if(dataObj.get("type").equals("resultsMap")) {
+                        dataObj.remove("type");
                         switchToViewResultsActivity(dataObj);
                     }
                     else if(dataObj.get("type").equals("newIteration")){
