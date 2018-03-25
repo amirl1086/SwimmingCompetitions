@@ -235,7 +235,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            button.setHeight(40);
+            button.setHeight(45);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);

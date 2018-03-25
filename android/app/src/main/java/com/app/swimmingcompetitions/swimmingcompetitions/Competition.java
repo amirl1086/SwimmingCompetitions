@@ -16,6 +16,7 @@ public class Competition implements Serializable {
     private String swimmingStyle;
     private String participants;
     private String currentParticipants;
+    private Boolean isDone;
     private Date activityDate;
     private String numOfParticipants;
     private String fromAge;

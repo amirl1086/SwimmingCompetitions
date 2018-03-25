@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:background="@drawable/abstract_swimming_pool"
     android:orientation="vertical"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity">
@@ -14,17 +14,6 @@
         android:layout_margin="15sp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/personal_results_btn"
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/menu_personal_results_btn"
-            android:onClick="openViewResultsActivity"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
 
         <Button
             android:id="@+id/competitions_btn"
@@ -34,6 +23,18 @@
             android:layout_alignParentStart="true"
             android:onClick="openViewCompetitionsActivity"
             android:text="@string/menu_view_competitions_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/ThemeOverlay.TransparentButton" />
+
+        <Button
+            android:id="@+id/personal_results_btn"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/menu_personal_results_btn"
+            android:onClick="openViewResultsActivity"
             android:textSize="25sp"
             android:textStyle="bold"
             android:theme="@style/ThemeOverlay.TransparentButton" />

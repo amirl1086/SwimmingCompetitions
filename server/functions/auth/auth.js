@@ -28,7 +28,6 @@ module.exports =  {
 				else {
 					utilities.sendResponse(response, null, currentUser);
 				}
-				
 			}
 			else {
 				if(callback) {

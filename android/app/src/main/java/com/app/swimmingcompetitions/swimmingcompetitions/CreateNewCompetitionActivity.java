@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -46,6 +47,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
     private NumberPicker numOfParticipants;
     private NumberPicker fromAge;
     private NumberPicker toAge;
+    private Button addSaveCompetition;
 
 
     @Override
@@ -64,6 +66,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
         //set up datepickers
         this.dateView = findViewById(R.id.competition_date);
         this.timeView = findViewById(R.id.competition_time);
+        this.addSaveCompetition = findViewById(R.id.add_save_competition_btn);
         this.calendar = Calendar.getInstance();
         this.year = this.calendar.get(Calendar.YEAR);
         this.month = this.calendar.get(Calendar.MONTH);
@@ -110,6 +113,8 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
                     break;
                 }
             }
+
+            this.addSaveCompetition.setText("שמור שינויים");
         }
     }
 
