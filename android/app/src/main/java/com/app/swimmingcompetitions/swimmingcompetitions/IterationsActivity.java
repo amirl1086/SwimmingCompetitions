@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -234,7 +235,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            button.setHeight(35);
+            button.setHeight(40);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);
@@ -278,6 +279,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private TextView getTextView(String text, int width, int textSize, int color, int alignment) {
         TextView textView = new TextView(this);
         textView.setWidth(width);
+        textView.setHeight(100);
         textView.setText(text);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         textView.setTextColor(color);

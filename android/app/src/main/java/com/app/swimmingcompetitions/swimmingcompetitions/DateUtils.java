@@ -23,15 +23,9 @@ public class DateUtils {
     }
 
     public String getCompleteDate(Calendar calendar) {
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
         int hours = calendar.get(Calendar.HOUR);
         int minutes = calendar.get(Calendar.MINUTE);
 
-        String hebrewMonth = this.months[month];
-        String hebrewDayOfWeek = this.days[day];
 
         return "מתקיימת ב: " + getDate(calendar) + ", בשעה - " + hours + ":" + minutes;
     }

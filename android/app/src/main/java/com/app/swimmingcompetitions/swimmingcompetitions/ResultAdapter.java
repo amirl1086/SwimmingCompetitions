@@ -1,9 +1,13 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +45,25 @@ public class ResultAdapter extends ArrayAdapter<JSONObject> {
 
         TextView ages = listItem.findViewById(R.id.result_list_item_ages);
         TextView malesHeader = listItem.findViewById(R.id.result_list_item_males);
-        TextView malesResults = listItem.findViewById(R.id.result_list_item_males_results);
         TextView femalesHeader = listItem.findViewById(R.id.result_list_item_females);
-        TextView femalesResults = listItem.findViewById(R.id.result_list_item_females_results);
+
+        TextView itemMales1 = listItem.findViewById(R.id.result_list_item_males_1);
+        TextView itemFemales1 = listItem.findViewById(R.id.result_list_item_females_1);
+        TextView itemMales2 = listItem.findViewById(R.id.result_list_item_males_2);
+        TextView itemFemales2 = listItem.findViewById(R.id.result_list_item_females_2);
+        TextView itemMales3 = listItem.findViewById(R.id.result_list_item_males_3);
+        TextView itemFemales3 = listItem.findViewById(R.id.result_list_item_females_3);
+
+        ArrayList<TextView> itemMales = new ArrayList<>();
+        itemMales.add(itemMales1);
+        itemMales.add(itemMales2);
+        itemMales.add(itemMales3);
+
+        ArrayList<TextView> itemFemales = new ArrayList<>();
+        itemFemales.add(itemFemales1);
+        itemFemales.add(itemFemales2);
+        itemFemales.add(itemFemales3);
+
 
         try {
             JSONObject currentResult = personalResults.get(position);
@@ -52,60 +72,31 @@ public class ResultAdapter extends ArrayAdapter<JSONObject> {
             JSONArray femalesResultsJson = new JSONArray(currentResult.getString("females"));
 
             if (malesResultsJson.length() > 0 || femalesResultsJson.length() > 0) {
-                ArrayList<Participant> maleParticipants = new ArrayList<>();
-                ArrayList<Participant> femaleParticipants = new ArrayList<>();
+
+                Participant participant = null;
+                if(malesResultsJson.length() > 0) {
+                    participant = new Participant(malesResultsJson.getJSONObject(0));
+                    setTextView(malesHeader, "בנים:", 24, Color.BLACK, Gravity.CENTER, Typeface.BOLD);
+
+                }
+                else if(femalesResultsJson.length() > 0) {
+                    participant = new Participant(femalesResultsJson.getJSONObject(0));
+                    setTextView(femalesHeader, "בנות:", 24, Color.BLACK, Gravity.CENTER, Typeface.BOLD);
+                }
+
+                String currentAge = dateUtils.getAge(participant.getBirthDate());
+                setTextView(ages, "גילאי " + currentAge, 28, Color.BLACK, Gravity.CENTER, Typeface.BOLD_ITALIC);
 
 
                 for (int i = 0; i < malesResultsJson.length(); i++) {
-                    String firstName = malesResultsJson.getJSONObject(i).getString("firstName");
-                    Participant currParticipant = new Participant(malesResultsJson.getJSONObject(i));
-                    maleParticipants.add(currParticipant);
+                    Participant maleParticipant = new Participant(femalesResultsJson.getJSONObject(i));
+                    setTextView(itemMales.get(i), maleParticipant.toString(), 24, Color.BLACK, Gravity.CENTER, Typeface.NORMAL);
                 }
 
                 for (int i = 0; i < femalesResultsJson.length(); i++) {
-                    femaleParticipants.add(new Participant(new JSONObject(femalesResultsJson.get(i).toString())));
+                    Participant femaleParticipant = new Participant(femalesResultsJson.getJSONObject(i));
+                    setTextView(itemFemales.get(i), femaleParticipant.toString(), 24, Color.BLACK, Gravity.CENTER, Typeface.NORMAL);
                 }
-
-                String maleResultsStr = "";
-                String femaleResultsStr = "";
-
-                if (maleParticipants.size() > 0) {
-                    String currentAge = dateUtils.getAge(maleParticipants.get(0).getBirthDate());
-                    ages.setText("עבור גילאי " + currentAge + ":");
-
-                    malesHeader.setText("בנים: ");
-                    for (int i = 0; i < maleParticipants.size(); i++) {
-                        maleResultsStr += (places[i] + maleParticipants.get(i).toString());
-                    }
-                    malesResults.setText(maleResultsStr);
-                }
-                else {
-                    malesHeader.setVisibility(View.GONE);
-                    malesResults.setVisibility(View.GONE);
-                }
-
-                if (femaleParticipants.size() > 0) {
-                    String currentAge = dateUtils.getAge(femaleParticipants.get(0).getBirthDate());
-                    femalesHeader.setText("בנות: ");
-
-                    ages.setText("עבור גילאי " + currentAge + ":");
-                    for (int i = 0; i < femaleParticipants.size(); i++) {
-                        femaleResultsStr += (places[i] + femaleParticipants.get(i).toString());
-                    }
-                    femalesResults.setText(femaleResultsStr);
-                }
-                else {
-                    femalesResults.setVisibility(View.GONE);
-                    femalesHeader.setVisibility(View.GONE);
-                }
-
-            }
-            else {
-                femalesResults.setVisibility(View.GONE);
-                femalesHeader.setVisibility(View.GONE);
-                malesHeader.setVisibility(View.GONE);
-                malesResults.setVisibility(View.GONE);
-                ages.setVisibility(View.GONE);
             }
         }
         catch (JSONException e) {
@@ -113,5 +104,14 @@ public class ResultAdapter extends ArrayAdapter<JSONObject> {
         }
 
         return listItem;
+    }
+
+    private TextView setTextView(TextView textView, String text, int textSize, int color, int alignment, int fontStyle) {
+        textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        textView.setTextColor(color);
+        textView.setTypeface(null, fontStyle);
+        textView.setGravity(alignment);
+        return textView;
     }
 }

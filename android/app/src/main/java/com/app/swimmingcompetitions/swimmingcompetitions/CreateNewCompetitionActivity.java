@@ -226,7 +226,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
     @Override
     public void processFinish(String result) {
         try {
-            if (result != null) {
+            if(result != null) {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
@@ -234,7 +234,8 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
                 this.newCompetition.setId(id);
 
                 switchToViewCompetitionsActivity();
-            } else {
+            }
+            else {
                 showToast("CreateNewCompetitionActivity processFinish: Error saving competition");
             }
             hideProgressDialog();
