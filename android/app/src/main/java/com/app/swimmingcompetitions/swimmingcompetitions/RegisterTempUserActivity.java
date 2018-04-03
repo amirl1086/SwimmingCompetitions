@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class RegisterTempUserActivity extends AppCompatActivity implements AsyncResponse {
+public class RegisterTempUserActivity extends LoadingDialog implements AsyncResponse {
 
     private JSON_AsyncTask jsonAsyncTaskPost;
     private EditText firstName;
@@ -55,10 +55,7 @@ public class RegisterTempUserActivity extends AppCompatActivity implements Async
 
             @Override
             public boolean isEnabled(int position){
-                if(position == 0) {
-                    return false;
-                }
-                return true;
+                return position != 0;
             }
 
             @Override
@@ -132,6 +129,8 @@ public class RegisterTempUserActivity extends AppCompatActivity implements Async
             showToast("RegisterTempUserActivity registerTempUser: Error creating JSONObject");
         }
 
+        showProgressDialog("מוסיף מתחרה חדש...");
+
         this.jsonAsyncTaskPost = new JSON_AsyncTask();
         this.jsonAsyncTaskPost.delegate = this;
 
@@ -152,6 +151,7 @@ public class RegisterTempUserActivity extends AppCompatActivity implements Async
             JSONObject response = new JSONObject(result);
             JSONObject dataObj = response.getJSONObject("data");
             if (response.getBoolean("success")) {
+                hideProgressDialog();
                 switchToViewCompetitionActivity(dataObj);
             }
             else {

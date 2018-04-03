@@ -40,12 +40,8 @@ module.exports = {
 
 	setNewCompetition: function(competitionParams, response) {
 		var db = admin.database();
-		var newCompetitionKey = db.ref('competitions').push().key;
 
-		var newCompetitionRef = db.ref('competitions/' + newCompetitionKey);
-		console.log('competitionParams ', competitionParams);
-
-		newCompetitionRef.update({
+		var newCompetition = {
 			'name': competitionParams.name,
 			'activityDate': competitionParams.activityDate,
 			'swimmingStyle': competitionParams.swimmingStyle,
@@ -53,7 +49,20 @@ module.exports = {
 			'length': competitionParams.length,
 			'toAge': competitionParams.toAge,
 			'fromAge': competitionParams.fromAge
-		});
+		};
+
+		var newCompetitionKey;
+		if(competitionParams.id) {
+			newCompetitionKey = competitionParams.id;
+		}
+		else {
+			newCompetitionKey = db.ref('competitions').push().key;
+		}
+
+		var newCompetitionRef = db.ref('competitions/' + newCompetitionKey);
+		console.log('competitionParams ', competitionParams);
+
+		newCompetitionRef.update(newCompetition);
 
 		newCompetitionRef.on('value', function(snapshot) {
 			utilities.sendResponse(response, null, attachIdToObject(snapshot));
@@ -63,13 +72,22 @@ module.exports = {
 	},
 
 
-	getCompetitions: function(uid, response) {
+	getCompetitions: function(params, response) {
 		var db = admin.database();
 		var competitionsRef = db.ref('competitions/');
 
 		competitionsRef.on('value', function(snapshot) {
 			console.log('getCompetitions ', snapshot.val());
-			utilities.sendResponse(response, null, snapshot.val());
+
+			var result;
+			if(params.filters) {
+				result = filterCompetitions(snapshot.val(), params); 
+			}
+			else {
+				result = snapshot.val();
+			}
+
+			utilities.sendResponse(response, null, result);
 		}, function(error) {
 			utilities.sendResponse(response, error, null);
 		});
@@ -118,6 +136,18 @@ module.exports = {
 			});
 		});
 	},
+
+	getPersonalResultsByCompetitionId: function(params, response) {
+		var competition = JSON.parse(params.competition);
+		var competitionId = competition.id;
+		var db = admin.database();
+
+		var personalResultsRef = db.ref('personalResults/' + competitionId);
+
+		personalResultsRef.on('value', function(snapshot) {
+			utilities.sendResponse(response, null, snapshot.val());
+		});
+	},
 	
 	joinToCompetition: function(params, response) {
 		var db = admin.database();
@@ -155,7 +185,7 @@ module.exports = {
 		var db = admin.database();
 		var currentCompetition = JSON.parse(params.competition);
 
-		updateCompetition(currentCompetition, function(competition) {
+		updateCompetitionJson(currentCompetition, function(competition) {
 			//var participantsResults = JSON.parse(currentCompetition.participants);
 			var participantsResults = JSON.parse(competition.currentParticipants);
 
@@ -194,6 +224,8 @@ module.exports = {
 					}
 
 					if(Object.keys(newParticipants).length === 0) {
+						currentCompetition.isDone = true;
+						updateCompetition(currentCompetition);
 						//TODO - maybe needs to query all results
 						var resultsAgeMap = sortPersonalResults(competition, snapshot.val());
 						resultsAgeMap.type = 'resultsMap';
@@ -269,7 +301,7 @@ var arraySortByScore = function(arrayList) {
 	});
 }
 
-var updateCompetition = function(competition, callback) {
+var updateCompetitionJson = function(competition, callback) {
 	var db = admin.database();
 	var competitionsRef = db.ref('competitions/' + competition.id + '/');
 
@@ -288,4 +320,59 @@ var updateCompetition = function(competition, callback) {
 	}, function(error) {
 		callback(null);
 	});
+}
+
+var updateCompetition = function(competition) {
+	var db = admin.database();
+	var competitionsRef = db.ref('competitions/' + competition.id + '/');
+	competitionsRef.update(competition);
+}
+
+var filterCompetitions = function(competitions, params) {
+	var currentUser = JSON.parse(params.currentUser);
+	var today = moment();
+	var birthDate = moment(currentUser.birthDate);
+	var userAge = Math.round(today.diff(birthDate, 'years', true));
+	var filters = params.filters.split(',');
+
+	var finalCompetitions = {};
+
+	console.log('competitions ',  competitions);
+	console.log('params ',  params);
+
+	for(key in competitions) {
+		var currentCompetition = competitions[key];
+		console.log('currentCompetition ',  currentCompetition);
+
+		for(var i = 0; i < filters.length; i++) {
+			if(filters[i] === 'uid') {
+				if(searchInParticipants(currentCompetition, currentUser.uid)) {
+					finalCompetitions[key] = competitions[key];
+				}
+			}
+			else if(filters[i] === 'age') {
+				var fromAge = parseInt(currentCompetition.fromAge);
+				var toAge = parseInt(currentCompetition.toAge);
+				if(userAge >= fromAge && userAge <= toAge) {
+					finalCompetitions[key] = competitions[key];
+				}
+			}
+			else if(filters[i] === 'results') {
+				if(currentCompetition.isDone) {
+					finalCompetitions[key] = competitions[key];
+				}
+			}
+		}
+	}
+
+	return finalCompetitions;
+}
+
+var searchInParticipants = function(competition, uid) {
+	for(var key in competition.participants) {
+		if(key === uid) {
+			return true;
+		}
+	}
+	return false;
 }

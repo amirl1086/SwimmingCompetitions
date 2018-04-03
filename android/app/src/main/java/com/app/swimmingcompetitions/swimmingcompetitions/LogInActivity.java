@@ -57,7 +57,7 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
             showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
         }
 
-        showProgressDialog();
+        showProgressDialog("מבצע כניסה...");
         //call the server
         jsonAsyncTaskPost.execute(logInData.toString());
     }

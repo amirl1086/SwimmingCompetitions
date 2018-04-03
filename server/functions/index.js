@@ -57,7 +57,7 @@ exports.logIn = functions.https.onRequest(function(request, response) {
 exports.getCompetitions = functions.https.onRequest(function(request, response) {
 	console.log('exports.getCompetitions body ', request.body);
 	
-	firebaseDB_Service.getCompetitions(request.body.currentUser.uid, response);
+	firebaseDB_Service.getCompetitions(request.body, response);
 });
 
 exports.setNewCompetition = functions.https.onRequest(function(request, response) {
@@ -82,5 +82,18 @@ exports.initCompetitionForIteration = functions.https.onRequest(function(request
 	console.log('exports.initCompetitionForIteration body ', request.body);
 	
 	firebaseDB_Service.initCompetitionForIteration(request.body, response);
+});
+
+exports.getPersonalResults = functions.https.onRequest(function(request, response) {
+	console.log('exports.getPersonalResults body ', request.body);
+
+	if(request.body.competition) {
+		firebaseDB_Service.getPersonalResultsByCompetitionId(request.body, response);
+	}
+	else {
+		firebaseDB_Service.getPersonalResults(request.body, response);
+	}
+	
+	
 });
 /* ================================ */

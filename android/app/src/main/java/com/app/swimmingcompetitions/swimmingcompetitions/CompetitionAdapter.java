@@ -1,9 +1,7 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +13,23 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class CompetitionAdapter extends ArrayAdapter<Competition> {
+public class CompetitionAdapter extends ArrayAdapter {
 
     private Context mContext;
+    private int mResource;
     private List<Competition> competitions = new ArrayList<>();
 
-    public CompetitionAdapter(@NonNull Context context, @LayoutRes ArrayList<Competition> list) {
-        super(context, 0, list);
+    public CompetitionAdapter(Context context, int resource, ArrayList<Competition> list) {
+        super(context, resource, list);
         this.mContext = context;
+        this.mResource = resource;
         competitions = list;
     }
 
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
         DateUtils dateUtils = new DateUtils();
 

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,12 +21,14 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ViewCompetitionResultsActivity extends AppCompatActivity {
+public class ViewCompetitionResultsActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser;
     private ListView listView;
     private ResultAdapter resultsListAdapter;
     private ArrayList<JSONObject> results;
+    private JSON_AsyncTask jsonAsyncTaskPost;
+    private Competition selectedCompetition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +39,64 @@ public class ViewCompetitionResultsActivity extends AppCompatActivity {
         this.results = new ArrayList<>();
 
         Intent intent = getIntent();
-        if (intent.hasExtra("currentUser") && intent.hasExtra("competitionResults")) {
-            JSONObject dataObj = null;
+        if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
+            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+
+            JSONObject data = new JSONObject();
+            //get competitions list set up action params
             try {
-                this.currentUser = (User) intent.getSerializableExtra("currentUser");
+                data.put("urlSuffix", "/getPersonalResults");
+                data.put("httpMethod", "GET");
+                JSONObject selectedCompetitionJson = this.selectedCompetition.getJSON_Object();
+                data.put("competition", selectedCompetitionJson.toString());
 
-                dataObj = new JSONObject(intent.getStringExtra("competitionResults"));
-                System.out.println(intent.getStringExtra("competitionResults"));
-                Iterator<String> agesKeys = dataObj.keys();
-
-                while (agesKeys.hasNext()) {
-                    String currentAge = agesKeys.next();
-                    JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
-                    results.add(currentResult);
-                }
-
-                this.resultsListAdapter = new ResultAdapter(this, results);
-                this.listView.setAdapter(this.resultsListAdapter);
             }
             catch (JSONException e) {
-                e.printStackTrace();
+                showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
+            }
+
+            showProgressDialog("טוען תחרויות...");
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(data.toString());
+        }
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void processFinish(String result) {
+        try {
+            if (result != null) {
+                JSONObject response = new JSONObject(result);
+
+                if (response.getBoolean("success")) {
+
+                    JSONObject dataObj = response.getJSONObject("data");
+                    Iterator<String> agesKeys = dataObj.keys();
+
+                    while (agesKeys.hasNext()) {
+                        String currentAge = agesKeys.next();
+                        JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
+                        this.results.add(currentResult);
+                    }
+
+                    this.resultsListAdapter = new ResultAdapter(this, R.layout.result_list_item, results);
+                    this.listView.setAdapter(this.resultsListAdapter);
+                }
+                else {
+                    showToast("ViewCompetitionsActivity processFinish: Error loging in");
+                }
+
             }
         }
+        catch (JSONException e) {
+            showToast("ViewCompetitionsActivity processFinish: Error parsing JSONObject");
+        }
+        hideProgressDialog();
     }
 }

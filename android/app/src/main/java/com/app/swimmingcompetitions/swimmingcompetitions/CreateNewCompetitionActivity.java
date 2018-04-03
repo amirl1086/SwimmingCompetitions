@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -24,14 +25,15 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreateNewCompetitionActivity extends AppCompatActivity implements AsyncResponse {
+public class CreateNewCompetitionActivity extends LoadingDialog implements AsyncResponse {
 
     private Competition newCompetition;
+    private Competition selectedCompetition;
     private JSON_AsyncTask jsonAsyncTaskPost;
     private Boolean isTimePickerOpen;
     private User currentUser;
 
-    private String[] swimmingStyles;
+    private String[] swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
     private ArrayAdapter spinnerListAdapter;
     private Spinner spinner;
 
@@ -45,6 +47,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
     private NumberPicker numOfParticipants;
     private NumberPicker fromAge;
     private NumberPicker toAge;
+    private Button addSaveCompetition;
 
 
     @Override
@@ -58,11 +61,12 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         }
 
         this.isTimePickerOpen = false;
-        this.competitionName = (EditText) findViewById(R.id.competition_list_item_name);
+        this.competitionName = findViewById(R.id.competition_list_item_name);
 
         //set up datepickers
-        this.dateView = (TextView) findViewById(R.id.competition_date);
-        this.timeView = (TextView) findViewById(R.id.competition_time);
+        this.dateView = findViewById(R.id.competition_date);
+        this.timeView = findViewById(R.id.competition_time);
+        this.addSaveCompetition = findViewById(R.id.add_save_competition_btn);
         this.calendar = Calendar.getInstance();
         this.year = this.calendar.get(Calendar.YEAR);
         this.month = this.calendar.get(Calendar.MONTH);
@@ -88,17 +92,40 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         this.numOfParticipants.setMaxValue(12);
 
         //set up spinner picker for swimming style
-        this.swimmingStyles = new String[]{"בחר סגנון שחייה", "חזה", "גב", "פרפר", "חתירה"};
-        this.spinner = (Spinner) findViewById(R.id.swimming_style_spinner);
+        setupSpinner();
+
+        if(intent.hasExtra("editMode")) {
+            DateUtils dateUtils = new DateUtils();
+            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            this.competitionName.setText(this.selectedCompetition.getName());
+            Calendar competitionDate = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
+            showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH) + 1, competitionDate.get(Calendar.DAY_OF_MONTH));
+            showTime(competitionDate.get(Calendar.HOUR_OF_DAY), competitionDate.get(Calendar.MINUTE));
+            this.fromAge.setValue(Integer.valueOf(this.selectedCompetition.getFromAge()));
+            this.toAge.setValue(Integer.valueOf(this.selectedCompetition.getToAge()));
+            this.iterationLength.setValue(Integer.valueOf(this.selectedCompetition.getLength()));
+            this.numOfParticipants.setValue(this.selectedCompetition.getNumOfParticipants());
+
+            String swimmingStyle = this.selectedCompetition.getSwimmingStyle();
+            for(int i = 0; i < this.swimmingStyles.length; i++) {
+                if(this.swimmingStyles[i].equals(swimmingStyle)) {
+                    this.spinner.setSelection(i);
+                    break;
+                }
+            }
+
+            this.addSaveCompetition.setText("שמור שינויים");
+        }
+    }
+
+    private void setupSpinner() {
+        this.spinner = findViewById(R.id.swimming_style_spinner);
 
         this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swimmingStyles) {
 
             @Override
             public boolean isEnabled(int position){
-                if(position == 0) {
-                    return false;
-                }
-                return true;
+                return position != 0;
             }
 
             @Override
@@ -118,10 +145,6 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
 
         this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
-
-        if(intent.hasExtra("editMode")) {
-
-        }
     }
 
     public void setDate(View view) {
@@ -150,14 +173,14 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         this.isTimePickerOpen = true;
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
+            new TimePickerDialog.OnTimeSetListener() {
 
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
-                        showTime(hourOfDay, minutes);
-                        isTimePickerOpen = false;
-                    }
-                }, this.hours, this.minutes, false);
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+                    showTime(hourOfDay, minutes);
+                    isTimePickerOpen = false;
+                }
+            }, this.hours, this.minutes, false);
         timePickerDialog.show();
     }
 
@@ -182,11 +205,16 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
         int fromAge = this.fromAge.getValue();
         int toAge = this.toAge.getValue();
 
-        this.newCompetition = new Competition("", competitionNameText, selectedDatetime.toString(), swimmingStyleText, numOfParticipantsNum, fromAge, toAge, iterationLengthNum);
+        String id = "";
+        if(this.selectedCompetition != null) {
+            id = this.selectedCompetition.getId();
+        }
+        this.newCompetition = new Competition(id, competitionNameText, selectedDatetime.toString(), swimmingStyleText, numOfParticipantsNum, fromAge, toAge, iterationLengthNum);
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
         JSONObject data = null;
 
+        showProgressDialog("שומר תחרות...");
         //set up action params
         try {
             data = this.newCompetition.getJSON_Object();
@@ -203,7 +231,7 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
     @Override
     public void processFinish(String result) {
         try {
-            if (result != null) {
+            if(result != null) {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
@@ -211,9 +239,11 @@ public class CreateNewCompetitionActivity extends AppCompatActivity implements A
                 this.newCompetition.setId(id);
 
                 switchToViewCompetitionsActivity();
-            } else {
+            }
+            else {
                 showToast("CreateNewCompetitionActivity processFinish: Error saving competition");
             }
+            hideProgressDialog();
         } catch (JSONException e) {
             showToast("LogInActivity processFinish: Error parsing JSONObject");
         }

@@ -1,16 +1,20 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +40,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private Handler handler;
 
     private GridLayout buttonsLayout;
+    private LinearLayout mainViewLayout;
     private GridLayout participantNamesLayout;
     private GridLayout participantResultsLayout;
 
@@ -51,68 +56,75 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
 
             try {
                 this.allParticipants = this.selectedCompetition.getParticipants();
-                this.currentParticipants = new ArrayList<>();
+                if(this.allParticipants == null) {
+                    setNoParticipantsMessage();
+                }
+                else {
+                    this.currentParticipants = new ArrayList<>();
 
-                int numOfParticipantsInIteration = this.selectedCompetition.getNumOfParticipants();
-                int totalNumOfParticipants = this.allParticipants.size();
-                int totalCurrentParticipants = (numOfParticipantsInIteration > totalNumOfParticipants ? totalNumOfParticipants : numOfParticipantsInIteration);
+                    int numOfParticipantsInIteration = this.selectedCompetition.getNumOfParticipants();
+                    int totalNumOfParticipants = this.allParticipants.size();
+                    int totalCurrentParticipants = (numOfParticipantsInIteration > totalNumOfParticipants ? totalNumOfParticipants : numOfParticipantsInIteration);
 
-                for(int i = 0; i < totalCurrentParticipants; i++) {
-                    this.currentParticipants.add(this.allParticipants.get(i));
+                    for(int i = 0; i < totalCurrentParticipants; i++) {
+                        this.currentParticipants.add(this.allParticipants.get(i));
+                    }
+
+                    this.handler = new Handler();
+
+                    this.buttonsLayout = findViewById(R.id.buttons_layout);
+                    this.participantNamesLayout = findViewById(R.id.participant_names_layout);
+                    this.participantResultsLayout = findViewById(R.id.participant_results_layout);
+                    this.timeView = findViewById(R.id.time_view);
+                    this.start = findViewById(R.id.start_time_btn);
+                    this.reset = findViewById(R.id.reset_btn);
+                    this.endIterationButton = findViewById(R.id.end_iteration_btn);
+
+                    this.buttonsLayout.post(new Runnable(){
+                        //layout is ready, set the buttons according to the device width
+                        @Override
+                        public void run(){
+                            setParticipantsView();
+                        }
+                    });
+                    this.start.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startClicked(view);
+                        }
+                    });
+                    this.reset.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            resetClicked();
+                        }
+                    });
+                    this.endIterationButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {endIterationClicked(view);
+                        }
+                    });
                 }
             }
             catch (JSONException e) {
                 showToast("IterationsActivity onCreate: Error getting participants");
             }
-
-            this.handler = new Handler();
-
-            this.buttonsLayout = findViewById(R.id.buttons_layout);
-            this.participantNamesLayout = findViewById(R.id.participant_names_layout);
-            this.participantResultsLayout = findViewById(R.id.participant_results_layout);
-            this.timeView = findViewById(R.id.time_view);
-            this.start = findViewById(R.id.start_time_btn);
-            this.reset = findViewById(R.id.reset_btn);
-            this.endIterationButton = findViewById(R.id.end_iteration_btn);
-
-            this.buttonsLayout.post(new Runnable(){
-                //layout is ready, set the buttons according to the device width
-                @Override
-                public void run(){
-                    setParticipantsView();
-                }
-            });
-            this.start.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startClicked(view);
-                }
-            });
-            this.reset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    resetClicked();
-                }
-            });
-            this.endIterationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {endIterationClicked(view);
-                }
-            });
         }
+    }
+
+    private void setNoParticipantsMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("אין משתתפים לתחרות זו!")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() { @Override public void onClick(DialogInterface dialog, int which) {} });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public void initIteration(Competition competition) {
         this.selectedCompetition = competition;
         try {
             this.currentParticipants = this.selectedCompetition.getCurrentParticipants();
-
-            if(this.currentParticipants.size() == 0) {
-
-            }
-            else {
-
-            }
 
             resetClicked();
             setParticipantsView();
@@ -139,7 +151,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             data.put("httpMethod", "POST");
             data.put("competition", this.selectedCompetition.getJSON_Object().toString());
 
-            showProgressDialog();
+            showProgressDialog("שומר תוצאות...");
 
             jsonAsyncTaskPost.execute(data.toString());
         }
@@ -223,7 +235,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            button.setHeight(35);
+            button.setHeight(45);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);
@@ -267,6 +279,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private TextView getTextView(String text, int width, int textSize, int color, int alignment) {
         TextView textView = new TextView(this);
         textView.setWidth(width);
+        textView.setHeight(100);
         textView.setText(text);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         textView.setTextColor(color);
@@ -295,13 +308,13 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                 JSONObject dataObj = response.getJSONObject("data");
                 if(response.getBoolean("success")) {
                     if(dataObj.get("type").equals("resultsMap")) {
+                        dataObj.remove("type");
                         switchToViewResultsActivity(dataObj);
                     }
                     else if(dataObj.get("type").equals("newIteration")){
                         Competition competition = new Competition(dataObj);
                         initIteration(competition);
                     }
-
                 }
                 else {
                     showToast("LogInActivity processFinish: Error saving competition results");
