@@ -8,10 +8,10 @@
 
 import Foundation
 
-struct Competition {
+class Competition {
     
-    let name:String
-    let activityDate:String
+    var name:String
+    var activityDate:String
     let swimmingStyle:String
     let length: String
     let numOfParticipants:String
@@ -42,6 +42,7 @@ struct Competition {
         self.fromAge = fromAge!
         self.toAge = toAge!
         self.id = id!
+        self.participants = []
         
         if participants != nil {
             for part in participants! {
@@ -51,6 +52,19 @@ struct Competition {
                 self.participants.append(participant)
             }
         }
-      
     }
+    
+    func getName() -> String {
+        return self.name
+    }
+    
+    func getActivityDate() -> String {
+        return self.activityDate
+    }
+    
+    func setActivityDate(activityDate: String) {
+        self.activityDate = activityDate
+    }
+    
+    
 }

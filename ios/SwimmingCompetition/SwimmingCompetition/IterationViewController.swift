@@ -13,12 +13,14 @@ class IterationViewController: UIViewController {
 
     var subviews: [UIView] = []
     
+    @IBOutlet weak var startButtonOutlet: RoundButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var resetButtonOutlet: UIButton!
     @IBOutlet weak var endIterationButtonOutlet: UIButton!
-    
-    
+  
     var competition: Competition!
+    var jsonData: JSON = [:]
+    
     var participantsIndex = [Int]()
     var buttonsArray = [UIButton!]()
     var labelsArray = [UILabel!]()
@@ -28,24 +30,28 @@ class IterationViewController: UIViewController {
     var minutes: Int = 0
     var seconds: Int = 0
     var fractions: Int = 0
-    
+    var userTime: String = ""
     
     var iterationNumber:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
-    
+       
         startNewIteration()
         
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)    }
+        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     @IBAction func endIterationButton(_ sender: Any) {
+        timer.invalidate()
+        resetButton(sender)
         startNewIteration()
     }
     
@@ -64,13 +70,13 @@ class IterationViewController: UIViewController {
             sender.backgroundColor = .green
             sender.setTitle("המשך", for: .normal)
             resetButtonOutlet.isEnabled = true
-            
-            
         }
         
     }
     
     @IBAction func resetButton(_ sender: Any) {
+        startButtonOutlet.setTitle("התחל", for: .normal)
+        startButtonOutlet.backgroundColor = .green
         validTimer = false
         minutes = 0
         seconds = 0
@@ -93,6 +99,9 @@ class IterationViewController: UIViewController {
         let secondsString = seconds > 9 ? "\(seconds)" : "0\(seconds)"
         let minutesString = minutes > 9 ? "\(minutes)" : "0\(minutes)"
         
+        let asSeconds = minutes+seconds
+        
+        self.userTime = "\(asSeconds).\(fractions)"
         self.timeLabel.text = "\(minutesString):\(secondsString):\(fractionsString)"
     }
     
@@ -125,8 +134,8 @@ class IterationViewController: UIViewController {
             print(i)
             if participantsIndex.count > i {
                 name.text = self.competition.participants[participantsIndex[i]].firstName
-                time.tag = participantsIndex[i]
-                button.tag = participantsIndex[i]
+                //time.tag = participantsIndex[i]
+                //button.tag = participantsIndex[i]
                 button.isEnabled = true
             }
             self.view.addSubview(name)
@@ -142,9 +151,11 @@ class IterationViewController: UIViewController {
     }
     
     @objc func stopUserTimeButton(sender: UIButton!) {
+        print(sender.tag)
         self.labelsArray[sender.tag].text = "\(self.timeLabel.text!)"
-        competition.participants[sender.tag].competed = "1"
-        competition.participants[sender.tag].score = "\(self.timeLabel.text!)"
+        
+        competition.participants[participantsIndex[sender.tag]].setCompeted(competed: true)
+        competition.participants[participantsIndex[sender.tag]].score = self.userTime
         //sender.isEnabled = false
         var i = 0
         for button in buttonsArray {
@@ -167,19 +178,18 @@ class IterationViewController: UIViewController {
     }
     
     func startNewIteration() {
-        if participantsIndex.count != 0 {
+       // if participantsIndex.count != 0 {
             iterationIsDone()
-        }
-        
+        //}
+        labelsArray.removeAll()
         participantsIndex.removeAll()
-        print("participant Index")
-        print(participantsIndex)
+        
         for (index, part) in self.competition.participants.enumerated() {
             if self.participantsIndex.count == iterationNumber {
                 break
             }
             
-            if (part.competed == "0" || part.competed == "false") {
+            if (part.competed == false) {
                 self.participantsIndex.append(index)
             }
         }
@@ -188,30 +198,24 @@ class IterationViewController: UIViewController {
             view.removeFromSuperview()
         }
         subviews.removeAll()
-        print(participantsIndex)
+        
         createButtonsLabels()
-        print("========start==========")
-        /*let a:JSON = ["competition":competition] as Dictionary<String,Any>
-        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: a as [String : AnyObject]) { (f) in
-            print(f)
-        }*/
-        
-       /* let send = ["competiton": ["id":"eeee", "numOfParticipants":"2", "activityDate":"2/3/12", "name":"ff",
-        "fromAge":"1", "toAge":"3", "lengh":"20", "swimmingStyle": "ff", "participants":["22": ["score":"1.2", "id":"22", "gender":"ff","lastName":"ggg","birthDate":"1/2/13","competed":true,"firstName":"rrr"]]]] as [String:AnyObject]
-        
-      
-       
-        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: send) { (a) in
-            print(a)
-        }*/
-        print("========end==========")
-        
+
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToCompetitionResults" {
+            let nextView = segue.destination as! PersonalResultsViewController
+            let result = self.jsonData
+            nextView.data = result
+        }
+    }
+    
     func iterationIsDone() {
         
-        var sendString = "{\"id\":\"\(self.competition.id)\",\"participants\":\"{"
+        var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
         
-        for i in 0...self.participantsIndex.count-1 {
+        for i in 0..<self.participantsIndex.count {
             print("im here")
             print(participantsIndex.count)
             let id = self.competition.participants[participantsIndex[i]].uid
@@ -228,15 +232,41 @@ class IterationViewController: UIViewController {
             }
         }
         
-        sendString += "}\"}" as String
+        //sendString += "}\"}" as String
+        var participantsString = ""
+        for participants in competition.participants {
+            participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
+            
+            if participants.uid != competition.participants.last?.uid {
+                participantsString += ","
+            }
+        }
+        sendString += "}\",\"participants\":\"{\(participantsString)}\"}"
         
-        
+    
         let param = ["competition":sendString] as [String:AnyObject]
         
         
-        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: param) { (a) in
-            print(a)
+        Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: param) { (response) in
+            if response.data["type"] as? String == "resultsMap" {
+                let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+                
+                let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
+                self.navigationItem.rightBarButtonItem = resultsButton
+                
+                self.jsonData = response.data
+                print("json to pass")
+                print(self.jsonData)
+            }
         }
+    }
+    
+    @objc func goToResults() {
+        performSegue(withIdentifier: "goToCompetitionResults", sender: self)
     }
    
     

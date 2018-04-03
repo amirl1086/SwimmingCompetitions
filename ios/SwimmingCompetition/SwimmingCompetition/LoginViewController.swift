@@ -12,7 +12,7 @@ import Alamofire
 import SwiftyJSON
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
-    
+   
     @IBOutlet weak var logo: UIImageView!
     //The input email and password for login
     @IBOutlet weak var emailTextFiled: UITextField!

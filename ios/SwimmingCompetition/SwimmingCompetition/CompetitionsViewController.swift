@@ -20,10 +20,12 @@ class CompetitionsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        
         addButtonView()
         getCompetitionsData()
         
-        self.tableView.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.tableView.backgroundColor = UIColor.clear
         
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
@@ -48,21 +50,34 @@ class CompetitionsViewController: UIViewController {
     }
     
     func getCompetitionsData() {
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        
+        self.view.addSubview(activityView)
         let parameters = ["currentUser": ["uid":user.uid]] as [String: AnyObject]
         print(parameters as JSON)
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
+            
             for data in response.data {
                 var competition : Competition!
                 let compData = response.data[data.0] as! JSON
                 competition = Competition(json: compData, id: data.0)
                 compArray.append(competition)
             }
+            let formatDate = DateFormatter()
+            formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
             self.competitions = compArray
+            self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
+            activityView.stopAnimating()
             self.tableView.reloadData()
+            
             print(self.competitions)
         }
     }
+    
+  
     
     
 }
@@ -80,22 +95,25 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "competitionCell", for: indexPath) as! CompetitionTableViewCell
         cell.name.text = competitions[indexPath.row].name
-        cell.date.text = "מתקיים בתאריך: \(competitions[indexPath.row].activityDate)"
+        
+        cell.date.text = "\(Date().getDate(fullDate: competitions[indexPath.row].activityDate)) \(Date().getWeekDay(fullDate: competitions[indexPath.row].activityDate))"
+        cell.time.text = Date().getHour(fullDate: competitions[indexPath.row].activityDate)
         cell.ages.text = "לגילאי \(competitions[indexPath.row].fromAge) עד \(competitions[indexPath.row].toAge)"
+        
         cell.layer.backgroundColor = UIColor.clear.cgColor
         cell.contentView.backgroundColor = UIColor.clear
-        cell.backgroundColor = .clear
-        
+        //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/4
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 230
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }

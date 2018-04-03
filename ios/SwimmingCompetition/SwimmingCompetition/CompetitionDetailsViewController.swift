@@ -21,13 +21,13 @@ class CompetitionDetailsViewController: UIViewController {
         let startButton = UIBarButtonItem(title: "התחל תחרות", style: .plain, target: self, action: #selector(goToStart))
         self.navigationItem.rightBarButtonItem = startButton
         nameLabel.text = competition.name
-        dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
-        
+        //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
+        dateLabel.text = Date().getDate(fullDate: competition.activityDate)
         styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
         
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+       // navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
     }
     
@@ -49,7 +49,7 @@ class CompetitionDetailsViewController: UIViewController {
             "lastName": "sh",
             "birthDate": "11/05/1988",
             "gender": "male",
-            "competed": false,
+            "competed": 0,
             "score": 0
             ] as [String : AnyObject]
         
@@ -79,7 +79,8 @@ class CompetitionDetailsViewController: UIViewController {
     
     @IBAction func joinTempUserButton(_ sender: UIButton) {
         
-        let alert = UIAlertController(title: "רישום משתמש זמני", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "רישום משתמש זמני", message: nil, preferredStyle: .actionSheet)
+        
         alert.addTextField { (firstName) in
             firstName.placeholder = "שם פרטי"
             firstName.textAlignment = .center
@@ -129,7 +130,7 @@ class CompetitionDetailsViewController: UIViewController {
     }
     
     func getDay() -> String {
-        let today = competition.activityDate
+        /*let today = competition.activityDate
         let formatter  = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         let todayDate = formatter.date(from: today)!
@@ -149,7 +150,8 @@ class CompetitionDetailsViewController: UIViewController {
             break;
         }
         
-        return day
+        return day*/
+        return ""
     }
     
 

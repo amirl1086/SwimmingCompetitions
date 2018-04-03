@@ -21,8 +21,12 @@
 		306C95991FF269AF00A0D266 /* stll-swimming-logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */; };
 		306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306C959C1FF27C6200A0D266 /* RoundButton.swift */; };
 		3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */; };
+		308CB6A72066BC2B005565BA /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */; };
+		308CB6A82066BC2B005565BA /* ResultsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */; };
 		3096CDD11FF855A00045E0D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3096CDD01FF855A00045E0D6 /* User.swift */; };
 		30C13D842011D71D000AAE4E /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C13D832011D71D000AAE4E /* Competition.swift */; };
+		30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220BF205E0A9E00A1E5F0 /* Date.swift */; };
+		30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */; };
 		30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A861FE72BB900201A20 /* AppDelegate.swift */; };
 		30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A881FE72BB900201A20 /* MainViewController.swift */; };
 		30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A8A1FE72BB900201A20 /* Main.storyboard */; };
@@ -74,8 +78,12 @@
 		306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
 		306C959C1FF27C6200A0D266 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 		3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableTextField.swift; sourceTree = "<group>"; };
+		308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
+		308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResultsTableViewCell.xib; sourceTree = "<group>"; };
 		3096CDD01FF855A00045E0D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		30C13D832011D71D000AAE4E /* Competition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
+		30F220BF205E0A9E00A1E5F0 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalResultsViewController.swift; sourceTree = "<group>"; };
 		30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwimmingCompetition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FE9A861FE72BB900201A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30FE9A881FE72BB900201A20 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +141,8 @@
 			children = (
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
 				3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */,
+				308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */,
+				308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */,
 			);
 			path = TableCell;
 			sourceTree = "<group>";
@@ -143,6 +153,7 @@
 				3096CDD01FF855A00045E0D6 /* User.swift */,
 				30C13D832011D71D000AAE4E /* Competition.swift */,
 				3027DA97203C9D3F009D8A17 /* Participant.swift */,
+				30F220BF205E0A9E00A1E5F0 /* Date.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -189,6 +200,7 @@
 				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */,
 				305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */,
 				305EAF522013F1420059C789 /* IterationViewController.swift */,
 				3068F8D820061DBD009518AD /* CompetitionsViewController.swift */,
@@ -370,6 +382,7 @@
 				30FE9A911FE72BBA00201A20 /* Assets.xcassets in Resources */,
 				30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */,
 				30291371205B3E8D00D293F2 /* CompetitionTableViewCell.xib in Resources */,
+				308CB6A82066BC2B005565BA /* ResultsTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,6 +571,7 @@
 			files = (
 				3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */,
 				305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */,
+				308CB6A72066BC2B005565BA /* ResultsTableViewCell.swift in Sources */,
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
@@ -571,8 +585,10 @@
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,
 				30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */,
 				3096CDD11FF855A00045E0D6 /* User.swift in Sources */,
+				30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */,
 				3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */,
 				30FE9A8F1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld in Sources */,
+				30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */,
 				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

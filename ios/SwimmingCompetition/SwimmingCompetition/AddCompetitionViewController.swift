@@ -26,13 +26,14 @@ class AddCompetitionViewController: UIViewController {
     var style: String = ""
     var fromAge: Int = 0
     var toAge: Int = 0
+    var dateToSend = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         toolBar()
-        
+      
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,7 +63,7 @@ class AddCompetitionViewController: UIViewController {
     
     @IBAction func addCompetitionButton(_ sender: Any) {
         let parameters = [
-            "activityDate": self.dateTextField.text!,
+            "activityDate": dateToSend,
             "length": Float(self.range),
             "name": self.nameTextField.text!,
             "numOfParticipants": self.numberTextField.text!,
@@ -83,24 +84,17 @@ class AddCompetitionViewController: UIViewController {
             let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
-                let gotoMain = MainViewController()
-                self.navigationController?.pushViewController(gotoMain, animated: true)
+                self.dismiss(animated: true, completion: nil)
             }))
             self.present(alert, animated: true, completion: nil)
             
         }
-        
-       /* let alert = UIAlertController(title: "", message: "message", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-            self.dismiss(animated: true, completion: nil)
-        }))
-        self.present(alert, animated: true, completion: nil)*/
        
     }
 }
 
 extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if (pickerView == self.styleTextField.inputView || pickerView == self.agesTextField.inputView) {
             return 2
@@ -170,7 +164,8 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     func toolBar() {
-        datePicker.datePickerMode = .date
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -187,7 +182,15 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     @objc func doneClicked() {
         let formatDate = DateFormatter()
         formatDate.dateFormat = "dd/MM/YYYY"
+       
+        
+        print(formatDate.locale!)
         dateTextField.text = formatDate.string(from: datePicker.date)
+        
+        formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
+        
+        
+        dateToSend = formatDate.string(from: datePicker.date)
         
         view.endEditing(true)
     }
