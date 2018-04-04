@@ -14,6 +14,7 @@ import SwiftyJSON
 class LoginViewController: UIViewController, UITextFieldDelegate {
    
     @IBOutlet weak var logo: UIImageView!
+    
     //The input email and password for login
     @IBOutlet weak var emailTextFiled: UITextField!
     @IBOutlet weak var passwordTextFiled: UITextField!
@@ -23,18 +24,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.logo.image = UIImage(named: "ios2.png")
+        
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
         
         activateSpinner(isActivate: false)
         
-        // Do any additional setup after loading the view, typically from a nib.
+        self.logo.image = UIImage(named: "ios2.png")
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        
-        
-        
     }
   
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -49,9 +46,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
    
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -69,6 +64,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func loginButton(_ sender: AnyObject) {
        
         activateSpinner(isActivate: true)
+        
         let parameters = [
             "email": emailTextFiled.text!,
             "password": passwordTextFiled.text!

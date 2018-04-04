@@ -15,12 +15,8 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        let param = ["uid":user.uid] as [String:AnyObject]
-        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: param) { (response) in
-            print(response)
-        }
         
     }
     

@@ -10,6 +10,7 @@ import UIKit
 
 class AddCompetitionViewController: UIViewController {
     
+    
     //The picker view object
     var pickerView = UIPickerView()
     let stylePicker = ["חזה","גב","חתירה","חופשי"]
@@ -40,6 +41,7 @@ class AddCompetitionViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     @IBAction func styleTextBegin(_ sender: UITextField) {
         self.pickerViewStart()
@@ -84,7 +86,9 @@ class AddCompetitionViewController: UIViewController {
             let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
-                self.dismiss(animated: true, completion: nil)
+                if response.succeed {
+                    _ = self.navigationController?.popViewController(animated: true)
+                }
             }))
             self.present(alert, animated: true, completion: nil)
             
@@ -122,6 +126,29 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         }
         return String(rangePicker[row])
         
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> String? {
+        if pickerView == self.styleTextField.inputView {
+            if component == 0 {
+                return "סגנון שחייה"
+            }
+            if component == 1 {
+                return "מרחק"
+            }
+        }
+        else if pickerView == self.agesTextField.inputView {
+            if component == 0 {
+                return "עד גיל"
+            }
+            if component == 1 {
+                return "מגיל"
+            }
+        }
+        else if pickerView == self.numberTextField.inputView {
+            return "מס׳ משתתפים למקצה"
+        }
+        return "בחר תאריך ושעה"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -181,10 +208,8 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     
     @objc func doneClicked() {
         let formatDate = DateFormatter()
-        formatDate.dateFormat = "dd/MM/YYYY"
+        formatDate.dateFormat = "HH:mm dd/MM/YYYY"
        
-        
-        print(formatDate.locale!)
         dateTextField.text = formatDate.string(from: datePicker.date)
         
         formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"

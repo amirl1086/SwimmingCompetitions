@@ -14,6 +14,7 @@
 		30291371205B3E8D00D293F2 /* CompetitionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
+		3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */; };
 		305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */; };
 		305EAF532013F1420059C789 /* IterationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF522013F1420059C789 /* IterationViewController.swift */; };
 		3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068F8D820061DBD009518AD /* CompetitionsViewController.swift */; };
@@ -70,6 +71,7 @@
 		3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionTableViewCell.xib; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
+		3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempRegPopUpViewController.swift; sourceTree = "<group>"; };
 		30541B602002D9940080CC58 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
 		305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		305EAF522013F1420059C789 /* IterationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IterationViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */,
 				30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */,
 				305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */,
 				305EAF522013F1420059C789 /* IterationViewController.swift */,
@@ -573,6 +576,7 @@
 				305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */,
 				308CB6A72066BC2B005565BA /* ResultsTableViewCell.swift in Sources */,
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
+				3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,

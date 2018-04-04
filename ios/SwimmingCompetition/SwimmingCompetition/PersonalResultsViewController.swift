@@ -17,9 +17,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     }
 
     var array = [Result]()
+    var data:JSON = [:]
     
     @IBOutlet weak var tableView: UITableView!
-    var data:JSON = [:]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self

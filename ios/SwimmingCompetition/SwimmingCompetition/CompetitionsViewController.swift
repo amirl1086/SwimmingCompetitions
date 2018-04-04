@@ -17,9 +17,9 @@ class CompetitionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
         
         addButtonView()
         getCompetitionsData()
@@ -27,7 +27,11 @@ class CompetitionsViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         self.tableView.backgroundColor = UIColor.clear
         
-        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getCompetitionsData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
