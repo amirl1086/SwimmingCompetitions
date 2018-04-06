@@ -71,10 +71,6 @@
                                     <action selector="loginButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QTp-Hj-35D"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hrU-40-lmN">
-                                <rect key="frame" x="131" y="104" width="113" height="81"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hd6-2J-1Hm" customClass="HoshiTextField" customModule="TextFieldEffects">
                                 <rect key="frame" x="36" y="290" width="302" height="50"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
@@ -116,6 +112,10 @@
                                     <segue destination="D9E-M8-pyd" kind="show" identifier="goToRegisterType" id="5RG-Ln-xtq"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hrU-40-lmN">
+                                <rect key="frame" x="137" y="68" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -352,6 +352,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOI-QC-Gb3">
+                                <rect key="frame" x="293" y="506" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="editCompetitionButton:" destination="8G7-kT-ObH" eventType="touchUpInside" id="IfX-OV-0s4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="TWy-N9-imZ"/>
@@ -576,7 +584,7 @@
         <!--הוספת תחרות-->
         <scene sceneID="TJy-pi-UfQ">
             <objects>
-                <viewController title="הוספת תחרות" id="a7i-Il-LgQ" customClass="AddCompetitionViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addCompetitionID" title="הוספת תחרות" id="a7i-Il-LgQ" customClass="AddCompetitionViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1sB-6F-mvl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -985,7 +993,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gF0-jP-U0B">
-                                <rect key="frame" x="43" y="130" width="288" height="407"/>
+                                <rect key="frame" x="43.5" y="130" width="288" height="407"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jkp-zN-c8P">
                                         <rect key="frame" x="8" y="369" width="120" height="30"/>

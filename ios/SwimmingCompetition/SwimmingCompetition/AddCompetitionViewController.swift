@@ -8,9 +8,13 @@
 
 import UIKit
 
+protocol dataProtocol {
+    func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String)
+}
+
 class AddCompetitionViewController: UIViewController {
     
-    
+    var delegate: dataProtocol?
     //The picker view object
     var pickerView = UIPickerView()
     let stylePicker = ["חזה","גב","חתירה","חופשי"]
@@ -23,6 +27,10 @@ class AddCompetitionViewController: UIViewController {
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var agesTextField: UITextField!
     
+    var isEdit: Bool = false
+    var editedCompetitionId: String = ""
+    var competitionName: String = ""
+    var numOfParticipants: String = ""
     var range: Int = 0
     var style: String = ""
     var fromAge: Int = 0
@@ -31,6 +39,14 @@ class AddCompetitionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if isEdit {
+            nameTextField.text = competitionName
+            styleTextField.text = "\(range) מטר \(style)"
+            numberTextField.text = numOfParticipants
+            dateTextField.text = "\(Date().getHour(fullDate: dateToSend)) \(Date().getDate(fullDate: dateToSend))"
+            agesTextField.text = "מגיל \(fromAge) עד גיל \(toAge)"
+        }
+        
         toolBar()
       
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
@@ -64,7 +80,7 @@ class AddCompetitionViewController: UIViewController {
     }
     
     @IBAction func addCompetitionButton(_ sender: Any) {
-        let parameters = [
+        var parameters = [
             "activityDate": dateToSend,
             "length": Float(self.range),
             "name": self.nameTextField.text!,
@@ -73,7 +89,9 @@ class AddCompetitionViewController: UIViewController {
             "fromAge": self.fromAge,
             "toAge": self.toAge
             ] as [String : AnyObject]
-        
+        if isEdit {
+            parameters["id"] = editedCompetitionId as AnyObject
+        }
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
             print(response.data)
             var message = ""
@@ -87,6 +105,9 @@ class AddCompetitionViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
                 if response.succeed {
+                    if self.isEdit {
+                        self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numOfParticipants)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
+                    }
                     _ = self.navigationController?.popViewController(animated: true)
                 }
             }))

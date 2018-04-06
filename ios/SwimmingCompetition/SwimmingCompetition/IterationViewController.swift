@@ -23,7 +23,8 @@ class IterationViewController: UIViewController {
     
     var participantsIndex = [Int]()
     var buttonsArray = [UIButton!]()
-    var labelsArray = [UILabel!]()
+    var timesArray = [UILabel!]()
+    var namesArray = [UILabel!]()
     
     var timer = Timer()
     var validTimer = false
@@ -110,7 +111,7 @@ class IterationViewController: UIViewController {
         var start:Int = 0
         for i in 0...iterationNumber-1 {
             let name = UILabel(frame: CGRect(x: start, y: 400, width: width, height: 30))
-            name.text = "מתחרה \(i+1)"
+            name.text = "אין מתחרה"
             name.textAlignment = .center
             
             let time = UILabel(frame: CGRect(x: start, y: 440, width: width, height: 30))
@@ -129,9 +130,7 @@ class IterationViewController: UIViewController {
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
             button.isEnabled = false
             self.view.addSubview(button)
-            print("hetttttttttt")
-            print(participantsIndex.count)
-            print(i)
+            
             if participantsIndex.count > i {
                 name.text = self.competition.participants[participantsIndex[i]].firstName
                 //time.tag = participantsIndex[i]
@@ -142,7 +141,8 @@ class IterationViewController: UIViewController {
             subviews.append(name)
             subviews.append(time)
             subviews.append(button)
-            labelsArray.append(time)
+            namesArray.append(name)
+            timesArray.append(time)
             buttonsArray.append(button)
             
             start += width + 10
@@ -151,12 +151,12 @@ class IterationViewController: UIViewController {
     }
     
     @objc func stopUserTimeButton(sender: UIButton!) {
-        print(sender.tag)
-        self.labelsArray[sender.tag].text = "\(self.timeLabel.text!)"
+        
+        self.timesArray[sender.tag].text = "\(self.timeLabel.text!)"
         
         competition.participants[participantsIndex[sender.tag]].setCompeted(competed: true)
         competition.participants[participantsIndex[sender.tag]].score = self.userTime
-        //sender.isEnabled = false
+        
         var i = 0
         for button in buttonsArray {
             if (button?.isEnabled)! == false {
@@ -170,7 +170,7 @@ class IterationViewController: UIViewController {
     
     @objc func labelTapped(gesture : UITapGestureRecognizer) {
         let id = gesture.view!.tag
-        let alert = UIAlertController(title: "זמן של מתחרה \(id+1)", message: "\(labelsArray[id].text!)", preferredStyle: .alert)
+        let alert = UIAlertController(title: "\(namesArray[id].text!)", message: "\(timesArray[id].text!)", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
@@ -181,7 +181,8 @@ class IterationViewController: UIViewController {
        // if participantsIndex.count != 0 {
             iterationIsDone()
         //}
-        labelsArray.removeAll()
+        namesArray.removeAll()
+        timesArray.removeAll()
         participantsIndex.removeAll()
         
         for (index, part) in self.competition.participants.enumerated() {

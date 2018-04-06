@@ -103,12 +103,12 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         title.font.withSize(30)
         
         if indexPath.row == 0 {
-            cell.cellView.backgroundColor = UIColor.red
+            cell.cellView.backgroundColor = UIColor.gray
             title.text = "בנים"
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
-            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+            //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
             
         }
         else if indexPath.row-1 < array[indexPath.section].maleResults.count {
@@ -122,13 +122,13 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             
         }
         else if indexPath.row-1 == array[indexPath.section].maleResults.count {
-            cell.cellView.backgroundColor = UIColor.red
+            cell.cellView.backgroundColor = UIColor.gray
             title.text = "בנות"
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
-            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
-            cell.name.font = cell.name.font.withSize(20)
+            //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+            //cell.name.font = cell.name.font.withSize(20)
         }
         else {
             cell.cellView.backgroundColor = UIColor.clear

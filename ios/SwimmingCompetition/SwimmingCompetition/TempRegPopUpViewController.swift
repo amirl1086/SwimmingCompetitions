@@ -18,7 +18,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
 
         showAnimate()
@@ -41,13 +41,23 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func confirmButton(_ sender: Any) {
-        print(firstName.text!)
-        print(lastName.text!)
-        print(gender.titleForSegment(at: gender.selectedSegmentIndex)!)
+        let currentCompetition = (self.parent as! CompetitionDetailsViewController).competition
         let formatDate = DateFormatter()
         formatDate.dateFormat = "dd/MM/YYYY"
+        let parameters = [
+            "competitionId": currentCompetition!.id,
+            "firstName": firstName.text!,
+            "lastName": lastName.text!,
+            "birthDate": formatDate.string(from: birthDate.date),
+            "gender": gender.titleForSegment(at: gender.selectedSegmentIndex)!,
+            "score": "0.0",
+            "competed": false
+        ] as [String:AnyObject]
         
-        print(formatDate.string(from: birthDate.date))
+        Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters) { (response) in
+            self.removeAnimate()
+        }
+        
     }
     
     func showAnimate() {

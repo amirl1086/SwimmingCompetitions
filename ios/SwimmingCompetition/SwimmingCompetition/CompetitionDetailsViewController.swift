@@ -32,6 +32,16 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        nameLabel.text = competition.name
+        //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
+        dateLabel.text = Date().getDate(fullDate: competition.activityDate)
+        styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
+        numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
+    }
+    
     @objc func goToStart() {
         performSegue(withIdentifier: "goToStartCompetition", sender: self)
     }
@@ -58,5 +68,42 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    @IBAction func editCompetitionButton(_ sender: Any) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "addCompetitionID") as! AddCompetitionViewController
+        viewController.delegate = self
+        viewController.isEdit = true
+        viewController.competitionName = competition.getName()
+        viewController.style = competition.getSwimmingStyle()
+        viewController.range = Int(competition.getLength())!
+        viewController.numOfParticipants = competition.getNumOfParticipants()
+        viewController.dateToSend = competition.getActivityDate()
+        viewController.fromAge = Int(competition.getFromAge())!
+        viewController.toAge = Int(competition.getToAge())!
+            
+        
+            print(competition.getName())
+            print(competition.getSwimmingStyle())
+            print(competition.getNumOfParticipants())
+            if let navigator = navigationController {
+                navigator.pushViewController(viewController, animated: true)
+            }
+        
+    }
+    
+}
 
+extension CompetitionDetailsViewController: dataProtocol {
+    func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String) {
+        self.competition.setName(name: name)
+        self.competition.setActivityDate(activityDate: activityDate)
+        self.competition.setSwimmingStyle(swimmingStyle: swimmingStyle)
+        self.competition.setLength(length: length)
+        self.competition.setNumOfParticipants(numOfParticipants: numOfParticipants)
+        self.competition.setFromAge(fromAge: fromAge)
+        self.competition.setToAge(toAge: toAge)
+    }
+    
+    
+    
+    
 }

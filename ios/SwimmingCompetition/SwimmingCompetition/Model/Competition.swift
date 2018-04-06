@@ -12,12 +12,12 @@ class Competition {
     
     var name:String
     var activityDate:String
-    let swimmingStyle:String
-    let length: String
-    let numOfParticipants:String
-    let id: String
-    let fromAge: String
-    let toAge: String
+    var swimmingStyle:String
+    var length: String
+    var numOfParticipants:String
+    var id: String
+    var fromAge: String
+    var toAge: String
     var participants = [Participant]()
     
     
@@ -58,6 +58,10 @@ class Competition {
         return self.name
     }
     
+    func setName(name: String) {
+        self.name = name
+    }
+    
     func getActivityDate() -> String {
         return self.activityDate
     }
@@ -66,5 +70,44 @@ class Competition {
         self.activityDate = activityDate
     }
     
+    func getSwimmingStyle() -> String {
+        return self.swimmingStyle
+    }
+    
+    func setSwimmingStyle(swimmingStyle: String) {
+        self.swimmingStyle = swimmingStyle
+    }
+    
+    func getLength() -> String {
+        return self.length
+    }
+    
+    func setLength(length: String) {
+        self.length = length
+    }
+    
+    func getNumOfParticipants() -> String {
+        return self.numOfParticipants
+    }
+    
+    func setNumOfParticipants(numOfParticipants: String) {
+        self.numOfParticipants = numOfParticipants
+    }
+    
+    func getFromAge() -> String {
+        return self.fromAge
+    }
+    
+    func setFromAge(fromAge: String) {
+        self.fromAge = fromAge
+    }
+    
+    func getToAge() -> String {
+        return self.toAge
+    }
+    
+    func setToAge(toAge: String) {
+        self.toAge = toAge
+    }
     
 }
