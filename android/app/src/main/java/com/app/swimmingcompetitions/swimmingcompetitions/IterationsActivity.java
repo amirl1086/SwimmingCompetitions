@@ -333,7 +333,8 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private void switchToViewResultsActivity(JSONObject dataObj) {
         Intent intent = new Intent(this, ViewCompetitionResultsActivity.class);
         intent.putExtra("competitionResults", dataObj.toString());
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
     }
 }

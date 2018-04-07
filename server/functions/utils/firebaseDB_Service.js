@@ -225,7 +225,7 @@ module.exports = {
 
 					if(Object.keys(newParticipants).length === 0) {
 						currentCompetition.isDone = true;
-						updateCompetition(currentCompetition);
+						//updateCompetition(currentCompetition);
 						//TODO - maybe needs to query all results
 						var resultsAgeMap = sortPersonalResults(competition, snapshot.val());
 						resultsAgeMap.type = 'resultsMap';

@@ -79,7 +79,7 @@ public class ResultAdapter extends ArrayAdapter<JSONObject> {
                     setTextView(malesHeader, "בנים:", 24, Color.BLACK, Gravity.CENTER, Typeface.BOLD);
 
                 }
-                else if(femalesResultsJson.length() > 0) {
+                if(femalesResultsJson.length() > 0) {
                     participant = new Participant(femalesResultsJson.getJSONObject(0));
                     setTextView(femalesHeader, "בנות:", 24, Color.BLACK, Gravity.CENTER, Typeface.BOLD);
                 }

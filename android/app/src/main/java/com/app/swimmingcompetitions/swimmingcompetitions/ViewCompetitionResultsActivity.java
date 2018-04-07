@@ -40,10 +40,28 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
 
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
-            this.currentUser = (User) intent.getSerializableExtra("currentUser");
-            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            try {
+                this.currentUser = (User) intent.getSerializableExtra("currentUser");
+                this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
 
-            JSONObject data = new JSONObject();
+                JSONObject competitionResults = new JSONObject(intent.getStringExtra("competitionResults"));
+                Iterator<String> agesKeys = competitionResults.keys();
+
+                while (agesKeys.hasNext()) {
+                    String currentAge = agesKeys.next();
+                    JSONObject currentResult = new JSONObject(competitionResults.get(currentAge).toString());
+                    this.results.add(currentResult);
+                }
+
+                this.resultsListAdapter = new ResultAdapter(this, R.layout.result_list_item, results);
+                this.listView.setAdapter(this.resultsListAdapter);
+            }
+            catch (JSONException e) {
+                showToast("ViewCompetitionResultsActivity onCreate: Error initializing results");
+            }
+
+
+            /*JSONObject data = new JSONObject();
             //get competitions list set up action params
             try {
                 data.put("urlSuffix", "/getPersonalResults");
@@ -60,7 +78,7 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
 
             this.jsonAsyncTaskPost = new JSON_AsyncTask();
             this.jsonAsyncTaskPost.delegate = this;
-            this.jsonAsyncTaskPost.execute(data.toString());
+            this.jsonAsyncTaskPost.execute(data.toString());*/
         }
     }
 
