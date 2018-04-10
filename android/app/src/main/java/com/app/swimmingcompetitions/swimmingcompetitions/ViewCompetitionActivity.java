@@ -15,9 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ViewCompetitionActivity extends LoadingDialog {
+public class ViewCompetitionActivity extends LoadingDialog implements AsyncResponse {
 
-    /*private JSON_AsyncTask jsonAsyncTaskPost;*/
+    private JSON_AsyncTask jsonAsyncTaskPost;
     private User currentUser = null;
     private Competition selectedCompetition;
 
@@ -109,44 +109,61 @@ public class ViewCompetitionActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-    public void switchToIterationsActivity(final View view) {
+    public void switchToIterationsActivity() {
         Intent intent = new Intent(this, IterationsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
     }
-/*
-    public void registerTempUserToCompetition(View view) {
+
+    public void initCompetitionForIterations(View view) {
+        JSONObject data = new JSONObject();
+        //get competitions list set up action params
         try {
-            this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
-
-            JSONObject data = new JSONObject();
-            data.put("urlSuffix", "/joinToCompetition");
-            data.put("httpMethod", "POST");
-            data.put("uid", this.currentUser.getUid());
+            data.put("urlSuffix", "/initCompetitionForIterations");
+            data.put("httpMethod", "GET");
             data.put("competitionId", this.selectedCompetition.getId());
+        }
+        catch (JSONException e) {
+            showToast("שגיאה באתחול התחרות למקצים, נסה לאתחל את האפליקציה");
+        }
 
-            jsonAsyncTaskPost.execute(data.toString());
-        }
-        catch (Exception e) {
-            showToast("ViewCompetitionActivity registerUserToCompetition: Error calling joinToCompetition");
-        }
+        showProgressDialog("מאתחל תחרות למקצים...");
+
+        jsonAsyncTaskPost = new JSON_AsyncTask();
+        jsonAsyncTaskPost.delegate = this;
+        jsonAsyncTaskPost.execute(data.toString());
     }
 
     @Override
     public void processFinish(String result) {
         try {
-            JSONObject response = new JSONObject(result);
-            JSONObject dataObj = response.getJSONObject("data");
-            if(response.getBoolean("success")) {
-                //switchToMainMenuActivity(dataObj);
+            if (result != null) {
+                JSONObject response = new JSONObject(result);
+
+                if (response.getBoolean("success")) {
+                    JSONObject dataObj = response.getJSONObject("data");
+
+                    this.selectedCompetition = new Competition(dataObj);
+                    if(this.selectedCompetition.getParticipants().size() == 0) {
+                        showToast("לא קיימים משתתפים לתחרות");
+                    }
+                    else if(this.selectedCompetition.getCurrentParticipants().size() == 0) {
+                        showToast("התחרות הנוכחית הסתיימה");
+                    }
+                    else {
+                        switchToIterationsActivity();
+                    }
+                }
+                else {
+                    showToast("ViewCompetitionsActivity processFinish: Error loging in");
+                }
             }
-            else {
-                showToast("LogInActivity processFinish: Error registering");
-            }
-        } catch (JSONException e) {
-            showToast("RegisterActivity, processFinish: Error parsing JSONObject");
         }
-    }*/
+        catch (JSONException e) {
+            showToast("ViewCompetitionsActivity processFinish: Error parsing JSONObject");
+        }
+
+        hideProgressDialog();
+    }
 }

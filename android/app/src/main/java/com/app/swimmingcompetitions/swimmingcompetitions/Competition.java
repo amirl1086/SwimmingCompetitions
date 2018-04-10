@@ -128,8 +128,10 @@ public class Competition implements Serializable {
         JSONObject participantsMap = new JSONObject();
         for(Participant participant : participants) {
             JSONObject participantJson = participant.getJSON_Object();
-            participantsMap.put(participant.getUserId(), participantJson.toString());
+            String strrr = participantJson.toString();
+            participantsMap.put(participant.getUserId(), participantJson);
         }
+        String str = participantsMap.toString();
         return participantsMap.toString();
     }
 

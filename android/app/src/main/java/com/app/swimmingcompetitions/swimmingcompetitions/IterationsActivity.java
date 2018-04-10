@@ -139,6 +139,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
         //this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
 
         try {
+
             this.selectedCompetition.setCurrentParticipants(this.currentParticipants);
             this.selectedCompetition.setAllParticipants(this.allParticipants);
 
@@ -146,7 +147,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             jsonAsyncTaskPost.delegate = this;
             JSONObject data = new JSONObject();
             //set up action params
-
+            String str = this.selectedCompetition.getJSON_Object().toString();
             data.put("urlSuffix", "/setCompetitionResults");
             data.put("httpMethod", "POST");
             data.put("competition", this.selectedCompetition.getJSON_Object().toString());
@@ -187,25 +188,30 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
 
     private void startClicked(View view) {
         String mode = (String) start.getText();
-        if(mode.equals("התחל")) {
-            startTime = SystemClock.uptimeMillis();
-            handler.postDelayed(runnable, 0);
-            reset.setEnabled(false);
-            start.setText("עצור");
-            endIterationButton.setEnabled(false);
-        }
-        else if(mode.equals("עצור")) {
-            timeBuff += millisecondTime;
-            handler.removeCallbacks(runnable);
-            reset.setEnabled(true);
-            start.setText("המשך");
-            endIterationButton.setEnabled(true);
-        }
-        else if(mode.equals("המשך")) {
-            startTime = SystemClock.uptimeMillis();
-            handler.postDelayed(runnable, 0);
-            reset.setEnabled(false);
-            start.setText("עצור");
+        switch (mode) {
+            case "התחל": {
+                startTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
+                reset.setEnabled(false);
+                start.setText("עצור");
+                endIterationButton.setEnabled(false);
+                break;
+            }
+            case "עצור": {
+                timeBuff += millisecondTime;
+                handler.removeCallbacks(runnable);
+                reset.setEnabled(true);
+                start.setText("המשך");
+                endIterationButton.setEnabled(true);
+                break;
+            }
+            case "המשך": {
+                startTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
+                reset.setEnabled(false);
+                start.setText("עצור");
+                break;
+            }
         }
     }
 
@@ -257,7 +263,6 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             }
         }
 
-        selectedParticipant.setCompeted(true);
         Double score = seconds + (60 * minutes) + (0.001 * milliSeconds);
         selectedParticipant.setScore(score.toString());
 
