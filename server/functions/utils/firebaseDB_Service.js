@@ -165,14 +165,15 @@ module.exports = {
 
 	setCompetitionResults: function(params, response) {
 		var currentCompetition = JSON.parse(params.competition);
-		//console.log('setCompetitionResults currentCompetition ', currentCompetition);
+		console.log('setCompetitionResults currentCompetition ', currentCompetition);
 
 		updateCompetitionIteration(currentCompetition, function(competition) {
-			//console.log('setCompetitionResults competition ', competition);
+			console.log('setCompetitionResults competition ', competition);
 			var participantsResults = competition.currentParticipants;
 
 			updateCompetitionResults(participantsResults, competition.id, function(success, competedParticipants) {
 				if(success) {
+					console.log('setCompetitionResults competition.participants ', competition.participants);
 					var participants = filters.filterCompetedParticipants(competition.participants);
 
 					if(Object.keys(participants).length === 0) {
@@ -260,9 +261,12 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	var db = admin.database();
 	var presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
 
+	console.log('updateCompetitionResults participantsResults ', participantsResults);
+	console.log('updateCompetitionResults competitionId ', competitionId);
+
 	var personalResults = {};
 	for(var key in participantsResults) {
-		var currentParticipant = JSON.parse(participantsResults[key]);
+		var currentParticipant = participantsResults[key];
 		personalResults[currentParticipant.id] = {
 			'firstName': currentParticipant.firstName,
 			'lastName': currentParticipant.lastName,
@@ -274,6 +278,7 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	
 	presonalResultsRef.update(personalResults);
 	presonalResultsRef.on('value', function(snapshot) {
+		console.log('updateCompetitionResults snapshot ', snapshot.val());
 		callback(true, snapshot.val());
 	}, function(error) {
 		callback(false, error);
@@ -388,14 +393,14 @@ var updateCompetitionIteration = function(competition, callback) {
 	competition.currentParticipants = JSON.parse(competition.currentParticipants);
 
 	for(var key in competition.participants) {
-		//console.log('competition.participants[key] ', competition.participants[key]);
+		console.log('competition.participants[key] ', competition.participants[key]);
 		competition.participants[key] = competition.participants[key];
 		var competedParticipant = competition.currentParticipants[key];
 		if(competedParticipant) {
-			competition.participants[key].competed = true;
+			competition.participants[key].competed = 'true';
 		}
 	}
-	delete competition.currentParticipants;
+	//delete competition.currentParticipants;
 
 	competitionsRef.update(competition);
 
