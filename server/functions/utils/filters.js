@@ -5,8 +5,8 @@ module.exports = {
 
 	filterCompetedParticipants: function(participants) {
 		var newParticipants = {};
-		for(key in participants) {
-			if(!participants[key].competed) {
+		for(var key in participants) {
+			if(participants[key].competed === 'false') {
 				newParticipants[key] = participants[key];
 			}
 		}
@@ -21,7 +21,7 @@ module.exports = {
 		return Object.keys(participants).reduce(function(totalResults, key) {
 			var participant = participants[key];
 
-			//console.log('sortParticipantsByAge participant ', JSON.stringify(participant));	
+			console.log('sortParticipantsByAge participant ', participant);	
 			var compare = moment(participant.birthDate);
 			var participantAge = Math.floor(today.diff(compare, 'years', true));
 			//console.log('participantAge ', participantAge);
