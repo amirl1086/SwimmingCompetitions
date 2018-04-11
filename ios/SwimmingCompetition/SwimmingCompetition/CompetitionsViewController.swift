@@ -54,11 +54,21 @@ class CompetitionsViewController: UIViewController {
     }
     
     func getCompetitionsData() {
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityView.center = self.view.center
-        activityView.startAnimating()
         
-        self.view.addSubview(activityView)
+        var alert: UIAlertView = UIAlertView(title: "Title", message: "Please wait...", delegate: nil, cancelButtonTitle: "Cancel");
+        
+        
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
+        loadingIndicator.center = self.view.center;
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating();
+        
+        alert.setValue(loadingIndicator, forKey: "accessoryView")
+        loadingIndicator.startAnimating()
+        
+        alert.show();
+        
         let parameters = ["currentUser": ["uid":user.uid]] as [String: AnyObject]
         print(parameters as JSON)
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
@@ -74,9 +84,9 @@ class CompetitionsViewController: UIViewController {
             formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
             self.competitions = compArray
             self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
-            activityView.stopAnimating()
-            self.tableView.reloadData()
             
+            self.tableView.reloadData()
+            alert.dismiss(withClickedButtonIndex: -1, animated: true)
             print(self.competitions)
         }
     }

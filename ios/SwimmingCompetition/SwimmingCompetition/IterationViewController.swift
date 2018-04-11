@@ -41,7 +41,7 @@ class IterationViewController: UIViewController {
        
         startNewIteration()
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "iteration_screen.jpg")!)
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
     }
@@ -178,9 +178,17 @@ class IterationViewController: UIViewController {
     }
     
     func startNewIteration() {
-       // if participantsIndex.count != 0 {
+        if participantsIndex.count != 0 {
             iterationIsDone()
-        //}
+        }
+        else {
+            let param = [
+                "competitionId": competition.getId()
+            ] as [String:AnyObject]
+            Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
+                print(response)
+            })
+        }
         namesArray.removeAll()
         timesArray.removeAll()
         participantsIndex.removeAll()
@@ -213,8 +221,7 @@ class IterationViewController: UIViewController {
     }
     
     func iterationIsDone() {
-        
-        var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
+        var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.participantsIndex.count {
             print("im here")
@@ -227,7 +234,7 @@ class IterationViewController: UIViewController {
             let score = self.competition.participants[participantsIndex[i]].score
             let competed = self.competition.participants[participantsIndex[i]].competed
             
-            sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
+            sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"id\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
             if i != self.participantsIndex.count-1 {
                 sendString += ","
             }
@@ -236,9 +243,8 @@ class IterationViewController: UIViewController {
         //sendString += "}\"}" as String
         var participantsString = ""
         for participants in competition.participants {
-            participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
-            
-            if participants.uid != competition.participants.last?.uid {
+            participantsString += "\\\"\(participants.uid)\\\":{\\\"birthDate\\\":\\\"\(participants.birthDate)\\\",\\\"firstName\\\":\\\"\(participants.firstName)\\\",\\\"lastName\\\":\\\"\(participants.lastName)\\\",\\\"gender\\\":\\\"\(participants.gender)\\\",\\\"score\\\":\\\"\(participants.score)\\\",\\\"id\\\":\\\"\(participants.uid)\\\",\\\"competed\\\":\\\"\(participants.competed)\\\"}"
+                        if participants.uid != competition.participants.last?.uid {
                 participantsString += ","
             }
         }
@@ -272,3 +278,33 @@ class IterationViewController: UIViewController {
    
     
 }
+
+/*var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
+ 
+ for i in 0..<self.participantsIndex.count {
+ print("im here")
+ print(participantsIndex.count)
+ let id = self.competition.participants[participantsIndex[i]].uid
+ let firstName = self.competition.participants[participantsIndex[i]].firstName
+ let lastName = self.competition.participants[participantsIndex[i]].lastName
+ let birthDate = self.competition.participants[participantsIndex[i]].birthDate
+ let gender = self.competition.participants[participantsIndex[i]].gender
+ let score = self.competition.participants[participantsIndex[i]].score
+ let competed = self.competition.participants[participantsIndex[i]].competed
+ 
+ sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
+ if i != self.participantsIndex.count-1 {
+ sendString += ","
+ }
+ }
+ 
+ //sendString += "}\"}" as String
+ var participantsString = ""
+ for participants in competition.participants {
+ participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
+ 
+ if participants.uid != competition.participants.last?.uid {
+ participantsString += ","
+ }
+ }
+ sendString += "}\",\"participants\":\"{\(participantsString)}\"}"*/

@@ -54,6 +54,10 @@ class Competition {
         }
     }
     
+    func getId() -> String {
+        return self.id
+    }
+    
     func getName() -> String {
         return self.name
     }

@@ -90,8 +90,11 @@ class AddCompetitionViewController: UIViewController {
             "toAge": self.toAge
             ] as [String : AnyObject]
         if isEdit {
+            print(editedCompetitionId)
             parameters["id"] = editedCompetitionId as AnyObject
         }
+        
+        
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
             print(response.data)
             var message = ""
