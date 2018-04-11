@@ -204,17 +204,48 @@ module.exports = {
 	},
 
 	initCompetitionForIterations: function(params, response) {
+		/*var competition = JSON.parse(params.competition);
+		console.log('initCompetitionForIterations competition ', competition);
+
+		var participants = JSON.parse(competition.participants);
+		console.log('initCompetitionForIterations participants ', participants);
+
+		var currentParticipants = JSON.parse(competition.currentParticipants || '{}');
+		console.log('initCompetitionForIterations currentParticipants ', currentParticipants);
+
+		competition.participants = filters.filterCompetedParticipants(participants);
+		console.log('competition.participants ', competition.participants);
+
+		var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
+		console.log('sortedParticipants ', sortedParticipants);
+
+		//filters.removeBlankSpots(competition, sortedParticipants);
+		if(!Object.keys(currentParticipants).length) {
+			competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+		}
+		else {
+			competition.currentParticipants = currentParticipants;
+		}
+		competition.currentParticipants = currentParticipants;*/
+		
+		//utilities.sendResponse(response, null, competition);
+
 		getCompetitionById(params.competitionId, function(success, result) {
 			if(success) {
 				var competition = result;
+				console.log('initCompetitionForIterations competition ', competition);
 				//console.log('competition ', JSON.stringify(competition));
 				competition.participants = filters.filterCompetedParticipants(competition.participants);
+				console.log('competition.participants ', competition.participants);
 				var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
+				console.log('sortedParticipants ', sortedParticipants);
 
 				//console.log('sortedParticipants ', JSON.stringify(sortedParticipants));
 
 				filters.removeBlankSpots(competition, sortedParticipants);
+				console.log('sortedParticipants ', sortedParticipants);
 				competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+				console.log('currentParticipants ', competition.currentParticipants);
 				utilities.sendResponse(response, null, competition);
 			}
 			else {
@@ -230,7 +261,7 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	var presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
 
 	var personalResults = {};
-	for(key in participantsResults) {
+	for(var key in participantsResults) {
 		var currentParticipant = JSON.parse(participantsResults[key]);
 		personalResults[currentParticipant.id] = {
 			'firstName': currentParticipant.firstName,
@@ -253,13 +284,13 @@ var getNewParticipants = function(competition, sortedParticipants) {
 	var newParticipants;
 	var currentAge = parseInt(competition.toAge);
 	var fromAge = parseInt(competition.fromAge);
-	//console.log('fromAge ', fromAge);
+	console.log('fromAge ', fromAge);
 
 	while(currentAge >= fromAge) {
-		//console.log('currentAge ', currentAge);
+		console.log('currentAge ', currentAge);
 
 		if(sortedParticipants[currentAge.toString()]) {
-			//console.log('sortedParticipants[currentAge.toString()] ', JSON.stringify(sortedParticipants[currentAge.toString()]));
+			console.log('sortedParticipants[currentAge.toString()] ', JSON.stringify(sortedParticipants[currentAge.toString()]));
 
 			if(sortedParticipants[currentAge.toString()].males.length) {
 				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].males, parseInt(competition.numOfParticipants));
@@ -275,11 +306,9 @@ var getNewParticipants = function(competition, sortedParticipants) {
 			}
 
 		}
-		else {
-			currentAge--;		
-		}
+		currentAge--;
 	}
-
+	console.log('newParticipants ', newParticipants);
 	return newParticipants;
 }
 
@@ -290,11 +319,12 @@ var getNewParticipantsFromGendger = function(participants, numOfParticipants) {
 	//console.log('getNewParticipantsFromGendger participants ', JSON.stringify(participants));
 	//console.log('getNewParticipantsFromGendger numOfParticipants ', numOfParticipants);
 	for(var i = 0; i < participants.length; i++) {
-		if(!participants[i].competed && totalSelected < numOfParticipants) {
+		if(participants[i].competed === 'false' && totalSelected < numOfParticipants) {
 			newParticipants[participants[i].id] = participants[i];
 			totalSelected++
 		}
 	}
+	console.log('getNewParticipantsFromGendger newParticipants ', newParticipants)
 	return newParticipants;
 }
 
@@ -357,7 +387,7 @@ var updateCompetitionIteration = function(competition, callback) {
 	competition.participants = JSON.parse(competition.participants);
 	competition.currentParticipants = JSON.parse(competition.currentParticipants);
 
-	for(key in competition.participants) {
+	for(var key in competition.participants) {
 		//console.log('competition.participants[key] ', competition.participants[key]);
 		competition.participants[key] = competition.participants[key];
 		var competedParticipant = competition.currentParticipants[key];
@@ -394,7 +424,7 @@ var filterCompetitions = function(competitions, params) {
 	//console.log('competitions ',  competitions);
 	//console.log('params ',  params);
 
-	for(key in competitions) {
+	for(var key in competitions) {
 		var currentCompetition = competitions[key];
 		console.log('currentCompetition ',  currentCompetition);
 
