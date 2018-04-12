@@ -42,8 +42,12 @@ class Participant implements Serializable {
         if(data.has("gender")) {
             this.gender = data.getString("gender");
         }
-        this.score = data.getString("score");
-        this.competed = data.getString("competed");
+        if(data.has("score")) {
+            this.score = data.getString("score");
+        }
+        if(data.has("competed")) {
+            this.competed = data.getString("competed");
+        }
     }
 
     @Override

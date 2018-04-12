@@ -31,7 +31,6 @@ public class ParticipantResultAdapter extends ArrayAdapter<JSONObject> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
-        DateUtils dateUtils = new DateUtils();
 
         if(listItem == null) {
             listItem = LayoutInflater.from(mContext).inflate(R.layout.participant_result_list_item, parent, false);
@@ -42,10 +41,11 @@ public class ParticipantResultAdapter extends ArrayAdapter<JSONObject> {
             Participant participant = new Participant(currentParticipant);
             TextView participantName = listItem.findViewById(R.id.participant_name);
             participantName.setText(participant.getFirstName() + " " + participant.getLastName());
-            System.out.println(currentParticipant);
+            System.out.println("ParticipantResultAdapter " + position + " " + currentParticipant);
         }
         catch (JSONException e) {
-
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
 

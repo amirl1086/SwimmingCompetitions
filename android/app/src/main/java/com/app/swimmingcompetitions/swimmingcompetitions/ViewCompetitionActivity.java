@@ -21,6 +21,8 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
     private JSON_AsyncTask jsonAsyncTaskPost;
     private User currentUser = null;
     private Competition selectedCompetition;
+    private Button startCompetitionBtn;
+    private JSONObject dataObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         TextView participantsForIteration = findViewById(R.id.num_of_participants_for_competition);
 
         Button registerEditBtn = findViewById(R.id.register_edit_btn);
-        Button startCompetitionBtn = findViewById(R.id.start_competition);
+        this.startCompetitionBtn = findViewById(R.id.start_competition);
 
         DateUtils dateUtils = new DateUtils();
         Calendar calendar;
@@ -70,7 +72,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 });
             }
             else {
-                startCompetitionBtn.setVisibility(View.INVISIBLE);
+                this.startCompetitionBtn.setVisibility(View.INVISIBLE);
 
                 registerEditBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -143,17 +145,28 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 JSONObject response = new JSONObject(result);
 
                 if (response.getBoolean("success")) {
-                    JSONObject dataObj = response.getJSONObject("data");
+                    this.dataObj = response.getJSONObject("data");
 
-                    this.selectedCompetition = new Competition(dataObj);
-                    if(this.selectedCompetition.getParticipants().size() == 0) {
-                        showToast("לא קיימים משתתפים לתחרות");
-                    }
-                    else if(this.selectedCompetition.getCurrentParticipants().size() == 0) {
+                    if(dataObj.get("type").equals("resultsMap")) {
+                        this.dataObj.remove("type");
                         showToast("התחרות הנוכחית הסתיימה");
+                        startCompetitionBtn.setText("צפה בתוצאות");
+                        startCompetitionBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                switchToViewResultsActivity();
+                            }
+                        });
                     }
-                    else {
-                        switchToIterationsActivity();
+                    else if(this.dataObj.get("type").equals("newIteration")){
+                        this.dataObj.remove("type");
+                        this.selectedCompetition = new Competition(this.dataObj);
+                        if(this.selectedCompetition.getParticipants().size() == 0) {
+                            showToast("לא קיימים משתתפים לתחרות");
+                        }
+                        else {
+                            switchToIterationsActivity();
+                        }
                     }
                 }
                 else {
@@ -166,5 +179,14 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         }
 
         hideProgressDialog();
+    }
+
+    private void switchToViewResultsActivity() {
+        Intent intent = new Intent(this, ViewCompetitionResultsActivity.class);
+        intent.putExtra("competitionResults", this.dataObj.toString());
+        System.out.println("switchToViewResultsActivity dataObj " + this.dataObj.toString());
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
+        startActivity(intent);
     }
 }

@@ -21,7 +21,6 @@ module.exports = {
 		});
 
 		usersRef.on('value', function(snapshot) {
-			console.log('firebase finished inserting new user ', snapshot)
 			//add the uid to the currentUser
 			callback(attachUidToUser(snapshot));
 		});
@@ -145,7 +144,8 @@ module.exports = {
 				'firstName': params.firstName,
 				'lastName': params.lastName,
 				'birthDate': params.birthDate,
-				'gender': params.gender
+				'gender': params.gender,
+				'id': competitionsRef.key
 			};
 		}
 
@@ -177,7 +177,7 @@ module.exports = {
 					var participants = filters.filterCompetedParticipants(competition.participants);
 
 					if(Object.keys(participants).length === 0) {
-						currentCompetition.isDone = true;
+						currentCompetition.isDone = 'true';
 						//updateCompetition(currentCompetition);
 						//TODO - maybe needs to query all results
 						var resultsAgeMap = sortPersonalResults(competition, competedParticipants);
@@ -208,49 +208,42 @@ module.exports = {
 	},
 
 	initCompetitionForIterations: function(params, response) {
-		/*var competition = JSON.parse(params.competition);
-		console.log('initCompetitionForIterations competition ', competition);
-
-		var participants = JSON.parse(competition.participants);
-		console.log('initCompetitionForIterations participants ', participants);
-
-		var currentParticipants = JSON.parse(competition.currentParticipants || '{}');
-		console.log('initCompetitionForIterations currentParticipants ', currentParticipants);
-
-		competition.participants = filters.filterCompetedParticipants(participants);
-		console.log('competition.participants ', competition.participants);
-
-		var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
-		console.log('sortedParticipants ', sortedParticipants);
-
-		//filters.removeBlankSpots(competition, sortedParticipants);
-		if(!Object.keys(currentParticipants).length) {
-			competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
-		}
-		else {
-			competition.currentParticipants = currentParticipants;
-		}
-		competition.currentParticipants = currentParticipants;*/
-		
-		//utilities.sendResponse(response, null, competition);
 
 		getCompetitionById(params.competitionId, function(success, result) {
 			if(success) {
 				var competition = result;
 				console.log('initCompetitionForIterations competition ', competition);
 				//console.log('competition ', JSON.stringify(competition));
-				var participants = filters.filterCompetedParticipants(competition.participants);
-				console.log('competition.participants ', participants);
-				var sortedParticipants = filters.sortParticipantsByAge(participants);
-				console.log('sortedParticipants ', sortedParticipants);
+				var newParticipants = filters.filterCompetedParticipants(competition.participants);
 
-				//console.log('sortedParticipants ', JSON.stringify(sortedParticipants));
+				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
+					getCompetitionResults(competition.id, function(success, result) {
+						if(success) {
+							console.log('competitionResults ', JSON.stringify(result));
+							var resultsAgeMap = sortPersonalResults(competition, result);
+							resultsAgeMap.type = 'resultsMap';
+							utilities.sendResponse(response, null, resultsAgeMap);
+						}
+						else {
+							utilities.sendResponse(response, result, null);
+						}
+						
+					});
+				}
+				else {
+					console.log('competition.participants ', newParticipants);
+					var sortedParticipants = filters.sortParticipantsByAge(newParticipants);
+					console.log('sortedParticipants ', sortedParticipants);
 
-				filters.removeBlankSpots(competition, sortedParticipants);
-				console.log('removeBlankSpots sortedParticipants ', sortedParticipants);
-				competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
-				console.log('currentParticipants ', competition.currentParticipants);
-				utilities.sendResponse(response, null, competition);
+					//console.log('sortedParticipants ', JSON.stringify(sortedParticipants));
+
+					filters.removeBlankSpots(competition, sortedParticipants);
+					console.log('removeBlankSpots sortedParticipants ', sortedParticipants);
+					competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+					console.log('currentParticipants ', competition.currentParticipants);
+					competition.type = 'newIteration';
+					utilities.sendResponse(response, null, competition);
+				}
 			}
 			else {
 				utilities.sendResponse(response, result, null);
@@ -272,11 +265,23 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 			'lastName': currentParticipant.lastName,
 			'birthDate': currentParticipant.birthDate,
 			'gender': currentParticipant.gender,
-			'score': currentParticipant.score
+			'score': currentParticipant.score,
+			'userId': currentParticipant.id
 		};
 	}
 	
 	presonalResultsRef.update(personalResults);
+	presonalResultsRef.on('value', function(snapshot) {
+		callback(true, snapshot.val());
+	}, function(error) {
+		callback(false, error);
+	});
+}
+
+var getCompetitionResults = function(competitionId, callback) {
+	var db = admin.database();
+	var presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
+
 	presonalResultsRef.on('value', function(snapshot) {
 		callback(true, snapshot.val());
 	}, function(error) {
