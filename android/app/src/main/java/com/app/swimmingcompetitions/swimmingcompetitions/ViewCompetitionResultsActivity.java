@@ -1,22 +1,12 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +15,7 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
 
     private User currentUser;
     private ListView listView;
-    private ResultAdapter resultsListAdapter;
+    private AgeResultAdapter resultsListAdapter;
     private ArrayList<JSONObject> results;
     private JSON_AsyncTask jsonAsyncTaskPost;
     private Competition selectedCompetition;
@@ -53,7 +43,7 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
                     this.results.add(currentResult);
                 }
 
-                this.resultsListAdapter = new ResultAdapter(this, R.layout.result_list_item, results);
+                this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
                 this.listView.setAdapter(this.resultsListAdapter);
             }
             catch (JSONException e) {
@@ -103,7 +93,7 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
                         this.results.add(currentResult);
                     }
 
-                    this.resultsListAdapter = new ResultAdapter(this, R.layout.result_list_item, results);
+                    this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
                     this.listView.setAdapter(this.resultsListAdapter);
                 }
                 else {
