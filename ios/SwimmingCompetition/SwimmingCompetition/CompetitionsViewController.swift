@@ -55,7 +55,7 @@ class CompetitionsViewController: UIViewController {
     
     func getCompetitionsData() {
         
-        var alert: UIAlertView = UIAlertView(title: "Title", message: "Please wait...", delegate: nil, cancelButtonTitle: "Cancel");
+        var alert: UIAlertView = UIAlertView(title: "טוען תחרויות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
         
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView

@@ -231,15 +231,17 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     @objc func doneClicked() {
-        let formatDate = DateFormatter()
-        formatDate.dateFormat = "HH:mm dd/MM/YYYY"
-       
-        dateTextField.text = formatDate.string(from: datePicker.date)
-        
-        formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
-        
-        
-        dateToSend = formatDate.string(from: datePicker.date)
+        if dateTextField.inputView == datePicker {
+            let formatDate = DateFormatter()
+            formatDate.dateFormat = "HH:mm dd/MM/YYYY"
+            
+            dateTextField.text = formatDate.string(from: datePicker.date)
+            
+            formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
+            
+            
+            dateToSend = formatDate.string(from: datePicker.date)
+        }
         
         view.endEditing(true)
     }

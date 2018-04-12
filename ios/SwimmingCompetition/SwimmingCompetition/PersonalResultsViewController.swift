@@ -45,7 +45,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 print(d["males"] as! NSArray)
                 for male in d["males"] as! NSArray{
                     let data = male as! JSON
-                    let maleResult = Participant(json: data, id: data["userId"] as! String)
+                    let maleResult = Participant(json: data, id: "")
                     maleArray.append(maleResult)
                 }
                 
@@ -57,7 +57,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 
                 for female in d["females"] as! NSArray {
                     let data = female as! JSON
-                    let femaleResult = Participant(json: data, id: data["userId"] as! String)
+                    let femaleResult = Participant(json: data, id: "")
                     femaleArray.append(femaleResult)
                 }
                 
@@ -100,7 +100,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath) as! ResultsTableViewCell
         let title = UILabel()
-        title.font.withSize(30)
+        title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
         
         if indexPath.row == 0 {
             cell.cellView.backgroundColor = UIColor.gray
@@ -113,9 +113,9 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
         else if indexPath.row-1 < array[indexPath.section].maleResults.count {
             cell.cellView.backgroundColor = UIColor.clear
-            cell.name.text = array[indexPath.section].maleResults[indexPath.row-1].firstName
+            cell.name.text = "\(array[indexPath.section].maleResults[indexPath.row-1].lastName) \(array[indexPath.section].maleResults[indexPath.row-1].firstName)"
             cell.score.text = array[indexPath.section].maleResults[indexPath.row-1].score
-            cell.rankImage.image = UIImage(named: "\(array[indexPath.section].maleResults[indexPath.row-1].rank).jpeg")
+            cell.rankImage.image = UIImage(named: "\(array[indexPath.section].maleResults[indexPath.row-1].rank).png")
             cell.rankImage.isHidden = false
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
@@ -127,13 +127,15 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
+            cell.cellView.layer.bounds = CGRect(x: cell.cellView.bounds.origin.x, y: cell.cellView.bounds.origin.y, width: cell.cellView.bounds.size.width - 40, height: cell.cellView.bounds.size.height - 20)
             //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
             //cell.name.font = cell.name.font.withSize(20)
         }
         else {
             cell.cellView.backgroundColor = UIColor.clear
-            cell.name.text = array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].firstName
+            cell.name.text = "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].lastName) \(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].firstName)"
             cell.score.text = array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].score
+            cell.rankImage.image = UIImage(named: "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].rank).png")
             cell.rankImage.isHidden = false
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
