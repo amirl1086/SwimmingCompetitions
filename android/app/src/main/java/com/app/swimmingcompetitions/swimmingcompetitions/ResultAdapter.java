@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ResultAdapter extends ArrayAdapter<JSONObject> {
@@ -84,7 +85,7 @@ public class ResultAdapter extends ArrayAdapter<JSONObject> {
                     setTextView(femalesHeader, "בנות:", 24, Color.BLACK, Gravity.CENTER, Typeface.BOLD);
                 }
 
-                String currentAge = dateUtils.getAge(participant.getBirthDate());
+                String currentAge = dateUtils.getAge(new Date(participant.getBirthDate()));
                 setTextView(ages, "גילאי " + currentAge, 28, Color.BLACK, Gravity.CENTER, Typeface.BOLD_ITALIC);
 
 

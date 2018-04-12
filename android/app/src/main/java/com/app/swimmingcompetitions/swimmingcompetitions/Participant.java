@@ -13,19 +13,19 @@ class Participant implements Serializable {
     private String firstName;
     private String gender;
     private String lastName;
-    private Date birthDate;
+    private String birthDate;
     private String score;
 
-    private Boolean competed;
+    private String competed;
 
     public Participant(String userId, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.birthDate = new Date(birthDate);
+        this.birthDate = birthDate;
         this.score = score;
-        this.competed = Boolean.valueOf(competed);
+        this.competed = competed;
     }
 
     public Participant(String userId, JSONObject data) throws JSONException {
@@ -37,13 +37,13 @@ class Participant implements Serializable {
             this.lastName = data.getString("lastName");
         }
         if(data.has("birthDate")) {
-            this.birthDate = new Date(data.getString("birthDate"));
+            this.birthDate = data.getString("birthDate");
         }
         if(data.has("gender")) {
             this.gender = data.getString("gender");
         }
         this.score = "0.0";
-        this.competed = false;
+        this.competed = "false";
     }
 
     @Override
@@ -79,11 +79,11 @@ class Participant implements Serializable {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -95,11 +95,11 @@ class Participant implements Serializable {
         this.score = score;
     }
 
-    public Boolean isCompeted() {
+    public String isCompeted() {
         return this.competed;
     }
 
-    public void setCompeted(Boolean competed) {
+    public void setCompeted(String competed) {
         this.competed = competed;
     }
 
@@ -117,10 +117,6 @@ class Participant implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public Boolean getCompeted() {
-        return competed;
     }
 
     public JSONObject getJSON_Object() throws JSONException{

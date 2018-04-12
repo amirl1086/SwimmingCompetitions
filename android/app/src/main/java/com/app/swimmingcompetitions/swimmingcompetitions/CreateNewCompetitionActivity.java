@@ -98,7 +98,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
             DateUtils dateUtils = new DateUtils();
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
             this.competitionName.setText(this.selectedCompetition.getName());
-            Calendar competitionDate = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
+            Calendar competitionDate = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
             showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH) + 1, competitionDate.get(Calendar.DAY_OF_MONTH));
             showTime(competitionDate.get(Calendar.HOUR_OF_DAY), competitionDate.get(Calendar.MINUTE));
             this.fromAge.setValue(Integer.valueOf(this.selectedCompetition.getFromAge()));

@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ public class Competition implements Serializable {
     private String participants;
     private String currentParticipants;
     private Boolean isDone;
-    private Date activityDate;
+    private String activityDate;
     private String numOfParticipants;
     private String fromAge;
     private String toAge;
@@ -27,7 +28,7 @@ public class Competition implements Serializable {
     public Competition(String id, String name, String activityDate, String swimmingStyle, Integer numOfParticipants, Integer fromAge, Integer toAge, Integer length) {
         this.id = id;
         this.name = name;
-        this.activityDate = new Date(activityDate);
+        this.activityDate = activityDate;
         this.numOfParticipants = String.valueOf(numOfParticipants);
         this.swimmingStyle = swimmingStyle;
         this.length = String.valueOf(length);
@@ -38,8 +39,7 @@ public class Competition implements Serializable {
     public Competition(String id, JSONObject data) throws JSONException {
         this.id = id;
         this.name = data.getString("name");
-        String activityDate = data.getString("activityDate");
-        this.activityDate = new Date(activityDate);
+        this.activityDate = data.getString("activityDate");
         this.numOfParticipants = data.getString("numOfParticipants");
         this.swimmingStyle = data.getString("swimmingStyle");
         this.length = data.getString("length");
@@ -67,7 +67,7 @@ public class Competition implements Serializable {
         data.put("participants", this.participants);
         data.put("currentParticipants", this.currentParticipants);
         data.put("swimmingStyle", this.swimmingStyle);
-        data.put("activityDate", this.activityDate.toString());
+        data.put("activityDate", this.activityDate);
         data.put("numOfParticipants", this.numOfParticipants);
         data.put("length", this.length);
         data.put("fromAge", this.fromAge);
@@ -156,7 +156,7 @@ public class Competition implements Serializable {
         return this.name;
     }
 
-    public Date getActivityDate() {
+    public String getActivityDate() {
         return this.activityDate;
     }
 
@@ -176,7 +176,7 @@ public class Competition implements Serializable {
         this.name = name;
     }
 
-    public void setActivityDate(Date activityDate) {
+    public void setActivityDate(String activityDate) {
         this.activityDate = activityDate;
     }
 

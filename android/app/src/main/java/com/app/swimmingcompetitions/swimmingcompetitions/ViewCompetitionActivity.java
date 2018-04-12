@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ViewCompetitionActivity extends LoadingDialog implements AsyncResponse {
 
@@ -79,7 +80,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 });
             }
 
-            calendar = dateUtils.dateToCalendar(this.selectedCompetition.getActivityDate());
+            calendar = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
             date.setText(dateUtils.getDate(calendar));
             competitionName.setText(selectedCompetition.getName());
             time.setText(dateUtils.getTime(calendar));
