@@ -112,7 +112,14 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         String firstNameText = this.firstName.getText().toString();
         String lastNameText = this.lastName.getText().toString();
         String birthDateText = this.dateView.getText().toString();
-        String genderText = this.spinner.getSelectedItem().toString();
+        String genderText;
+
+        if(this.spinner.getSelectedItem().toString().equals("זכר")) {
+            genderText = "male";
+        }
+        else {
+            genderText = "female";
+        }
 
         JSONObject registerData = new JSONObject();
 

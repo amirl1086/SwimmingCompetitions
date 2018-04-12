@@ -90,8 +90,11 @@ class AddCompetitionViewController: UIViewController {
             "toAge": self.toAge
             ] as [String : AnyObject]
         if isEdit {
+            print(editedCompetitionId)
             parameters["id"] = editedCompetitionId as AnyObject
         }
+        
+        
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
             print(response.data)
             var message = ""
@@ -228,15 +231,17 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     @objc func doneClicked() {
-        let formatDate = DateFormatter()
-        formatDate.dateFormat = "HH:mm dd/MM/YYYY"
-       
-        dateTextField.text = formatDate.string(from: datePicker.date)
-        
-        formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
-        
-        
-        dateToSend = formatDate.string(from: datePicker.date)
+        if dateTextField.inputView == datePicker {
+            let formatDate = DateFormatter()
+            formatDate.dateFormat = "HH:mm dd/MM/YYYY"
+            
+            dateTextField.text = formatDate.string(from: datePicker.date)
+            
+            formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
+            
+            
+            dateToSend = formatDate.string(from: datePicker.date)
+        }
         
         view.endEditing(true)
     }

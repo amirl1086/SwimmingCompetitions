@@ -151,7 +151,7 @@ module.exports = {
 
 		newParticipant = Object.assign({
 			'score': params.score || '0', 
-			'competed': params.competed || 'false'
+			'competed': 'false'
 		}, newParticipant);
 
 		competitionsRef.set(newParticipant);
@@ -236,15 +236,15 @@ module.exports = {
 				var competition = result;
 				console.log('initCompetitionForIterations competition ', competition);
 				//console.log('competition ', JSON.stringify(competition));
-				competition.participants = filters.filterCompetedParticipants(competition.participants);
-				console.log('competition.participants ', competition.participants);
-				var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
+				var participants = filters.filterCompetedParticipants(competition.participants);
+				console.log('competition.participants ', participants);
+				var sortedParticipants = filters.sortParticipantsByAge(participants);
 				console.log('sortedParticipants ', sortedParticipants);
 
 				//console.log('sortedParticipants ', JSON.stringify(sortedParticipants));
 
 				filters.removeBlankSpots(competition, sortedParticipants);
-				console.log('sortedParticipants ', sortedParticipants);
+				console.log('removeBlankSpots sortedParticipants ', sortedParticipants);
 				competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
 				console.log('currentParticipants ', competition.currentParticipants);
 				utilities.sendResponse(response, null, competition);
@@ -324,7 +324,7 @@ var getNewParticipantsFromGendger = function(participants, numOfParticipants) {
 	//console.log('getNewParticipantsFromGendger participants ', JSON.stringify(participants));
 	//console.log('getNewParticipantsFromGendger numOfParticipants ', numOfParticipants);
 	for(var i = 0; i < participants.length; i++) {
-		if(participants[i].competed === 'false' && totalSelected < numOfParticipants) {
+		if((!participants[i].competed || participants[i].competed === 'false') && totalSelected < numOfParticipants) {
 			newParticipants[participants[i].id] = participants[i];
 			totalSelected++
 		}

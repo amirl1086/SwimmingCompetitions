@@ -19,7 +19,7 @@ class Competition {
     var fromAge: String
     var toAge: String
     var participants = [Participant]()
-    
+    var currentParticipants = [Participant]()
     
     init(json: JSON, id: String) {
             let name = json["name"] as? String
@@ -31,6 +31,7 @@ class Competition {
             let toAge = json["toAge"] as? String
             let id = id as? String
             let participants = json["participants"] as? JSON
+            let currentParticipants = json["currentParticipants"] as? JSON
             //else{return nil}
         
         
@@ -43,6 +44,7 @@ class Competition {
         self.toAge = toAge!
         self.id = id!
         self.participants = []
+        self.currentParticipants = []
         
         if participants != nil {
             for part in participants! {
@@ -52,6 +54,19 @@ class Competition {
                 self.participants.append(participant)
             }
         }
+        
+        if currentParticipants != nil {
+            for part in currentParticipants! {
+                var currentParticipant: Participant!
+                let data = currentParticipants![part.0] as! JSON
+                currentParticipant = Participant(json: data, id: part.0)
+                self.currentParticipants.append(currentParticipant)
+            }
+        }
+    }
+    
+    func getId() -> String {
+        return self.id
     }
     
     func getName() -> String {

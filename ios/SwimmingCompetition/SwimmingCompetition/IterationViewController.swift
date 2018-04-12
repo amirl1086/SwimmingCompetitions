@@ -39,9 +39,9 @@ class IterationViewController: UIViewController {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
        
-        startNewIteration()
+        initIteration()
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "iteration_screen.jpg")!)
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
     }
@@ -53,7 +53,7 @@ class IterationViewController: UIViewController {
     @IBAction func endIterationButton(_ sender: Any) {
         timer.invalidate()
         resetButton(sender)
-        startNewIteration()
+        iterationIsDone()
     }
     
     @IBAction func startButton(_ sender: UIButton) {
@@ -132,7 +132,7 @@ class IterationViewController: UIViewController {
             self.view.addSubview(button)
             
             if participantsIndex.count > i {
-                name.text = self.competition.participants[participantsIndex[i]].firstName
+                name.text = self.competition.currentParticipants[participantsIndex[i]].firstName
                 //time.tag = participantsIndex[i]
                 //button.tag = participantsIndex[i]
                 button.isEnabled = true
@@ -154,8 +154,8 @@ class IterationViewController: UIViewController {
         
         self.timesArray[sender.tag].text = "\(self.timeLabel.text!)"
         
-        competition.participants[participantsIndex[sender.tag]].setCompeted(competed: true)
-        competition.participants[participantsIndex[sender.tag]].score = self.userTime
+        competition.currentParticipants[participantsIndex[sender.tag]].setCompeted(competed: true)
+        competition.currentParticipants[participantsIndex[sender.tag]].score = self.userTime
         
         var i = 0
         for button in buttonsArray {
@@ -178,14 +178,12 @@ class IterationViewController: UIViewController {
     }
     
     func startNewIteration() {
-       // if participantsIndex.count != 0 {
-            iterationIsDone()
-        //}
+        
         namesArray.removeAll()
         timesArray.removeAll()
         participantsIndex.removeAll()
         
-        for (index, part) in self.competition.participants.enumerated() {
+        for (index, part) in self.competition.currentParticipants.enumerated() {
             if self.participantsIndex.count == iterationNumber {
                 break
             }
@@ -213,21 +211,20 @@ class IterationViewController: UIViewController {
     }
     
     func iterationIsDone() {
-        
-        var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
+        var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.participantsIndex.count {
             print("im here")
             print(participantsIndex.count)
-            let id = self.competition.participants[participantsIndex[i]].uid
-            let firstName = self.competition.participants[participantsIndex[i]].firstName
-            let lastName = self.competition.participants[participantsIndex[i]].lastName
-            let birthDate = self.competition.participants[participantsIndex[i]].birthDate
-            let gender = self.competition.participants[participantsIndex[i]].gender
-            let score = self.competition.participants[participantsIndex[i]].score
-            let competed = self.competition.participants[participantsIndex[i]].competed
+            let id = self.competition.currentParticipants[participantsIndex[i]].uid
+            let firstName = self.competition.currentParticipants[participantsIndex[i]].firstName
+            let lastName = self.competition.currentParticipants[participantsIndex[i]].lastName
+            let birthDate = self.competition.currentParticipants[participantsIndex[i]].birthDate
+            let gender = self.competition.currentParticipants[participantsIndex[i]].gender
+            let score = self.competition.currentParticipants[participantsIndex[i]].score
+            let competed = self.competition.currentParticipants[participantsIndex[i]].competed
             
-            sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
+            sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"id\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
             if i != self.participantsIndex.count-1 {
                 sendString += ","
             }
@@ -236,9 +233,8 @@ class IterationViewController: UIViewController {
         //sendString += "}\"}" as String
         var participantsString = ""
         for participants in competition.participants {
-            participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
-            
-            if participants.uid != competition.participants.last?.uid {
+            participantsString += "\\\"\(participants.uid)\\\":{\\\"birthDate\\\":\\\"\(participants.birthDate)\\\",\\\"firstName\\\":\\\"\(participants.firstName)\\\",\\\"lastName\\\":\\\"\(participants.lastName)\\\",\\\"gender\\\":\\\"\(participants.gender)\\\",\\\"score\\\":\\\"\(participants.score)\\\",\\\"id\\\":\\\"\(participants.uid)\\\",\\\"competed\\\":\\\"\(participants.competed)\\\"}"
+                        if participants.uid != competition.participants.last?.uid {
                 participantsString += ","
             }
         }
@@ -263,6 +259,13 @@ class IterationViewController: UIViewController {
                 print("json to pass")
                 print(self.jsonData)
             }
+            else {
+                var competition: Competition!
+                let data = response.data
+                competition = Competition(json: data, id: data["id"] as! String)
+                self.competition = competition
+                self.startNewIteration()
+            }
         }
     }
     
@@ -270,5 +273,49 @@ class IterationViewController: UIViewController {
         performSegue(withIdentifier: "goToCompetitionResults", sender: self)
     }
    
+    func initIteration() {
+        let param = [
+            "competitionId": competition.getId()
+            ] as [String:AnyObject]
+        
+        Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
+            var competition: Competition!
+            let data = response.data
+            competition = Competition(json: data, id: data["id"] as! String)
+            self.competition = competition
+            self.startNewIteration()
+            
+        })
+    }
     
 }
+
+/*var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
+ 
+ for i in 0..<self.participantsIndex.count {
+ print("im here")
+ print(participantsIndex.count)
+ let id = self.competition.participants[participantsIndex[i]].uid
+ let firstName = self.competition.participants[participantsIndex[i]].firstName
+ let lastName = self.competition.participants[participantsIndex[i]].lastName
+ let birthDate = self.competition.participants[participantsIndex[i]].birthDate
+ let gender = self.competition.participants[participantsIndex[i]].gender
+ let score = self.competition.participants[participantsIndex[i]].score
+ let competed = self.competition.participants[participantsIndex[i]].competed
+ 
+ sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
+ if i != self.participantsIndex.count-1 {
+ sendString += ","
+ }
+ }
+ 
+ //sendString += "}\"}" as String
+ var participantsString = ""
+ for participants in competition.participants {
+ participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
+ 
+ if participants.uid != competition.participants.last?.uid {
+ participantsString += ","
+ }
+ }
+ sendString += "}\",\"participants\":\"{\(participantsString)}\"}"*/

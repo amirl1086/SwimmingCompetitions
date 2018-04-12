@@ -79,7 +79,7 @@ class CompetitionDetailsViewController: UIViewController {
         viewController.dateToSend = competition.getActivityDate()
         viewController.fromAge = Int(competition.getFromAge())!
         viewController.toAge = Int(competition.getToAge())!
-            
+        viewController.editedCompetitionId = competition.getId()
         
             print(competition.getName())
             print(competition.getSwimmingStyle())
