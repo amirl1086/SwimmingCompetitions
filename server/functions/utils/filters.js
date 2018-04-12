@@ -6,7 +6,7 @@ module.exports = {
 	filterCompetedParticipants: function(participants) {
 		var newParticipants = {};
 		for(var key in participants) {
-			if(participants[key].competed === 'false') {
+			if(!participants[key].competed || participants[key].competed === 'false') {
 				newParticipants[key] = participants[key];
 			}
 		}
