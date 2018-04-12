@@ -69,4 +69,5 @@
     <string name="register_temp_user_btn">רשום משתמש זמני</string>
     <string name="first_place">מקום ראשון</string>
     <string name="choose_competition_to_view_results">בחר תחרות לצפיה בתוצאות</string>
+    <string name="competition_results_header">תוצאות</string>
 </resources>
