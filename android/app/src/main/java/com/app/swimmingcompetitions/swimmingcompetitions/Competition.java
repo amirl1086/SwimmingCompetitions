@@ -93,10 +93,11 @@ public class Competition implements Serializable {
     }*/
 
     public ArrayList<Participant> getParticipants() throws JSONException {
+        ArrayList<Participant> participants = new ArrayList<>();
         if(this.participants != null) {
-            return getParticipants(new JSONObject(this.participants));
+            participants = getParticipants(new JSONObject(this.participants));
         }
-        return null;
+        return participants;
     }
 
     public ArrayList<Participant> getParticipants(JSONObject dataObj) throws JSONException {
@@ -113,7 +114,11 @@ public class Competition implements Serializable {
     }
 
     public ArrayList<Participant> getCurrentParticipants() throws JSONException {
-        return getParticipants(new JSONObject(this.currentParticipants));
+        ArrayList<Participant> participants = new ArrayList<>();
+        if(this.currentParticipants != null) {
+            participants = getParticipants(new JSONObject(this.currentParticipants));
+        }
+        return participants;
     }
 
     public void setCurrentParticipants(ArrayList<Participant> participants) throws JSONException{
@@ -128,10 +133,8 @@ public class Competition implements Serializable {
         JSONObject participantsMap = new JSONObject();
         for(Participant participant : participants) {
             JSONObject participantJson = participant.getJSON_Object();
-            String strrr = participantJson.toString();
             participantsMap.put(participant.getUserId(), participantJson);
         }
-        String str = participantsMap.toString();
         return participantsMap.toString();
     }
 

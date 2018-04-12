@@ -185,10 +185,13 @@ module.exports = {
 						utilities.sendResponse(response, null, resultsAgeMap);
 					}
 					else {
-						competition.participants = participants;
-						var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
+						//competition.participants = participants;
+						var sortedParticipants = filters.sortParticipantsByAge(participants);
+						console.log('setCompetitionResults sortedParticipants ', sortedParticipants);
 						filters.removeBlankSpots(competition, sortedParticipants);
+						console.log('setCompetitionResults removeBlankSpots sortedParticipants ', sortedParticipants);
 						competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+						console.log('setCompetitionResults currentParticipants ', competition.currentParticipants);
 
 						console.log('competition ', competition);
 						competition.type = 'newIteration';
@@ -261,9 +264,6 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	var db = admin.database();
 	var presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
 
-	console.log('updateCompetitionResults participantsResults ', participantsResults);
-	console.log('updateCompetitionResults competitionId ', competitionId);
-
 	var personalResults = {};
 	for(var key in participantsResults) {
 		var currentParticipant = participantsResults[key];
@@ -278,7 +278,6 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	
 	presonalResultsRef.update(personalResults);
 	presonalResultsRef.on('value', function(snapshot) {
-		console.log('updateCompetitionResults snapshot ', snapshot.val());
 		callback(true, snapshot.val());
 	}, function(error) {
 		callback(false, error);
@@ -291,20 +290,25 @@ var getNewParticipants = function(competition, sortedParticipants) {
 	var fromAge = parseInt(competition.fromAge);
 	console.log('fromAge ', fromAge);
 
-	while(currentAge >= fromAge) {
+	while(currentAge >= 0) {
 		console.log('currentAge ', currentAge);
 
 		if(sortedParticipants[currentAge.toString()]) {
 			console.log('sortedParticipants[currentAge.toString()] ', JSON.stringify(sortedParticipants[currentAge.toString()]));
 
+			console.log('males.length ' + sortedParticipants[currentAge.toString()].males.length);
+			console.log('females.length ' + sortedParticipants[currentAge.toString()].females.length);
+
 			if(sortedParticipants[currentAge.toString()].males.length) {
 				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].males, parseInt(competition.numOfParticipants));
+				console.log('males newParticipants ', JSON.stringify(newParticipants));
 				if(Object.keys(newParticipants).length) {
 					break;
 				}
 			}
 			if(sortedParticipants[currentAge.toString()].females.length) {
 				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].females, parseInt(competition.numOfParticipants));
+				console.log('females newParticipants ', JSON.stringify(newParticipants));
 				if(Object.keys(newParticipants).length) {
 					break;
 				}
@@ -321,9 +325,10 @@ var getNewParticipants = function(competition, sortedParticipants) {
 var getNewParticipantsFromGendger = function(participants, numOfParticipants) {
 	var newParticipants = {};
 	var totalSelected = 0;
-	//console.log('getNewParticipantsFromGendger participants ', JSON.stringify(participants));
-	//console.log('getNewParticipantsFromGendger numOfParticipants ', numOfParticipants);
+	console.log('getNewParticipantsFromGendger participants ', JSON.stringify(participants));
+	console.log('getNewParticipantsFromGendger numOfParticipants ', numOfParticipants);
 	for(var i = 0; i < participants.length; i++) {
+		console.log('getNewParticipantsFromGendger participant[i] ', participants[i]);
 		if((!participants[i].competed || participants[i].competed === 'false') && totalSelected < numOfParticipants) {
 			newParticipants[participants[i].id] = participants[i];
 			totalSelected++
@@ -394,9 +399,11 @@ var updateCompetitionIteration = function(competition, callback) {
 
 	for(var key in competition.participants) {
 		console.log('competition.participants[key] ', competition.participants[key]);
-		competition.participants[key] = competition.participants[key];
 		var competedParticipant = competition.currentParticipants[key];
-		if(competedParticipant) {
+		console.log('competition.participants[key] ', competition.participants[key]);
+		if(competition.currentParticipants[key]) {
+			console.log('competed ', competition.participants[key]);
+			competition.participants[key].score = competition.currentParticipants[key].score;
 			competition.participants[key].competed = 'true';
 		}
 	}
@@ -405,6 +412,7 @@ var updateCompetitionIteration = function(competition, callback) {
 	competitionsRef.update(competition);
 
 	competitionsRef.on('value', function(snapshot) {
+		console.log('updateCompetitionIteration snapshot ', JSON.stringify(snapshot.val()));
 		callback(snapshot.val());
 	}, function(error) {
 		callback(null);
@@ -420,7 +428,7 @@ var updateCompetition = function(competition) {
 var filterCompetitions = function(competitions, params) {
 	var currentUser = JSON.parse(params.currentUser);
 	var today = moment();
-	var birthDate = moment(currentUser.birthDate);
+	var birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
 	var userAge = Math.floor(today.diff(birthDate, 'years', true));
 	var filters = params.filters.split(',');
 

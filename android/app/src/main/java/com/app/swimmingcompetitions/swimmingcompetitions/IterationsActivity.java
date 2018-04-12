@@ -60,15 +60,15 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                     setNoParticipantsMessage();
                 }
                 else {
-                    this.currentParticipants = new ArrayList<>();
+                    this.currentParticipants = this.selectedCompetition.getCurrentParticipants();
 
-                    int numOfParticipantsInIteration = this.selectedCompetition.getNumOfParticipants();
+                    /*int numOfParticipantsInIteration = this.selectedCompetition.getNumOfParticipants();
                     int totalNumOfParticipants = this.allParticipants.size();
                     int totalCurrentParticipants = (numOfParticipantsInIteration > totalNumOfParticipants ? totalNumOfParticipants : numOfParticipantsInIteration);
 
                     for(int i = 0; i < totalCurrentParticipants; i++) {
                         this.currentParticipants.add(this.allParticipants.get(i));
-                    }
+                    }*/
 
                     this.handler = new Handler();
 
@@ -121,10 +121,10 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
         alert.show();
     }
 
-    public void initIteration(Competition competition) {
-        this.selectedCompetition = competition;
+    public void initIteration() {
         try {
             this.currentParticipants = this.selectedCompetition.getCurrentParticipants();
+            this.allParticipants = this.selectedCompetition.getParticipants();
 
             resetClicked();
             setParticipantsView();
@@ -317,8 +317,8 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                         switchToViewResultsActivity(dataObj);
                     }
                     else if(dataObj.get("type").equals("newIteration")){
-                        Competition competition = new Competition(dataObj);
-                        initIteration(competition);
+                        this.selectedCompetition = new Competition(dataObj);
+                        initIteration();
                     }
                 }
                 else {

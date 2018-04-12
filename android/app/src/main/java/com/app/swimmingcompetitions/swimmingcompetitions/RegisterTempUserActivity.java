@@ -51,7 +51,7 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         //set up spinner picker for swimming style
         this.genders = new String[]{"בחר מין", "זכר", "נקבה"};
         this.spinner = findViewById(R.id.temp_register_gender);
-        this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
+        this.spinnerListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, genders) {
 
             @Override
             public boolean isEnabled(int position){
@@ -111,7 +111,7 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
     public void registerTempUser(View view) {
         String firstNameText = this.firstName.getText().toString();
         String lastNameText = this.lastName.getText().toString();
-        String birthDateText = this.dateView.getText().toString();
+        String birthDateText = this.dateView.getText().toString() + " 00:00";
         String genderText;
 
         if(this.spinner.getSelectedItem().toString().equals("זכר")) {

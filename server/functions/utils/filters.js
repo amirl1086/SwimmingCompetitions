@@ -22,7 +22,8 @@ module.exports = {
 			var participant = participants[key];
 
 			console.log('sortParticipantsByAge participant ', participant);	
-			var compare = moment(participant.birthDate);
+			var compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
+			console.log('compare ', compare.format('DD/MM/YYYY hh:mm'))
 			var participantAge = Math.floor(today.diff(compare, 'years', true));
 			//console.log('participantAge ', participantAge);
 
