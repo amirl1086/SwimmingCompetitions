@@ -237,8 +237,8 @@ module.exports = {
 				console.log('initCompetitionForIterations competition ', competition);
 				//console.log('competition ', JSON.stringify(competition));
 				var participants = filters.filterCompetedParticipants(competition.participants);
-				console.log('competition.participants ', competition.participants);
-				var sortedParticipants = filters.sortParticipantsByAge(competition.participants);
+				console.log('competition.participants ', participants);
+				var sortedParticipants = filters.sortParticipantsByAge(participants);
 				console.log('sortedParticipants ', sortedParticipants);
 
 				//console.log('sortedParticipants ', JSON.stringify(sortedParticipants));
