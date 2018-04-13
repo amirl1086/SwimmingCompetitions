@@ -90,7 +90,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                     this.start.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startClicked(view);
+                            startClicked();
                         }
                     });
                     this.reset.setOnClickListener(new View.OnClickListener() {
@@ -135,16 +135,14 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     }
 
     private void endIterationClicked(View view) {
-
         //this.currentParticipants = this.selectedCompetition.getNewParticipants(this.allParticipants);
-
         try {
-
+            resetTimer();
             this.selectedCompetition.setCurrentParticipants(this.currentParticipants);
             this.selectedCompetition.setAllParticipants(this.allParticipants);
 
             this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.delegate = this;
             JSONObject data = new JSONObject();
             //set up action params
             String str = this.selectedCompetition.getJSON_Object().toString();
@@ -154,7 +152,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
 
             showProgressDialog("שומר תוצאות...");
 
-            jsonAsyncTaskPost.execute(data.toString());
+            this.jsonAsyncTaskPost.execute(data.toString());
         }
         catch (JSONException e) {
             showToast("IterationsActivity endIterationClicked: Error creating JSONObject");
@@ -166,16 +164,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     }
 
     private void resetClicked() {
-        millisecondTime = 0L ;
-        startTime = 0L ;
-        timeBuff = 0L ;
-        updateTime = 0L ;
-        seconds = 0 ;
-        minutes = 0 ;
-        milliSeconds = 0 ;
-        timeView.setText("00:00");
-        start.setText("התחל");
-        endIterationButton.setEnabled(true);
+        resetTimer();
 
         for(int i = 0; i < this.currentParticipants.size(); i++){
             Participant participant = this.currentParticipants.get(i);
@@ -186,30 +175,42 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
         }
     }
 
-    private void startClicked(View view) {
-        String mode = (String) start.getText();
+    private void resetTimer() {
+        this.millisecondTime = 0L;
+        this.startTime = 0L;
+        this.timeBuff = 0L;
+        this.updateTime = 0L;
+        this.seconds = 0;
+        this.minutes = 0;
+        this.milliSeconds = 0;
+        this.timeView.setText("00:00");
+        this.start.setText("התחל");
+        this.handler.removeCallbacks(this.runnable);
+    }
+
+    private void startClicked() {
+        String mode = (String) this.start.getText();
         switch (mode) {
             case "התחל": {
-                startTime = SystemClock.uptimeMillis();
-                handler.postDelayed(runnable, 0);
-                reset.setEnabled(false);
-                start.setText("עצור");
-                endIterationButton.setEnabled(false);
+                this.startTime = SystemClock.uptimeMillis();
+                this.handler.postDelayed(this.runnable, 0);
+                this.reset.setEnabled(false);
+                this.start.setText("עצור");
                 break;
             }
             case "עצור": {
-                timeBuff += millisecondTime;
-                handler.removeCallbacks(runnable);
-                reset.setEnabled(true);
-                start.setText("המשך");
-                endIterationButton.setEnabled(true);
+                this.timeBuff += this.millisecondTime;
+                this.handler.removeCallbacks(this.runnable);
+                this.reset.setEnabled(true);
+                this.start.setText("המשך");
+                this.endIterationButton.setEnabled(true);
                 break;
             }
             case "המשך": {
-                startTime = SystemClock.uptimeMillis();
-                handler.postDelayed(runnable, 0);
-                reset.setEnabled(false);
-                start.setText("עצור");
+                this.startTime = SystemClock.uptimeMillis();
+                this.handler.postDelayed(this.runnable, 0);
+                this.reset.setEnabled(false);
+                this.start.setText("עצור");
                 break;
             }
         }
@@ -241,7 +242,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             Button button = new Button(this);
             button.setWidth(totalWidth / numOfParticipants);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            button.setHeight(45);
+            button.setHeight(50);
             button.setText("עצור");
             button.setTag(participant.getUserId());
             button.setGravity(Gravity.CENTER);
@@ -284,7 +285,6 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private TextView getTextView(String text, int width, int textSize, int color, int alignment) {
         TextView textView = new TextView(this);
         textView.setWidth(width);
-        textView.setHeight(100);
         textView.setText(text);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         textView.setTextColor(color);

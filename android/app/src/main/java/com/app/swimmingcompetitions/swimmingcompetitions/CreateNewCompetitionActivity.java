@@ -143,7 +143,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
             }
         };
 
-        this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        this.spinnerListAdapter.setDropDownViewResource(R.layout.spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
     }
 
@@ -193,12 +193,12 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
     }
 
     public void addNewCompetition(View view) {
-        DateUtils dateUtils = new DateUtils();
+        /*DateUtils dateUtils = new DateUtils();*/
         String competitionNameText = this.competitionName.getText().toString();
         String activityDateText = this.dateView.getText().toString();
         String activityTimeText = this.timeView.getText().toString();
         String swimmingStyleText = this.spinner.getSelectedItem().toString();
-        Date selectedDatetime = dateUtils.createNewDate(activityDateText, activityTimeText);
+        /*Date selectedDatetime = dateUtils.createNewDate(activityDateText, activityTimeText);*/
 
         int numOfParticipantsNum = this.numOfParticipants.getValue();
         int iterationLengthNum = this.iterationLength.getValue();
@@ -209,7 +209,7 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
         if(this.selectedCompetition != null) {
             id = this.selectedCompetition.getId();
         }
-        this.newCompetition = new Competition(id, competitionNameText, selectedDatetime.toString(), swimmingStyleText, numOfParticipantsNum, fromAge, toAge, iterationLengthNum);
+        this.newCompetition = new Competition(id, competitionNameText, activityDateText + " " + activityTimeText , swimmingStyleText, numOfParticipantsNum, fromAge, toAge, iterationLengthNum);
         jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
         JSONObject data = null;

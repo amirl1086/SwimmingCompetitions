@@ -15,6 +15,9 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +52,7 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
 
         try {
             JSONObject currentResult = personalResults.get(position);
-            System.out.println("AgeResultAdapter " + position + " " + currentResult);
+            System.out.println("AgeResultAdapter POSITION " + position + " " + currentResult);
 
             JSONArray malesResultsJson = new JSONArray(currentResult.getString("males"));
             JSONArray femalesResultsJson = new JSONArray(currentResult.getString("females"));
@@ -61,8 +64,9 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                 if(malesResultsJson.length() > 0) {
                     Participant participant = new Participant(malesResultsJson.getJSONObject(0));
                     malesHeader.setText("בנים");
-
-                    currentAge = dateUtils.getAge(new Date(participant.getBirthDate()));
+                    currentAge = dateUtils.getAge(participant.getBirthDate());
+                    System.out.println("participant.getBirthDate()) " + participant.getBirthDate() + " " + new Date(participant.getBirthDate()));
+                    System.out.println("malesResultsJson AGE " + currentAge);
                     ages.setText( "גילאי " + currentAge);
 
 
@@ -71,18 +75,23 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                     for (int i = 0; i < malesResultsJson.length(); i++) {
                         malesResults.add(malesResultsJson.getJSONObject(i));
                         Participant currParticipant = new Participant(malesResultsJson.getJSONObject(i));
-                        participantsStr.append(i + 1).append(". ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append(", ").append(currParticipant.getScore()).append("\n");
+                        participantsStr.append(i + 1).append(". ").append(currParticipant.getScore()).append(", ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append("\n");
                     }
                     malesListView.setText(participantsStr);
                     /*ParticipantResultAdapter resultsListAdapter = new ParticipantResultAdapter(this, R.layout.participant_result_list_item, malesResults);
                     malesListView.setAdapter(resultsListAdapter);*/
+                }
+                else {
+                    malesHeader.setVisibility(View.GONE);
                 }
                 if(femalesResultsJson.length() > 0) {
                     Participant participant = new Participant(femalesResultsJson.getJSONObject(0));
                     femalesHeader.setText("בנות");
 
                     if(currentAge.isEmpty()) {
-                        currentAge = dateUtils.getAge(new Date(participant.getBirthDate()));
+                        System.out.println("participant.getBirthDate()) " + participant.getBirthDate() + " " + new Date(participant.getBirthDate()));
+                        currentAge = dateUtils.getAge(participant.getBirthDate());
+                        System.out.println("femalesResultsJson AGE " + currentAge);
                         ages.setText( "גילאי " + currentAge);
                     }
 
@@ -91,12 +100,18 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                     for (int i = 0; i < femalesResultsJson.length(); i++) {
                         femalesResults.add(femalesResultsJson.getJSONObject(i));
                         Participant currParticipant = new Participant(femalesResultsJson.getJSONObject(i));
-                        participantsStr.append(i + 1).append(". ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append(", ").append(currParticipant.getScore()).append("\n");
+                        participantsStr.append(i + 1).append(". ").append(currParticipant.getScore()).append(", ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append("\n");
                     }
                     femalesListView.setText(participantsStr);
                     /*ParticipantResultAdapter resultsListAdapter = new ParticipantResultAdapter(ViewCompetitionResultsActivity.this, R.layout.participant_result_list_item, femalesResults);
                     femalesListView.setAdapter(resultsListAdapter);*/
                 }
+                else {
+                    femalesHeader.setVisibility(View.GONE);
+                }
+            }
+            else {
+                ages.setVisibility(View.GONE);
             }
         }
         catch (JSONException e) {

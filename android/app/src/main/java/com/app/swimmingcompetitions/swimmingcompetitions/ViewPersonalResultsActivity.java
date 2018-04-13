@@ -38,12 +38,12 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                 JSONObject currentUserJson = this.currentUser.getJSON_Object();
                 data.put("currentUser", currentUserJson.toString());
 
-                if(!this.currentUser.getType().equals("coach")) {
+                /*if(!this.currentUser.getType().equals("coach")) {
                     data.put("filters", "uid, results, age");
                 }
                 else {
                     data.put("filters", "results");
-                }
+                }*/
 
             }
             catch (JSONException e) {
@@ -109,7 +109,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
 
     public void switchToViewCompetitionResultsActivity(Competition competition) {
         Intent intent = new Intent(this, ViewCompetitionResultsActivity.class);
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUser", this.currentUser);
         intent.putExtra("selectedCompetition", competition);
         startActivity(intent);
     }

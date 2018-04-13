@@ -121,12 +121,16 @@ module.exports = {
 	getPersonalResultsByCompetitionId: function(params, response) {
 		var competition = JSON.parse(params.competition);
 		var competitionId = competition.id;
-		var db = admin.database();
 
-		var personalResultsRef = db.ref('personalResults/' + competitionId);
-
-		personalResultsRef.on('value', function(snapshot) {
-			utilities.sendResponse(response, null, snapshot.val());
+		getCompetitionResults(competition.id, function(success, result) {
+			if(success) {
+				var resultsAgeMap = sortPersonalResults(competition, result);
+				utilities.sendResponse(response, null, resultsAgeMap);
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
+			
 		});
 	},
 	

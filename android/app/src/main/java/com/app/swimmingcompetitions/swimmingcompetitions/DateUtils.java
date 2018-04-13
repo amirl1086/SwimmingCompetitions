@@ -63,6 +63,7 @@ public class DateUtils {
         int hours =Integer.valueOf(timeArr[0]);
         int minutes = Integer.valueOf(timeArr[1]);
 
+        System.out.println(new Date(year, month, day, hours, minutes));
         return new Date(year, month, day, hours, minutes);
     }
 
@@ -74,9 +75,30 @@ public class DateUtils {
         return day + "/" + month + "/" + year;
     }
 
-    public String getAge(Date birthDate){
-        Calendar dob = this.dateToCalendar(birthDate);
+    public String getAge(String birthDate){
+        String[] birthDateArr = birthDate.split(" ");
+
+        String[] dateArr = birthDateArr[0].split("/");
+        int day = Integer.valueOf(dateArr[0]);
+        int month = Integer.valueOf(dateArr[1]) - 1;
+        int year = Integer.valueOf(dateArr[2]);
+
+        String[] timeArr = birthDateArr[1].split(":");
+        int hours =Integer.valueOf(timeArr[0]);
+        int minutes = Integer.valueOf(timeArr[1]);
+
+        Calendar dob = Calendar.getInstance(); /*Calendar.(year, month, day, hours, minutes);*/
+        dob.set(Calendar.DAY_OF_MONTH, day);
+        dob.set(Calendar.MONTH, month);
+        dob.set(Calendar.YEAR, year);
+
+        dob.set(Calendar.HOUR_OF_DAY, hours);
+        dob.set(Calendar.MINUTE, minutes);
+
         Calendar today = Calendar.getInstance();
+
+        System.out.println(dob.get(Calendar.YEAR));
+        System.out.println(today.get(Calendar.YEAR));
 
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
 
@@ -84,10 +106,8 @@ public class DateUtils {
             age--;
         }
 
-        Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
-
-        return ageS;
+        Integer ageInt = age;
+        return ageInt.toString();
     }
 
 

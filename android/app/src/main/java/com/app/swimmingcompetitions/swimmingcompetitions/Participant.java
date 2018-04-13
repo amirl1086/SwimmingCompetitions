@@ -92,7 +92,7 @@ class Participant implements Serializable {
     }
 
     public String getScore() {
-        return this.score;
+        return this.score.substring(0, 3);
     }
 
     public void setScore(String score) {
