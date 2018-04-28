@@ -7,7 +7,7 @@
     android:layoutDirection="rtl"
     android:background="@drawable/abstract_swimming_pool"
     android:orientation="vertical"
-    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MainMenuActivity">
+    tools:context=".MySettingsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,33 +15,34 @@
         android:layout_margin="15sp"
         android:orientation="horizontal">
 
-
         <Button
-            android:id="@+id/competitions_btn"
+            android:id="@+id/personal_information_btn"
             android:layout_width="170dp"
             android:layout_height="100dp"
+            android:text="@string/my_personal_information"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:onClick="openViewCompetitionsActivity"
-            android:text="@string/menu_view_competitions_btn"
             android:textSize="25sp"
+            android:onClick="openMyPersonalInformationActivity"
             android:textStyle="bold"
             android:theme="@style/ThemeOverlay.TransparentButton" />
 
+
         <Button
-            android:id="@+id/personal_results_btn"
+            android:id="@+id/messages_btn"
             android:layout_width="170dp"
             android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
+            android:text="@string/messages"
             android:layout_alignParentRight="true"
-            android:text="@string/menu_personal_results_btn"
-            android:onClick="openViewResultsActivity"
+            android:layout_alignParentEnd="true"
             android:textSize="25sp"
+            android:onClick="openMyMessagesActivity"
             android:textStyle="bold"
             android:theme="@style/ThemeOverlay.TransparentButton" />
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100sp"
@@ -49,59 +50,30 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/real_time_btn"
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/menu_realtime_view_btn"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
-
-        <Button
-            android:id="@+id/statistics_btn"
+            android:id="@+id/my_children_btn"
             android:layout_width="170dp"
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:onClick="openViewCompetitionsActivity"
-            android:text="@string/menu_statistics_btn"
+            android:onClick="openMyChildrenActivity"
+            android:text="@string/my_children"
             android:textSize="25sp"
             android:textStyle="bold"
             android:theme="@style/ThemeOverlay.TransparentButton" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100sp"
-        android:layout_margin="15sp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/img_pics_btn"
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/menu_img_pics_btn"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
-
-        <Button
+        <!--<Button
             android:id="@+id/settings_btn"
             android:layout_width="170dp"
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:onClick="openMySettingsActivity"
-            android:text="@string/menu_settings_btn"
+            android:onClick="openMyChildrenActivity"
+            android:text="@string/my_children"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/ThemeOverlay.TransparentButton" />-->
 
     </RelativeLayout>
 
 </LinearLayout>
+

@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 
-public class RegisterActivity extends AppCompatActivity implements AsyncResponse {
+public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
     private JSON_AsyncTask jsonAsyncTaskPost;
 
@@ -31,14 +31,12 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     private EditText eMail;
     private EditText password;
     private EditText passwordConfirmation;
-    private Button birthDateButton;
-    private Calendar calendar;
     private TextView dateView;
     private int year, month, day;
     private String registerType;
     private Spinner spinner;
-    private ArrayAdapter<String> spinnerListAdapter;
-    private String[] genders;
+    private Competition selectedCompetition;
+    private User currentUser;
 
 
     @Override
@@ -46,21 +44,42 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Bundle extras = getIntent().getExtras();
-        this.registerType = extras.getString("registerType");
+        Intent intent = getIntent();
+        if(intent.hasExtra("currentUser")) {
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
+            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            this.registerType = "student";
+        }
+        else {
+            this.registerType = intent.getStringExtra("registerType");
 
+        }
+        this.spinner = findViewById(R.id.register_gender);
         this.firstName = findViewById(R.id.register_first_name);
         this.lastName = findViewById(R.id.register_last_name);
-        this.birthDateButton = findViewById(R.id.register_birth_date);
+        this.eMail = findViewById(R.id.register_email);
+        this.password = findViewById(R.id.register_password);
+        this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
+        Button birthDateButton = findViewById(R.id.register_birth_date);
 
-        //set up spinner picker for swimming style
-        this.genders = new String[]{"בחר מין", "זכר", "נקבה"};
-        this.spinner = findViewById(R.id.register_gender);
-        this.spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
+        if (this.registerType.equals("parent")) {
+            birthDateButton.setVisibility(View.GONE);
+            this.spinner.setVisibility(View.GONE);
+        }
+        else { //initialize date picker for date of birth
+            initParticipantUser();
+        }
+
+    }
+
+    private void initParticipantUser() {
+        String[] genders = new String[]{"בחר מין", "זכר", "נקבה"};
+
+        ArrayAdapter<String> spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0) {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     return false;
                 }
                 return true;
@@ -70,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0){
+                if(position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 }
@@ -81,25 +100,16 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             }
         };
 
-        this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
 
-        if (this.registerType.equals("parent")) {
-            this.birthDateButton.setVisibility(View.GONE);
-            this.spinner.setVisibility(View.GONE);
-        } else { //initialize date picker for date of birth
-            this.dateView = findViewById(R.id.birth_date_view);
-            this.calendar = Calendar.getInstance();
-            this.year = calendar.get(Calendar.YEAR);
+        this.dateView = findViewById(R.id.birth_date_view);
+        Calendar calendar = Calendar.getInstance();
+        this.year = calendar.get(Calendar.YEAR);
 
-            this.month = calendar.get(Calendar.MONTH);
-            this.day = calendar.get(Calendar.DAY_OF_MONTH);
-            showDate(year, month + 1, day);
-        }
-
-        this.eMail = findViewById(R.id.register_email);
-        this.password = findViewById(R.id.register_password);
-        this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
+        this.month = calendar.get(Calendar.MONTH);
+        this.day = calendar.get(Calendar.DAY_OF_MONTH);
+        showDate(year, month + 1, day);
     }
 
 
@@ -130,12 +140,18 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
             registerData.put("gender", genderText);
             registerData.put("birthDate", birthDateText);
             registerData.put("type", this.registerType);
-        } catch (JSONException e) {
-            showToast("RegisterActivity, createFirebaseUser: Error creating JSONObject");
+            if(this.currentUser != null) {
+                registerData.put("joinToCompetition", true);
+            }
+        }
+        catch (JSONException e) {
+            showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
         }
 
         this.jsonAsyncTaskPost = new JSON_AsyncTask();
         this.jsonAsyncTaskPost.delegate = this;
+
+        showProgressDialog("נרשם למערכת...");
 
         this.jsonAsyncTaskPost.execute(registerData.toString());
     }
@@ -162,26 +178,48 @@ public class RegisterActivity extends AppCompatActivity implements AsyncResponse
     @Override
     public void processFinish(String result) {
         try {
-            JSONObject response = new JSONObject(result);
-            JSONObject dataObj = response.getJSONObject("data");
-            if (response.getBoolean("success")) {
-                User currentUser = new User(dataObj);
-                switchToMainMenuActivity(currentUser);
-            } else {
-                showToast("LogInActivity processFinish: Error registering");
+            if(result != null) {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
+
+
+
+                if(this.currentUser != null) {
+                    showToast("המתחרה נוסף בהצלחה");
+                    switchToViewCompetitionActivity(dataObj);
+                }
+                else {
+                    showToast("החשבון נוצר בהצלחה");
+                    User newUser = new User(dataObj);
+                    switchToMainMenuActivity(newUser);
+                }
             }
-        } catch (JSONException e) {
-            showToast("RegisterActivity, processFinish: Error parsing JSONObject");
+            else {
+                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
+            }
         }
+        catch (JSONException e) {
+            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        }
+
+        hideProgressDialog();
     }
 
     public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void switchToMainMenuActivity(User currentUser) {
         Intent intent = new Intent(this, MainMenuActivity.class);
         intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewCompetitionActivity(JSONObject newUser) {
+        Intent intent = new Intent(this, ViewCompetitionActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
+        intent.putExtra("newParticipant", newUser.toString());
         startActivity(intent);
     }
 

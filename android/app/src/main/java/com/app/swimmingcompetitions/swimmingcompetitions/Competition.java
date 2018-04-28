@@ -133,7 +133,7 @@ public class Competition implements Serializable {
         JSONObject participantsMap = new JSONObject();
         for(Participant participant : participants) {
             JSONObject participantJson = participant.getJSON_Object();
-            participantsMap.put(participant.getUserId(), participantJson);
+            participantsMap.put(participant.getUid(), participantJson);
         }
         return participantsMap.toString();
     }
@@ -204,4 +204,12 @@ public class Competition implements Serializable {
     }
 
 
+    public boolean isCurrentUserRegistered(User currentUser, ArrayList<Participant> participants) {
+        for(int i = 0; i < participants.size(); i++) {
+            if(currentUser.getUid().equals(participants.get(i).getUid())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

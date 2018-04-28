@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 class Participant implements Serializable {
-    private String userId;
+    private String uid;
     private int listviewIndex;
     private String firstName;
     private String gender;
@@ -18,8 +18,8 @@ class Participant implements Serializable {
 
     private String competed;
 
-    public Participant(String userId, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
-        this.userId = userId;
+    public Participant(String uid, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
+        this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -28,8 +28,8 @@ class Participant implements Serializable {
         this.competed = competed;
     }
 
-    public Participant(String userId, JSONObject data) throws JSONException {
-        this.userId = userId;
+    public Participant(String uid, JSONObject data) throws JSONException {
+        this.uid = uid;
         if(data.has("firstName")) {
             this.firstName = data.getString("firstName");
         }
@@ -56,15 +56,15 @@ class Participant implements Serializable {
     }
 
     public Participant(JSONObject data) throws JSONException {
-        this(data.getString("userId"), data);
+        this(data.getString("uid"), data);
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUid() {
+        return this.uid;
     }
 
-    public void setUserId(String id) {
-        this.userId = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getFirstName() {
@@ -126,7 +126,7 @@ class Participant implements Serializable {
     public JSONObject getJSON_Object() throws JSONException{
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("id", this.userId);
+        jsonObject.put("uid", this.uid);
         jsonObject.put("firstName", this.firstName);
         jsonObject.put("lastName", this.lastName);
         jsonObject.put("gender", this.gender);

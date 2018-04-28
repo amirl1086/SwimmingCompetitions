@@ -195,7 +195,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:onClick="switchToRegisterUserToCompetitionActivity"
-            android:text="@string/register_temp_user"
+            android:text="@string/register_user"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="22sp"

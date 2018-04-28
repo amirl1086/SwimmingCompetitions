@@ -56,7 +56,7 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
                         data.put("competition", this.selectedCompetition.getJSON_Object().toString());
                     }
                     catch (JSONException e) {
-                        showToast("שגיאה בשליפה של התוצאות, נסה לאתחל את האפליקציה ");
+                        showToast("שגיאה בשליפה של התוצאות, נסה לאתחל את האפליקציה");
                     }
 
                     showProgressDialog("טוען תוצאות...");

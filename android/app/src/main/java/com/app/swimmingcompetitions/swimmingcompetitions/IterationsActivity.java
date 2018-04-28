@@ -244,7 +244,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
             button.setHeight(50);
             button.setText("עצור");
-            button.setTag(participant.getUserId());
+            button.setTag(participant.getUid());
             button.setGravity(Gravity.CENTER);
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +259,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     private void participantFinishedIteration(View view) {
         Participant selectedParticipant = null;
         for(Participant participant : this.currentParticipants) {
-            if(participant.getUserId() == view.getTag()) {
+            if(participant.getUid() == view.getTag()) {
                 selectedParticipant = participant;
             }
         }

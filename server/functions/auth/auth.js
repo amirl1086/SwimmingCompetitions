@@ -42,13 +42,16 @@ module.exports =  {
 
 	addNewFirebaseUser: function(params, response) {
 		//create new user in with credantials
-		console.log('addNewFirebaseUser params: ', params);
 		firebase.auth().createUserWithEmailAndPassword(params.email, params.password).then(function(firebaseUser) {
-			console.log('addNewFirebaseUser firebaseUser: ', firebaseUser);
-			firebaseDB_Service.addNewUser(firebaseUser, params, function(currentUser) { 
-				//will run after firebase finished inserting new user
-				console.log('addNewFirebaseUser currentUser: ', currentUser);
-				utilities.sendResponse(response, null, currentUser); 
+			console.log('firebaseUser ', firebaseUser);
+			firebaseDB_Service.addNewUser(firebaseUser, params, function(success, result) { 
+				if(success) {
+					utilities.sendResponse(response, null, result); 
+				}
+				else {
+					utilities.sendResponse(response, result, null);
+				}
+				
 			});
 		})
 		.catch(function(error) {

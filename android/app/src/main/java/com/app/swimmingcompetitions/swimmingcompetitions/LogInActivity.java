@@ -14,26 +14,23 @@ import org.json.JSONObject;
 
 public class LogInActivity extends LoadingDialog implements AsyncResponse {
 
-    private User currentUser = null;
-    private JSON_AsyncTask jsonAsyncTaskPost;
-
+    private User currentUser;
     private EditText logInMail;
     private EditText logInPassword;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        logInMail = (EditText) findViewById(R.id.edit_email);
-        logInPassword = (EditText) findViewById(R.id.edit_password);
+        logInMail = findViewById(R.id.edit_email);
+        logInPassword = findViewById(R.id.edit_password);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (currentUser != null) {
+        if(this.currentUser != null) {
             switchToMainMenuActivity();
         }
     }
@@ -42,11 +39,10 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
         String logInMailText = logInMail.getText().toString();
         String logInPasswordText = logInPassword.getText().toString();
 
-        jsonAsyncTaskPost = new JSON_AsyncTask();
+        JSON_AsyncTask jsonAsyncTaskPost = new JSON_AsyncTask();
         jsonAsyncTaskPost.delegate = this;
         JSONObject logInData = new JSONObject();
 
-        //set up action params
         try {
             logInData.put("urlSuffix", "/logIn");
             logInData.put("httpMethod", "POST");
@@ -54,43 +50,41 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
             logInData.put("password", logInPasswordText);
         }
         catch (JSONException e) {
-            showToast("LogInActivity firebaseLogIn: Error creating JSONObject");
+            showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
         }
 
         showProgressDialog("מבצע כניסה...");
-        //call the server
+
         jsonAsyncTaskPost.execute(logInData.toString());
     }
 
     @Override
     public void processFinish(String result) {
         try {
-            if (result != null) {
+            if(result != null) {
                 JSONObject response = new JSONObject(result);
-                if(response.getBoolean("success")) {
-                    JSONObject userData = response.getJSONObject("data");
-                    currentUser = new User(userData);
+                JSONObject userData = response.getJSONObject("data");
+                this.currentUser = new User(userData);
 
-                    switchToMainMenuActivity();
-                }
+                switchToMainMenuActivity();
             }
             else {
-                showToast("LogInActivity processFinish: Error loging in");
+                showToast("שגיאה בכניסה למערכת, נסה שוב");
             }
         }
         catch (JSONException e) {
-            showToast("LogInActivity processFinish: Error parsing JSONObject");
+            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
         }
         hideProgressDialog();
     }
 
     public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void switchToMainMenuActivity() {
         Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
