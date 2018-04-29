@@ -6,7 +6,7 @@ module.exports = {
 	filterCompetedParticipants: function(participants) {
 		var newParticipants = {};
 		for(var key in participants) {
-			if(participants[key].competed === 'false') {
+			if(!participants[key].competed || participants[key].competed === 'false') {
 				newParticipants[key] = participants[key];
 			}
 		}
@@ -21,8 +21,11 @@ module.exports = {
 		return Object.keys(participants).reduce(function(totalResults, key) {
 			var participant = participants[key];
 
-			console.log('sortParticipantsByAge participant ', participant);	
-			var compare = moment(participant.birthDate);
+			//console.log('sortParticipantsByAge participant ', participant);
+
+			var compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
+			//console.log('compare ', compare.format('DD/MM/YYYY hh:mm'))
+
 			var participantAge = Math.floor(today.diff(compare, 'years', true));
 			//console.log('participantAge ', participantAge);
 
@@ -44,30 +47,29 @@ module.exports = {
 			Object.keys(currentAgeParticipants).forEach(function(genderKey) {
 				var currentGenderParticipants = currentAgeParticipants[genderKey];
 
-				//console.log('currentGenderParticipants ' + JSON.stringify(currentGenderParticipants));
-				//console.log('genderKey ' + JSON.stringify(genderKey));
+				console.log('currentGenderParticipants ' + JSON.stringify(currentGenderParticipants));
+				console.log('genderKey ' + JSON.stringify(genderKey));
 
 				//check if there are missing participants for the current age and gender
 				var leftovers = currentGenderParticipants.length % parseInt(competition.numOfParticipants);
 
-				//console.log('leftovers ' + JSON.stringify(leftovers));
+				console.log('leftovers ' + JSON.stringify(leftovers));
 
 				if(leftovers != 0) {
 					if(!sortedParticipants['0']) {
 						sortedParticipants['0'] = { 'males': [], 'females': [] };
-
 					}
 					for(var i = currentGenderParticipants.length - leftovers; i < currentGenderParticipants.length; i++) {
 						//add it to the missing map
 						sortedParticipants['0'][genderKey].push(Object.assign({}, currentGenderParticipants[i]));
 						//remove it from the participants map
-						currentGenderParticipants.splice(i, 1);
+						currentGenderParticipants.splice(i--, 1);
 					}
 				}
 			});
 		});
 
-		console.log('participantsByAges ' + JSON.stringify(sortedParticipants));
+		//console.log('participantsByAges ' + JSON.stringify(sortedParticipants));
 	}
 
 }

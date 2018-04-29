@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -120,9 +120,11 @@
         <TextView
             android:id="@+id/distance_of_competition"
             android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_height="50dp"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:layout_marginStart="10dp" />
 
         <TextView
             android:id="@+id/meters"
@@ -193,7 +195,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:onClick="switchToRegisterUserToCompetitionActivity"
-            android:text="@string/register_temp_user"
+            android:text="@string/register_user"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="22sp"

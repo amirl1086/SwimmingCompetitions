@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
+
+    <item android:id="@+id/competitions_menu_item"
+        android:title="@string/competitions_menu_btn" />
+
+    <item android:id="@+id/competitions_results_item"
+        android:title="@string/view_results_menu_btn" />
+
+    <item android:id="@+id/competitions_settings_item"
+        android:title="@string/settings_menu_btn" />
+
+    <!--android:icon="@mipmap/ic_info_black_24dp"-->
+
+
+</menu>

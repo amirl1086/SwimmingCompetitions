@@ -4,20 +4,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class MainMenuActivity extends LoadingDialog {
+public class MySettingsActivity extends AppCompatActivity {
 
     private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_my_settings);
 
         Intent intent = getIntent();
         if(!intent.hasExtra("currentUser")) {
@@ -32,20 +27,20 @@ public class MainMenuActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-    public void openViewCompetitionsActivity(View view) {
-        Intent intent = new Intent(this, ViewCompetitionsActivity.class);
+    public void openMyPersonalInformationActivity(View view) {
+        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openViewResultsActivity(View view) {
-        Intent intent = new Intent(this, ViewPersonalResultsActivity.class);
+    public void openMyChildrenActivity(View view) {
+        Intent intent = new Intent(this, MyChildrenActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openMySettingsActivity(View view) {
-        Intent intent = new Intent(this, MySettingsActivity.class);
+    public void openMyMessagesActivity(View view) {
+        Intent intent = new Intent(this, MyMessagesActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

@@ -21,8 +21,9 @@
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25dp"
+            android:textStyle="bold"
             android:text="@string/start_timer"
-            android:textSize="25sp"
+            android:textSize="30sp"
             android:theme="@style/ThemeOverlay.TransparentButton" />
 
         <TextView
@@ -43,22 +44,23 @@
             android:layout_marginTop="25dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
             android:text="@string/reset_stopper"
-            android:textSize="25sp"
+            android:textSize="30sp"
             android:theme="@style/ThemeOverlay.TransparentButton" />
 
 
         <GridLayout
             android:id="@+id/participant_names_layout"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:orientation="horizontal" />
 
         <GridLayout
             android:id="@+id/buttons_layout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:orientation="horizontal" />
 
         <GridLayout

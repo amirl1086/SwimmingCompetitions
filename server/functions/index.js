@@ -30,20 +30,14 @@ var firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 /* AUTHENTICATION FUNCTIONS LISTENERS */
 /* ================================== */
 exports.addNewUser = functions.https.onRequest(function(request, response) {
-	console.log('exports.addNewUser body ', request.body);
-
 	authentication.addNewFirebaseUser(request.body, response);
 });
 
 exports.getUser = functions.https.onRequest(function(request, response) {
-	console.log('exports.getUser body ', request.body);
-
 	authentication.getUser(request.body.currentUserUid, response);
 });
 
 exports.logIn = functions.https.onRequest(function(request, response) {
-	console.log('exports.logIn body ', request.body);
-	
 	authentication.logIn(request.body, response);
 });
 
@@ -55,45 +49,41 @@ exports.logIn = functions.https.onRequest(function(request, response) {
 /* COMPETITIONS FUNCTIONS LISTENERS */
 /* ================================ */
 exports.getCompetitions = functions.https.onRequest(function(request, response) {
-	console.log('exports.getCompetitions body ', request.body);
-	
 	firebaseDB_Service.getCompetitions(request.body, response);
 });
 
 exports.setNewCompetition = functions.https.onRequest(function(request, response) {
-	console.log('exports.setNewCompetition body ', request.body);
-	
 	firebaseDB_Service.setNewCompetition(request.body, response);
 });
 
 exports.joinToCompetition = functions.https.onRequest(function(request, response) {
-	console.log('exports.joinToCompetition body ', request.body);
-	
 	firebaseDB_Service.joinToCompetition(request.body, response);
 });
 
 exports.setCompetitionResults = functions.https.onRequest(function(request, response) {
-	console.log('exports.setCompetitionResults body ', request.body);
-	
 	firebaseDB_Service.setCompetitionResults(request.body, response);
 });
 
 exports.initCompetitionForIterations = functions.https.onRequest(function(request, response) {
-	console.log('exports.initCompetitionForIterations body ', request.body);
-	
 	firebaseDB_Service.initCompetitionForIterations(request.body, response);
 });
 
-exports.getPersonalResults = functions.https.onRequest(function(request, response) {
-	console.log('exports.getPersonalResults body ', request.body);
+exports.getUsersByParentId = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.getUsersByParentId(request.body, response);
+});
 
-	if(request.body.competition) {
-		firebaseDB_Service.getPersonalResultsByCompetitionId(request.body, response);
+exports.getPersonalResults = functions.https.onRequest(function(request, response) {
+	var params = request.body;
+
+	if(params.competition) {
+		firebaseDB_Service.getPersonalResultsByCompetitionId(params, response);
 	}
 	else {
-		firebaseDB_Service.getPersonalResults(request.body, response);
+		firebaseDB_Service.getPersonalResults(params, response);
 	}
-	
-	
+});
+
+exports.cancelRegistration = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.cancelRegistration(request.body, response);
 });
 /* ================================ */

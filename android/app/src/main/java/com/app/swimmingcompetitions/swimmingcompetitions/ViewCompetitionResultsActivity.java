@@ -34,17 +34,38 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
                 this.currentUser = (User) intent.getSerializableExtra("currentUser");
                 this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
 
-                JSONObject competitionResults = new JSONObject(intent.getStringExtra("competitionResults"));
-                Iterator<String> agesKeys = competitionResults.keys();
+                if(intent.hasExtra("competitionResults")) {
+                    JSONObject competitionResults = new JSONObject(intent.getStringExtra("competitionResults"));
+                    Iterator<String> agesKeys = competitionResults.keys();
 
-                while (agesKeys.hasNext()) {
-                    String currentAge = agesKeys.next();
-                    JSONObject currentResult = new JSONObject(competitionResults.get(currentAge).toString());
-                    this.results.add(currentResult);
+                    while (agesKeys.hasNext()) {
+                        String currentAge = agesKeys.next();
+                        JSONObject currentResult = new JSONObject(competitionResults.get(currentAge).toString());
+                        this.results.add(currentResult);
+                    }
+
+                    this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
+                    this.listView.setAdapter(this.resultsListAdapter);
+                }
+                else {
+                    JSONObject data = new JSONObject();
+                    //get competitions list set up action params
+                    try {
+                        data.put("urlSuffix", "/getPersonalResults");
+                        data.put("httpMethod", "GET");
+                        data.put("competition", this.selectedCompetition.getJSON_Object().toString());
+                    }
+                    catch (JSONException e) {
+                        showToast("שגיאה בשליפה של התוצאות, נסה לאתחל את האפליקציה");
+                    }
+
+                    showProgressDialog("טוען תוצאות...");
+
+                    this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                    this.jsonAsyncTaskPost.delegate = this;
+                    this.jsonAsyncTaskPost.execute(data.toString());
                 }
 
-                this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
-                this.listView.setAdapter(this.resultsListAdapter);
             }
             catch (JSONException e) {
                 showToast("ViewCompetitionResultsActivity onCreate: Error initializing results");

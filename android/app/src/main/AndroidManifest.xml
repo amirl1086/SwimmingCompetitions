@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,6 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PreRegisterActivity" />
         <activity android:name=".CreateNewCompetitionActivity" />
-        <activity android:name=".NewIterationActivity" />
         <activity android:name=".ViewCompetitionsActivity" />
         <activity android:name=".ViewCompetitionActivity" />
         <activity android:name=".IterationsActivity" />
@@ -31,6 +30,11 @@
         <activity android:name=".ViewCompetitionResultsActivity" />
         <activity android:name=".ViewPersonalResultsActivity" />
         <activity android:name=".ViewCompetitionParticipantsActivity" />
+        <activity android:name=".MySettingsActivity" />
+        <activity android:name=".MyPersonalInformationActivity" />
+        <activity android:name=".MyChildrenActivity" />
+        <activity android:name=".MyMessagesActivity" />
+        <activity android:name=".PreCompetitionRegisterActivity"></activity>
     </application>
 
 </manifest>

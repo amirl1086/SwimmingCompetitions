@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -42,7 +43,7 @@ public class CompetitionAdapter extends ArrayAdapter {
         competitionName.setText(currentCompetition.getName());
 
         TextView competitionDate = listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = dateUtils.dateToCalendar(currentCompetition.getActivityDate());
+        Calendar calendar = dateUtils.dateToCalendar(new Date(currentCompetition.getActivityDate()));
         competitionDate.setText(dateUtils.getCompleteDate(calendar));
 
         TextView competitionAges = listItem.findViewById(R.id.competition_list_item_ages);

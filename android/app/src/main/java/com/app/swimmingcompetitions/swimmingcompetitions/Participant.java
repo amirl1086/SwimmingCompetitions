@@ -8,28 +8,28 @@ import java.io.Serializable;
 import java.util.Date;
 
 class Participant implements Serializable {
-    private String userId;
+    private String uid;
     private int listviewIndex;
     private String firstName;
     private String gender;
     private String lastName;
-    private Date birthDate;
+    private String birthDate;
     private String score;
 
-    private Boolean competed;
+    private String competed;
 
-    public Participant(String userId, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
-        this.userId = userId;
+    public Participant(String uid, String firstName, String lastName, String gender, String birthDate, String score, String competed) {
+        this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.birthDate = new Date(birthDate);
+        this.birthDate = birthDate;
         this.score = score;
-        this.competed = Boolean.valueOf(competed);
+        this.competed = competed;
     }
 
-    public Participant(String userId, JSONObject data) throws JSONException {
-        this.userId = userId;
+    public Participant(String uid, JSONObject data) throws JSONException {
+        this.uid = uid;
         if(data.has("firstName")) {
             this.firstName = data.getString("firstName");
         }
@@ -37,13 +37,17 @@ class Participant implements Serializable {
             this.lastName = data.getString("lastName");
         }
         if(data.has("birthDate")) {
-            this.birthDate = new Date(data.getString("birthDate"));
+            this.birthDate = data.getString("birthDate");
         }
         if(data.has("gender")) {
             this.gender = data.getString("gender");
         }
-        this.score = "0.0";
-        this.competed = false;
+        if(data.has("score")) {
+            this.score = data.getString("score");
+        }
+        if(data.has("competed")) {
+            this.competed = data.getString("competed");
+        }
     }
 
     @Override
@@ -52,15 +56,15 @@ class Participant implements Serializable {
     }
 
     public Participant(JSONObject data) throws JSONException {
-        this(data.getString("userId"), data);
+        this(data.getString("uid"), data);
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUid() {
+        return this.uid;
     }
 
-    public void setUserId(String id) {
-        this.userId = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getFirstName() {
@@ -79,27 +83,27 @@ class Participant implements Serializable {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
     public String getScore() {
-        return this.score;
+        return this.score.substring(0, 3);
     }
 
     public void setScore(String score) {
         this.score = score;
     }
 
-    public Boolean isCompeted() {
+    public String isCompeted() {
         return this.competed;
     }
 
-    public void setCompeted(Boolean competed) {
+    public void setCompeted(String competed) {
         this.competed = competed;
     }
 
@@ -119,14 +123,10 @@ class Participant implements Serializable {
         this.gender = gender;
     }
 
-    public Boolean getCompeted() {
-        return competed;
-    }
-
     public JSONObject getJSON_Object() throws JSONException{
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("id", this.userId);
+        jsonObject.put("uid", this.uid);
         jsonObject.put("firstName", this.firstName);
         jsonObject.put("lastName", this.lastName);
         jsonObject.put("gender", this.gender);

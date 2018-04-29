@@ -10,13 +10,12 @@ public class PersonalResult {
     private String userId;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private String birthDate;
     private String score;
     private String rank;
 
     public PersonalResult(String userId, String birthDate, String firstName, String lastName, String score, String rank) {
-        this.userId = userId;
-        this.birthDate = new Date(birthDate);
+        this.birthDate = birthDate;
         this.firstName = firstName;
         this.lastName = lastName;
         this.score = score;
@@ -25,7 +24,7 @@ public class PersonalResult {
 
     public PersonalResult(JSONObject data) throws JSONException {
         this.userId = data.getString("userId");
-        this.birthDate =  new Date(data.getString("birthDate"));
+        this.birthDate =  data.getString("birthDate");
         this.firstName = data.getString("firstName");
         this.lastName = data.getString("lastName");
         this.score = data.getString("score");
@@ -73,11 +72,11 @@ public class PersonalResult {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
