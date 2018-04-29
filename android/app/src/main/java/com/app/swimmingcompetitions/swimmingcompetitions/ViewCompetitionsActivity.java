@@ -1,7 +1,6 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
-import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -104,5 +103,8 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
         intent.putExtra("currentUser", currentUser);
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
+    }
+
+    public static class ChildrenAdapter {
     }
 }
