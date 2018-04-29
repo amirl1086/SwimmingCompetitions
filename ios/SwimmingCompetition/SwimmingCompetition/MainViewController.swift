@@ -16,8 +16,10 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
     }
     
     

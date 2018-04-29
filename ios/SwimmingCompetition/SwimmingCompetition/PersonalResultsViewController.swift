@@ -27,7 +27,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.tableView.dataSource = self
         tableView.allowsSelection = false
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         self.tableView.backgroundColor = UIColor.clear
         print(data)
         for age in data {
@@ -52,6 +55,12 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 for i in 0..<maleArray.count {
                     if i == 0 {
                         maleArray[i].setRank(rank: 1)
+                    }
+                    if i == 1 {
+                        maleArray[i].setRank(rank: 2)
+                    }
+                    if i == 2 {
+                        maleArray[i].setRank(rank: 3)
                     }
                 }
                 
@@ -78,6 +87,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             }
             
         }
+        
         self.array = self.array.sorted(by: {Int($0.age)! < Int($1.age)!})
         print(self.array)
         var a = Int(self.array[0].age)
@@ -127,7 +137,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
-            cell.cellView.layer.bounds = CGRect(x: cell.cellView.bounds.origin.x, y: cell.cellView.bounds.origin.y, width: cell.cellView.bounds.size.width - 40, height: cell.cellView.bounds.size.height - 20)
+            
             //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
             //cell.name.font = cell.name.font.withSize(20)
         }

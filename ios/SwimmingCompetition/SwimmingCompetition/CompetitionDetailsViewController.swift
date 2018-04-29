@@ -27,8 +27,11 @@ class CompetitionDetailsViewController: UIViewController {
         styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
        // navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
         
     }
     
@@ -37,7 +40,7 @@ class CompetitionDetailsViewController: UIViewController {
         
         nameLabel.text = competition.name
         //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
-        dateLabel.text = Date().getDate(fullDate: competition.activityDate)
+        //dateLabel.text = Date().getDate(fullDate: competition.activityDate)
         styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
     }

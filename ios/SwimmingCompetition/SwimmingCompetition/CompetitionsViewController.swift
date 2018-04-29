@@ -23,8 +23,10 @@ class CompetitionsViewController: UIViewController {
         
         addButtonView()
         getCompetitionsData()
-        
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         self.tableView.backgroundColor = UIColor.clear
         
     }
@@ -83,7 +85,7 @@ class CompetitionsViewController: UIViewController {
             let formatDate = DateFormatter()
             formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
             self.competitions = compArray
-            self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
+           // self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
             
             self.tableView.reloadData()
             alert.dismiss(withClickedButtonIndex: -1, animated: true)
@@ -109,9 +111,9 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "competitionCell", for: indexPath) as! CompetitionTableViewCell
         cell.name.text = competitions[indexPath.row].name
-        
-        cell.date.text = "\(Date().getDate(fullDate: competitions[indexPath.row].activityDate)) \(Date().getWeekDay(fullDate: competitions[indexPath.row].activityDate))"
-        cell.time.text = Date().getHour(fullDate: competitions[indexPath.row].activityDate)
+        cell.date.text = "מתקיימת בתאריך \(Date().getDate(fullDate: competitions[indexPath.row].activityDate)) ביום \(Date().getWeekDay(fullDate: competitions[indexPath.row].activityDate))"
+
+        cell.time.text = "בשעה \(Date().getHour(fullDate: competitions[indexPath.row].activityDate))"
         cell.ages.text = "לגילאי \(competitions[indexPath.row].fromAge) עד \(competitions[indexPath.row].toAge)"
         
         cell.layer.backgroundColor = UIColor.clear.cgColor

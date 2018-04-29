@@ -14,14 +14,14 @@ class Date {
     
     func convertDate(date: String) -> DateComponents {
         let formatDate = DateFormatter()
-        
-        formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
+        formatDate.isLenient = true
+        formatDate.dateFormat = "dd/MM/yyyy HH:mm"
        
-        let convertDate = formatDate.date(from:date)!
+        let convertDate = formatDate.date(from:date)
         
         let calendar = Calendar.current
         
-        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: convertDate)
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: convertDate!)
         
         return components
     }

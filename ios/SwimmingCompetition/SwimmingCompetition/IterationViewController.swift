@@ -211,6 +211,19 @@ class IterationViewController: UIViewController {
     }
     
     func iterationIsDone() {
+        var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        
+        
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
+        loadingIndicator.center = self.view.center;
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating();
+        
+        alert.setValue(loadingIndicator, forKey: "accessoryView")
+        loadingIndicator.startAnimating()
+        
+        alert.show();
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.participantsIndex.count {
@@ -266,6 +279,7 @@ class IterationViewController: UIViewController {
                 self.competition = competition
                 self.startNewIteration()
             }
+            alert.dismiss(withClickedButtonIndex: -1, animated: true)
         }
     }
     
@@ -274,16 +288,46 @@ class IterationViewController: UIViewController {
     }
    
     func initIteration() {
+        var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        
+        
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
+        loadingIndicator.center = self.view.center;
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating();
+        
+        alert.setValue(loadingIndicator, forKey: "accessoryView")
+        loadingIndicator.startAnimating()
+        
+        alert.show();
         let param = [
             "competitionId": competition.getId()
             ] as [String:AnyObject]
         
         Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
-            var competition: Competition!
-            let data = response.data
-            competition = Competition(json: data, id: data["id"] as! String)
-            self.competition = competition
-            self.startNewIteration()
+            if response.data["type"] as? String == "resultsMap" {
+                let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+                
+                let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
+                self.navigationItem.rightBarButtonItem = resultsButton
+                
+                self.jsonData = response.data
+                print("json to pass")
+                print(self.jsonData)
+            }
+            else {
+                var competition: Competition!
+                let data = response.data
+                competition = Competition(json: data, id: data["id"] as! String)
+                self.competition = competition
+                self.startNewIteration()
+            }
+            alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
         })
     }
