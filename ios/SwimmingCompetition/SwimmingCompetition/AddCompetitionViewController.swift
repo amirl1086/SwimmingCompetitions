@@ -48,8 +48,10 @@ class AddCompetitionViewController: UIViewController {
         }
         
         toolBar()
-      
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
 
@@ -80,6 +82,19 @@ class AddCompetitionViewController: UIViewController {
     }
     
     @IBAction func addCompetitionButton(_ sender: Any) {
+        var alert: UIAlertView = UIAlertView(title: "שומר תחרות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        
+        
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
+        loadingIndicator.center = self.view.center;
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating();
+        
+        alert.setValue(loadingIndicator, forKey: "accessoryView")
+        loadingIndicator.startAnimating()
+        
+        alert.show();
         var parameters = [
             "activityDate": dateToSend,
             "length": Float(self.range),
@@ -97,6 +112,7 @@ class AddCompetitionViewController: UIViewController {
         
         Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
             print(response.data)
+            alert.dismiss(withClickedButtonIndex: -1, animated: true)
             var message = ""
             if response.succeed {
                 message = "התחרות נוספה בהצלחה"
@@ -237,7 +253,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
             
             dateTextField.text = formatDate.string(from: datePicker.date)
             
-            formatDate.dateFormat = "E MMM dd HH:mm:ss yyyy"
+            formatDate.dateFormat = "dd/MM/yyyy HH:mm"
             
             
             dateToSend = formatDate.string(from: datePicker.date)
