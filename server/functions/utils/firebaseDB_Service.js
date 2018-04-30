@@ -144,7 +144,7 @@ module.exports = {
 		var competition = JSON.parse(params.competition);
 		var competitionId = competition.id;
 
-		getCompetitionResults(competition.id, function(success, result) {
+		getCompetitionResults(competition, function(success, result) {
 			if(success) {
 				var resultsAgeMap = sortPersonalResults(competition, result);
 				utilities.sendResponse(response, null, resultsAgeMap);
@@ -234,10 +234,9 @@ module.exports = {
 				console.log('initCompetitionForIterations newParticipants ', JSON.stringify(Object.keys(newParticipants).length));
 
 				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
-					getCompetitionResults(competition.id, function(success, result) {
+					getCompetitionResults(competition, function(success, result) {
 						if(success) {
 							var resultsAgeMap = sortPersonalResults(competition, result);
-							createCompetitionResults(competition);
 							console.log('initCompetitionForIterations resultsAgeMap ', JSON.stringify(resultsAgeMap));
 							resultsAgeMap.type = 'resultsMap';
 							utilities.sendResponse(response, null, resultsAgeMap);
@@ -319,12 +318,19 @@ var updateCompetitionResults = function(participantsResults, competitionId, call
 	});
 }
 
-var getCompetitionResults = function(competitionId, callback) {
+var getCompetitionResults = function(competition, callback) {
 	var db = admin.database();
-	var presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
+	var presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
 
 	presonalResultsRef.on('value', function(snapshot) {
-		callback(true, snapshot.val());
+		if(!snapshot.val()) {
+			createCompetitionResults(competition, function(success) {
+				callback(success, snapshot.val());
+			});	
+		}
+		else {
+			callback(true, snapshot.val());
+		}
 	}, function(error) {
 		callback(false, error);
 	});
@@ -535,7 +541,7 @@ var searchInParticipants = function(competition, uid) {
 	return false;
 }
 
-var createCompetitionResults = function(competition) {
+var createCompetitionResults = function(competition, callback) {
 	var db = admin.database();
 	var presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
 

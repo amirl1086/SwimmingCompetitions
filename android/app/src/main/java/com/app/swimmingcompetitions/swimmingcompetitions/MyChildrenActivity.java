@@ -61,9 +61,9 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
-                ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.competition_list_item, competitions);
+                /*ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.competition_list_item, competitions);
                 ListView listView = findViewById(R.id.children_list);
-                listView.setAdapter(childrenListAdapter);
+                listView.setAdapter(childrenListAdapter);*/
             }
             else {
                 showToast("שגיאה בטעינת המידע מהמערכת, נסה לאתחל את האפליקציה");
