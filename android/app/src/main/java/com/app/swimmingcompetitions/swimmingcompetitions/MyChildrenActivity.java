@@ -3,10 +3,16 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
 
@@ -38,7 +44,7 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
         }
 
-        showProgressDialog("מבצע כניסה...");
+        showProgressDialog("טוען את הילדים שלך...");
 
         jsonAsyncTaskPost.execute(logInData.toString());
     }
@@ -50,21 +56,31 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
 
     @Override
     public void processFinish(String result) {
-/*        try {
-            if(result != null) {
+        try {
+            if (result != null) {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
 
+                /*ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.competition_list_item, competitions);
+                ListView listView = findViewById(R.id.children_list);
+                listView.setAdapter(childrenListAdapter);*/
             }
             else {
-                showToast("שגיאה בטעינת המשתמשים");
+                showToast("שגיאה בטעינת המידע מהמערכת, נסה לאתחל את האפליקציה");
             }
         }
         catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-        }*/
+            showToast("שגיאה בטעינת המידע מהמערכת, נסה לאתחל את האפליקציה");
+        }
+
         hideProgressDialog();
     }
 
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public void switchToAddChildToParentActivity(View view) {
+
     }
 }

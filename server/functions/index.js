@@ -69,7 +69,7 @@ exports.initCompetitionForIterations = functions.https.onRequest(function(reques
 });
 
 exports.getUsersByParentId = functions.https.onRequest(function(request, response) {
-	firebaseDB_Service.getUsersByParentId(request.body, response);
+	firebaseDB_Service.getUsersByFilter(request.body, response);
 });
 
 exports.getPersonalResults = functions.https.onRequest(function(request, response) {

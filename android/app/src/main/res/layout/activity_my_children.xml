@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyChildrenActivity">
+    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.MyChildrenActivity"
+    android:background="@drawable/abstract_swimming_pool"
+    android:orientation="vertical"
+    android:padding="15sp">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/children_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/my_children_header"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/children_list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15sp"
+        android:layout_marginTop="15sp"
+        android:layout_weight="1"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1dp" />
+
+    <Button
+        android:id="@+id/add_child_btn"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:onClick="switchToAddChildToParentActivity"
+        android:text="הוסף ילד לחשבון שלי"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:theme="@style/ThemeOverlay.TransparentButton" />
+
+</LinearLayout>
