@@ -14,6 +14,7 @@ class ResultsTableViewCell: UITableViewCell {
     @IBOutlet weak var rankImage: UIImageView!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var score: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

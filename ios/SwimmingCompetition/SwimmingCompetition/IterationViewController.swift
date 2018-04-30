@@ -41,7 +41,10 @@ class IterationViewController: UIViewController {
        
         initIteration()
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "iteration_screen.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
+       
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
     }
@@ -132,7 +135,7 @@ class IterationViewController: UIViewController {
             self.view.addSubview(button)
             
             if participantsIndex.count > i {
-                name.text = self.competition.currentParticipants[participantsIndex[i]].firstName
+                name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
                 //time.tag = participantsIndex[i]
                 //button.tag = participantsIndex[i]
                 button.isEnabled = true

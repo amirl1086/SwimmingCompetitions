@@ -111,15 +111,19 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath) as! ResultsTableViewCell
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
+        var originNameFrame = cell.name.frame
         
         if indexPath.row == 0 {
-            cell.cellView.backgroundColor = UIColor.gray
+            cell.cellView.backgroundColor = UIColor.blue
             title.text = "בנים"
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
-            //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
-            
+            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+            cell.name.font = cell.name.font.withSize(35)
+            originNameFrame = cell.name.frame
+            cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+        
         }
         else if indexPath.row-1 < array[indexPath.section].maleResults.count {
             cell.cellView.backgroundColor = UIColor.clear
@@ -129,17 +133,21 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.rankImage.isHidden = false
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
+            cell.name.font = cell.name.font.withSize(20)
+            cell.name.frame = originNameFrame
             
         }
         else if indexPath.row-1 == array[indexPath.section].maleResults.count {
-            cell.cellView.backgroundColor = UIColor.gray
+            cell.cellView.backgroundColor = UIColor.purple
             title.text = "בנות"
             cell.name.text = title.text
             cell.rankImage.isHidden = true
             cell.score.isHidden = true
             
-            //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
-            //cell.name.font = cell.name.font.withSize(20)
+            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+            cell.name.font = cell.name.font.withSize(35)
+            originNameFrame = cell.name.frame
+            cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
         }
         else {
             cell.cellView.backgroundColor = UIColor.clear
@@ -149,7 +157,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.rankImage.isHidden = false
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
-            
+            cell.name.font = cell.name.font.withSize(20)
+            cell.name.frame = originNameFrame
         }
         
         cell.layer.backgroundColor = UIColor.clear.cgColor

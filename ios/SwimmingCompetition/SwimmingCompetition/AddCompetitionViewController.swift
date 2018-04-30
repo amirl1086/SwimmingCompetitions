@@ -39,6 +39,7 @@ class AddCompetitionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(isEdit)
         if isEdit {
             nameTextField.text = competitionName
             styleTextField.text = "\(range) מטר \(style)"

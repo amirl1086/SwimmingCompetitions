@@ -22,10 +22,23 @@ class Service {
     func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else { return }
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
-            print(response)
-            guard let json = response.result.value as? JSON else{ return}
+            //print(response)
+            switch(response.result) {
+            case .success(let json):
+                    print(json)
+                    break
+            case .failure(let error):
+                    print(error)
+                    if error._code == -1009 {
+                        
+                    }
+                    if error._code == NSURLErrorTimedOut {
+                        
+                }
+            }
+            guard let json = response.result.value as? JSON else{return}
             do {
-                print(json)
+                //print(json)
                 let getData = try responseData(json: json)
                 completion(getData)
             } catch {}
