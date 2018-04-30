@@ -42,6 +42,7 @@ class CompetitionsViewController: UIViewController {
             let nextView = segue.destination as! CompetitionDetailsViewController
             let competition = sender as? Competition
             nextView.competition = competition
+            nextView.currentUser = self.user
         }
     }
     

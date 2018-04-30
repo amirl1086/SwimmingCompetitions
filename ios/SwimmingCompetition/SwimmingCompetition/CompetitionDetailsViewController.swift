@@ -11,11 +11,13 @@ import UIKit
 class CompetitionDetailsViewController: UIViewController {
     
     var competition: Competition!
+    var currentUser: User!
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var styleNrangeLabel: UILabel!
     @IBOutlet weak var numOfParticipantsLabel: UILabel!
+    @IBOutlet var joinButtonOutlet: RoundButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,20 @@ class CompetitionDetailsViewController: UIViewController {
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(imageView, at: 0)
+        
+        var exist = false
+        for part in competition.participants {
+            if part.uid == self.currentUser.uid {
+                exist = true
+                break
+            }
+        }
+        
+        if exist {
+            joinButtonOutlet.setTitle("בטל רישום", for: .normal)
+            joinButtonOutlet.backgroundColor = UIColor.red
+            joinButtonOutlet.tag = 1
+        }
         
     }
     
@@ -58,6 +74,33 @@ class CompetitionDetailsViewController: UIViewController {
     
     @IBAction func joinButton(_ sender: UIButton) {
         
+        let parameters = [
+            "competitionId": self.competition.id,
+            "firstName": self.currentUser.firstName,
+            "lastName": self.currentUser.lastName,
+            "birthDate": self.currentUser.birthDate,
+            "gender": self.currentUser.gender,
+            "uid": self.currentUser.uid,
+        ] as [String:AnyObject]
+        
+        if sender.tag == 1 {
+            sender.setTitle("הירשם", for: .normal)
+            sender.backgroundColor = UIColor.green
+            
+            Service.shared.connectToServer(path: "cancelRegistration", method: .post, params: parameters, completion: { (response) in
+                
+            })
+        }
+        
+        else {
+            sender.setTitle("בטל רישום", for: .normal)
+            sender.backgroundColor = UIColor.red
+            sender.tag = 1
+            
+            Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters, completion: { (response) in
+                
+            })
+        }
         
     }
     

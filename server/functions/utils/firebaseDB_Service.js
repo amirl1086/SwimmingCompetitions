@@ -168,6 +168,7 @@ module.exports = {
 	},
 
 	cancelRegistration: function(params, response) {
+		var db = admin.database();
 		competitionsRef = db.ref('competitions/' + params.competitionId + '/participants/' + params.uid);
 		competitionsRef.remove();
 

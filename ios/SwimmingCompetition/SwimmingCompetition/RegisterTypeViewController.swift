@@ -34,7 +34,7 @@ class RegisterTypeViewController: UIViewController {
     
     //===== Buttons for select register type =====//
     @IBAction func userButton(_ sender: Any) {
-        type = "user"
+        type = "student"
         self.performSegue(withIdentifier: "goToRegister", sender: self)
     }
     

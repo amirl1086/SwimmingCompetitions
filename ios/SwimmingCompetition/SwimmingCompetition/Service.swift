@@ -74,14 +74,17 @@ class Service {
 
 
 struct responseData {
-    let data:JSON
+    var data:JSON
     let succeed:Bool
     
     init(json: JSON) throws {
         let result = json["data"] as? JSON
         let success = json["success"] as? Bool
+        self.data = [:]
+        if result != nil {
+            self.data = result!
+        }
         
-        self.data = result!
         self.succeed = success!
     }
 }

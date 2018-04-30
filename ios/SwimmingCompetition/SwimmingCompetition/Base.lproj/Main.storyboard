@@ -372,6 +372,7 @@
                     </view>
                     <connections>
                         <outlet property="dateLabel" destination="ROe-fW-nVm" id="pYr-DS-G8E"/>
+                        <outlet property="joinButtonOutlet" destination="LR3-Vj-yiv" id="GJc-PA-3O4"/>
                         <outlet property="nameLabel" destination="XbZ-gS-7BH" id="mBe-DB-lVD"/>
                         <outlet property="numOfParticipantsLabel" destination="jkZ-GC-IcI" id="lSQ-TE-4yX"/>
                         <outlet property="styleNrangeLabel" destination="U6B-o9-m87" id="BI8-05-OJs"/>
@@ -1106,7 +1107,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="5RG-Ln-xtq"/>
         <segue reference="wBa-MU-PKU"/>
     </inferredMetricsTieBreakers>
 </document>
