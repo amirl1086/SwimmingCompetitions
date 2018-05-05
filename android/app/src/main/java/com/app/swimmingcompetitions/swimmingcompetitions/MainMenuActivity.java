@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,5 +50,9 @@ public class MainMenuActivity extends LoadingDialog {
         Intent intent = new Intent(this, MySettingsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
+    }
+
+    public void logOut(View view) {
+        FirebaseAuth.getInstance().signOut();
     }
 }

@@ -13,12 +13,12 @@ module.exports = {
 
 		usersRef.set({
 			'uid': firebaseUser.uid,
+			'email': userParams.email,
 			'firstName': userParams.firstName,
 			'lastName': userParams.lastName,
-			'birthDate': userParams.birthDate,
-			'email': userParams.email,
-			'gender': userParams.gender,
-			'type': userParams.type //can be 'parent', 'student' or 'coach'
+			'birthDate': userParams.birthDate || '',
+			'gender': userParams.gender || '',
+			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 		});
 
 		usersRef.on('value', function(snapshot) {
@@ -31,7 +31,6 @@ module.exports = {
 			}
 			else {
 				callback(true, snapshot.val());
-				
 			}
 		}, function(error) {
 			callback(false, error);

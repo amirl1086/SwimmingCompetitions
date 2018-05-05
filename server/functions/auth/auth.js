@@ -10,9 +10,27 @@ module.exports =  {
 	logIn: function(idToken, response) {
 		admin.auth().verifyIdToken(idToken).then(function(decodedToken) {
 			console.log('decodedToken ', decodedToken);
-		    firebaseDB_Service.getUser(decodedToken.uid, function(sucess, result) {
+			var currentUid = decodedToken.uid;
+		    firebaseDB_Service.getUser(currentUid, function(sucess, result) {
 		    	if(sucess) {
-		    		utilities.sendResponse(response, null, result);
+		    		if(!result) {
+		    			var userParams = { 
+		    				'firstName': decodedToken.name.substr(0, decodedToken.name.indexOf(' ')),
+		    				'lastName': decodedToken.name.substr(decodedToken.name.indexOf(' ') + 1),
+		    				'email': decodedToken.email
+		    			}
+		    			firebaseDB_Service.addNewUser({ 'uid': currentUid }, userParams, function(success, result) { 
+							if(success) {
+								utilities.sendResponse(response, null, result); 
+							}
+							else {
+								utilities.sendResponse(response, result, null);
+							}
+						});
+		    		}
+		    		else {
+		    			utilities.sendResponse(response, null, result);
+		    		}
 		    	}
 		    	else {
 		    		utilities.sendResponse(response, result, null);

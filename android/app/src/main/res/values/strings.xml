@@ -81,4 +81,6 @@
     <string name="add_new_user">מתחרה חדש במערכת</string>
     <string name="my_children_header">הילדים שלי</string>
     <string name="mobile_phone_number">מספר טלפון נייד</string>
+    <string name="server_client_id">197819058733-viutts2tem5tfl305fmrfqjug65kgbj0.apps.googleusercontent.com</string>
+    <string name="google_sign_in">כניסה באמצעות גוגל</string>
 </resources>

@@ -1,43 +1,75 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-
+import com.google.firebase.auth.GoogleAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class LogInActivity extends LoadingDialog implements AsyncResponse {
+public class LogInActivity extends LoadingDialog implements View.OnClickListener, AsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
     private EditText logInMail;
     private EditText logInPassword;
     private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        SignInButton googleSignInButton = findViewById(R.id.google_sign_in_button);
+        googleSignInButton.setOnClickListener(this);
+
+        for (int i = 0; i < googleSignInButton.getChildCount (); i++) {
+            View v = googleSignInButton.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText("כניסה באמצעות גוגל");
+                break;
+            }
+        }
+
         this.logInMail = findViewById(R.id.edit_email);
         this.logInPassword = findViewById(R.id.edit_password);
 
         this.mAuth = FirebaseAuth.getInstance();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        googleSignIn();
     }
 
     @Override
@@ -46,10 +78,9 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
         if(this.fbUser != null) {
             switchToMainMenuActivity();
         }
-        this.fbUser = this.mAuth.getCurrentUser();
     }
 
-    public void firebaseLogIn(final View view) {
+    public void logIn(final View view) {
         String logInMailText = this.logInMail.getText().toString();
         String logInPasswordText = this.logInPassword.getText().toString();
 
@@ -61,42 +92,27 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         fbUser = mAuth.getCurrentUser();
-                        fbUser.getIdToken(true)
-                            .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                    if (task.isSuccessful()) {
-                                        logInWithIdToken(task.getResult().getToken());
-                                        // ...
-                                    } else {
-                                        // Handle error -> task.getException();
-                                    }
-                                }
-                            });
+                        logInWithFirebase();
                     }
                     else {
                         // If sign in fails, display a message to the user.
-                        showToast("ההתחברות נכשלה");
+                        showToast("ההתחברות נכשלה, נסה שוב");
                     }
                 }
             });
+    }
 
-        /*JSON_AsyncTask jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
-        JSONObject logInData = new JSONObject();
-
-        try {
-            logInData.put("urlSuffix", "/logIn");
-            logInData.put("httpMethod", "POST");
-            logInData.put("email", logInMailText);
-            logInData.put("password", logInPasswordText);
-        }
-        catch (JSONException e) {
-            showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-        }
-
-        showProgressDialog("מבצע כניסה...");
-
-        jsonAsyncTaskPost.execute(logInData.toString());*/
+    private void logInWithFirebase() {
+        this.fbUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()) {
+                    logInWithIdToken(task.getResult().getToken());
+                }
+                else {
+                    showToast("ההתחברות נכשלה, נסה שוב");
+                }
+            }
+        });
     }
 
     private void logInWithIdToken(String token) {
@@ -113,9 +129,40 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
         }
 
-        showProgressDialog("מבצע כניסה...");
-
         jsonAsyncTaskPost.execute(logInData.toString());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                showProgressDialog("מבצע כניסה...");
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+            }
+            catch (ApiException e) {
+                showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    fbUser = mAuth.getCurrentUser();
+                    logInWithFirebase();
+                }
+                else {
+                    showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
+                }
+            }
+        });
     }
 
     @Override
@@ -153,6 +200,8 @@ public class LogInActivity extends LoadingDialog implements AsyncResponse {
         startActivity(intent);
     }
 
+    public void googleSignIn() {
+        Intent signInIntent = this.mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 }
-
-
