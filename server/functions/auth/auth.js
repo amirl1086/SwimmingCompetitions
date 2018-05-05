@@ -17,8 +17,9 @@ module.exports =  {
 		    			var userParams = { 
 		    				'firstName': decodedToken.name.substr(0, decodedToken.name.indexOf(' ')),
 		    				'lastName': decodedToken.name.substr(decodedToken.name.indexOf(' ') + 1),
-		    				'email': decodedToken.email
-		    			}
+		    				'email': decodedToken.email,
+		    				'uid': currentUid
+		    			};
 		    			firebaseDB_Service.addNewUser({ 'uid': currentUid }, userParams, function(success, result) { 
 							if(success) {
 								utilities.sendResponse(response, null, result); 

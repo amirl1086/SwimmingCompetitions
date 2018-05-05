@@ -86,4 +86,8 @@ exports.getPersonalResults = functions.https.onRequest(function(request, respons
 exports.cancelRegistration = functions.https.onRequest(function(request, response) {
 	firebaseDB_Service.cancelRegistration(request.body, response);
 });
+
+exports.updateFirebaseUser = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.updateFirebaseUser(request.body, response);
+});
 /* ================================ */

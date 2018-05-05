@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/abstract_swimming_pool"
+    tools:context=".GoogleRegisterActivity"
     android:layoutDirection="rtl"
-    android:padding="15dp"
-    tools:context=".RegisterActivity">
+    android:padding="15dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/children_list_header"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="עדכון פרטים נוספים"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp">
 
             <EditText
                 android:id="@+id/register_first_name"
@@ -88,59 +100,17 @@
             android:textAlignment="center"
             android:textSize="22sp" />
 
-        <EditText
-            android:id="@+id/register_email"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="25dp"
-            android:hint="@string/register_email"
-            android:inputType="textEmailAddress"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
-
-        <EditText
-            android:id="@+id/register_password"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:hint="@string/register_password"
-            android:inputType="textPassword"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
-        <EditText
-            android:id="@+id/register_password_confirmation"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:hint="@string/register_password_confirmation"
-            android:inputType="numberPassword"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
-        <EditText
-            android:id="@+id/register_token"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:hint="@string/register_token"
-            android:inputType="textPersonName"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
         <Button
-            android:id="@+id/register_btn"
+            android:id="@+id/update_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:layout_marginTop="15dp"
-            android:onClick="createFirebaseUser"
-            android:text="@string/register_register_btn"
+            android:onClick="updateFirebaseUser"
+            android:text="@string/save_details"
             android:textAlignment="center"
             android:textSize="25sp"
             android:theme="@style/ThemeOverlay.TransparentButton" />
-
 
     </LinearLayout>
 

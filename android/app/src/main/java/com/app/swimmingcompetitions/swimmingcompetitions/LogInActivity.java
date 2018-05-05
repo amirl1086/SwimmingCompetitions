@@ -172,8 +172,13 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 JSONObject response = new JSONObject(result);
                 JSONObject userData = response.getJSONObject("data");
                 this.currentUser = new User(userData);
+                if(this.currentUser.getBirthDate().isEmpty()) {
+                    switchToGoogleRegisterActivity();
+                }
+                else {
+                    switchToMainMenuActivity();
+                }
 
-                switchToMainMenuActivity();
             }
             else {
                 showToast("שגיאה בכניסה למערכת, נסה שוב");
@@ -191,6 +196,12 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
 
     public void switchToMainMenuActivity() {
         Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToGoogleRegisterActivity() {
+        Intent intent = new Intent(this, PreRegisterActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

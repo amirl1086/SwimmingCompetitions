@@ -34,7 +34,8 @@
         <activity android:name=".MyPersonalInformationActivity" />
         <activity android:name=".MyChildrenActivity" />
         <activity android:name=".MyMessagesActivity" />
-        <activity android:name=".PreCompetitionRegisterActivity"></activity>
+        <activity android:name=".PreCompetitionRegisterActivity" />
+        <activity android:name=".GoogleRegisterActivity"></activity>
     </application>
 
 </manifest>

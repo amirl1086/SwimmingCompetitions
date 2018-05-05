@@ -18,14 +18,13 @@ module.exports = {
 			'lastName': userParams.lastName,
 			'birthDate': userParams.birthDate || '',
 			'gender': userParams.gender || '',
+			'phoneNumber': userParams.phoneNumber || '',
 			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 		});
 
 		usersRef.on('value', function(snapshot) {
 			if(userParams.joinToCompetition) {
 				joinToCompetition(snapshot.val(), function(success, result) {
-					console.log('addNewUser snapshot.val() ', snapshot.val());
-					console.log('addNewUser result ', result);
 					callback(success, snapshot.val());
 				});
 			}
@@ -34,6 +33,26 @@ module.exports = {
 			}
 		}, function(error) {
 			callback(false, error);
+		});
+	},
+
+	updateFirebaseUser: function(params, response) {
+		var db = admin.database();
+		var usersRef = db.ref('users/' + params.uid);
+
+		usersRef.update({
+			'firstName': params.firstName,
+			'lastName': params.lastName,
+			'birthDate': params.birthDate || '',
+			'phoneNumber': params.phoneNumber || '',
+			'gender': params.gender || '',
+			'type': params.type
+		});
+
+		usersRef.on('value', function(snapshot) {
+			utilities.sendResponse(response, null, snapshot.val());
+		}, function(error) {
+			utilities.sendResponse(response, error, null);
 		});
 	},
 

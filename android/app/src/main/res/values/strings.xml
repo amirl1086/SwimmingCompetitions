@@ -83,4 +83,6 @@
     <string name="mobile_phone_number">מספר טלפון נייד</string>
     <string name="server_client_id">197819058733-viutts2tem5tfl305fmrfqjug65kgbj0.apps.googleusercontent.com</string>
     <string name="google_sign_in">כניסה באמצעות גוגל</string>
+    <string name="log_out">יציאה</string>
+    <string name="save_details">שמור פרטים</string>
 </resources>
