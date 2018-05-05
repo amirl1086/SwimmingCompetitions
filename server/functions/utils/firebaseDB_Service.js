@@ -43,9 +43,9 @@ module.exports = {
 		var userRef = db.ref('users/' + uid);
 
 		userRef.on('value', function(snapshot) {
-			callback(snapshot.val());
+			callback(true, snapshot.val());
 		}, function(error) {
-			callback(error);
+			callback(false, error);
 		});
 	},
 
@@ -119,24 +119,29 @@ module.exports = {
 		var uid = params.uid;
 		var db = admin.database();
 
-		authentication.getUser(uid, null, function(currentUser) {
-			var personalResultsRef = db.ref('personalResults/');
-
-			personalResultsRef.on('value', function(snapshot) {
-				if(currentUser.type === 'coach') {
-					utilities.sendResponse(response, null, snapshot.val());
-				}
-				else {
-					var competitions = snapshot.val();
-					var selectedCompetitions = [];
-					for(competitionId in competitions) {
-						if(competitions[competitionId].child(uid).exists()) {
-							selectedCompetitions.push(competitions[competitionId]);
-						}
+		authentication.getUser(uid, null, function(sucess, result) {
+			if(sucess) {
+				var personalResultsRef = db.ref('personalResults/');
+				var currentUser = result;
+				personalResultsRef.on('value', function(snapshot) {
+					if(currentUser.type === 'coach') {
+						utilities.sendResponse(response, null, snapshot.val());
 					}
-					utilities.sendResponse(response, null, selectedCompetitions);
-				}
-			});
+					else {
+						var competitions = snapshot.val();
+						var selectedCompetitions = [];
+						for(competitionId in competitions) {
+							if(competitions[competitionId].child(uid).exists()) {
+								selectedCompetitions.push(competitions[competitionId]);
+							}
+						}
+						utilities.sendResponse(response, null, selectedCompetitions);
+					}
+				});
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
 		});
 	},
 

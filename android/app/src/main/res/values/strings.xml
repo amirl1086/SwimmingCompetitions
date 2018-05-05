@@ -80,4 +80,5 @@
     <string name="add_temporary_user">מתחרה זמני</string>
     <string name="add_new_user">מתחרה חדש במערכת</string>
     <string name="my_children_header">הילדים שלי</string>
+    <string name="mobile_phone_number">מספר טלפון נייד</string>
 </resources>

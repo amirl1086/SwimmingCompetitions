@@ -6,7 +6,7 @@ const serviceAccount = require("./firebase-swimmingcompetitions-firebase-adminsd
 
 
 /* APP SETTINGS INITIALIZING */
-var config = {
+const config = {
 	apiKey: "AIzaSyAJiubD80W9a1s8K9tx3yILgLZwPJZMziE",
     authDomain: "firebase-swimmingcompetitions.firebaseapp.com",
     databaseURL: "https://fir-swimmingcompetitions.firebaseio.com",
@@ -19,11 +19,11 @@ firebase.initializeApp(config);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fir-swimmingcompetitions.firebaseio.com"
+  databaseURL: config.databaseURL
 });
 
-var authentication = require('./auth/auth.js');
-var firebaseDB_Service = require('./utils/firebaseDB_Service.js');
+const authentication = require('./auth/auth.js');
+const firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 
 
@@ -38,7 +38,7 @@ exports.getUser = functions.https.onRequest(function(request, response) {
 });
 
 exports.logIn = functions.https.onRequest(function(request, response) {
-	authentication.logIn(request.body, response);
+	authentication.logIn(request.body.idToken, response);
 });
 
 /* ================================== */

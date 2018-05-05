@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "197819058733",
-    "project_id": "firebase-swimmingcompetitions"
+    "firebase_url": "https://fir-swimmingcompetitions.firebaseio.com",
+    "project_id": "firebase-swimmingcompetitions",
+    "storage_bucket": "firebase-swimmingcompetitions.appspot.com"
   },
   "client": [
     {
@@ -12,6 +14,18 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "197819058733-viutts2tem5tfl305fmrfqjug65kgbj0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
+            "certificate_hash": "ef7a5d5bffaa424ad866f89db9622ce8bbb134ef"
+          }
+        },
+        {
+          "client_id": "197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "197819058733-33l7850i92luq9rc1n301d5a2kc3c4p4.apps.googleusercontent.com",
           "client_type": 1,
@@ -35,11 +49,23 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197819058733-uua0nj6o4j2cjuuk3dlbt75anavj59cl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.swimmingcompetitions"
+              }
+            },
+            {
+              "client_id": "197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

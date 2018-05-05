@@ -30,6 +30,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     private EditText lastName;
     private EditText eMail;
     private EditText password;
+    private EditText phoneNumber;
     private EditText passwordConfirmation;
     private TextView dateView;
     private int year, month, day;
@@ -59,6 +60,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         this.lastName = findViewById(R.id.register_last_name);
         this.eMail = findViewById(R.id.register_email);
         this.password = findViewById(R.id.register_password);
+        this.phoneNumber = findViewById(R.id.mobile_phone_number);
         this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
         Button birthDateButton = findViewById(R.id.register_birth_date);
 
@@ -125,6 +127,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
         String eMailText = this.eMail.getText().toString();
         String passwordText = this.password.getText().toString();
+        String phoneNumberText = this.phoneNumber.getText().toString();
         String passwordConfirmationText = this.passwordConfirmation.getText().toString();
 
         JSONObject registerData = new JSONObject();
@@ -133,6 +136,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             registerData.put("urlSuffix", "/addNewUser");
             registerData.put("httpMethod", "POST");
             registerData.put("email", eMailText);
+            registerData.put("phoneNumber", phoneNumberText);
             registerData.put("password", passwordText);
             registerData.put("passwordConfirmation", passwordConfirmationText);
             registerData.put("firstName", firstNameText);
