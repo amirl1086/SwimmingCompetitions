@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class CompetitionDetailsViewController: UIViewController {
     
@@ -18,11 +19,26 @@ class CompetitionDetailsViewController: UIViewController {
     @IBOutlet weak var styleNrangeLabel: UILabel!
     @IBOutlet weak var numOfParticipantsLabel: UILabel!
     @IBOutlet var joinButtonOutlet: RoundButton!
+    @IBOutlet var tempJoinButtonOutlet: RoundButton!
+    @IBOutlet var editButtonOutlet: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let startButton = UIBarButtonItem(title: "התחל תחרות", style: .plain, target: self, action: #selector(goToStart))
-        self.navigationItem.rightBarButtonItem = startButton
+        
+        if(currentUser.type == "coach"){
+            let startButton = UIBarButtonItem(title: "התחל תחרות", style: .plain, target: self, action: #selector(goToStart))
+            self.navigationItem.rightBarButtonItem = startButton
+            joinButtonOutlet.isHidden = true
+            tempJoinButtonOutlet.center.x = self.view.center.x
+        } else if currentUser.type == "parent" {
+            joinButtonOutlet.isHidden = true
+            editButtonOutlet.isHidden = true
+            tempJoinButtonOutlet.center.x = self.view.center.x
+        } else {
+            editButtonOutlet.isHidden = true
+        }
+        
+        
         nameLabel.text = competition.name
         //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
         dateLabel.text = Date().getDate(fullDate: competition.activityDate)
@@ -84,12 +100,25 @@ class CompetitionDetailsViewController: UIViewController {
         ] as [String:AnyObject]
         
         if sender.tag == 1 {
-            sender.setTitle("הירשם", for: .normal)
-            sender.backgroundColor = UIColor.green
-            
-            Service.shared.connectToServer(path: "cancelRegistration", method: .post, params: parameters, completion: { (response) in
+            let alert = UIAlertController(title: "ביטול הרשמה לתחרות", message: "האם את/ה בטוח/ה?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                 
-            })
+                
+                Service.shared.connectToServer(path: "cancelRegistration", method: .post, params: parameters, completion: { (response) in
+                    if response.succeed {
+                        sender.setTitle("הירשם", for: .normal)
+                        sender.backgroundColor = UIColor.green
+                    }
+                    else {
+                        
+                    }
+                })
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "ביטול", style: .default, handler: { (action) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
         
         else {
@@ -127,9 +156,7 @@ class CompetitionDetailsViewController: UIViewController {
         viewController.toAge = Int(competition.getToAge())!
         viewController.editedCompetitionId = competition.getId()
         
-            print(competition.getName())
-            print(competition.getSwimmingStyle())
-            print(competition.getNumOfParticipants())
+            
             if let navigator = navigationController {
                 navigator.pushViewController(viewController, animated: true)
             }

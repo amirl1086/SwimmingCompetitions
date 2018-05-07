@@ -12,13 +12,14 @@ protocol dataProtocol {
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String)
 }
 
-class AddCompetitionViewController: UIViewController {
+class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     
     var delegate: dataProtocol?
     //The picker view object
     var pickerView = UIPickerView()
     let stylePicker = ["חזה","גב","חתירה","חופשי"]
     let rangePicker:[Int] = Array(0...100)
+    let rangeSwimPicker:[Int] = Array(0...5)
     let datePicker = UIDatePicker()
    
     @IBOutlet weak var nameTextField: UITextField!
@@ -26,6 +27,7 @@ class AddCompetitionViewController: UIViewController {
     @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var agesTextField: UITextField!
+    var activeTextField: UITextField!
     
     var isEdit: Bool = false
     var editedCompetitionId: String = ""
@@ -39,7 +41,15 @@ class AddCompetitionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(isEdit)
+        
+        nameTextField.delegate = self
+        styleTextField.delegate = self
+        numberTextField.delegate = self
+        dateTextField.delegate = self
+        agesTextField.delegate = self
+        
+        activeTextField = nameTextField
+        
         if isEdit {
             nameTextField.text = competitionName
             styleTextField.text = "\(range) מטר \(style)"
@@ -54,6 +64,42 @@ class AddCompetitionViewController: UIViewController {
         self.view.insertSubview(imageView, at: 0)
         //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
+    
+    @objc func keyboardWillChange(notification: Notification) {
+        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        if notification.name == Notification.Name.UIKeyboardWillShow ||
+            notification.name == Notification.Name.UIKeyboardWillChangeFrame {
+            if ((view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
+                view.frame.origin.y = -keyboardRect.height
+                
+            } else {
+                view.frame.origin.y = 0
+            }
+            
+        } else {
+            view.frame.origin.y = 0
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 
     override func didReceiveMemoryWarning() {
@@ -83,7 +129,7 @@ class AddCompetitionViewController: UIViewController {
     }
     
     @IBAction func addCompetitionButton(_ sender: Any) {
-        var alert: UIAlertView = UIAlertView(title: "שומר תחרות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        /*var alert: UIAlertView = UIAlertView(title: "שומר תחרות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
         
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
@@ -95,50 +141,61 @@ class AddCompetitionViewController: UIViewController {
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
         
-        alert.show();
-        var parameters = [
-            "activityDate": dateToSend,
-            "length": Float(self.range),
-            "name": self.nameTextField.text!,
-            "numOfParticipants": self.numberTextField.text!,
-            "swimmingStyle": self.style,
-            "fromAge": self.fromAge,
-            "toAge": self.toAge
-            ] as [String : AnyObject]
-        if isEdit {
-            print(editedCompetitionId)
-            parameters["id"] = editedCompetitionId as AnyObject
-        }
-        
-        
-        Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
-            print(response.data)
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
-            var message = ""
-            if response.succeed {
-                message = "התחרות נוספה בהצלחה"
-            }
-            else {
-                message = "התחרות לא נוספה"
-            }
-            let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+        alert.show();*/
+        if self.nameTextField.text == "" || self.styleTextField.text == "" || self.numberTextField.text == "" || self.dateTextField.text == "" || self.agesTextField.text == "" {
+            let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
-                if response.succeed {
-                    if self.isEdit {
-                        self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numOfParticipants)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
-                    }
-                    _ = self.navigationController?.popViewController(animated: true)
-                }
             }))
             self.present(alert, animated: true, completion: nil)
-            
         }
+        else {
+            var parameters = [
+                "activityDate": dateToSend,
+                "length": Float(self.range),
+                "name": self.nameTextField.text!,
+                "numOfParticipants": self.numberTextField.text!,
+                "swimmingStyle": self.style,
+                "fromAge": self.fromAge,
+                "toAge": self.toAge
+                ] as [String : AnyObject]
+            if isEdit {
+                
+                parameters["id"] = editedCompetitionId as AnyObject
+            }
+            
+            
+            Service.shared.connectToServer(path: "setNewCompetition", method: .post, params: parameters) { (response) in
+                
+                var message = ""
+                if response.succeed {
+                    message = "התחרות נוספה בהצלחה"
+                }
+                else {
+                    message = "התחרות לא נוספה"
+                }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                    if response.succeed {
+                        if self.isEdit {
+                            self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numOfParticipants)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
+                        }
+                        _ = self.navigationController?.popViewController(animated: true)
+                    }
+                }))
+                self.present(alert, animated: true, completion: nil)
+                //alert.dismiss(withClickedButtonIndex: -1, animated: true)
+                
+                
+            }
+        }
+        
        
     }
 }
 
-extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
+extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if (pickerView == self.styleTextField.inputView || pickerView == self.agesTextField.inputView) {
@@ -154,6 +211,9 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
             }
             return rangePicker.count
         }
+        if pickerView == self.numberTextField.inputView {
+            return rangeSwimPicker.count
+        }
         
         return rangePicker.count
     }
@@ -164,6 +224,9 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
                 return stylePicker[row]
             }
             return String(rangePicker[row])
+        }
+        if pickerView == self.numberTextField.inputView {
+            return String(rangeSwimPicker[row])
         }
         return String(rangePicker[row])
         
@@ -221,7 +284,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
             agesTextField.text = "מגיל \(fromAge) עד גיל \(toAge)"
         }
         else {
-            numberTextField.text = String(rangePicker[row])
+            numberTextField.text = String(rangeSwimPicker[row])
         }
     }
     
