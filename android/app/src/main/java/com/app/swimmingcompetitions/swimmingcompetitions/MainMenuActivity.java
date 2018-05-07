@@ -7,12 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainMenuActivity extends LoadingDialog {
 
     private User currentUser;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +24,13 @@ public class MainMenuActivity extends LoadingDialog {
         setContentView(R.layout.activity_main_menu);
 
         Intent intent = getIntent();
-        if(!intent.hasExtra("currentUser")) {
+        if(intent.hasExtra("currentUser")) {
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
+            this.mAuth = FirebaseAuth.getInstance();
+        }
+        else {
             switchToLogInActivity();
         }
-
-        this.currentUser = (User) intent.getSerializableExtra("currentUser");
     }
 
     private void switchToLogInActivity() {
@@ -48,5 +54,10 @@ public class MainMenuActivity extends LoadingDialog {
         Intent intent = new Intent(this, MySettingsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
+    }
+
+    public void logOut(View view) {
+        this.mAuth.signOut();
+        switchToLogInActivity();
     }
 }

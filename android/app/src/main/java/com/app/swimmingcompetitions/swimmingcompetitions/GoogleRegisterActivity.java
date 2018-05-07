@@ -16,61 +16,57 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
 
+public class GoogleRegisterActivity extends LoadingDialog implements AsyncResponse {
 
-public class RegisterActivity extends LoadingDialog implements AsyncResponse {
-
+    private User currentUser;
+    private FirebaseAuth mAuth;
     private JSON_AsyncTask jsonAsyncTaskPost;
+
     private EditText firstName;
     private EditText lastName;
-    private EditText eMail;
-    private EditText password;
-    private EditText phoneNumber;
-    private EditText passwordConfirmation;
     private TextView dateView;
+    private EditText phoneNumber;
     private int year, month, day;
     private String registerType;
     private Spinner spinner;
-    private Competition selectedCompetition;
-    private User currentUser;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_google_register);
 
         Intent intent = getIntent();
         if(intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
-            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
-            this.registerType = "student";
+            this.mAuth = FirebaseAuth.getInstance();
+
+            this.spinner = findViewById(R.id.register_gender);
+            this.firstName = findViewById(R.id.register_first_name);
+            this.firstName.setText(this.currentUser.getFirstName());
+            this.lastName = findViewById(R.id.register_last_name);
+            this.lastName.setText(this.currentUser.getLastName());
+            this.phoneNumber = findViewById(R.id.mobile_phone_number);
+            this.registerType = intent.getStringExtra("registerType");
+            Button birthDateButton = findViewById(R.id.register_birth_date);
+
+            if (this.registerType.equals("parent")) {
+                birthDateButton.setVisibility(View.GONE);
+                this.spinner.setVisibility(View.GONE);
+            }
+            else {
+                initParticipantUser();
+            }
         }
         else {
-            this.registerType = intent.getStringExtra("registerType");
-
+            switchToLogInActivity();
         }
-        this.spinner = findViewById(R.id.register_gender);
-        this.firstName = findViewById(R.id.register_first_name);
-        this.lastName = findViewById(R.id.register_last_name);
-        this.eMail = findViewById(R.id.register_email);
-        this.password = findViewById(R.id.register_password);
-        this.phoneNumber = findViewById(R.id.mobile_phone_number);
-        this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
-        Button birthDateButton = findViewById(R.id.register_birth_date);
-
-        if (this.registerType.equals("parent")) {
-            birthDateButton.setVisibility(View.GONE);
-            this.spinner.setVisibility(View.GONE);
-        }
-        else { //initialize date picker for date of birth
-            initParticipantUser();
-        }
-
     }
 
     private void initParticipantUser() {
@@ -113,8 +109,39 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         showDate(year, month + 1, day);
     }
 
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
 
-    public void createFirebaseUser(View view) {
+    @Override
+    public void processFinish(String result) {
+        try {
+            if(result != null) {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
+
+                this.currentUser = new User(dataObj);
+                switchToMainMenuActivity();
+            }
+            else {
+                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
+            }
+        }
+        catch (JSONException e) {
+            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        }
+
+        hideProgressDialog();
+    }
+
+    public void switchToMainMenuActivity() {
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void updateFirebaseUser(View view) {
         String firstNameText = this.firstName.getText().toString();
         String lastNameText = this.lastName.getText().toString();
         String genderText = "", birthDateText = "";
@@ -123,21 +150,14 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             birthDateText = dateView.getText().toString();
             genderText = spinner.getSelectedItem().toString();
         }
-
-        String eMailText = this.eMail.getText().toString();
-        String passwordText = this.password.getText().toString();
         String phoneNumberText = this.phoneNumber.getText().toString();
-        String passwordConfirmationText = this.passwordConfirmation.getText().toString();
 
         JSONObject registerData = new JSONObject();
-
         try {
-            registerData.put("urlSuffix", "/addNewUser");
+            registerData.put("urlSuffix", "/updateFirebaseUser");
             registerData.put("httpMethod", "POST");
-            registerData.put("email", eMailText);
             registerData.put("phoneNumber", phoneNumberText);
-            registerData.put("password", passwordText);
-            registerData.put("passwordConfirmation", passwordConfirmationText);
+            registerData.put("uid", this.currentUser.getUid());
             registerData.put("firstName", firstNameText);
             registerData.put("lastName", lastNameText);
             registerData.put("gender", genderText);
@@ -148,7 +168,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             }
         }
         catch (JSONException e) {
-            showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
+            showToast("שגיאה בתהליך שמירת הפרטים, נסה לאתחל את האפליקציה");
         }
 
         this.jsonAsyncTaskPost = new JSON_AsyncTask();
@@ -159,8 +179,17 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         this.jsonAsyncTaskPost.execute(registerData.toString());
     }
 
+
     public void setDate(View view) {
         showDialog(R.integer.dialog_id);
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void showDate(int year, int month, int day) {
+        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
     }
 
     @Override
@@ -177,55 +206,4 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             showDate(year, month + 1, day);
         }
     };
-
-    @Override
-    public void processFinish(String result) {
-        try {
-            if(result != null) {
-                JSONObject response = new JSONObject(result);
-                JSONObject dataObj = response.getJSONObject("data");
-
-                if(this.currentUser != null) {
-                    showToast("המתחרה נוסף בהצלחה");
-                    switchToViewCompetitionActivity(dataObj);
-                }
-                else {
-                    showToast("החשבון נוצר בהצלחה");
-                    User newUser = new User(dataObj);
-                    switchToMainMenuActivity(newUser);
-                }
-            }
-            else {
-                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
-            }
-        }
-        catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-        }
-
-        hideProgressDialog();
-    }
-
-    public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public void switchToMainMenuActivity(User currentUser) {
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToViewCompetitionActivity(JSONObject newUser) {
-        Intent intent = new Intent(this, ViewCompetitionActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        intent.putExtra("selectedCompetition", this.selectedCompetition);
-        intent.putExtra("newParticipant", newUser.toString());
-        startActivity(intent);
-    }
-
-    private void showDate(int year, int month, int day) {
-        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
-    }
-
 }

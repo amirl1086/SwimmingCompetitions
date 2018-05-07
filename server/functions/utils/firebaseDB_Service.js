@@ -13,28 +13,46 @@ module.exports = {
 
 		usersRef.set({
 			'uid': firebaseUser.uid,
+			'email': userParams.email,
 			'firstName': userParams.firstName,
 			'lastName': userParams.lastName,
-			'birthDate': userParams.birthDate,
-			'email': userParams.email,
-			'gender': userParams.gender,
-			'type': userParams.type //can be 'parent', 'student' or 'coach'
+			'birthDate': userParams.birthDate || '',
+			'gender': userParams.gender || '',
+			'phoneNumber': userParams.phoneNumber || '',
+			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 		});
 
 		usersRef.on('value', function(snapshot) {
 			if(userParams.joinToCompetition) {
 				joinToCompetition(snapshot.val(), function(success, result) {
-					console.log('addNewUser snapshot.val() ', snapshot.val());
-					console.log('addNewUser result ', result);
 					callback(success, snapshot.val());
 				});
 			}
 			else {
 				callback(true, snapshot.val());
-				
 			}
 		}, function(error) {
 			callback(false, error);
+		});
+	},
+
+	updateFirebaseUser: function(params, response) {
+		var db = admin.database();
+		var usersRef = db.ref('users/' + params.uid);
+
+		usersRef.update({
+			'firstName': params.firstName,
+			'lastName': params.lastName,
+			'birthDate': params.birthDate || '',
+			'phoneNumber': params.phoneNumber || '',
+			'gender': params.gender || '',
+			'type': params.type
+		});
+
+		usersRef.on('value', function(snapshot) {
+			utilities.sendResponse(response, null, snapshot.val());
+		}, function(error) {
+			utilities.sendResponse(response, error, null);
 		});
 	},
 
@@ -43,9 +61,9 @@ module.exports = {
 		var userRef = db.ref('users/' + uid);
 
 		userRef.on('value', function(snapshot) {
-			callback(snapshot.val());
+			callback(true, snapshot.val());
 		}, function(error) {
-			callback(error);
+			callback(false, error);
 		});
 	},
 
@@ -119,24 +137,29 @@ module.exports = {
 		var uid = params.uid;
 		var db = admin.database();
 
-		authentication.getUser(uid, null, function(currentUser) {
-			var personalResultsRef = db.ref('personalResults/');
-
-			personalResultsRef.on('value', function(snapshot) {
-				if(currentUser.type === 'coach') {
-					utilities.sendResponse(response, null, snapshot.val());
-				}
-				else {
-					var competitions = snapshot.val();
-					var selectedCompetitions = [];
-					for(competitionId in competitions) {
-						if(competitions[competitionId].child(uid).exists()) {
-							selectedCompetitions.push(competitions[competitionId]);
-						}
+		authentication.getUser(uid, null, function(sucess, result) {
+			if(sucess) {
+				var personalResultsRef = db.ref('personalResults/');
+				var currentUser = result;
+				personalResultsRef.on('value', function(snapshot) {
+					if(currentUser.type === 'coach') {
+						utilities.sendResponse(response, null, snapshot.val());
 					}
-					utilities.sendResponse(response, null, selectedCompetitions);
-				}
-			});
+					else {
+						var competitions = snapshot.val();
+						var selectedCompetitions = [];
+						for(competitionId in competitions) {
+							if(competitions[competitionId].child(uid).exists()) {
+								selectedCompetitions.push(competitions[competitionId]);
+							}
+						}
+						utilities.sendResponse(response, null, selectedCompetitions);
+					}
+				});
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
 		});
 	},
 
