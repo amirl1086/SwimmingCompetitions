@@ -33,9 +33,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.logo.image = UIImage(named: "logo.png")
         //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "waterpool_bottom.jpg")!)
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "waterpool_bottom.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        //let imageView = UIImageView(frame: self.view.bounds)
+        //imageView.image = UIImage(named: "waterpool_bottom.jpg")//if its in images.xcassets
+        //self.view.insertSubview(imageView, at: 0)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)

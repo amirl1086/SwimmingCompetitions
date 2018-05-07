@@ -296,14 +296,23 @@ module.exports = {
 
 var joinToCompetition = function(params, callback) {
 	var db = admin.database();
-	competitionsRef = db.ref('competitions/' + params.competitionId + '/participants/' + params.uid);
+	var newParticipantUid;
+	
+	if(params.uid) {
+		newParticipantUid = params.uid;
+	}
+	else {
+		newParticipantUid = db.ref('competitions/' + params.competitionId + '/participants').push().key;
+	}
+	
+	competitionsRef = db.ref('competitions/' + params.competitionId + '/participants/' + newParticipantUid);
 
 	var newParticipant = {
 		'firstName': params.firstName,
 		'lastName': params.lastName,
 		'birthDate': params.birthDate,
 		'gender': params.gender,
-		'uid': params.uid,
+		'uid': newParticipantUid,
 		'score': params.score || '0', 
 		'competed': 'false'
 	};
