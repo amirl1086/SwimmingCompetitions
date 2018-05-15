@@ -17,7 +17,9 @@ class RegisterTypeViewController: UIViewController {
         super.viewDidLoad()
         
         //The background image
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        let imageView = UIImageView(frame: self.view.bounds)
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(imageView, at: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -27,8 +29,11 @@ class RegisterTypeViewController: UIViewController {
     
     //pass the type of user to the next controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let passData = segue.destination as! RegisterViewController
-        passData.userType = type
+        if segue.identifier == "goToRegister" {
+            let passData = segue.destination as! RegisterViewController
+            passData.userType = type
+        }
+        
         
     }
     

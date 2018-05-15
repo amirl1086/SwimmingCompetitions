@@ -14,11 +14,13 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var gender: UISegmentedControl!
     @IBOutlet weak var birthDate: UIDatePicker!
-    
+    var activeTextField: UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        activeTextField = firstName
+        
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
 
         showAnimate()
@@ -29,6 +31,42 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         lastName.delegate = self
         
         // Do any additional setup after loading the view.
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
+    
+    @objc func keyboardWillChange(notification: Notification) {
+        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        if notification.name == Notification.Name.UIKeyboardWillShow ||
+            notification.name == Notification.Name.UIKeyboardWillChangeFrame {
+            if ((view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
+                view.frame.origin.y = -keyboardRect.height
+               
+            } else {
+                view.frame.origin.y = 0
+            }
+            
+        } else {
+            view.frame.origin.y = 0
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,7 +87,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
         }
         else {
-            var alert: UIAlertView = UIAlertView(title: "מוסיף משתמש", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+            /*var alert: UIAlertView = UIAlertView(title: "מוסיף משתמש", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
             
             
             let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
@@ -61,8 +99,9 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
             alert.setValue(loadingIndicator, forKey: "accessoryView")
             loadingIndicator.startAnimating()
             
-            alert.show();
+            alert.show();*/
             let currentCompetition = (self.parent as! CompetitionDetailsViewController).competition
+            
             let formatDate = DateFormatter()
             formatDate.dateFormat = "dd/MM/YYYY HH:mm"
             var genderToSend = ""
@@ -77,13 +116,11 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
                 "firstName": firstName.text!,
                 "lastName": lastName.text!,
                 "birthDate": formatDate.string(from: birthDate.date),
-                "gender": genderToSend,
-                "score": "0.0",
-                "competed": false
+                "gender": genderToSend
                 ] as [String:AnyObject]
             
             Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters) { (response) in
-                alert.dismiss(withClickedButtonIndex: -1, animated: true)
+                //alert.dismiss(withClickedButtonIndex: -1, animated: true)
                 self.removeAnimate()
             }
         }
@@ -111,9 +148,5 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
     
 }

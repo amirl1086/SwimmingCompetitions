@@ -32,20 +32,18 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.view.insertSubview(imageView, at: 0)
         //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         self.tableView.backgroundColor = UIColor.clear
-        print(data)
-        for age in data {
-            print(age.0)
-        }
+       
+        
         for age in data {
             if age.0 != "type" {
                 
-                print(age.0)
+                
                 let getAge = age.0
                 var maleArray = [Participant]()
                 var femaleArray = [Participant]()
                 
                 var d = age.1 as! JSON
-                print(d["males"] as! NSArray)
+                
                 for male in d["males"] as! NSArray{
                     let data = male as! JSON
                     let maleResult = Participant(json: data, id: "")
@@ -89,8 +87,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         self.array = self.array.sorted(by: {Int($0.age)! < Int($1.age)!})
-        print(self.array)
-        var a = Int(self.array[0].age)
+        
+        
         // Do any additional setup after loading the view.
     }
 
@@ -111,7 +109,6 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath) as! ResultsTableViewCell
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
-        var originNameFrame = cell.name.frame
         
         if indexPath.row == 0 {
             cell.cellView.backgroundColor = UIColor.blue
@@ -121,8 +118,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.score.isHidden = true
             cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
             cell.name.font = cell.name.font.withSize(35)
-            originNameFrame = cell.name.frame
-            cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+           
+            //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
         
         }
         else if indexPath.row-1 < array[indexPath.section].maleResults.count {
@@ -134,7 +131,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
             cell.name.font = cell.name.font.withSize(20)
-            cell.name.frame = originNameFrame
+            //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
             
         }
         else if indexPath.row-1 == array[indexPath.section].maleResults.count {
@@ -146,8 +143,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             
             cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
             cell.name.font = cell.name.font.withSize(35)
-            originNameFrame = cell.name.frame
-            cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+           
+            //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
         }
         else {
             cell.cellView.backgroundColor = UIColor.clear
@@ -158,7 +155,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.score.isHidden = false
             cell.contentView.backgroundColor = UIColor.clear
             cell.name.font = cell.name.font.withSize(20)
-            cell.name.frame = originNameFrame
+            //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
         }
         
         cell.layer.backgroundColor = UIColor.clear.cgColor

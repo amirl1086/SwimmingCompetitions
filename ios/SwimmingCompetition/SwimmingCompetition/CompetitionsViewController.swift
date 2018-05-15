@@ -28,7 +28,6 @@ class CompetitionsViewController: UIViewController {
         self.view.insertSubview(imageView, at: 0)
         //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         self.tableView.backgroundColor = UIColor.clear
-        self.tableView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0)
         
     }
     
@@ -59,7 +58,7 @@ class CompetitionsViewController: UIViewController {
     
     func getCompetitionsData() {
         
-        var alert: UIAlertView = UIAlertView(title: "טוען תחרויות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        /*var alert: UIAlertView = UIAlertView(title: "טוען תחרויות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
         
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
@@ -71,10 +70,10 @@ class CompetitionsViewController: UIViewController {
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
         
-        alert.show();
+        alert.show();*/
         
         let parameters = ["currentUser": ["uid":user.uid]] as [String: AnyObject]
-        print(parameters as JSON)
+     
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
             
@@ -90,8 +89,8 @@ class CompetitionsViewController: UIViewController {
             self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
             
             self.tableView.reloadData()
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
-            print(self.competitions)
+            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            
         }
     }
     

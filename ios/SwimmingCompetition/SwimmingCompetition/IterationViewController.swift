@@ -113,11 +113,11 @@ class IterationViewController: UIViewController {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
         var start:Int = 0
         for i in 0...iterationNumber-1 {
-            let name = UILabel(frame: CGRect(x: start, y: 400, width: width, height: 30))
+            let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y+self.resetButtonOutlet.frame.height+10), width: width, height: 30))
             name.text = "אין מתחרה"
             name.textAlignment = .center
             
-            let time = UILabel(frame: CGRect(x: start, y: 440, width: width, height: 30))
+            let time = UILabel(frame: CGRect(x: start, y: Int(name.frame.origin.y+name.frame.height+10), width: width, height: 30))
             time.text = "00:00:00"
             time.textAlignment = .center
             time.tag = i
@@ -126,7 +126,7 @@ class IterationViewController: UIViewController {
             time.addGestureRecognizer(gestureRecognizer)
             self.view.addSubview(time)
             
-            let button = UIButton(frame: CGRect(x: start, y: 500, width: width, height: 50))
+            let button = UIButton(frame: CGRect(x: start, y: Int(time.frame.origin.y+time.frame.height+10), width: width, height: 50))
             button.backgroundColor = .red
             button.tag = i
             button.setTitle("עצור", for: .normal)
@@ -214,7 +214,7 @@ class IterationViewController: UIViewController {
     }
     
     func iterationIsDone() {
-        var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        /*var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
         
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
@@ -226,12 +226,12 @@ class IterationViewController: UIViewController {
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
         
-        alert.show();
+        alert.show();*/
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.participantsIndex.count {
-            print("im here")
-            print(participantsIndex.count)
+           
+            
             let id = self.competition.currentParticipants[participantsIndex[i]].uid
             let firstName = self.competition.currentParticipants[participantsIndex[i]].firstName
             let lastName = self.competition.currentParticipants[participantsIndex[i]].lastName
@@ -272,17 +272,18 @@ class IterationViewController: UIViewController {
                 self.navigationItem.rightBarButtonItem = resultsButton
                 
                 self.jsonData = response.data
-                print("json to pass")
-                print(self.jsonData)
+               
+                
             }
             else {
                 var competition: Competition!
                 let data = response.data
-                competition = Competition(json: data, id: data["id"] as! String)
+                competition = Competition(json: data, id: self.competition.getId())
                 self.competition = competition
-                self.startNewIteration()
+                
             }
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            self.startNewIteration()
+            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
         }
     }
     
@@ -291,7 +292,7 @@ class IterationViewController: UIViewController {
     }
    
     func initIteration() {
-        var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        /*var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
         
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
@@ -303,7 +304,7 @@ class IterationViewController: UIViewController {
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
         
-        alert.show();
+        alert.show();*/
         let param = [
             "competitionId": competition.getId()
             ] as [String:AnyObject]
@@ -320,17 +321,17 @@ class IterationViewController: UIViewController {
                 self.navigationItem.rightBarButtonItem = resultsButton
                 
                 self.jsonData = response.data
-                print("json to pass")
-                print(self.jsonData)
+                
             }
             else {
                 var competition: Competition!
                 let data = response.data
-                competition = Competition(json: data, id: data["id"] as! String)
+                competition = Competition(json: data, id: self.competition.getId())
                 self.competition = competition
-                self.startNewIteration()
+                
             }
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            self.startNewIteration()
+            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
         })
     }
