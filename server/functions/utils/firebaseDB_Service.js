@@ -117,11 +117,9 @@ module.exports = {
 		var competitionsRef = db.ref('competitions/');
 
 		competitionsRef.on('value', function(snapshot) {
-			//console.log('getCompetitions ', snapshot.val());
-
 			var result;
 			if(params.filters) {
-				result = filterCompetitions(snapshot.val(), params); 
+				result = filters.filterCompetitions(snapshot.val(), params); 
 			}
 			else {
 				result = snapshot.val();
@@ -525,45 +523,7 @@ var updateCompetition = function(competition) {
 	competitionsRef.update(competition);
 }
 
-var filterCompetitions = function(competitions, params) {
-	var currentUser = JSON.parse(params.currentUser);
-	var today = moment();
-	var birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
-	var userAge = Math.floor(today.diff(birthDate, 'years', true));
-	var filters = params.filters.split(',');
 
-	var filteredCompetitions = {};
-
-	//console.log('competitions ',  competitions);
-	//console.log('params ',  params);
-
-	for(var key in competitions) {
-		var currentCompetition = competitions[key];
-		//console.log('currentCompetition ',  currentCompetition);
-
-		for(var i = 0; i < filters.length; i++) {
-			if(filters[i] === 'uid') {
-				if(searchInParticipants(currentCompetition, currentUser.uid)) {
-					filteredCompetitions[key] = competitions[key];
-				}
-			}
-			else if(filters[i] === 'age') {
-				var fromAge = parseInt(currentCompetition.fromAge);
-				var toAge = parseInt(currentCompetition.toAge);
-				if(userAge >= fromAge && userAge <= toAge) {
-					filteredCompetitions[key] = competitions[key];
-				}
-			}
-			else if(filters[i] === 'results') {
-				if(currentCompetition.isDone) {
-					filteredCompetitions[key] = competitions[key];
-				}
-			}
-		}
-	}
-
-	return filteredCompetitions;
-}
 
 var searchInParticipants = function(competition, uid) {
 	for(var key in competition.participants) {

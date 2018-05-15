@@ -70,6 +70,51 @@ module.exports = {
 		});
 
 		//console.log('participantsByAges ' + JSON.stringify(sortedParticipants));
+	},
+
+	filterCompetitions : function(competitions, params) {
+		var currentUser = JSON.parse(params.currentUser);
+		var today = moment();
+		var birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
+		var userAge = Math.floor(today.diff(birthDate, 'years', true));
+		var filters = params.filters.split(',');
+
+		var filteredCompetitions = {};
+
+		//console.log('competitions ',  competitions);
+		//console.log('params ',  params);
+
+		for(var key in competitions) {
+			var currentCompetition = competitions[key];
+			//console.log('currentCompetition ',  currentCompetition);
+
+			for(var i = 0; i < filters.length; i++) {
+				switch(filters[i]) {
+					case 'uid': {
+						if(searchInParticipants(currentCompetition, currentUser.uid)) {
+							filteredCompetitions[key] = competitions[key];
+						}
+						break;
+					}
+					case 'age': {
+						var fromAge = parseInt(currentCompetition.fromAge);
+						var toAge = parseInt(currentCompetition.toAge);
+						if(userAge >= fromAge && userAge <= toAge) {
+							filteredCompetitions[key] = competitions[key];
+						}
+						break;
+					}
+					case 'isDone': {
+						if(currentCompetition.isDone) {
+							filteredCompetitions[key] = competitions[key];
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		return filteredCompetitions;
 	}
 
 }

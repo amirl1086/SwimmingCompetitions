@@ -64,7 +64,6 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 .build();
 
         this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
     }
 
     @Override
@@ -138,13 +137,12 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
-                showProgressDialog("מבצע כניסה...");
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             }
             catch (ApiException e) {
                 showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
+                hideProgressDialog();
             }
         }
     }
@@ -178,7 +176,6 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 else {
                     switchToMainMenuActivity();
                 }
-
             }
             else {
                 showToast("שגיאה בכניסה למערכת, נסה שוב");
@@ -212,6 +209,8 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     }
 
     public void googleSignIn() {
+        showProgressDialog("מבצע כניסה...");
+
         Intent signInIntent = this.mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
