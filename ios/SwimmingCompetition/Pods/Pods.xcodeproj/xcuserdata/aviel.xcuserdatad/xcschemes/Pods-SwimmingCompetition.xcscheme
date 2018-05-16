@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DB86155ABC33A7F6476BD2CB41437549"
+               BlueprintIdentifier = "9BB1EA6619B092AC4FE2333C971FA25E"
                BuildableName = "Pods_SwimmingCompetition.framework"
                BlueprintName = "Pods-SwimmingCompetition"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -26,7 +26,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -37,7 +36,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -47,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DB86155ABC33A7F6476BD2CB41437549"
+            BlueprintIdentifier = "9BB1EA6619B092AC4FE2333C971FA25E"
             BuildableName = "Pods_SwimmingCompetition.framework"
             BlueprintName = "Pods-SwimmingCompetition"
             ReferencedContainer = "container:Pods.xcodeproj">

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import GoogleSignIn
 
 class RegisterViewController: UIViewController, UITextFieldDelegate {
     
@@ -29,6 +30,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     var dateToSend = ""
     
     var userType = String()
+    var isGoogleRegister = false
+    var googleUser: GIDGoogleUser! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +47,13 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         productNumber.isHidden = true
         
         activeTextField = firstName
+        
+        if isGoogleRegister {
+            self.firstName.text = googleUser.profile.givenName!
+            self.lastName.text = googleUser.profile.familyName!
+            self.email.text = googleUser.profile.email!
+            self.email.isEnabled = false
+        }
         
         // Do any additional setup after loading the view, typically from a nib.
         let imageView = UIImageView(frame: self.view.bounds)
@@ -115,80 +125,100 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     //Button to register and create the user
     @IBAction func confirmRegister(_ sender: AnyObject) {
-        if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
-            let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else if password.text != passwordConfirmation.text {
-            let alert = UIAlertController(title: nil, message: "הסיסמאות אינן תואמות", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
+        
+        var genderToSend = ""
+        if gender.titleForSegment(at: gender.selectedSegmentIndex)! == "זכר" {
+            genderToSend = "male"
         }
         else {
-            var genderToSend = ""
-            if gender.titleForSegment(at: gender.selectedSegmentIndex)! == "זכר" {
-                genderToSend = "male"
+            genderToSend = "female"
+        }
+        
+        let parameters = [
+            "uid": Auth.auth().currentUser != nil ? Auth.auth().currentUser!.uid : "",
+            "firstName": firstName.text!,
+            "lastName": lastName.text!,
+            "birthDate": birthDate.text!,
+            "phoneNumber": phoneNumber.text!,
+            "gender": genderToSend,
+            "email": email.text!,
+            "password": password.text != nil ? password.text! : "",
+            "passwordConfirmation": passwordConfirmation.text != nil ? passwordConfirmation.text! : "",
+            "type": userType
+            ] as [String: AnyObject]
+        
+        if isGoogleRegister {
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" {
+                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
             }
             else {
-                genderToSend = "female"
-            }
-            
-            let parameters = [
-                "firstName": firstName.text!,
-                "lastName": lastName.text!,
-                "birthDate": birthDate.text!,
-                "phoneNumber": phoneNumber.text!,
-                "gender": genderToSend,
-                "email": email.text!,
-                "password": password.text!,
-                "passwordConfirmation": passwordConfirmation.text!,
-                "type": userType
-                ] as [String: AnyObject]
-            
-            //connect to the server and add a new user
-            Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
-                
-                if response.succeed {
-                    let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-                        alert.dismiss(animated: true, completion: nil)
-                        _ = self.navigationController?.popViewController(animated: true)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
+                Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     
                 }
-                else {
-                    var message = ""
-                    switch(response.data["code"] as! String) {
-                    case "auth/email-already-exists":
-                        message = "כתובת אימייל כבר קיימת"
-                        break;
-                    case "auth/internal-error":
-                        message = "מספר הטלפון לא תקין"
-                        break;
-                    case "auth/invalid-password":
-                        message = "סיסמא חייבת להכיל לפחות 6 תוים"
-                        break;
-                    case "auth/invalid-email":
-                        message = "כתובת אימייל לא חוקית"
-                        break;
-                    default:
-                        message = "שגיאה"
-                        break;
+            }
+        } else {
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
+                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else if password.text != passwordConfirmation.text {
+                let alert = UIAlertController(title: nil, message: "הסיסמאות אינן תואמות", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                
+                
+                Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
+                    
+                    if response.succeed {
+                        let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+                            alert.dismiss(animated: true, completion: nil)
+                            _ = self.navigationController?.popViewController(animated: true)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                        
                     }
-                    let alert = UIAlertController(title: "שגיאה", message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                        alert.dismiss(animated: true, completion: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
+                    else {
+                        var message = ""
+                        switch(response.data["code"] as! String) {
+                        case "auth/email-already-exists":
+                            message = "כתובת אימייל כבר קיימת"
+                            break;
+                        case "auth/internal-error":
+                            message = "מספר הטלפון לא תקין"
+                            break;
+                        case "auth/invalid-password":
+                            message = "סיסמא חייבת להכיל לפחות 6 תוים"
+                            break;
+                        case "auth/invalid-email":
+                            message = "כתובת אימייל לא חוקית"
+                            break;
+                        default:
+                            message = "שגיאה"
+                            break;
+                        }
+                        let alert = UIAlertController(title: "שגיאה", message: message, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                            alert.dismiss(animated: true, completion: nil)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
+                
             }
         }
+        
         
     }
     @IBAction func dateTextBegin(_ sender: Any) {

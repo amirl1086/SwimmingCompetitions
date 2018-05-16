@@ -19,6 +19,8 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        firstName.delegate = self
+        lastName.delegate = self
         activeTextField = firstName
         
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
@@ -26,10 +28,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         showAnimate()
         birthDate.datePickerMode = .date
         birthDate.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
-        
-        firstName.delegate = self
-        lastName.delegate = self
-        
+       
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -87,20 +86,8 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
         }
         else {
-            /*var alert: UIAlertView = UIAlertView(title: "מוסיף משתמש", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
             
-            
-            let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-            loadingIndicator.center = self.view.center;
-            loadingIndicator.hidesWhenStopped = true
-            loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-            loadingIndicator.startAnimating();
-            
-            alert.setValue(loadingIndicator, forKey: "accessoryView")
-            loadingIndicator.startAnimating()
-            
-            alert.show();*/
-            let currentCompetition = (self.parent as! CompetitionDetailsViewController).competition
+            let currentCompetition = (self.parent as! CompetitionDetailsViewController).currentCompetition
             
             let formatDate = DateFormatter()
             formatDate.dateFormat = "dd/MM/YYYY HH:mm"

@@ -22,9 +22,9 @@ class IterationViewController: UIViewController {
     var jsonData: JSON = [:]
     
     var participantsIndex = [Int]()
-    var buttonsArray = [UIButton!]()
-    var timesArray = [UILabel!]()
-    var namesArray = [UILabel!]()
+    var buttonsArray = [UIButton?]()
+    var timesArray = [UILabel?]()
+    var namesArray = [UILabel?]()
     
     var timer = Timer()
     var validTimer = false
@@ -39,7 +39,9 @@ class IterationViewController: UIViewController {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
        
-        initIteration()
+        //initIteration()
+        
+        startNewIteration()
         
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
@@ -112,9 +114,9 @@ class IterationViewController: UIViewController {
     func createButtonsLabels() {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
         var start:Int = 0
-        for i in 0...iterationNumber-1 {
+        for i in 0...participantsIndex.count-1 {
             let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y+self.resetButtonOutlet.frame.height+10), width: width, height: 30))
-            name.text = "אין מתחרה"
+            name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
             name.textAlignment = .center
             
             let time = UILabel(frame: CGRect(x: start, y: Int(name.frame.origin.y+name.frame.height+10), width: width, height: 30))
@@ -131,15 +133,8 @@ class IterationViewController: UIViewController {
             button.tag = i
             button.setTitle("עצור", for: .normal)
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
-            button.isEnabled = false
             self.view.addSubview(button)
             
-            if participantsIndex.count > i {
-                name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
-                //time.tag = participantsIndex[i]
-                //button.tag = participantsIndex[i]
-                button.isEnabled = true
-            }
             self.view.addSubview(name)
             subviews.append(name)
             subviews.append(time)
@@ -155,7 +150,7 @@ class IterationViewController: UIViewController {
     
     @objc func stopUserTimeButton(sender: UIButton!) {
         
-        self.timesArray[sender.tag].text = "\(self.timeLabel.text!)"
+        self.timesArray[sender.tag]?.text = "\(self.timeLabel.text!)"
         
         competition.currentParticipants[participantsIndex[sender.tag]].setCompeted(competed: true)
         competition.currentParticipants[participantsIndex[sender.tag]].score = self.userTime
@@ -173,7 +168,7 @@ class IterationViewController: UIViewController {
     
     @objc func labelTapped(gesture : UITapGestureRecognizer) {
         let id = gesture.view!.tag
-        let alert = UIAlertController(title: "\(namesArray[id].text!)", message: "\(timesArray[id].text!)", preferredStyle: .alert)
+        let alert = UIAlertController(title: "\(String(describing: namesArray[id]?.text!))", message: "\(String(describing: timesArray[id]?.text!))", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
@@ -214,24 +209,10 @@ class IterationViewController: UIViewController {
     }
     
     func iterationIsDone() {
-        /*var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
-        
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = self.view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        
-        alert.show();*/
+    
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.participantsIndex.count {
-           
-            
             let id = self.competition.currentParticipants[participantsIndex[i]].uid
             let firstName = self.competition.currentParticipants[participantsIndex[i]].firstName
             let lastName = self.competition.currentParticipants[participantsIndex[i]].lastName
@@ -246,7 +227,6 @@ class IterationViewController: UIViewController {
             }
         }
         
-        //sendString += "}\"}" as String
         var participantsString = ""
         for participants in competition.participants {
             participantsString += "\\\"\(participants.uid)\\\":{\\\"birthDate\\\":\\\"\(participants.birthDate)\\\",\\\"firstName\\\":\\\"\(participants.firstName)\\\",\\\"lastName\\\":\\\"\(participants.lastName)\\\",\\\"gender\\\":\\\"\(participants.gender)\\\",\\\"score\\\":\\\"\(participants.score)\\\",\\\"id\\\":\\\"\(participants.uid)\\\",\\\"competed\\\":\\\"\(participants.competed)\\\"}"
@@ -254,9 +234,9 @@ class IterationViewController: UIViewController {
                 participantsString += ","
             }
         }
+        
         sendString += "}\",\"participants\":\"{\(participantsString)}\"}"
         
-    
         let param = ["competition":sendString] as [String:AnyObject]
         
         
@@ -272,98 +252,20 @@ class IterationViewController: UIViewController {
                 self.navigationItem.rightBarButtonItem = resultsButton
                 
                 self.jsonData = response.data
-               
                 
-            }
-            else {
+            } else {
                 var competition: Competition!
                 let data = response.data
                 competition = Competition(json: data, id: self.competition.getId())
                 self.competition = competition
-                
+                self.startNewIteration()
             }
-            self.startNewIteration()
-            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
         }
     }
     
     @objc func goToResults() {
         performSegue(withIdentifier: "goToCompetitionResults", sender: self)
     }
-   
-    func initIteration() {
-        /*var alert: UIAlertView = UIAlertView(title: "מחפש מתחרים", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
-        
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = self.view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        
-        alert.show();*/
-        let param = [
-            "competitionId": competition.getId()
-            ] as [String:AnyObject]
-        
-        Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
-            if response.data["type"] as? String == "resultsMap" {
-                let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
-                
-                let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
-                self.navigationItem.rightBarButtonItem = resultsButton
-                
-                self.jsonData = response.data
-                
-            }
-            else {
-                var competition: Competition!
-                let data = response.data
-                competition = Competition(json: data, id: self.competition.getId())
-                self.competition = competition
-                
-            }
-            self.startNewIteration()
-            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
-            
-        })
-    }
     
 }
 
-/*var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"currentParticipants\":\"{"
- 
- for i in 0..<self.participantsIndex.count {
- print("im here")
- print(participantsIndex.count)
- let id = self.competition.participants[participantsIndex[i]].uid
- let firstName = self.competition.participants[participantsIndex[i]].firstName
- let lastName = self.competition.participants[participantsIndex[i]].lastName
- let birthDate = self.competition.participants[participantsIndex[i]].birthDate
- let gender = self.competition.participants[participantsIndex[i]].gender
- let score = self.competition.participants[participantsIndex[i]].score
- let competed = self.competition.participants[participantsIndex[i]].competed
- 
- sendString += "\\\"\(id)\\\":\\\"{\\\\\\\"firstName\\\\\\\":\\\\\\\"\(firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(lastName)\\\\\\\",\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(birthDate)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(id)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(competed)\\\\\\\"}\\\""
- if i != self.participantsIndex.count-1 {
- sendString += ","
- }
- }
- 
- //sendString += "}\"}" as String
- var participantsString = ""
- for participants in competition.participants {
- participantsString += "\\\"\(participants.uid)\\\":\\\"{\\\\\\\"birthDate\\\\\\\":\\\\\\\"\(participants.birthDate)\\\\\\\",\\\\\\\"firstName\\\\\\\":\\\\\\\"\(participants.firstName)\\\\\\\",\\\\\\\"lastName\\\\\\\":\\\\\\\"\(participants.lastName)\\\\\\\",\\\\\\\"gender\\\\\\\":\\\\\\\"\(participants.gender)\\\\\\\",\\\\\\\"score\\\\\\\":\\\\\\\"\(participants.score)\\\\\\\",\\\\\\\"id\\\\\\\":\\\\\\\"\(participants.uid)\\\\\\\",\\\\\\\"competed\\\\\\\":\\\\\\\"\(participants.competed)\\\\\\\"}\\\""
- 
- if participants.uid != competition.participants.last?.uid {
- participantsString += ","
- }
- }
- sendString += "}\",\"participants\":\"{\(participantsString)}\"}"*/

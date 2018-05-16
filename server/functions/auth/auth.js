@@ -55,6 +55,7 @@ module.exports =  {
 	},
 
 	getUser: function(uid, response, callback) {
+		console.log('uid ', uid)
 		firebaseDB_Service.getUser(uid, function(sucess, result) {
 			if(sucess) {
 				var currentUser = result;

@@ -10,10 +10,11 @@ import UIKit
 
 class CompetitionsViewController: UIViewController {
     
-   
-    @IBOutlet weak var tableView: UITableView!
-    var user: User!
+    var currenUser: User!
     var competitions = [Competition]()
+    var controllerType = ""
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,10 +24,11 @@ class CompetitionsViewController: UIViewController {
         
         addButtonView()
         getCompetitionsData()
+        
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(imageView, at: 0)
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        
         self.tableView.backgroundColor = UIColor.clear
         
     }
@@ -40,20 +42,25 @@ class CompetitionsViewController: UIViewController {
         if segue.identifier == "goToCompetitionDetails" {
             let nextView = segue.destination as! CompetitionDetailsViewController
             let competition = sender as? Competition
-            nextView.competition = competition
-            nextView.currentUser = self.user
+            nextView.currentCompetition = competition
+            nextView.currentUser = self.currenUser
         }
     }
     
     func addButtonView() {
-        if(user.type == "coach") {
+        /*if(currenUser.type == "coach") {
             let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCompetition))
             self.navigationItem.rightBarButtonItem = addButton
-        }
+        }*/
+        
+        let addButton = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(addCompetition(_:)))
+        self.navigationItem.rightBarButtonItem = addButton
     }
     
-    @objc func addCompetition() {
-        self.performSegue(withIdentifier: "goToAddCompetition", sender: self)
+    @objc func addCompetition(_ sender: UIBarButtonItem) {
+        //self.performSegue(withIdentifier: "goToAddCompetition", sender: self)
+        self.tableView.isEditing = !self.tableView.isEditing
+        sender.title = (self.tableView.isEditing) ? "done" : "edit"
     }
     
     func getCompetitionsData() {
@@ -72,7 +79,11 @@ class CompetitionsViewController: UIViewController {
         
         alert.show();*/
         
-        let parameters = ["currentUser": ["uid":user.uid]] as [String: AnyObject]
+        let parameters = [
+            "currentUser": [
+                "uid":currenUser.uid
+            ]
+        ] as [String: AnyObject]
      
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
@@ -131,6 +142,31 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            competitions.remove(at: indexPath.item)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }*/
+    
+    func importantAction(at indexPath: IndexPath) -> UIContextualAction {
+        let competitions = self.competitions[indexPath.row]
+        let action = UIContextualAction(style: .normal, title: "מחק") { (action, view, completion) in
+            self.competitions.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            completion(true)
+        }
+        action.image = #imageLiteral(resourceName: "clock")
+        action.backgroundColor = .green
+        
+        return action
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = importantAction(at: indexPath)
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
 }

@@ -11,13 +11,14 @@ import Firebase
 
 class CompetitionDetailsViewController: UIViewController {
     
-    var competition: Competition!
+    var currentCompetition: Competition!
     var currentUser: User!
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var styleNrangeLabel: UILabel!
     @IBOutlet weak var numOfParticipantsLabel: UILabel!
+    
     @IBOutlet var joinButtonOutlet: RoundButton!
     @IBOutlet var tempJoinButtonOutlet: RoundButton!
     @IBOutlet var editButtonOutlet: UIButton!
@@ -38,28 +39,17 @@ class CompetitionDetailsViewController: UIViewController {
             editButtonOutlet.isHidden = true
         }
         
+
+        nameLabel.text = currentCompetition.name
+        dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
+        styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
+        numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         
-        nameLabel.text = competition.name
-        //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
-        dateLabel.text = Date().getDate(fullDate: competition.activityDate)
-        styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
-        numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
-        
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-       // navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")
         self.view.insertSubview(imageView, at: 0)
         
-        var exist = false
-        for part in competition.participants {
-            if part.uid == self.currentUser.uid {
-                exist = true
-                break
-            }
-        }
-        
-        if exist {
+        if userExist() {
             joinButtonOutlet.setTitle("בטל רישום", for: .normal)
             joinButtonOutlet.backgroundColor = UIColor.red
             joinButtonOutlet.tag = 1
@@ -70,28 +60,65 @@ class CompetitionDetailsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        nameLabel.text = competition.name
-        //dateLabel.text = "\(competition.activityDate) ביום \(getDay())"
-        //dateLabel.text = Date().getDate(fullDate: competition.activityDate)
-        styleNrangeLabel.text = "\(competition.length) מטר \(competition.swimmingStyle)"
-        numOfParticipantsLabel.text = "\(competition.numOfParticipants)"
-    }
-    
-    @objc func goToStart() {
-        performSegue(withIdentifier: "goToStartCompetition", sender: self)
+        nameLabel.text = currentCompetition.name
+        styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
+        numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToStartCompetition" {
             let nextView = segue.destination as! IterationViewController
-            nextView.competition = self.competition
+            nextView.competition = self.currentCompetition
         }
+    }
+    
+    @objc func goToStart() {
+        
+        let param = [
+            "competitionId": currentCompetition.getId()
+            ] as [String:AnyObject]
+        
+        Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
+            if response.data["type"] as? String == "resultsMap" {
+                let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+                
+                //let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
+                //self.navigationItem.rightBarButtonItem = resultsButton
+                
+                //self.jsonData = response.data
+                
+            }
+            else {
+                var competition: Competition!
+                let data = response.data
+                competition = Competition(json: data, id: self.currentCompetition.getId())
+                let iterationView = IterationViewController()
+                iterationView.competition = competition
+                self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
+            }
+        })
+        
+        
+    }
+    
+    //Function to check if the user already sign up to current competition
+    func userExist() -> Bool {
+        for part in currentCompetition.participants {
+            if part.uid == self.currentUser.uid {
+                return true
+            }
+        }
+        return false
     }
     
     @IBAction func joinButton(_ sender: UIButton) {
         
         let parameters = [
-            "competitionId": self.competition.id,
+            "competitionId": self.currentCompetition.id,
             "firstName": self.currentUser.firstName,
             "lastName": self.currentUser.lastName,
             "birthDate": self.currentUser.birthDate,
@@ -147,14 +174,14 @@ class CompetitionDetailsViewController: UIViewController {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "addCompetitionID") as! AddCompetitionViewController
         viewController.delegate = self
         viewController.isEdit = true
-        viewController.competitionName = competition.getName()
-        viewController.style = competition.getSwimmingStyle()
-        viewController.range = Int(competition.getLength())!
-        viewController.numOfParticipants = competition.getNumOfParticipants()
-        viewController.dateToSend = competition.getActivityDate()
-        viewController.fromAge = Int(competition.getFromAge())!
-        viewController.toAge = Int(competition.getToAge())!
-        viewController.editedCompetitionId = competition.getId()
+        viewController.competitionName = currentCompetition.getName()
+        viewController.style = currentCompetition.getSwimmingStyle()
+        viewController.range = Int(currentCompetition.getLength())!
+        viewController.numOfParticipants = currentCompetition.getNumOfParticipants()
+        viewController.dateToSend = currentCompetition.getActivityDate()
+        viewController.fromAge = Int(currentCompetition.getFromAge())!
+        viewController.toAge = Int(currentCompetition.getToAge())!
+        viewController.editedCompetitionId = currentCompetition.getId()
         
             
             if let navigator = navigationController {
@@ -167,13 +194,13 @@ class CompetitionDetailsViewController: UIViewController {
 
 extension CompetitionDetailsViewController: dataProtocol {
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String) {
-        self.competition.setName(name: name)
-        self.competition.setActivityDate(activityDate: activityDate)
-        self.competition.setSwimmingStyle(swimmingStyle: swimmingStyle)
-        self.competition.setLength(length: length)
-        self.competition.setNumOfParticipants(numOfParticipants: numOfParticipants)
-        self.competition.setFromAge(fromAge: fromAge)
-        self.competition.setToAge(toAge: toAge)
+        self.currentCompetition.setName(name: name)
+        self.currentCompetition.setActivityDate(activityDate: activityDate)
+        self.currentCompetition.setSwimmingStyle(swimmingStyle: swimmingStyle)
+        self.currentCompetition.setLength(length: length)
+        self.currentCompetition.setNumOfParticipants(numOfParticipants: numOfParticipants)
+        self.currentCompetition.setFromAge(fromAge: fromAge)
+        self.currentCompetition.setToAge(toAge: toAge)
     }
     
     

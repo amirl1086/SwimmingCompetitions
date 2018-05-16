@@ -19,7 +19,6 @@ class Service {
     
     private init() {}
     
-    
     func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         
         var alert: UIAlertView = UIAlertView(title: activityMessage(path: path), message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
@@ -30,7 +29,10 @@ class Service {
         loadingIndicator.startAnimating();
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
-        alert.show();
+        if path != "getUser" {
+            alert.show();
+        }
+        
         
         
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else {
@@ -39,7 +41,7 @@ class Service {
             
         }
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
-            
+        
             alert.dismiss(withClickedButtonIndex: -1, animated: true)
             switch(response.result) {
             case .success(let json):
@@ -48,12 +50,9 @@ class Service {
             case .failure(let error):
                     print(error)
                     
-                    if error._code == -1009 {
-                        
-                    }
-                    if error._code == NSURLErrorTimedOut {
-                        return
-                }
+                    let alert = self.systemErrorMessage(data: error._code)
+                    UIApplication.top()?.present(alert, animated: true, completion: nil)
+                    break;
             }
             guard let json = response.result.value as? JSON else{return}
             do {
@@ -97,6 +96,28 @@ class Service {
             break;
         }
         return message
+    }
+    
+    func systemErrorMessage(data: Int) -> UIAlertController {
+        var title = ""
+        var message = ""
+        
+        switch(data) {
+        case -1009:
+            title = "בעיה בחיבור הרשת";
+            message = "בדוק שהינך מחובר לרשת ואתחל את האפליקציה";
+            break;
+        default:
+            title = "שגיאת מערכת";
+            message = "נא לאתחל את האפליקציה";
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+            exit(0)
+        }))
+        return alert
     }
     
     func errorMessage(data: NSError) -> UIAlertController {
@@ -143,5 +164,20 @@ struct responseData {
         }
         
         self.succeed = success!
+    }
+}
+
+extension UIApplication {
+    static func top(base: UIViewController? = UIApplication.shared.delegate?.window??.rootViewController) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return top(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return top(base:tab.selectedViewController)
+        }
+        if let presented = base?.presentedViewController {
+            return top(base:presented)
+        }
+        return base
     }
 }
