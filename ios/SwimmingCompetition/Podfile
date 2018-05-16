@@ -13,6 +13,8 @@ target 'SwimmingCompetition' do
     pod 'Firebase/Database'
     pod 'SwiftyJSON'
     pod 'Alamofire'
+    pod 'GoogleSignIn'
+    pod 'Google'
 
 
   target 'SwimmingCompetitionTests' do

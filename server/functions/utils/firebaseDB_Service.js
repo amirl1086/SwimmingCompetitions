@@ -1,8 +1,9 @@
 
-const admin = require('firebase-admin');
+var admin = require('firebase-admin');
 var utilities = require('./utils.js');
 var filters = require('./filters.js');
 var authentication = require('../auth/auth.js');
+console.log('authentication 1 ', authentication);
 var moment = require('moment');
 
 module.exports = {
@@ -36,23 +37,46 @@ module.exports = {
 		});
 	},
 
+	addChildToParent: function(params, response) {
+		console.log('params ', params);
+		var birthDate = params.birthDate;
+		var email = params.email;
+		getCollectionByFilter('users', 'email', params.email, function(success, result) {
+			var child = result;
+			console.log('child ', child);
+			if(!Object.keys(child).length) {
+				utilities.sendResponse(response, 'no_such_email', null);
+			}
+			else if(child.birthDate === params.birthDate) {
+				utilities.sendResponse(response, null, child);
+			}
+			else {
+				utilities.sendResponse(response, 'birth_date_dont_match', null);
+			}
+		})
+	},
+
 	updateFirebaseUser: function(params, response) {
-		var db = admin.database();
-		var usersRef = db.ref('users/' + params.uid);
+		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then(function(userRecord) {
+		    var db = admin.database();
+			var usersRef = db.ref('users/' + params.uid);
 
-		usersRef.update({
-			'firstName': params.firstName,
-			'lastName': params.lastName,
-			'birthDate': params.birthDate || '',
-			'phoneNumber': params.phoneNumber || '',
-			'gender': params.gender || '',
-			'type': params.type
-		});
+			usersRef.update({
+				'firstName': params.firstName,
+				'lastName': params.lastName,
+				'birthDate': params.birthDate || '',
+				'gender': params.gender || '',
+				'type': params.type
+			});
 
-		usersRef.on('value', function(snapshot) {
-			utilities.sendResponse(response, null, snapshot.val());
-		}, function(error) {
-			utilities.sendResponse(response, error, null);
+			usersRef.on('value', function(snapshot) {
+				utilities.sendResponse(response, null, snapshot.val());
+			}, function(error) {
+				utilities.sendResponse(response, error, null);
+			});
+		})
+		.catch(function(error) {
+		    console.log("Error updating user:", error);
 		});
 	},
 
@@ -67,7 +91,7 @@ module.exports = {
 		});
 	},
 
-	getUsersByFilter: function(params, response) {
+	getUsersByFilters: function(params, response) {
 		var db = admin.database();
 		var usersRef = db.ref('users');
 
@@ -134,7 +158,7 @@ module.exports = {
 	getPersonalResults: function(params, response) {
 		var uid = params.uid;
 		var db = admin.database();
-
+		console.log('authentication 2 ', authentication);
 		authentication.getUser(uid, null, function(sucess, result) {
 			if(sucess) {
 				var personalResultsRef = db.ref('personalResults/');
@@ -249,37 +273,24 @@ module.exports = {
 		getCompetitionById(params.competitionId, function(success, result) {
 			if(success) {
 				var competition = result;
-				//console.log('competition ', JSON.stringify(competition));
-				console.log('initCompetitionForIterations allParticipants ', JSON.stringify(Object.keys(competition.participants).length));
-				
 				var newParticipants = filters.filterCompetedParticipants(competition.participants);
-				console.log('initCompetitionForIterations newParticipants ', JSON.stringify(Object.keys(newParticipants).length));
 
 				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
 					getCompetitionResults(competition, function(success, result) {
 						if(success) {
 							var resultsAgeMap = sortPersonalResults(competition, result);
-							console.log('initCompetitionForIterations resultsAgeMap ', JSON.stringify(resultsAgeMap));
 							resultsAgeMap.type = 'resultsMap';
 							utilities.sendResponse(response, null, resultsAgeMap);
 						}
 						else {
 							utilities.sendResponse(response, result, null);
 						}
-						
 					});
 				}
 				else {
-					
 					var sortedParticipants = filters.sortParticipantsByAge(newParticipants);
-					console.log('initCompetitionForIterations sortedParticipants ', JSON.stringify(sortedParticipants));
-
 					filters.removeBlankSpots(competition, sortedParticipants);
-					console.log('initCompetitionForIterations removeBlankSpots ', JSON.stringify(sortedParticipants));
-
 					competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
-					console.log('initCompetitionForIterations currentParticipants ', JSON.stringify(competition.currentParticipants));
-
 					competition.type = 'newIteration';
 					utilities.sendResponse(response, null, competition);
 				}
@@ -291,6 +302,17 @@ module.exports = {
 		});
 	}
 };
+
+var getCollectionByFilter = function(collectionName, filter, value, callback) {
+	var db = admin.database();
+	var collectionRef = db.ref(collectionName);
+
+	collectionRef.orderByChild(filter).equalTo(value).on('value', function(snapshot) {
+		callback(true, snapshot.val());
+	}, function(error) {
+		callback(false, error);
+	});
+}
 
 var joinToCompetition = function(params, callback) {
 	var db = admin.database();
@@ -371,27 +393,17 @@ var getNewParticipants = function(competition, sortedParticipants) {
 	var newParticipants;
 	var currentAge = parseInt(competition.toAge);
 	var fromAge = parseInt(competition.fromAge);
-	//console.log('fromAge ', fromAge);
 
 	while(currentAge >= 0) {
-		//console.log('currentAge ', currentAge);
-
 		if(sortedParticipants[currentAge.toString()]) {
-			//console.log('sortedParticipants[currentAge.toString()] ', JSON.stringify(sortedParticipants[currentAge.toString()]));
-
-			//console.log('males.length ' + sortedParticipants[currentAge.toString()].males.length);
-			//console.log('females.length ' + sortedParticipants[currentAge.toString()].females.length);
-
 			if(sortedParticipants[currentAge.toString()].males.length) {
 				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].males, parseInt(competition.numOfParticipants));
-				//console.log('males newParticipants ', JSON.stringify(newParticipants));
 				if(Object.keys(newParticipants).length) {
 					break;
 				}
 			}
 			if(sortedParticipants[currentAge.toString()].females.length) {
 				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].females, parseInt(competition.numOfParticipants));
-				//console.log('females newParticipants ', JSON.stringify(newParticipants));
 				if(Object.keys(newParticipants).length) {
 					break;
 				}
@@ -400,7 +412,6 @@ var getNewParticipants = function(competition, sortedParticipants) {
 		}
 		currentAge--;
 	}
-	console.log('newParticipants ', newParticipants);
 	return newParticipants;
 }
 
@@ -408,16 +419,12 @@ var getNewParticipants = function(competition, sortedParticipants) {
 var getNewParticipantsFromGendger = function(participants, numOfParticipants) {
 	var newParticipants = {};
 	var totalSelected = 0;
-	//console.log('getNewParticipantsFromGendger participants ', JSON.stringify(participants));
-	//console.log('getNewParticipantsFromGendger numOfParticipants ', numOfParticipants);
 	for(var i = 0; i < participants.length; i++) {
-		//console.log('getNewParticipantsFromGendger participant[i] ', participants[i]);
 		if((!participants[i].competed || participants[i].competed === 'false') && totalSelected < numOfParticipants) {
 			newParticipants[participants[i].id] = participants[i];
 			totalSelected++
 		}
 	}
-	//console.log('getNewParticipantsFromGendger newParticipants ', newParticipants)
 	return newParticipants;
 }
 
@@ -437,7 +444,7 @@ var getCompetitionById = function(competitionId, callback) {
 			//competition.participants = {};
 			for(var key in competition.participants) {
 				competition.participants[key].uid = competition.participants[key].id;
-				delete competition.participants[key].id;
+				devare competition.participants[key].id;
 			}
 			var key = db.ref('competitions').push().key;
 			competitionsRef = db.ref('competitions/' + key);
@@ -491,26 +498,20 @@ var updateCompetitionIteration = function(competition, callback) {
 	var db = admin.database();
 	var competitionsRef = db.ref('competitions/' + competition.id + '/');
 
-	//console.log('updateCompetitionIteration competition ', competition);
 	competition.participants = JSON.parse(competition.participants);
 	competition.currentParticipants = JSON.parse(competition.currentParticipants);
 
 	for(var key in competition.participants) {
-		//console.log('competition.participants[key] ', competition.participants[key]);
 		var competedParticipant = competition.currentParticipants[key];
-		//console.log('competition.participants[key] ', competition.participants[key]);
 		if(competition.currentParticipants[key]) {
-			//console.log('competed ', competition.participants[key]);
 			competition.participants[key].score = competition.currentParticipants[key].score;
 			competition.participants[key].competed = 'true';
 		}
 	}
-	//delete competition.currentParticipants;
 
 	competitionsRef.update(competition);
 
 	competitionsRef.on('value', function(snapshot) {
-		//console.log('updateCompetitionIteration snapshot ', JSON.stringify(snapshot.val()));
 		callback(snapshot.val());
 	}, function(error) {
 		callback(null);

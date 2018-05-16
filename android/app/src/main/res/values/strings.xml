@@ -85,4 +85,9 @@
     <string name="google_sign_in">כניסה באמצעות גוגל</string>
     <string name="log_out">יציאה</string>
     <string name="save_details">שמור פרטים</string>
+    <string name="birth_date_txt">תאריך לידה:</string>
+    <string name="name_txt">שם:</string>
+    <string name="add_new_child">הוסף ילד לחשבון שלי</string>
+    <string name="add_child_to_your_account">הוסף ילד לחשבונך</string>
+    <string name="confirm">אישור</string>
 </resources>

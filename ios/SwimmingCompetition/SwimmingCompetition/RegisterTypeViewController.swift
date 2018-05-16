@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class RegisterTypeViewController: UIViewController {
     
     //user type
     var type = String()
+    var googleUser: GIDGoogleUser! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,10 @@ class RegisterTypeViewController: UIViewController {
         if segue.identifier == "goToRegister" {
             let passData = segue.destination as! RegisterViewController
             passData.userType = type
+            if (googleUser != nil) {
+                passData.googleUser = self.googleUser
+                passData.isGoogleRegister = true
+            }
         }
         
         

@@ -41,6 +41,10 @@ exports.logIn = functions.https.onRequest(function(request, response) {
 	authentication.logIn(request.body.idToken, response);
 });
 
+exports.updateFirebaseUser = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.updateFirebaseUser(request.body, response);
+});
+
 /* ================================== */
 
 
@@ -69,7 +73,11 @@ exports.initCompetitionForIterations = functions.https.onRequest(function(reques
 });
 
 exports.getUsersByParentId = functions.https.onRequest(function(request, response) {
-	firebaseDB_Service.getUsersByFilter(request.body, response);
+	firebaseDB_Service.getUsersByFilters(request.body, response);
+});
+
+exports.addChildToParent = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.addChildToParent(request.body, response);
 });
 
 exports.getPersonalResults = functions.https.onRequest(function(request, response) {
@@ -85,9 +93,5 @@ exports.getPersonalResults = functions.https.onRequest(function(request, respons
 
 exports.cancelRegistration = functions.https.onRequest(function(request, response) {
 	firebaseDB_Service.cancelRegistration(request.body, response);
-});
-
-exports.updateFirebaseUser = functions.https.onRequest(function(request, response) {
-	firebaseDB_Service.updateFirebaseUser(request.body, response);
 });
 /* ================================ */

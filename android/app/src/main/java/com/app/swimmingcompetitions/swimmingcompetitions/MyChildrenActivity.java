@@ -17,6 +17,7 @@ import java.util.Iterator;
 public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser;
+    private ArrayList<Participant> children;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,30 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
             if (result != null) {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
+                if(dataObj != null) {
+                    this.children = new ArrayList<>();
 
-                /*ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.competition_list_item, competitions);
-                ListView listView = findViewById(R.id.children_list);
-                listView.setAdapter(childrenListAdapter);*/
+                    Iterator<String> childrenIds = dataObj.keys();
+                    while (childrenIds.hasNext()) {
+                        String currentId = childrenIds.next();
+                        JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
+                        this.children.add(new Participant(currentId, currentCompetition));
+                    }
+
+                    ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.child_list_item, this.children);
+                    ListView listView = findViewById(R.id.children_list);
+                    listView.setAdapter(childrenListAdapter);
+                }
+                else {
+                    showToast("אין לך ילדים רשומים, לחץ על הוסף ילד לחשבון");
+                }
+                /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        selectedCompetition = competitions.get(position);
+                        switchToViewCompetitionActivity();
+                    }
+                });*/
             }
             else {
                 showToast("שגיאה בטעינת המידע מהמערכת, נסה לאתחל את האפליקציה");
@@ -81,6 +102,8 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
     }
 
     public void switchToAddChildToParentActivity(View view) {
-
+        Intent googleRegIntent = new Intent(this, AddChildToParentActivity.class);
+        googleRegIntent.putExtra("currentUser", this.currentUser);
+        startActivity(googleRegIntent);
     }
 }

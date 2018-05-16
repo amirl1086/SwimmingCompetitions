@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +26,8 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     private JSON_AsyncTask jsonAsyncTaskPost;
     private EditText firstName;
     private EditText lastName;
-    private EditText eMail;
+    private EditText email;
     private EditText password;
-    private EditText phoneNumber;
     private EditText passwordConfirmation;
     private TextView dateView;
     private int year, month, day;
@@ -57,9 +55,8 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         this.spinner = findViewById(R.id.register_gender);
         this.firstName = findViewById(R.id.register_first_name);
         this.lastName = findViewById(R.id.register_last_name);
-        this.eMail = findViewById(R.id.register_email);
+        this.email = findViewById(R.id.register_email);
         this.password = findViewById(R.id.register_password);
-        this.phoneNumber = findViewById(R.id.mobile_phone_number);
         this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
         Button birthDateButton = findViewById(R.id.register_birth_date);
 
@@ -124,9 +121,8 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             genderText = spinner.getSelectedItem().toString();
         }
 
-        String eMailText = this.eMail.getText().toString();
+        String eMailText = this.email.getText().toString();
         String passwordText = this.password.getText().toString();
-        String phoneNumberText = this.phoneNumber.getText().toString();
         String passwordConfirmationText = this.passwordConfirmation.getText().toString();
 
         JSONObject registerData = new JSONObject();
@@ -135,7 +131,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             registerData.put("urlSuffix", "/addNewUser");
             registerData.put("httpMethod", "POST");
             registerData.put("email", eMailText);
-            registerData.put("phoneNumber", phoneNumberText);
             registerData.put("password", passwordText);
             registerData.put("passwordConfirmation", passwordConfirmationText);
             registerData.put("firstName", firstNameText);
@@ -177,6 +172,10 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             showDate(year, month + 1, day);
         }
     };
+
+    private void showDate(int year, int month, int day) {
+        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+    }
 
     @Override
     public void processFinish(String result) {
@@ -222,10 +221,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         intent.putExtra("newParticipant", newUser.toString());
         startActivity(intent);
-    }
-
-    private void showDate(int year, int month, int day) {
-        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
     }
 
 }

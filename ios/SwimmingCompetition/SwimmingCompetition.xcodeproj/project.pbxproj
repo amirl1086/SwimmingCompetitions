@@ -16,6 +16,7 @@
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
 		3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */; };
+		304C621820A839840073E490 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304C621720A839840073E490 /* NavigationController.swift */; };
 		305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */; };
 		305EAF532013F1420059C789 /* IterationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF522013F1420059C789 /* IterationViewController.swift */; };
 		3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068F8D820061DBD009518AD /* CompetitionsViewController.swift */; };
@@ -73,6 +74,7 @@
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
 		3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempRegPopUpViewController.swift; sourceTree = "<group>"; };
+		304C621720A839840073E490 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		30541B602002D9940080CC58 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
 		305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		305EAF522013F1420059C789 /* IterationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IterationViewController.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 				30D9EBEF2001BEFC00A89A92 /* Model */,
 				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
+				304C621720A839840073E490 /* NavigationController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
 				3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */,
 				30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */,
@@ -416,6 +419,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
@@ -426,6 +430,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
@@ -522,9 +527,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -589,6 +597,7 @@
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
 				30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */,
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,
+				304C621820A839840073E490 /* NavigationController.swift in Sources */,
 				30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */,
 				3096CDD11FF855A00045E0D6 /* User.swift in Sources */,
 				30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */,

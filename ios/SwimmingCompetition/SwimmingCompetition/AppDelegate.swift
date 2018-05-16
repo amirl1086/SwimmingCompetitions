@@ -9,9 +9,11 @@
 import UIKit
 import CoreData
 import Firebase
+import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+    
 
     var window: UIWindow?
 
@@ -20,8 +22,104 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         FirebaseApp.configure()
+        
+        //new
+        GIDSignIn.sharedInstance().clientID = "197819058733-uua0nj6o4j2cjuuk3dlbt75anavj59cl.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().delegate = self
+       
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        
+        window?.rootViewController = NavigationController()
+        
+        //
         return true
     }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if let error = error {
+            print("\(error.localizedDescription)")
+        } else {
+            let googleUser = user
+            
+            guard let auth = user.authentication else {return}
+            let credential = GoogleAuthProvider.credential(withIDToken: auth.idToken, accessToken: auth.accessToken)
+            
+            Auth.auth().signIn(with: credential) { (user, error) in
+                if error != nil {
+                    print("error: \(error!)")
+                } else {
+                    
+                    user?.getIDToken(completion: { (token, error) in
+                        if error != nil {
+                            
+                        }
+                        else {
+                            let parameters = [
+                                "idToken": token!
+                                ] as [String: AnyObject]
+                            Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
+                                
+                                let sb = UIStoryboard(name: "Main", bundle: nil)
+                                
+                                if response.data["uid"] == nil {
+                                    Service.shared.connectToServer(path: "logIn", method: .post, params: parameters, completion: { (response) in
+                                        if response.succeed {
+                                            if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
+                                                registerView.googleUser = googleUser
+                                                let root = self.window!.rootViewController as! UINavigationController
+                                                root.pushViewController(registerView, animated: true)
+                                            }
+                                        }
+                                    })
+                                    
+                                } else if response.data["type"] as! String == "" {
+                                    if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
+                                        registerView.googleUser = googleUser
+                                        let root = self.window!.rootViewController as! UINavigationController
+                                        root.pushViewController(registerView, animated: true)
+                                    }
+                                } else {
+                                    if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                                        UserDefaults.standard.set(true, forKey: "loggedIn")
+                                        UserDefaults.standard.synchronize()
+                                        mainView.currentUser = User(json: response.data)
+                                        let root = self.window!.rootViewController as! UINavigationController
+                                        root.pushViewController(mainView, animated: true)
+                                    }
+                                    
+                                }
+                            }
+                            
+                        }
+                    })
+                }
+            }
+            // ...
+        }
+    }
+    
+    
+    //new
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
+              withError error: Error!) {
+        // Perform any operations when the user disconnects from app here.
+        // ...
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        
+        return true
+    }
+    
+    //new
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,
+                                                 sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                 annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    }
+    
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

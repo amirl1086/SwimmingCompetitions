@@ -6,19 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChildrenAdapter extends ArrayAdapter {
     private Context mContext;
     private int mResource;
-    private List<Competition> competitions = new ArrayList<>();
+    private List<Participant> children = new ArrayList<>();
 
-    public ChildrenAdapter(Context context, int resource, ArrayList<Competition> list) {
+    public ChildrenAdapter(Context context, int resource, ArrayList<Participant> list) {
         super(context, resource, list);
         this.mContext = context;
         this.mResource = resource;
-        competitions = list;
+        this.children = list;
     }
 
 
@@ -30,6 +32,13 @@ public class ChildrenAdapter extends ArrayAdapter {
         if(listItem == null) {
             listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
         }
+        Participant currentUser = children.get(position);
+
+        TextView userName = listItem.findViewById(R.id.user_name);
+        userName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+
+        TextView userBirthDate = listItem.findViewById(R.id.user_birth_date);
+        userBirthDate.setText(currentUser.getBirthDate());
 
         return listItem;
     }
