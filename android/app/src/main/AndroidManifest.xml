@@ -35,7 +35,8 @@
         <activity android:name=".MyChildrenActivity" />
         <activity android:name=".MyMessagesActivity" />
         <activity android:name=".PreCompetitionRegisterActivity" />
-        <activity android:name=".GoogleRegisterActivity"></activity>
+        <activity android:name=".GoogleRegisterActivity" />
+        <activity android:name=".AddChildToParentActivity"></activity>
     </application>
 
 </manifest>

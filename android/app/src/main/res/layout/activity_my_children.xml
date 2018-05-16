@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/children_list_header"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:text="@string/my_children_header"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:onClick="switchToAddChildToParentActivity"
-        android:text="הוסף ילד לחשבון שלי"
+        android:text="@string/add_new_child"
         android:textSize="25sp"
         android:textStyle="bold"
         android:theme="@style/ThemeOverlay.TransparentButton" />

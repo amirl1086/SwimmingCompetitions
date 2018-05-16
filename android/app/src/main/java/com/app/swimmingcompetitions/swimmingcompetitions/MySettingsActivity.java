@@ -22,7 +22,7 @@ public class MySettingsActivity extends AppCompatActivity {
         this.currentUser = (User) intent.getSerializableExtra("currentUser");
     }
 
-    private void switchToLogInActivity() {
+    public void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
     }

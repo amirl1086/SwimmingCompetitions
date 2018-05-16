@@ -78,17 +78,6 @@
             android:textSize="22sp" />
 
         <EditText
-            android:id="@+id/mobile_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="25dp"
-            android:digits="0123456789+"
-            android:hint="@string/mobile_phone_number"
-            android:inputType="phone"
-            android:textAlignment="center"
-            android:textSize="22sp" />
-
-        <EditText
             android:id="@+id/register_email"
             android:layout_width="match_parent"
             android:layout_height="50dp"

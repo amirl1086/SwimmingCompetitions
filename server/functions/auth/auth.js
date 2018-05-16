@@ -55,7 +55,7 @@ module.exports =  {
 	},
 
 	getUser: function(uid, response, callback) {
-		console.log('uid ', uid)
+		console.log('uid ', uid);
 		firebaseDB_Service.getUser(uid, function(sucess, result) {
 			if(sucess) {
 				var currentUser = result;
@@ -83,9 +83,8 @@ module.exports =  {
 		console.log('params ', params);
 		var newUser = {
 			'email': params.email,
-		  	'phoneNumber': '+972' + params.phoneNumber,
 		  	'password': params.password,
-			'displayName': params.firstName + '' + params.lastName
+			'displayName': params.firstName + ' ' + params.lastName
 		}
 
 		admin.auth().createUser(newUser).then(function(userRecord) {
@@ -103,6 +102,15 @@ module.exports =  {
 		.catch(function(error) {
 			console.log('addNewFirebaseUser error: ', error);
 			utilities.sendResponse(response, error, null);
+		});
+	},
+
+	getFirebaseUser: function(uid, callback) {
+		admin.auth().getUser(uid).then(function(result) {
+			callback(true, result);
+		})
+		.catch(function(error) {
+			callback(false, error);
 		});
 	}
 
