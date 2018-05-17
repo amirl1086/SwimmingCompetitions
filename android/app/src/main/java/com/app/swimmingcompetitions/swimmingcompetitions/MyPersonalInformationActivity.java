@@ -68,12 +68,12 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
         this.firstName.setText(this.currentUser.getFirstName());
         this.lastName.setText(this.currentUser.getLastName());
         this.dateView.setText(this.currentUser.getBirthDate());
-        competitionName.setText(selectedCompetition.getName());
+        /*competitionName.setText(selectedCompetition.getName());
         time.setText(dateUtils.getTime(calendar));
         distance.setText(selectedCompetition.getLength());
         style.setText(selectedCompetition.getSwimmingStyle());
         ages.setText(selectedCompetition.getAgesString());
-        participantsForIteration.setText(String.valueOf(selectedCompetition.getNumOfParticipants()));
+        participantsForIteration.setText(String.valueOf(selectedCompetition.getNumOfParticipants()));*/
 
     }
 
