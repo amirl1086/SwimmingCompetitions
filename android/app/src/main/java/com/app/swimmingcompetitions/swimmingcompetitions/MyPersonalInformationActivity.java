@@ -24,6 +24,8 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
     private EditText firstName;
     private EditText lastName;
     private TextView dateView;
+    private TextView genderView;
+    private TextView typeView;
     private int year, month, day;
     private String registerType;
     private Spinner genderSpinner;
@@ -46,6 +48,8 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
         this.genderSpinner = findViewById(R.id.edit_gender);
         this.typeSpinner = findViewById(R.id.edit_type);
         this.dateView = findViewById(R.id.birth_date_view);
+        this.genderView = findViewById(R.id.edit_gender);
+
         Button birthDateButton = findViewById(R.id.edit_birth_date);
 
         if(this.currentUser.getType().equals("parent")) {
@@ -54,20 +58,13 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
             this.dateView.setVisibility(View.GONE);
         }
         else if(this.currentUser.getType().equals("student")) {
-
-        }
-
-
-        if (this.currentUser.getType().equals("parent")) {
-
-        }
-        else { //initialize date picker for date of birth
             initParticipantUser();
         }
 
         this.firstName.setText(this.currentUser.getFirstName());
         this.lastName.setText(this.currentUser.getLastName());
         this.dateView.setText(this.currentUser.getBirthDate());
+        this.typeSpinner.
         /*competitionName.setText(selectedCompetition.getName());
         time.setText(dateUtils.getTime(calendar));
         distance.setText(selectedCompetition.getLength());
