@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePageActivity extends LoadingDialog {
@@ -17,11 +16,15 @@ public class HomePageActivity extends LoadingDialog {
     private User currentUser;
     private FirebaseAuth mAuth;
     private DrawerLayout mDrawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        this.mDrawerLayout = findViewById(R.id.drawer_layout);
+        this.navigationView = findViewById(R.id.nav_view);
 
         setUpSidebar();
 
@@ -36,7 +39,7 @@ public class HomePageActivity extends LoadingDialog {
     }
 
     private void setUpSidebar() {
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("תפריט ראשי");
@@ -47,8 +50,7 @@ public class HomePageActivity extends LoadingDialog {
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 // set item as selected to persist highlight

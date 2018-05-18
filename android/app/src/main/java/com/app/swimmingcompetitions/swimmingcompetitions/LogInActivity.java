@@ -34,6 +34,8 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
+    private String logInMailText;
+    private String logInPasswordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,43 +93,46 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-    public void logIn(final View view) {
-        String logInMailText = this.logInMail.getText().toString();
-        String logInPasswordText = this.logInPassword.getText().toString();
+    public Boolean isValid() {
+        this.logInMailText = this.logInMail.getText().toString();
+        this.logInPasswordText = this.logInPassword.getText().toString();
 
         if(logInMailText.isEmpty()) {
-            this.logInMail.setError("אנא הכנס כתובת אימייל");
-            return;
+            this.logInMail.setError("חובה למלא כתובת אימייל");
+            return false;
         }
         if(!isValidEmail(logInMailText)) {
             this.logInMail.setError("כתובת אימייל שגוייה");
-            return;
+            return false;
         }
         if(logInPasswordText.isEmpty()) {
-            this.logInPassword.setError("אנא הכנס סיסמא");
-            return;
+            this.logInPassword.setError("חובה למלא סיסמא");
+            return false;
         }
         if(logInPasswordText.length() < 6) {
             this.logInPassword.setError("אורך סיסמא מינימלי 6 תווים");
-            return;
+            return false;
         }
+        return true;
+    }
 
-        showProgressDialog("מבצע אימות...");
-
-        this.mAuth.signInWithEmailAndPassword(logInMailText, logInPasswordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-            if(task.isSuccessful()) {
-                fbUser = mAuth.getCurrentUser();
-                logInWithFirebase();
-            }
-            else {
-                hideProgressDialog();
-                showToast("שם משתמש או סיסמא לא נכונים, נסה שוב");
-            }
-            }
-        });
-
+    public void logIn(final View view) {
+        if(isValid()) {
+            showProgressDialog("מבצע אימות...");
+            this.mAuth.signInWithEmailAndPassword(this.logInMailText, this.logInPasswordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()) {
+                        fbUser = mAuth.getCurrentUser();
+                        logInWithFirebase();
+                    }
+                    else {
+                        hideProgressDialog();
+                        showToast("שם משתמש או סיסמא לא נכונים, נסה שוב");
+                    }
+                }
+            });
+        }
     }
 
     private void logInWithFirebase() {

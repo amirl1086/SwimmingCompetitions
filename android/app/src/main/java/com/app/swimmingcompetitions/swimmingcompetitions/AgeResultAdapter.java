@@ -1,23 +1,17 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +58,7 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                 if(malesResultsJson.length() > 0) {
                     Participant participant = new Participant(malesResultsJson.getJSONObject(0));
                     malesHeader.setText("בנים");
-                    currentAge = dateUtils.getAge(participant.getBirthDate());
+                    currentAge = String.valueOf(dateUtils.getAgeByDate(participant.getBirthDate()));
                     System.out.println("participant.getBirthDate()) " + participant.getBirthDate() + " " + new Date(participant.getBirthDate()));
                     System.out.println("malesResultsJson AGE " + currentAge);
                     ages.setText( "גילאי " + currentAge);
@@ -90,7 +84,7 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
 
                     if(currentAge.isEmpty()) {
                         System.out.println("participant.getBirthDate()) " + participant.getBirthDate() + " " + new Date(participant.getBirthDate()));
-                        currentAge = dateUtils.getAge(participant.getBirthDate());
+                        currentAge = String.valueOf(dateUtils.getAgeByDate(participant.getBirthDate()));
                         System.out.println("femalesResultsJson AGE " + currentAge);
                         ages.setText( "גילאי " + currentAge);
                     }

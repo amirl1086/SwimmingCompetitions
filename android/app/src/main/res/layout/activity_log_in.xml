@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/waterpool_bottom"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.LogInActivity">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/waterpool_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:padding="15dp"
-        tools:context="com.app.swimmingcompetitions.swimmingcompetitions.LogInActivity">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -41,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            android:contentDescription="@string/hello_world"
             app:srcCompat="@drawable/front_page_img" />
 
         <android.support.design.widget.TextInputLayout
@@ -143,12 +133,12 @@
                 android:id="@+id/forget_password_btn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:minHeight="12dp"
-                android:text="@string/forgot_password_txt"
                 android:layout_centerHorizontal="true"
+                android:minHeight="12dp"
+                android:onClick="switchToForgotPasswordActivity"
+                android:text="@string/forgot_password_txt"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                android:onClick="switchToForgotPasswordActivity"
                 android:theme="@style/AppTheme.LinkButton" />
 
         </RelativeLayout>

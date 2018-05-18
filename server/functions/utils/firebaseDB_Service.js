@@ -134,7 +134,6 @@ module.exports = {
 		});
 	},
 
-
 	getCompetitions: function(params, response) {
 		let db = admin.database();
 		let competitionsRef = db.ref('competitions/');
@@ -157,7 +156,6 @@ module.exports = {
 	getPersonalResults: function(params, response) {
 		let uid = params.uid;
 		let db = admin.database();
-		console.log('authentication 2 ', authentication);
 		authentication.getUser(uid, null, function(sucess, result) {
 			if(sucess) {
 				let personalResultsRef = db.ref('personalResults/');
