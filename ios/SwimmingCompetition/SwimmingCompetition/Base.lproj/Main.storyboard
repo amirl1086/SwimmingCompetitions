@@ -488,7 +488,7 @@
         <!--Iteration View Controller-->
         <scene sceneID="EVc-3R-C0Z">
             <objects>
-                <viewController id="pxa-Zl-704" customClass="IterationViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="iterationId" id="pxa-Zl-704" customClass="IterationViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2o6-0A-BAE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -572,7 +572,7 @@
         <!--תחרויות-->
         <scene sceneID="6l6-LR-GOz">
             <objects>
-                <viewController title="תחרויות" id="Fqc-rk-ITT" customClass="CompetitionsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="competitionsId" title="תחרויות" id="Fqc-rk-ITT" customClass="CompetitionsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vy9-Ui-ftI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1249,7 +1249,7 @@
         <!--Personal Results View Controller-->
         <scene sceneID="Eaa-pv-w5E">
             <objects>
-                <viewController id="Ld4-WH-O4Y" customClass="PersonalResultsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="resultsId" id="Ld4-WH-O4Y" customClass="PersonalResultsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SEg-P2-fwG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -115,7 +115,7 @@ class Service {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
-            exit(0)
+            
         }))
         return alert
     }

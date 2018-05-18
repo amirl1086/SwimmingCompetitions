@@ -56,6 +56,12 @@ class MainViewController: UIViewController {
     @IBAction func statistics(_ sender: UIButton) {
     }
     @IBAction func realTimeShow(_ sender: UIButton) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+            competitionsView.controllerType = "realTime"
+            competitionsView.currenUser = self.currentUser
+            self.navigationController?.pushViewController(competitionsView, animated: true)
+        }
     }
     @IBAction func settings(_ sender: UIButton) {
     }
