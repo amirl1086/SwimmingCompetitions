@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
@@ -18,14 +19,26 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
 
     var array = [Result]()
     var data:JSON = [:]
+    var controllerType = ""
+    var competition: Competition!
+    var realTimeArray = [String]()
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.allowsSelection = false
+        
+        if controllerType == "" {
+            getCompetitionResults()
+        } else {
+            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childChanged) { (snapshot) in
+                print(snapshot)
+            }
+        }
         
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
@@ -34,17 +47,23 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.tableView.backgroundColor = UIColor.clear
        
         
+        
+        
+        
+        // Do any additional setup after loading the view.
+    }
+    
+    func getCompetitionResults() {
         for age in data {
             if age.0 != "type" {
-                
-                
                 let getAge = age.0
+                
                 var maleArray = [Participant]()
                 var femaleArray = [Participant]()
                 
-                var d = age.1 as! JSON
+                var allData = age.1 as! JSON
                 
-                for male in d["males"] as! NSArray{
+                for male in allData["males"] as! NSArray{
                     let data = male as! JSON
                     let maleResult = Participant(json: data, id: "")
                     maleArray.append(maleResult)
@@ -62,7 +81,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                     }
                 }
                 
-                for female in d["females"] as! NSArray {
+                for female in allData["females"] as! NSArray {
                     let data = female as! JSON
                     let femaleResult = Participant(json: data, id: "")
                     femaleArray.append(femaleResult)
@@ -87,9 +106,6 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         self.array = self.array.sorted(by: {Int($0.age)! < Int($1.age)!})
-        
-        
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

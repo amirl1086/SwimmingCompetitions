@@ -13,6 +13,7 @@ class CompetitionDetailsViewController: UIViewController {
     
     var currentCompetition: Competition!
     var currentUser: User!
+    var jsonData: JSON = [:]
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
@@ -85,24 +86,39 @@ class CompetitionDetailsViewController: UIViewController {
                     alert.dismiss(animated: true, completion: nil)
                 }))
                 self.present(alert, animated: true, completion: nil)
-                
+                let resultsButton = UIBarButtonItem(title: "צפה בתוצאות", style: .plain, target: self, action: #selector(self.goToResults))
+                self.navigationItem.rightBarButtonItem = resultsButton
                 //let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
                 //self.navigationItem.rightBarButtonItem = resultsButton
                 
-                //self.jsonData = response.data
+                self.jsonData = response.data
                 
             }
             else {
                 var competition: Competition!
                 let data = response.data
+                let sb = UIStoryboard(name: "Main", bundle: nil)
                 competition = Competition(json: data, id: self.currentCompetition.getId())
-                let iterationView = IterationViewController()
-                iterationView.competition = competition
-                self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
+                if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
+                    iterationView.competition = competition
+                    self.navigationController?.pushViewController(iterationView, animated: true)
+                }
+                
+                //let iterationView = IterationViewController()
+                //iterationView.competition = competition
+                //self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
             }
         })
         
         
+    }
+    
+    @objc func goToResults() {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
+            resultsView.data = self.jsonData
+            self.navigationController?.pushViewController(resultsView, animated: true)
+        }
     }
     
     //Function to check if the user already sign up to current competition

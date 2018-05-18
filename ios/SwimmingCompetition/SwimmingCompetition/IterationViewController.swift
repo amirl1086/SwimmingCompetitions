@@ -38,10 +38,12 @@ class IterationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
-       
+      
+        startNewIteration()
+        
         //initIteration()
         
-        startNewIteration()
+        
         
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
@@ -115,7 +117,7 @@ class IterationViewController: UIViewController {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
         var start:Int = 0
         for i in 0...participantsIndex.count-1 {
-            let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y+self.resetButtonOutlet.frame.height+10), width: width, height: 30))
+            let name = UILabel(frame: CGRect(x: start, y: Int(self.endIterationButtonOutlet.frame.origin.y-10), width: width, height: 30))
             name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
             name.textAlignment = .center
             
@@ -196,7 +198,10 @@ class IterationViewController: UIViewController {
         }
         subviews.removeAll()
         
-        createButtonsLabels()
+        if participantsIndex.count != 0 {
+            createButtonsLabels()
+        }
+        
 
     }
     

@@ -22,7 +22,10 @@ class CompetitionsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        addButtonView()
+        if controllerType == "" {
+            addButtonView()
+        }
+        
         getCompetitionsData()
         
         let imageView = UIImageView(frame: self.view.bounds)
@@ -48,19 +51,17 @@ class CompetitionsViewController: UIViewController {
     }
     
     func addButtonView() {
-        /*if(currenUser.type == "coach") {
+        if(currenUser.type == "coach") {
             let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCompetition))
             self.navigationItem.rightBarButtonItem = addButton
-        }*/
+        }
         
         let addButton = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(addCompetition(_:)))
         self.navigationItem.rightBarButtonItem = addButton
     }
     
     @objc func addCompetition(_ sender: UIBarButtonItem) {
-        //self.performSegue(withIdentifier: "goToAddCompetition", sender: self)
-        self.tableView.isEditing = !self.tableView.isEditing
-        sender.title = (self.tableView.isEditing) ? "done" : "edit"
+        self.performSegue(withIdentifier: "goToAddCompetition", sender: self)
     }
     
     func getCompetitionsData() {
@@ -140,34 +141,20 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete{
-            competitions.remove(at: indexPath.item)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+        if controllerType == "realTime" {
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
+                resultsView.controllerType = "realTime"
+                resultsView.competition = competitions[indexPath.row]
+                self.navigationController?.pushViewController(resultsView, animated: true)
+            }
+        } else {
+            performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
+            tableView.deselectRow(at: indexPath, animated: true)
         }
-    }*/
-    
-    func importantAction(at indexPath: IndexPath) -> UIContextualAction {
-        let competitions = self.competitions[indexPath.row]
-        let action = UIContextualAction(style: .normal, title: "מחק") { (action, view, completion) in
-            self.competitions.remove(at: indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            completion(true)
-        }
-        action.image = #imageLiteral(resourceName: "clock")
-        action.backgroundColor = .green
         
-        return action
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = importantAction(at: indexPath)
-        return UISwipeActionsConfiguration(actions: [delete])
-    }
+  
     
 }
 
