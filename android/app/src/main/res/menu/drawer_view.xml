@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/back_to_home_btn"
+            app:showAsAction="always"/>
 
         <item
             android:id="@+id/competitions_nav_item"
@@ -23,7 +30,9 @@
             android:title="@string/menu_realtime_view_btn" />
 
 
-        <item android:title="@string/settings_menu_btn"
+        <item
+            android:id="@+id/settings_nav_item"
+            android:title="@string/settings_menu_btn"
             android:icon="@drawable/ic_settings">
 
             <menu>

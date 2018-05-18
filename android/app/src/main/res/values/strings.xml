@@ -77,5 +77,6 @@
     <string name="confirm">אישור</string>
     <string name="forgot_password_txt">שכחתי סיסמא</string>
     <string name="password_reset_header">איפוס סיסמא</string>
+    <string name="back_to_home_btn">חזרה למסך הבית</string>
 
 </resources>

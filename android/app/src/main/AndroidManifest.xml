@@ -15,6 +15,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LogInActivity">
             <tools:validation testUrl="http://swimming-competitions.com/swimming-competitions" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,9 +28,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="swimming-competitions.com"
-                    android:pathPattern="/swimming-competitions" />
+                    android:pathPattern="/swimming-competitions"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity android:name=".HomePageActivity" />
@@ -51,6 +52,8 @@
         <activity android:name=".GoogleRegisterActivity" />
         <activity android:name=".AddChildToParentActivity" />
         <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".ViewStatisticsActivity" />
+        <activity android:name=".ViewInRealTimeActivity"></activity>
     </application>
 
 </manifest>

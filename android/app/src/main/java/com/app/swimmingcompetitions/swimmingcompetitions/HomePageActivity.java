@@ -23,9 +23,6 @@ public class HomePageActivity extends LoadingDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        this.mDrawerLayout = findViewById(R.id.drawer_layout);
-        this.navigationView = findViewById(R.id.nav_view);
-
         setUpSidebar();
 
         Intent intent = getIntent();
@@ -38,8 +35,19 @@ public class HomePageActivity extends LoadingDialog {
         }
     }
 
-    private void setUpSidebar() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    private void setUpSidebar() {
+        this.mDrawerLayout = findViewById(R.id.drawer_layout);
+        this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("תפריט ראשי");
@@ -53,27 +61,54 @@ public class HomePageActivity extends LoadingDialog {
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                // set item as selected to persist highlight
                 menuItem.setChecked(true);
-                // close drawer when item is tapped
+
+                switch (menuItem.getItemId()) {
+                    case R.id.competitions_nav_item: {
+                        openViewCompetitionsActivity();
+                        break;
+                    }
+                    case R.id.personal_results_nav_item: {
+                        openViewResultsActivity();
+                        break;
+                    }
+                    case R.id.statistics_nav_item: {
+                        openViewStatisticsActivity();
+                        break;
+                    }
+                    case R.id.real_time_nav_item: {
+                        openViewInRealTimeActivity();
+                        break;
+                    }
+                    case R.id.my_personal_info_nav_item: {
+                        openMyPersonalInformationActivity();
+                        break;
+                    }
+                    case R.id.my_children_nav_item: {
+                        openMyChildrenActivity();
+                        break;
+                    }
+                    case R.id.log_out_nav_item: {
+                        logOut();
+                        break;
+                    }
+                }
                 mDrawerLayout.closeDrawers();
-
-                // Add code here to update the UI based on the item selected
-                // For example, swap UI fragments here
-
                 return true;
             }
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    private void openViewInRealTimeActivity() {
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    private void openViewStatisticsActivity() {
+        Intent intent = new Intent(this, ViewStatisticsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
     }
 
     private void switchToLogInActivity() {
@@ -81,25 +116,31 @@ public class HomePageActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-    public void openViewCompetitionsActivity(View view) {
+    public void openViewCompetitionsActivity() {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openViewResultsActivity(View view) {
+    public void openViewResultsActivity() {
         Intent intent = new Intent(this, ViewPersonalResultsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openMySettingsActivity(View view) {
-        Intent intent = new Intent(this, MySettingsActivity.class);
+    public void openMyPersonalInformationActivity() {
+        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void logOut(View view) {
+    public void openMyChildrenActivity() {
+        Intent intent = new Intent(this, MyChildrenActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void logOut() {
         this.mAuth.signOut();
         switchToLogInActivity();
     }
