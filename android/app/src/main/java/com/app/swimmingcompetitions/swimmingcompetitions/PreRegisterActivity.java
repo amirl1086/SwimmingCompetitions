@@ -24,9 +24,6 @@ public class PreRegisterActivity extends AppCompatActivity {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
         }
-        else {
-            switchToLogInActivity();
-        }
     }
 
     public void switchToRegisterActivity(final View view) {

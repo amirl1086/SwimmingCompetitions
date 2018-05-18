@@ -9,5 +9,13 @@ module.exports = {
 		else {
 			response.send({ 'success': true, 'data': resultObj });
 		}
+	},
+
+	mapToList: function(map) {
+
+	},
+
+	listToMap: function(list, key) {
+
 	}
 }

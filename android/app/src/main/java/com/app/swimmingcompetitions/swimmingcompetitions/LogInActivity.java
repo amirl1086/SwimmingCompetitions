@@ -89,14 +89,13 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        fbUser = mAuth.getCurrentUser();
-                        logInWithFirebase();
-                    }
-                    else {
-                        // If sign in fails, display a message to the user.
-                        showToast("ההתחברות נכשלה, נסה שוב");
-                    }
+                if(task.isSuccessful()) {
+                    fbUser = mAuth.getCurrentUser();
+                    logInWithFirebase();
+                }
+                else {
+                    showToast("ההתחברות נכשלה, נסה שוב");
+                }
                 }
             });
     }
@@ -104,12 +103,12 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     private void logInWithFirebase() {
         this.fbUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             public void onComplete(@NonNull Task<GetTokenResult> task) {
-                if (task.isSuccessful()) {
-                    logInWithIdToken(task.getResult().getToken());
-                }
-                else {
-                    showToast("ההתחברות נכשלה, נסה שוב");
-                }
+            if(task.isSuccessful()) {
+                logInWithIdToken(task.getResult().getToken());
+            }
+            else {
+                showToast("ההתחברות נכשלה, נסה שוב");
+            }
             }
         });
     }
