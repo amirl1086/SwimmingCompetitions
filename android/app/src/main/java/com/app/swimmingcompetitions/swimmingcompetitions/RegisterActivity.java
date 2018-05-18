@@ -210,7 +210,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     }
 
     public void switchToMainMenuActivity(User currentUser) {
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }

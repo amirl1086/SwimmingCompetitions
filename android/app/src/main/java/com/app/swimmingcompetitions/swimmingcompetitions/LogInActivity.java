@@ -1,16 +1,9 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +75,15 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     public void onStart() {
         super.onStart();
         if(this.fbUser != null) {
-            switchToMainMenuActivity();
+            switchToHomePageActivity();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(this.fbUser != null) {
+            switchToHomePageActivity();
         }
     }
 
@@ -111,7 +112,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             return;
         }
 
-        showProgressDialog("מבצע כניסה...");
+        showProgressDialog("מבצע אימות...");
 
         this.mAuth.signInWithEmailAndPassword(logInMailText, logInPasswordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -207,7 +208,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                     switchToGoogleRegisterActivity();
                 }
                 else {
-                    switchToMainMenuActivity();
+                    switchToHomePageActivity();
                 }
             }
             else {
@@ -224,8 +225,8 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public void switchToMainMenuActivity() {
-        Intent intent = new Intent(this, MainMenuActivity.class);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

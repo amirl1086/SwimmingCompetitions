@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,7 +135,7 @@ public class GoogleRegisterActivity extends LoadingDialog implements AsyncRespon
     }
 
     public void switchToMainMenuActivity() {
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

@@ -32,7 +32,7 @@
                     android:pathPattern="/swimming-competitions" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".HomePageActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PreRegisterActivity" />
         <activity android:name=".CreateNewCompetitionActivity" />

@@ -20,7 +20,7 @@ public class ForgotPasswordActivity extends LoadingDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        
+
         this.logInMail = findViewById(R.id.edit_email);
     }
 
