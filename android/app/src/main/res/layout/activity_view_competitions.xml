@@ -26,7 +26,7 @@
         android:layout_marginBottom="15sp"
         android:layout_marginTop="15sp"
         android:layout_weight="1"
-        android:divider="@color/colorPrimaryDark"
+        android:divider="@color/purple"
         android:dividerHeight="1dp" />
 
     <Button
@@ -37,6 +37,6 @@
         android:text="@string/add_competition_text_btn"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:theme="@style/ThemeOverlay.TransparentButton" />
+        android:theme="@style/AppTheme.TransparentButton" />
 
 </LinearLayout>

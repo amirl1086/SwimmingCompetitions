@@ -90,4 +90,6 @@
     <string name="add_new_child">הוסף ילד לחשבון שלי</string>
     <string name="add_child_to_your_account">הוסף ילד לחשבונך</string>
     <string name="confirm">אישור</string>
+    <string name="forgot_password_txt">שכחתי סיסמא</string>
+    <string name="password_reset_header">איפוס סיסמא</string>
 </resources>

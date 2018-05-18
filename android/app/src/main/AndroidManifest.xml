@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.app.swimmingcompetitions.swimmingcompetitions">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,10 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LogInActivity">
+            <tools:validation testUrl="http://swimming-competitions.com/swimming-competitions" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="swimming-competitions.com"
+                    android:pathPattern="/swimming-competitions" />
             </intent-filter>
         </activity>
         <activity android:name=".MainMenuActivity" />
@@ -36,7 +49,8 @@
         <activity android:name=".MyMessagesActivity" />
         <activity android:name=".PreCompetitionRegisterActivity" />
         <activity android:name=".GoogleRegisterActivity" />
-        <activity android:name=".AddChildToParentActivity"></activity>
+        <activity android:name=".AddChildToParentActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
     </application>
 
 </manifest>

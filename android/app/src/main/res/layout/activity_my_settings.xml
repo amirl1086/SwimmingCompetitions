@@ -25,7 +25,7 @@
             android:textSize="25sp"
             android:onClick="openMyPersonalInformationActivity"
             android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/AppTheme.TransparentButton" />
 
 
         <Button
@@ -38,7 +38,7 @@
             android:textSize="25sp"
             android:onClick="openMyMessagesActivity"
             android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/AppTheme.TransparentButton" />
 
     </RelativeLayout>
 
@@ -59,7 +59,7 @@
             android:text="@string/my_children"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/AppTheme.TransparentButton" />
 
         <!--<Button
             android:id="@+id/settings_btn"

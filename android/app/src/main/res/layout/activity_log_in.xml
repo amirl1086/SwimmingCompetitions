@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@drawable/waterpool_bottom"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
-    android:padding="15sp"
+    android:padding="15dp"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.LogInActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:lineSpacingExtra="8sp"
         android:text="@string/log_in_header"
         android:textAlignment="center"
-        android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="30sp"
-        android:textStyle="bold|italic"
-        android:typeface="normal"
-        android:visibility="visible" />
+        android:textStyle="bold|italic" />
 
     <ImageView
         android:id="@+id/app_logo_img"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="10dp"
         android:contentDescription="@string/hello_world"
         app:srcCompat="@drawable/front_page_img" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40sp">
+        android:layout_marginTop="20dp">
 
         <EditText
             android:id="@+id/edit_email"
@@ -48,6 +48,7 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textColorHighlight="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="25sp" />
 
     </android.support.design.widget.TextInputLayout>
@@ -55,7 +56,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp">
+        android:layout_marginTop="10dp">
 
         <EditText
             android:id="@+id/edit_password"
@@ -68,6 +69,7 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textColorHighlight="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="25sp" />
 
     </android.support.design.widget.TextInputLayout>
@@ -75,21 +77,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50sp"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:id="@+id/forget_password_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="12dp"
+            android:text="@string/forgot_password_txt"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:onClick="switchToForgotPasswordActivity"
+            android:theme="@style/AppTheme.LinkButton" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/email_create_account_button"
+            android:id="@+id/email_create_account_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:width="130sp"
+            android:width="130dp"
             android:onClick="logIn"
             android:text="@string/log_in_log_in_text"
             android:textSize="25sp"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/AppTheme.TransparentButton" />
 
         <Button
             android:id="@+id/register_btn"
@@ -102,7 +123,7 @@
             android:onClick="switchToPreRegisterActivity"
             android:text="@string/log_in_register"
             android:textSize="25sp"
-            android:theme="@style/ThemeOverlay.TransparentButton" />
+            android:theme="@style/AppTheme.TransparentButton" />
 
 
     </RelativeLayout>
@@ -110,15 +131,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35sp">
+        android:layout_marginTop="35dp">
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in_button"
-            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/google_sign_in"
-            android:layout_width="wrap_content" />
-
+            android:layout_centerHorizontal="true"
+            android:text="@string/google_sign_in" />
 
     </RelativeLayout>
 

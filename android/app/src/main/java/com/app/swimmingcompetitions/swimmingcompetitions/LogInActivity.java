@@ -1,9 +1,16 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,10 +65,10 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         this.mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com")
+            .requestEmail()
+            .build();
 
         this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
@@ -79,36 +86,59 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         }
     }
 
+    public boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
     public void logIn(final View view) {
         String logInMailText = this.logInMail.getText().toString();
         String logInPasswordText = this.logInPassword.getText().toString();
 
+        if(logInMailText.isEmpty()) {
+            this.logInMail.setError("אנא הכנס כתובת אימייל");
+            return;
+        }
+        if(!isValidEmail(logInMailText)) {
+            this.logInMail.setError("כתובת אימייל שגוייה");
+            return;
+        }
+        if(logInPasswordText.isEmpty()) {
+            this.logInPassword.setError("אנא הכנס סיסמא");
+            return;
+        }
+        if(logInPasswordText.length() < 6) {
+            this.logInPassword.setError("אורך סיסמא מינימלי 6 תווים");
+            return;
+        }
+
         showProgressDialog("מבצע כניסה...");
 
-        this.mAuth.signInWithEmailAndPassword(logInMailText, logInPasswordText)
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    fbUser = mAuth.getCurrentUser();
-                    logInWithFirebase();
-                }
-                else {
-                    showToast("ההתחברות נכשלה, נסה שוב");
-                }
-                }
-            });
+        this.mAuth.signInWithEmailAndPassword(logInMailText, logInPasswordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+            if(task.isSuccessful()) {
+                fbUser = mAuth.getCurrentUser();
+                logInWithFirebase();
+            }
+            else {
+                hideProgressDialog();
+                showToast("שם משתמש או סיסמא לא נכונים, נסה שוב");
+            }
+            }
+        });
+
     }
 
     private void logInWithFirebase() {
         this.fbUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             public void onComplete(@NonNull Task<GetTokenResult> task) {
-            if(task.isSuccessful()) {
-                logInWithIdToken(task.getResult().getToken());
-            }
-            else {
-                showToast("ההתחברות נכשלה, נסה שוב");
-            }
+                if(task.isSuccessful()) {
+                    logInWithIdToken(task.getResult().getToken());
+                }
+                else {
+                    showProgressDialog("מבצע כניסה...");
+                    showToast("ההתחברות נכשלה, נסה שוב");
+                }
             }
         });
     }
@@ -124,6 +154,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             logInData.put("idToken", token);
         }
         catch (JSONException e) {
+            hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
         }
 
@@ -140,13 +171,15 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 firebaseAuthWithGoogle(account.getIdToken());
             }
             catch (ApiException e) {
-                showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
                 hideProgressDialog();
+                showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
             }
         }
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
+        showProgressDialog("מבצע כניסה...");
+
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -156,6 +189,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                     logInWithFirebase();
                 }
                 else {
+                    hideProgressDialog();
                     showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
                 }
             }
@@ -169,7 +203,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 JSONObject response = new JSONObject(result);
                 JSONObject userData = response.getJSONObject("data");
                 this.currentUser = new User(userData);
-                if(this.currentUser.getBirthDate().isEmpty()) {
+                if(this.currentUser.getType().isEmpty()) {
                     switchToGoogleRegisterActivity();
                 }
                 else {
@@ -208,9 +242,12 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     }
 
     public void googleSignIn() {
-        showProgressDialog("מבצע כניסה...");
-
         Intent signInIntent = this.mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    public void switchToForgotPasswordActivity(View view) {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 }

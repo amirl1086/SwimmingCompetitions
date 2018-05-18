@@ -48,7 +48,7 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
         this.genderSpinner = findViewById(R.id.edit_gender);
         this.typeSpinner = findViewById(R.id.edit_type);
         this.dateView = findViewById(R.id.birth_date_view);
-        this.genderView = findViewById(R.id.edit_gender);
+        //this.genderView = findViewById(R.id.edit_gender);
 
         Button birthDateButton = findViewById(R.id.edit_birth_date);
 
@@ -64,7 +64,7 @@ public class MyPersonalInformationActivity extends AppCompatActivity {
         this.firstName.setText(this.currentUser.getFirstName());
         this.lastName.setText(this.currentUser.getLastName());
         this.dateView.setText(this.currentUser.getBirthDate());
-        this.typeSpinner.
+        //this.typeSpinner.
         /*competitionName.setText(selectedCompetition.getName());
         time.setText(dateUtils.getTime(calendar));
         distance.setText(selectedCompetition.getLength());
