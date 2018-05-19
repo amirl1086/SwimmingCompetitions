@@ -43,7 +43,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/home_page_header"
-        app:menu="@menu/drawer_view" />
+        app:headerLayout="@layout/home_page_header" />
 
 </android.support.v4.widget.DrawerLayout>

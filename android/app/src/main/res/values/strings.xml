@@ -78,5 +78,7 @@
     <string name="forgot_password_txt">שכחתי סיסמא</string>
     <string name="password_reset_header">איפוס סיסמא</string>
     <string name="back_to_home_btn">חזרה למסך הבית</string>
+    <string name="change_email">שנה אימייל</string>
+    <string name="change_password">שנה סיסמא</string>
 
 </resources>

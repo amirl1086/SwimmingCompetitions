@@ -33,9 +33,10 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     private EditText logInPassword;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 9001;
     private String logInMailText;
     private String logInPasswordText;
+
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

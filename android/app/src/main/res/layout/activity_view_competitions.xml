@@ -11,22 +11,13 @@
     android:layoutDirection="rtl"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/home_page_header"
-        app:menu="@menu/drawer_view" />
-
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/competitions_toolbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@color/purple"
@@ -38,7 +29,7 @@
             android:layout_marginTop="45dp"
             android:orientation="vertical">
 
-            <TextView
+<!--            <TextView
                 android:id="@+id/list_header"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -46,7 +37,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold" />-->
 
             <ListView
                 android:id="@+id/competitions_list"
@@ -58,7 +49,7 @@
                 android:divider="@color/purple"
                 android:dividerHeight="1dp" />
 
-            <Button
+<!--            <Button
                 android:id="@+id/add_competition_btn"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
@@ -66,8 +57,18 @@
                 android:text="@string/add_competition_text_btn"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                android:theme="@style/AppTheme.TransparentButton" />
+                android:theme="@style/AppTheme.TransparentButton" />-->
 
         </LinearLayout>
     </FrameLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/home_page_header"
+        app:menu="@menu/tool_bar_menu" />
+
 </android.support.v4.widget.DrawerLayout>

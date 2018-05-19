@@ -4,16 +4,19 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomePageActivity extends LoadingDialog {
 
     private User currentUser;
+    private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
@@ -23,14 +26,31 @@ public class HomePageActivity extends LoadingDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        setUpSidebar();
-
         Intent intent = getIntent();
         if(intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
+            this.fbUser = this.mAuth.getCurrentUser();
+
+            setUpSidebar();
         }
         else {
+            switchToLogInActivity();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(this.fbUser == null) {
+            switchToLogInActivity();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(this.fbUser == null) {
             switchToLogInActivity();
         }
     }
@@ -52,6 +72,13 @@ public class HomePageActivity extends LoadingDialog {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("תפריט ראשי");
         setSupportActionBar(toolbar);
+
+        if(this.currentUser.getType().equals("parent") || this.currentUser.getType().equals("coach")) {
+            this.navigationView.inflateMenu(R.menu.parent_home_side_bar_menu);
+        }
+        else if(this.currentUser.getType().equals("student")) {
+            this.navigationView.inflateMenu(R.menu.student_home_side_bar_menu);
+        }
         ActionBar actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
@@ -65,27 +92,35 @@ public class HomePageActivity extends LoadingDialog {
 
                 switch (menuItem.getItemId()) {
                     case R.id.competitions_nav_item: {
-                        openViewCompetitionsActivity();
+                        switchToViewCompetitionsActivity();
                         break;
                     }
                     case R.id.personal_results_nav_item: {
-                        openViewResultsActivity();
+                        switchToViewResultsActivity();
                         break;
                     }
                     case R.id.statistics_nav_item: {
-                        openViewStatisticsActivity();
+                        switchToViewStatisticsActivity();
                         break;
                     }
                     case R.id.real_time_nav_item: {
-                        openViewInRealTimeActivity();
+                        switchToViewInRealTimeActivity();
                         break;
                     }
                     case R.id.my_personal_info_nav_item: {
-                        openMyPersonalInformationActivity();
+                        switchToMyPersonalInformationActivity();
                         break;
                     }
                     case R.id.my_children_nav_item: {
-                        openMyChildrenActivity();
+                        switchToMyChildrenActivity();
+                        break;
+                    }
+                    case R.id.change_email_nav_item: {
+                        // TODO
+                        break;
+                    }
+                    case R.id.change_password_nav_item: {
+                        // TODO
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -99,42 +134,42 @@ public class HomePageActivity extends LoadingDialog {
         });
     }
 
-    private void openViewInRealTimeActivity() {
-        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    private void openViewStatisticsActivity() {
-        Intent intent = new Intent(this, ViewStatisticsActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
     }
 
-    public void openViewCompetitionsActivity() {
+    private void switchToViewInRealTimeActivity() {
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    private void switchToViewStatisticsActivity() {
+        Intent intent = new Intent(this, ViewStatisticsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewCompetitionsActivity() {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openViewResultsActivity() {
+    public void switchToViewResultsActivity() {
         Intent intent = new Intent(this, ViewPersonalResultsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openMyPersonalInformationActivity() {
+    public void switchToMyPersonalInformationActivity() {
         Intent intent = new Intent(this, MyPersonalInformationActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void openMyChildrenActivity() {
+    public void switchToMyChildrenActivity() {
         Intent intent = new Intent(this, MyChildrenActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
