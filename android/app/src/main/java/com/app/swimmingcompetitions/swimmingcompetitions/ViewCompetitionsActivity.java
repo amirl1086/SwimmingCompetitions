@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 
@@ -28,8 +30,13 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
     private User currentUser;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
+    private DateUtils dateUtils;
     private Competition selectedCompetition;
     private ArrayList<Competition> competitions;
+    private CompetitionAdapter competitionsListAdapter;
+    private Boolean isAscending;
+    private int lastSelectedFilter;
+    private ListView listView;
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
 
@@ -43,6 +50,11 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
+
+            this.listView = findViewById(R.id.competitions_list);
+            this.lastSelectedFilter = R.id.name_sort;
+            this.isAscending = true;
+            this.dateUtils = new DateUtils();
 
             setUpSidebar();
 
@@ -86,8 +98,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.home: {
+        int itemClicked = item.getItemId();
+        switch(item.getItemId()) {
+            case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
@@ -95,43 +108,107 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                 switchToHomePageActivity();
                 return true;
             }
-            case R.id.add_competition_btn: {
+            case R.id.add_new_competition: {
                 switchToCreateNewCompetitionActivity();
+                return true;
+            }
+            case R.id.name_sort: case R.id.ages_sort: case R.id.date_sort: case R.id.style_sort: {
+                sortCompetitionsByField(itemClicked);
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void sortCompetitionsByField(final int fieldName) {
+        if(this.lastSelectedFilter == fieldName) {
+            this.isAscending = !this.isAscending;
+        }
+        else {
+            this.isAscending = true;
+            this.lastSelectedFilter = fieldName;
+        }
+
+        Collections.sort(this.competitions, new Comparator(){
+            @Override
+            public int compare(Object a, Object b) {
+                Competition competitionA = (Competition) a;
+                Competition competitionB = (Competition) b;
+
+                switch (fieldName) {
+                    case R.id.name_sort: {
+                        return isAscending ?
+                            competitionB.getName().toLowerCase().compareTo(competitionA.getName().toLowerCase()) :
+                            competitionA.getName().toLowerCase().compareTo(competitionB.getName().toLowerCase());
+                    }
+                    case R.id.ages_sort: {
+                        return isAscending ?
+                                dateUtils.stringToCalendar(competitionB.getActivityDate()).after(dateUtils.stringToCalendar(competitionA.getActivityDate())) :
+                                dateUtils.stringToCalendar(competitionA.getActivityDate()).after(dateUtils.stringToCalendar(competitionB.getActivityDate()));
+                    }
+                    case R.id.date_sort: {
+
+                    }
+                    case R.id.style_sort: {
+
+                    }
+                }
+                return -1;
+            }
+        });
+
+        this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
+        this.listView.setAdapter(this.competitionsListAdapter);
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                selectedCompetition = competitions.get(position);
+                switchToViewCompetitionActivity();
+            }
+        });
+
+        this.competitionsListAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
+        menu.add(Menu.NONE, R.id.name_sort, Menu.NONE, R.string.name_sort_text);
+        menu.add(Menu.NONE, R.id.date_sort, Menu.NONE, R.string.date_sort_text);
+        menu.add(Menu.NONE, R.id.style_sort, Menu.NONE, R.string.style_sort_text);
+        menu.add(Menu.NONE, R.id.ages_sort, Menu.NONE, R.string.ages_sort_text);
+
         if(this.currentUser.getType().equals("coach")) {
-            menu.add(Menu.NONE, R.id.back_to_home, Menu.NONE, R.string.add_competition_text_btn);
+            getMenuInflater().inflate(R.menu.coach_competitions_tool_bar_menu, menu);
+        }
+        else if(this.currentUser.getType().equals("student") || this.currentUser.getType().equals("parent")) {
+            getMenuInflater().inflate(R.menu.student_competitions_tool_bar_menu, menu);
         }
 
-        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
         return true;
     }
 
     private void setUpSidebar() {
         this.mDrawerLayout = findViewById(R.id.drawer_layout);
-        this.navigationView = findViewById(R.id.nav_view);
+        this.navigationView = findViewById(R.id.competitions_nav_view);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.competitions_toolbar);
         toolbar.setTitle("רשימת התחרויות");
         setSupportActionBar(toolbar);
+
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
 
         if(this.currentUser.getType().equals("parent") || this.currentUser.getType().equals("coach")) {
             this.navigationView.inflateMenu(R.menu.parent_home_side_bar_menu);
         }
         else if(this.currentUser.getType().equals("student")) {
             this.navigationView.inflateMenu(R.menu.student_home_side_bar_menu);
-        }
-        ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null) {
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -200,17 +277,19 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                         this.competitions.add(new Competition(currentId, currentCompetition));
                     }
 
-                    CompetitionAdapter competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, competitions);
-                    ListView listView = findViewById(R.id.competitions_list);
-                    listView.setAdapter(competitionsListAdapter);
+                    sortCompetitionsByField(R.id.name_sort);
 
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+/*                    this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
+                    this.listView = findViewById(R.id.competitions_list);
+                    this.listView.setAdapter(competitionsListAdapter);
+
+                    this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                             selectedCompetition = competitions.get(position);
                             switchToViewCompetitionActivity();
                         }
-                    });
+                    });*/
                 }
                 else {
                     showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");

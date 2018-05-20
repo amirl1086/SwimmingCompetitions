@@ -25,8 +25,6 @@ public class DateUtils {
     public String getCompleteDate(Calendar calendar) {
         int hours = calendar.get(Calendar.HOUR);
         int minutes = calendar.get(Calendar.MINUTE);
-
-
         return "מתקיימת ב: " + getDate(calendar) + ", בשעה - " + hours + ":" + minutes;
     }
 
@@ -48,22 +46,48 @@ public class DateUtils {
         return cal;
     }
 
-    public String getTime(Calendar calendar) {
-        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
-    }
+    public Calendar stringToCalendar(String date) {
+        Calendar calendar = Calendar.getInstance();
+        String[] birthDateArr = date.split(" ");
 
-    public Date createNewDate(String date, String time) {
-
-        String[] dateArr = date.split("/");
+        String[] dateArr = birthDateArr[0].split("/");
         int day = Integer.valueOf(dateArr[0]);
         int month = Integer.valueOf(dateArr[1]) - 1;
         int year = Integer.valueOf(dateArr[2]);
 
-        String[] timeArr = time.split(":");
-        int hours =Integer.valueOf(timeArr[0]);
+        dob.set(Calendar.DAY_OF_MONTH, day);
+        dob.set(Calendar.MONTH, month);
+        dob.set(Calendar.YEAR, year);
+
+        String[] timeArr = birthDateArr[1].split(":");
+        int hours = Integer.valueOf(timeArr[0]);
         int minutes = Integer.valueOf(timeArr[1]);
 
-        System.out.println(new Date(year, month, day, hours, minutes));
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+
+        return calendar;
+    }
+
+    public String getTime(Calendar calendar) {
+        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
+    }
+
+    public Date getDateFromString(String date) {
+        String[] birthDateArr = date.split(" ");
+
+        String[] dateArr = birthDateArr[0].split("/");
+        int day = Integer.valueOf(dateArr[0]);
+        int month = Integer.valueOf(dateArr[1]) - 1;
+        int year = Integer.valueOf(dateArr[2]);
+        Calendar calendar = Calendar.getInstance(); /*Calendar.(year, month, day, hours, minutes);*/
+
+        String[] timeArr = birthDateArr[1].split(":");
+        int hours = Integer.valueOf(timeArr[0]);
+        int minutes = Integer.valueOf(timeArr[1]);
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+
         return new Date(year, month, day, hours, minutes);
     }
 

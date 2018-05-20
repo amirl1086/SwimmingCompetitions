@@ -73,16 +73,16 @@ public class HomePageActivity extends LoadingDialog {
         toolbar.setTitle("תפריט ראשי");
         setSupportActionBar(toolbar);
 
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
         if(this.currentUser.getType().equals("parent") || this.currentUser.getType().equals("coach")) {
             this.navigationView.inflateMenu(R.menu.parent_home_side_bar_menu);
         }
         else if(this.currentUser.getType().equals("student")) {
             this.navigationView.inflateMenu(R.menu.student_home_side_bar_menu);
-        }
-        ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null) {
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

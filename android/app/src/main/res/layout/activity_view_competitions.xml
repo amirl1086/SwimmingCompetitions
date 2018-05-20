@@ -16,18 +16,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/competitions_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/purple"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
-
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/competitions_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="45dp"
-            android:orientation="vertical">
+            android:layout_height="45dp"
+            android:background="@color/purple"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="45dp"
+                android:orientation="vertical">
 
 <!--            <TextView
                 android:id="@+id/list_header"
@@ -39,15 +39,15 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />-->
 
-            <ListView
-                android:id="@+id/competitions_list"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="15sp"
-                android:layout_marginTop="15sp"
-                android:layout_weight="1"
-                android:divider="@color/purple"
-                android:dividerHeight="1dp" />
+                <ListView
+                    android:id="@+id/competitions_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="15sp"
+                    android:layout_marginTop="15sp"
+                    android:layout_weight="1"
+                    android:divider="@color/purple"
+                    android:dividerHeight="1dp" />
 
 <!--            <Button
                 android:id="@+id/add_competition_btn"
@@ -59,16 +59,15 @@
                 android:textStyle="bold"
                 android:theme="@style/AppTheme.TransparentButton" />-->
 
-        </LinearLayout>
-    </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/competitions_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/home_page_header"
-        app:menu="@menu/tool_bar_menu" />
+        app:headerLayout="@layout/home_page_header" />
 
 </android.support.v4.widget.DrawerLayout>

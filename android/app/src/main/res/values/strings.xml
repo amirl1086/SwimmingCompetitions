@@ -80,5 +80,9 @@
     <string name="back_to_home_btn">חזרה למסך הבית</string>
     <string name="change_email">שנה אימייל</string>
     <string name="change_password">שנה סיסמא</string>
+    <string name="ages_sort_text">מיון לפי גיל</string>
+    <string name="style_sort_text">מיון לפי סגנון</string>
+    <string name="date_sort_text">מיון לפי תאריך</string>
+    <string name="name_sort_text">מיון לפי שם</string>
 
 </resources>
