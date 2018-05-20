@@ -55,9 +55,9 @@ public class DateUtils {
         int month = Integer.valueOf(dateArr[1]) - 1;
         int year = Integer.valueOf(dateArr[2]);
 
-        dob.set(Calendar.DAY_OF_MONTH, day);
-        dob.set(Calendar.MONTH, month);
-        dob.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
 
         String[] timeArr = birthDateArr[1].split(":");
         int hours = Integer.valueOf(timeArr[0]);

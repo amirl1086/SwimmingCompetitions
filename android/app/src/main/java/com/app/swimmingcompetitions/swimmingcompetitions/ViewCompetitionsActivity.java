@@ -129,31 +129,43 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             this.lastSelectedFilter = fieldName;
         }
 
-        Collections.sort(this.competitions, new Comparator(){
+        Collections.sort(this.competitions, new Comparator<Object>(){
+
             @Override
             public int compare(Object a, Object b) {
                 Competition competitionA = (Competition) a;
                 Competition competitionB = (Competition) b;
 
-                switch (fieldName) {
+                switch(fieldName) {
                     case R.id.name_sort: {
                         return isAscending ?
                             competitionB.getName().toLowerCase().compareTo(competitionA.getName().toLowerCase()) :
                             competitionA.getName().toLowerCase().compareTo(competitionB.getName().toLowerCase());
                     }
                     case R.id.ages_sort: {
-                        return isAscending ?
-                                dateUtils.stringToCalendar(competitionB.getActivityDate()).after(dateUtils.stringToCalendar(competitionA.getActivityDate())) :
-                                dateUtils.stringToCalendar(competitionA.getActivityDate()).after(dateUtils.stringToCalendar(competitionB.getActivityDate()));
+                        if(Integer.valueOf(competitionA.getFromAge()) > Integer.valueOf(competitionB.getFromAge())) {
+                            return isAscending ? 1 : -1;
+                        }
+                        else if(Integer.valueOf(competitionA.getFromAge()) < Integer.valueOf(competitionB.getFromAge())) {
+                            return isAscending ? -1 : 1;
+                        }
                     }
                     case R.id.date_sort: {
-
+                        if(dateUtils.stringToCalendar(competitionA.getActivityDate()).getTimeInMillis() > dateUtils.stringToCalendar(competitionB.getActivityDate()).getTimeInMillis()) {
+                            return isAscending ? 1 : -1;
+                        }
+                        else if(dateUtils.stringToCalendar(competitionA.getActivityDate()).getTimeInMillis() < dateUtils.stringToCalendar(competitionB.getActivityDate()).getTimeInMillis()) {
+                            return isAscending ? -1 : 1;
+                        }
                     }
                     case R.id.style_sort: {
-
+                        return isAscending ?
+                                competitionB.getSwimmingStyle().toLowerCase().compareTo(competitionA.getSwimmingStyle().toLowerCase()) :
+                                competitionA.getSwimmingStyle().toLowerCase().compareTo(competitionB.getSwimmingStyle().toLowerCase());
                     }
+                    default:
+                        return 0;
                 }
-                return -1;
             }
         });
 
