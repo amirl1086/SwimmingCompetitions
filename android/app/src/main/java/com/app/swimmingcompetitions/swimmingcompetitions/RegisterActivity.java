@@ -57,7 +57,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         }
         else {
             this.registerType = intent.getStringExtra("registerType");
-
         }
         this.spinner = findViewById(R.id.register_gender);
         this.firstName = findViewById(R.id.register_first_name);
@@ -95,7 +94,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if(position == 0) {
-                    // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 }
                 else {

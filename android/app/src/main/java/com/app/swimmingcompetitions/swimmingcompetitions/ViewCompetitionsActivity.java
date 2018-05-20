@@ -40,6 +40,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,10 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                 data.put("urlSuffix", "/getCompetitions");
                 data.put("httpMethod", "GET");
                 JSONObject currentUserJson = this.currentUser.getJSON_Object();
+
+                if(this.currentUser.getType().equals("student")) {
+                    data.put("filters", "age");
+                }
                 data.put("currentUser", currentUserJson);
             }
             catch (JSONException e) {
@@ -196,7 +201,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             getMenuInflater().inflate(R.menu.coach_competitions_tool_bar_menu, menu);
         }
         else if(this.currentUser.getType().equals("student") || this.currentUser.getType().equals("parent")) {
-            getMenuInflater().inflate(R.menu.student_competitions_tool_bar_menu, menu);
+            getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
         }
 
         return true;
@@ -204,9 +209,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
     private void setUpSidebar() {
         this.mDrawerLayout = findViewById(R.id.drawer_layout);
-        this.navigationView = findViewById(R.id.competitions_nav_view);
+        this.navigationView = findViewById(R.id.nav_view);
 
-        Toolbar toolbar = findViewById(R.id.competitions_toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("רשימת התחרויות");
         setSupportActionBar(toolbar);
 
@@ -254,11 +259,11 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                         break;
                     }
                     case R.id.change_email_nav_item: {
-                        // TODO
+                        switchToChangeEmailActivity();
                         break;
                     }
                     case R.id.change_password_nav_item: {
-                        // TODO
+                        switchToChangePasswordActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -290,18 +295,6 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                     }
 
                     sortCompetitionsByField(R.id.name_sort);
-
-/*                    this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
-                    this.listView = findViewById(R.id.competitions_list);
-                    this.listView.setAdapter(competitionsListAdapter);
-
-                    this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            selectedCompetition = competitions.get(position);
-                            switchToViewCompetitionActivity();
-                        }
-                    });*/
                 }
                 else {
                     showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
@@ -375,6 +368,18 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
     public void switchToMyChildrenActivity() {
         Intent intent = new Intent(this, MyChildrenActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToChangePasswordActivity() {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToChangeEmailActivity() {
+        Intent intent = new Intent(this, ChangeEmailActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

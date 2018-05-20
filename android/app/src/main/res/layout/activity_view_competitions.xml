@@ -17,53 +17,53 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/competitions_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@color/purple"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="45dp"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="45dp"
+            android:orientation="vertical">
 
 <!--            <TextView
-                android:id="@+id/list_header"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="@string/list_of_competitions_txt"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold" />-->
+            android:id="@+id/list_header"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/list_of_competitions_txt"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />-->
 
-                <ListView
-                    android:id="@+id/competitions_list"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="15sp"
-                    android:layout_marginTop="15sp"
-                    android:layout_weight="1"
-                    android:divider="@color/purple"
-                    android:dividerHeight="1dp" />
+            <ListView
+                android:id="@+id/competitions_list"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="15sp"
+                android:layout_marginTop="15sp"
+                android:layout_weight="1"
+                android:divider="@color/purple"
+                android:dividerHeight="1dp" />
 
 <!--            <Button
-                android:id="@+id/add_competition_btn"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:onClick="switchToCreateNewCompetitionActivity"
-                android:text="@string/add_competition_text_btn"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:theme="@style/AppTheme.TransparentButton" />-->
+            android:id="@+id/add_competition_btn"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:onClick="switchToCreateNewCompetitionActivity"
+            android:text="@string/add_competition_text_btn"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:theme="@style/AppTheme.TransparentButton" />-->
 
-            </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
+    </FrameLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/competitions_nav_view"
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

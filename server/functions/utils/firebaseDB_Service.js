@@ -41,18 +41,21 @@ module.exports = {
 		let birthDate = params.birthDate;
 		let email = params.email;
 		getCollectionByFilter('users', 'email', params.email, function(success, result) {
-			let child = result;
-			console.log('child ', child);
-			if(!Object.keys(child).length) {
+			let users = result;
+			console.log('users ', users);
+			if(!Object.keys(users).length) {
 				utilities.sendResponse(response, 'no_such_email', null);
 			}
-			else if(child.birthDate === params.birthDate) {
-				utilities.sendResponse(response, null, child);
-			}
 			else {
-				utilities.sendResponse(response, 'birth_date_dont_match', null);
+				let user = users[Object.keys(user)[0]];
+				if(user.birthDate === params.birthDate) {
+					utilities.sendResponse(response, null, child);
+				}
+				else {
+					utilities.sendResponse(response, 'birth_date_dont_match', null);
+				}
 			}
-		})
+		});
 	},
 
 	updateFirebaseUser: function(params, response) {
@@ -76,6 +79,34 @@ module.exports = {
 		})
 		.catch(function(error) {
 		    console.log("Error updating user:", error);
+		});
+	},
+
+	addExistingUserToCompetition: function(params, response) {
+		console.log('addExistingUserToCompetition params ', params);
+		getCollectionByFilter('users', 'email', params.email, function(success, result) {
+			let users = result;
+			console.log('users ', users);
+			if(!Object.keys(users).length) {
+				utilities.sendResponse(response, 'no_such_email', null);
+			}
+			else {
+				let user = users[Object.keys(user)[0]];
+				if(user.birthDate === params.birthDate) {
+					params.uid = user.uid;
+					joinToCompetition(params, function(success, result2) {
+						if(success) {
+							utilities.sendResponse(response, null, result2);
+						} 
+						else {
+							utilities.sendResponse(response, result2, null);
+						}
+					});
+				}
+				else {
+					utilities.sendResponse(response, 'birth_date_dont_match', null);
+				}
+			}
 		});
 	},
 
@@ -301,6 +332,7 @@ module.exports = {
 };
 
 let getCollectionByFilter = function(collectionName, filter, value, callback) {
+	console.log('getCollectionByFilter params collectionName: ', collectionName, ', filter: ', filter, ', value: ', value);
 	let db = admin.database();
 	let collectionRef = db.ref(collectionName);
 

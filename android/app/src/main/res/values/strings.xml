@@ -46,7 +46,7 @@
     <string name="ages">גילאים:</string>
     <string name="participants_for_iteration">מספר משתתפים בכל מקצה:</string>
     <string name="register">הרשם לתחרות</string>
-    <string name="register_user">רשום מתחרה חדש</string>
+    <string name="register_user">רשום מתחרה אחר</string>
     <string name="start_competition">התחל תחרות</string>
     <string name="reset_stopper">איפוס</string>
     <string name="start_timer">התחל</string>
@@ -64,7 +64,7 @@
     <string name="view_results_menu_btn">צפה בתוצאות</string>
     <string name="swimming_competitions_txt">תחרויות שחייה</string>
     <string name="add_temporary_user">מתחרה זמני</string>
-    <string name="add_new_user">מתחרה חדש במערכת</string>
+    <string name="add_new_user">מתחרה חדש</string>
     <string name="my_children_header">הילדים שלי</string>
     <string name="mobile_phone_number">מספר טלפון נייד</string>
     <string name="google_sign_in">כניסה באמצעות גוגל</string>
@@ -84,5 +84,7 @@
     <string name="style_sort_text">מיון לפי סגנון</string>
     <string name="date_sort_text">מיון לפי תאריך</string>
     <string name="name_sort_text">מיון לפי שם</string>
+    <string name="register_existing_user">מתחרה קיים</string>
+    <string name="search_by_email_and_birth_date">חפש לפי אימייל ותאריך לידה</string>
 
 </resources>

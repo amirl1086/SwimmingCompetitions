@@ -24,8 +24,11 @@ public class DateUtils {
 
     public String getCompleteDate(Calendar calendar) {
         int hours = calendar.get(Calendar.HOUR);
+        if(calendar.get(Calendar.AM_PM) == Calendar.AM) {
+            hours += 12;
+        }
         int minutes = calendar.get(Calendar.MINUTE);
-        return "מתקיימת ב: " + getDate(calendar) + ", בשעה - " + hours + ":" + minutes;
+        return "מתקיימת ב: " + getDate(calendar) + ",   בשעה - " + hours + ":" + minutes;
     }
 
     public String getHebrewDate(Calendar calendar) {

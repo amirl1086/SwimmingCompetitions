@@ -116,11 +116,11 @@ public class HomePageActivity extends LoadingDialog {
                         break;
                     }
                     case R.id.change_email_nav_item: {
-                        // TODO
+                        switchToChangeEmailActivity();
                         break;
                     }
                     case R.id.change_password_nav_item: {
-                        // TODO
+                        switchToChangePasswordActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -141,6 +141,18 @@ public class HomePageActivity extends LoadingDialog {
 
     private void switchToViewInRealTimeActivity() {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToChangePasswordActivity() {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToChangeEmailActivity() {
+        Intent intent = new Intent(this, ChangeEmailActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

@@ -53,7 +53,10 @@
         <activity android:name=".AddChildToParentActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".ViewStatisticsActivity" />
-        <activity android:name=".ViewInRealTimeActivity"></activity>
+        <activity android:name=".ViewInRealTimeActivity" />
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".ChangeEmailActivity" />
+        <activity android:name=".RegisterExistingUserActivity"></activity>
     </application>
 
 </manifest>

@@ -38,13 +38,6 @@
         android:orientation="horizontal"
         android:weightSum="2">
 
-        <TextView
-            android:id="@+id/birth_date_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:textSize="22sp" />
-
         <Button
             android:id="@+id/child_birth_date"
             android:layout_width="match_parent"
@@ -54,6 +47,14 @@
             android:onClick="setDate"
             android:textAlignment="center"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/birth_date_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="22sp" />
+
 
     </LinearLayout>
 
