@@ -70,26 +70,9 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
             catch (JSONException e) {
                 showToast("ViewCompetitionResultsActivity onCreate: Error initializing results");
             }
+        }
+        else {
 
-
-            /*JSONObject data = new JSONObject();
-            //get competitions list set up action params
-            try {
-                data.put("urlSuffix", "/getPersonalResults");
-                data.put("httpMethod", "GET");
-                JSONObject selectedCompetitionJson = this.selectedCompetition.getJSON_Object();
-                data.put("competition", selectedCompetitionJson.toString());
-
-            }
-            catch (JSONException e) {
-                showToast("ViewCompetitionsActivity getCompetitions: Error creating JSONObject");
-            }
-
-            showProgressDialog("טוען תחרויות...");
-
-            this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            this.jsonAsyncTaskPost.delegate = this;
-            this.jsonAsyncTaskPost.execute(data.toString());*/
         }
     }
 
@@ -97,35 +80,38 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void processFinish(String result) {
-        try {
-            if (result != null) {
+        if (result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
 
-                if (response.getBoolean("success")) {
+                JSONObject dataObj = response.getJSONObject("data");
+                Iterator<String> agesKeys = dataObj.keys();
 
-                    JSONObject dataObj = response.getJSONObject("data");
-                    Iterator<String> agesKeys = dataObj.keys();
-
-                    while (agesKeys.hasNext()) {
-                        String currentAge = agesKeys.next();
-                        JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
-                        this.results.add(currentResult);
-                    }
-
-                    this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
-                    this.listView.setAdapter(this.resultsListAdapter);
-                }
-                else {
-                    showToast("ViewCompetitionsActivity processFinish: Error loging in");
+                while (agesKeys.hasNext()) {
+                    String currentAge = agesKeys.next();
+                    JSONObject currentResult = new JSONObject(dataObj.get(currentAge).toString());
+                    this.results.add(currentResult);
                 }
 
+                this.resultsListAdapter = new AgeResultAdapter(this, R.layout.age_result_list_item, results);
+                this.listView.setAdapter(this.resultsListAdapter);
+            }
+            catch(Exception e) {
+                showToast("שגיאה בטעינת המידע מהשרת, נסה לאתחל את האפליקציה");
             }
         }
-        catch (JSONException e) {
-            showToast("ViewCompetitionsActivity processFinish: Error parsing JSONObject");
+        else {
+            showToast("שגיאה בטעינת המידע מהשרת, נסה לאתחל את האפליקציה");
         }
+
         hideProgressDialog();
+    }
+
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
     }
 }
