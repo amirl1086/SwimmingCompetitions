@@ -77,7 +77,7 @@ public class AddChildToParentActivity extends LoadingDialog implements AsyncResp
     }
 
     public void addChildToParent(View view) {
-        String birthDateText = dateView.getText().toString();
+        String birthDateText = this.dateView.getText().toString();
         String eMailText = this.email.getText().toString();
 
         JSONObject registerData = new JSONObject();

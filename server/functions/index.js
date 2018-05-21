@@ -68,6 +68,10 @@ exports.setCompetitionResults = functions.https.onRequest(function(request, resp
 	firebaseDB_Service.setCompetitionResults(request.body, response);
 });
 
+exports.addExistingUserToCompetition = functions.https.onRequest(function(request, response) {
+	firebaseDB_Service.addExistingUserToCompetition(request.body, response);
+});
+
 exports.initCompetitionForIterations = functions.https.onRequest(function(request, response) {
 	firebaseDB_Service.initCompetitionForIterations(request.body, response);
 });

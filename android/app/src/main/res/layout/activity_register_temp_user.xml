@@ -82,9 +82,9 @@
         android:layout_height="60dp"
         android:layout_margin="25dp"
         android:onClick="registerTempUser"
-        android:text="@string/register_temp_user_btn"
+        android:text="@string/confirm"
         android:textSize="26sp"
-        android:theme="@style/ThemeOverlay.TransparentButton"/>
+        android:theme="@style/AppTheme.TransparentButton"/>
 
 
 </LinearLayout>

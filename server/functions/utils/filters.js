@@ -16,18 +16,10 @@ module.exports = {
 	sortParticipantsByAge: function(participants) {
 		var today = moment(new Date());
 		//map results by age
-
-		//console.log('sortParticipantsByAge participants ', JSON.stringify(participants));	
 		return Object.keys(participants).reduce(function(totalResults, key) {
 			var participant = participants[key];
-
-			//console.log('sortParticipantsByAge participant ', participant);
-
 			var compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
-			//console.log('compare ', compare.format('DD/MM/YYYY hh:mm'))
-
 			var participantAge = Math.floor(today.diff(compare, 'years', true));
-			//console.log('participantAge ', participantAge);
 
 			if(!totalResults[participantAge]) {
 				totalResults[participantAge] = { 'males': [], 'females': [] };
@@ -40,8 +32,6 @@ module.exports = {
 	removeBlankSpots: function(competition, sortedParticipants) {
 		Object.keys(sortedParticipants).forEach(function(ageKey) {
 			var currentAgeParticipants = sortedParticipants[ageKey];
-
-			//console.log('currentAgeParticipants ' + JSON.stringify(currentAgeParticipants));
 
 			//loop over the gender
 			Object.keys(currentAgeParticipants).forEach(function(genderKey) {
@@ -68,12 +58,10 @@ module.exports = {
 				}
 			});
 		});
-
-		//console.log('participantsByAges ' + JSON.stringify(sortedParticipants));
 	},
 
 	filterCompetitions : function(competitions, params) {
-		var currentUser = JSON.parse(params.currentUser);
+		var currentUser = params.currentUser;
 		var today = moment();
 		var birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
 		var userAge = Math.floor(today.diff(birthDate, 'years', true));
@@ -81,12 +69,8 @@ module.exports = {
 
 		var filteredCompetitions = {};
 
-		//console.log('competitions ',  competitions);
-		//console.log('params ',  params);
-
 		for(var key in competitions) {
 			var currentCompetition = competitions[key];
-			//console.log('currentCompetition ',  currentCompetition);
 
 			for(var i = 0; i < filters.length; i++) {
 				switch(filters[i]) {

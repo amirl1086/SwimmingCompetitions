@@ -35,6 +35,13 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     private Spinner spinner;
     private Competition selectedCompetition;
     private User currentUser;
+    private String firstNameText;
+    private String lastNameText;
+    private String genderText;
+    private String birthDateText;
+    private String eMailText;
+    private String passwordText;
+    private String passwordConfirmationText;
 
 
     @Override
@@ -50,7 +57,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         }
         else {
             this.registerType = intent.getStringExtra("registerType");
-
         }
         this.spinner = findViewById(R.id.register_gender);
         this.firstName = findViewById(R.id.register_first_name);
@@ -71,7 +77,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     }
 
     private void initParticipantUser() {
-        String[] genders = new String[]{"בחר מין", "זכר", "נקבה"};
+        String[] genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
 
         ArrayAdapter<String> spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
@@ -88,7 +94,6 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if(position == 0) {
-                    // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 }
                 else {
@@ -112,46 +117,110 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
 
     public void createFirebaseUser(View view) {
-        String firstNameText = this.firstName.getText().toString();
-        String lastNameText = this.lastName.getText().toString();
-        String genderText = "", birthDateText = "";
+        if(isValid()) {
+            try {
+                JSONObject registerData = new JSONObject();
+                registerData.put("urlSuffix", "/addNewUser");
+                registerData.put("httpMethod", "POST");
+                registerData.put("email", this.eMailText);
+                registerData.put("password", this.passwordText);
+                registerData.put("firstName", this.firstNameText);
+                registerData.put("lastName", this.lastNameText);
+                registerData.put("gender", this.genderText);
+                registerData.put("birthDate", this.birthDateText);
+                registerData.put("type", this.registerType);
+                if(this.currentUser != null) {
+                    registerData.put("joinToCompetition", true);
+                }
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
+
+                showProgressDialog("נרשם למערכת...");
+
+                this.jsonAsyncTaskPost.execute(registerData.toString());
+
+            }
+            catch (JSONException e) {
+                showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
+            }
+
+        }
+    }
+
+    private boolean isValid() {
+        DateUtils dateUtils = new DateUtils();
+        this.firstNameText = this.firstName.getText().toString();
+        if(this.firstNameText.isEmpty()) {
+            this.firstName.setError("חובה למלא שם פרטי");
+            return false;
+        }
+        this.lastNameText = this.lastName.getText().toString();
+        if(this.lastNameText.isEmpty()) {
+            this.lastName.setError("חובה למלא שם משפחה");
+            return false;
+        }
+        this.genderText = "";
+        this.birthDateText = "";
 
         if (this.registerType.equals("student")) {
-            birthDateText = dateView.getText().toString();
-            genderText = spinner.getSelectedItem().toString();
-        }
+            this.birthDateText = dateView.getText().toString();
+            if(this.birthDateText.isEmpty()) {
+                return false;
+            }
+            else {
+                int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+                if(participantAge < 4) {
+                    showToast("הגיל המינימלי להשתתפות הוא 4");
+                    return false;
+                }
+                if(participantAge > 18) {
+                    showToast("הגיל המקסימלי להשתתפות הוא 18");
+                    return false;
+                }
 
-        String eMailText = this.email.getText().toString();
-        String passwordText = this.password.getText().toString();
-        String passwordConfirmationText = this.passwordConfirmation.getText().toString();
-
-        JSONObject registerData = new JSONObject();
-
-        try {
-            registerData.put("urlSuffix", "/addNewUser");
-            registerData.put("httpMethod", "POST");
-            registerData.put("email", eMailText);
-            registerData.put("password", passwordText);
-            registerData.put("passwordConfirmation", passwordConfirmationText);
-            registerData.put("firstName", firstNameText);
-            registerData.put("lastName", lastNameText);
-            registerData.put("gender", genderText);
-            registerData.put("birthDate", birthDateText);
-            registerData.put("type", this.registerType);
-            if(this.currentUser != null) {
-                registerData.put("joinToCompetition", true);
+            }
+            this.genderText = spinner.getSelectedItem().toString();
+            if(this.genderText.equals("בחר מגדר")) {
+                showToast("חובה למלא מגדר");
+                return false;
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
+
+        this.eMailText = this.email.getText().toString();
+        if(this.eMailText.isEmpty()) {
+            this.email.setError("חובה למלא כתובת אימייל");
+            return false;
+        }
+        if(!isValidEmail(this.eMailText)) {
+            this.email.setError("כתובת אימייל שגוייה");
+            return false;
         }
 
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        this.jsonAsyncTaskPost.delegate = this;
+        this.passwordText = this.password.getText().toString();
+        if(this.passwordText.isEmpty()) {
+            this.password.setError("חובה למלא סיסמא");
+            return false;
+        }
+        if(this.passwordText.length() < 6) {
+            this.password.setError("אורך סיסמא מינימלי 6 תווים");
+            return false;
+        }
 
-        showProgressDialog("נרשם למערכת...");
+        this.passwordConfirmationText = this.passwordConfirmation.getText().toString();
+        if(this.passwordConfirmationText.isEmpty()) {
+            this.passwordConfirmation.setError("חובה למלא אימות סיסמא");
+            return false;
+        }
+        if(!this.passwordConfirmationText.equals(this.passwordText)) {
+            this.passwordConfirmation.setError("סיסמא לא תואמת");
+            return false;
+        }
 
-        this.jsonAsyncTaskPost.execute(registerData.toString());
+        return true;
+    }
+
+    public boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     public void setDate(View view) {
@@ -210,7 +279,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     }
 
     public void switchToMainMenuActivity(User currentUser) {
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }

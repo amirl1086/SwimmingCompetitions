@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
+    android:layoutDirection="rtl"
     android:cacheColorHint="@android:color/transparent"
     android:orientation="vertical"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
@@ -52,15 +53,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/competition_list_item_ages"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="גילאים:"
@@ -70,10 +62,29 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/competition_list_item_ages"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text=","
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="סגנון:"
+            android:layout_weight="2"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -90,16 +101,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="סגנון:"
-            android:layout_weight="2"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="מטרים,"
+            android:text=", אורך המקצים: "
             android:layout_weight="2"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -117,7 +119,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="אורך המקצים: "
+            android:text="מטרים"
             android:layout_weight="2"
             android:textAlignment="center"
             android:textColor="@color/black"

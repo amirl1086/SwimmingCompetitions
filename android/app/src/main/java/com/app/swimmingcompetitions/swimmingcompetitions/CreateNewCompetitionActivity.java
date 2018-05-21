@@ -58,65 +58,69 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
         Intent intent = getIntent();
         if (intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
-        }
+            this.isTimePickerOpen = false;
+            this.competitionName = findViewById(R.id.competition_list_item_name);
 
-        this.isTimePickerOpen = false;
-        this.competitionName = findViewById(R.id.competition_list_item_name);
+            //set up datepickers
+            this.dateView = findViewById(R.id.competition_date);
+            this.timeView = findViewById(R.id.competition_time);
+            this.addSaveCompetition = findViewById(R.id.add_save_competition_btn);
+            this.calendar = Calendar.getInstance();
+            this.year = this.calendar.get(Calendar.YEAR);
+            this.month = this.calendar.get(Calendar.MONTH);
+            this.day = this.calendar.get(Calendar.DAY_OF_MONTH);
+            this.hours = this.calendar.get(Calendar.HOUR_OF_DAY);
+            this.minutes = this.calendar.get(Calendar.MINUTE);
+            //showDate(year, this.month + 1, this.day);
 
-        //set up datepickers
-        this.dateView = findViewById(R.id.competition_date);
-        this.timeView = findViewById(R.id.competition_time);
-        this.addSaveCompetition = findViewById(R.id.add_save_competition_btn);
-        this.calendar = Calendar.getInstance();
-        this.year = this.calendar.get(Calendar.YEAR);
-        this.month = this.calendar.get(Calendar.MONTH);
-        this.day = this.calendar.get(Calendar.DAY_OF_MONTH);
-        this.hours = this.calendar.get(Calendar.HOUR_OF_DAY);
-        this.minutes = this.calendar.get(Calendar.MINUTE);
-        //showDate(year, this.month + 1, this.day);
+            //set up number pickers
+            this.fromAge = findViewById(R.id.from_age);
+            this.toAge = findViewById(R.id.to_age);
+            this.fromAge.setMinValue(4);
+            this.fromAge.setMaxValue(18);
+            this.toAge.setMinValue(4);
+            this.toAge.setMaxValue(18);
 
-        //set up number pickers
-        this.fromAge = findViewById(R.id.from_age);
-        this.toAge = findViewById(R.id.to_age);
-        this.fromAge.setMinValue(4);
-        this.fromAge.setMaxValue(18);
-        this.toAge.setMinValue(4);
-        this.toAge.setMaxValue(18);
+            this.iterationLength = findViewById(R.id.iteration_length);
+            this.iterationLength.setMinValue(1);
+            this.iterationLength.setMaxValue(1000);
 
-        this.iterationLength = findViewById(R.id.iteration_length);
-        this.iterationLength.setMinValue(1);
-        this.iterationLength.setMaxValue(1000);
+            this.numOfParticipants = findViewById(R.id.num_of_participants);
+            this.numOfParticipants.setMinValue(1);
+            this.numOfParticipants.setMaxValue(12);
 
-        this.numOfParticipants = findViewById(R.id.num_of_participants);
-        this.numOfParticipants.setMinValue(1);
-        this.numOfParticipants.setMaxValue(12);
+            //set up spinner picker for swimming style
+            setupSpinner();
 
-        //set up spinner picker for swimming style
-        setupSpinner();
+            if(intent.hasExtra("editMode")) {
+                DateUtils dateUtils = new DateUtils();
+                this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+                this.competitionName.setText(this.selectedCompetition.getName());
+                Calendar competitionDate = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
+                showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH) + 1, competitionDate.get(Calendar.DAY_OF_MONTH));
+                showTime(competitionDate.get(Calendar.HOUR_OF_DAY), competitionDate.get(Calendar.MINUTE));
+                this.fromAge.setValue(Integer.valueOf(this.selectedCompetition.getFromAge()));
+                this.toAge.setValue(Integer.valueOf(this.selectedCompetition.getToAge()));
+                this.iterationLength.setValue(Integer.valueOf(this.selectedCompetition.getLength()));
+                this.numOfParticipants.setValue(this.selectedCompetition.getNumOfParticipants());
 
-        if(intent.hasExtra("editMode")) {
-            DateUtils dateUtils = new DateUtils();
-            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
-            this.competitionName.setText(this.selectedCompetition.getName());
-            Calendar competitionDate = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
-            showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH) + 1, competitionDate.get(Calendar.DAY_OF_MONTH));
-            showTime(competitionDate.get(Calendar.HOUR_OF_DAY), competitionDate.get(Calendar.MINUTE));
-            this.fromAge.setValue(Integer.valueOf(this.selectedCompetition.getFromAge()));
-            this.toAge.setValue(Integer.valueOf(this.selectedCompetition.getToAge()));
-            this.iterationLength.setValue(Integer.valueOf(this.selectedCompetition.getLength()));
-            this.numOfParticipants.setValue(this.selectedCompetition.getNumOfParticipants());
-
-            String swimmingStyle = this.selectedCompetition.getSwimmingStyle();
-            for(int i = 0; i < this.swimmingStyles.length; i++) {
-                if(this.swimmingStyles[i].equals(swimmingStyle)) {
-                    this.spinner.setSelection(i);
-                    break;
+                String swimmingStyle = this.selectedCompetition.getSwimmingStyle();
+                for(int i = 0; i < this.swimmingStyles.length; i++) {
+                    if(this.swimmingStyles[i].equals(swimmingStyle)) {
+                        this.spinner.setSelection(i);
+                        break;
+                    }
                 }
-            }
 
-            this.addSaveCompetition.setText("שמור שינויים");
+                this.addSaveCompetition.setText("שמור שינויים");
+            }
         }
+        else {
+            //switchToLogInActivity();
+        }
+
     }
+
 
     private void setupSpinner() {
         this.spinner = findViewById(R.id.swimming_style_spinner);
