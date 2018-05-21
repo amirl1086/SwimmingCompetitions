@@ -47,7 +47,7 @@ module.exports = {
 				utilities.sendResponse(response, 'no_such_email', null);
 			}
 			else {
-				let user = users[Object.keys(user)[0]];
+				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
 					utilities.sendResponse(response, null, child);
 				}
@@ -91,7 +91,7 @@ module.exports = {
 				utilities.sendResponse(response, 'no_such_email', null);
 			}
 			else {
-				let user = users[Object.keys(user)[0]];
+				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
 					params.uid = user.uid;
 					joinToCompetition(params, function(success, result2) {

@@ -36,6 +36,10 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
     private Spinner spinner;
     private ArrayAdapter<String> spinnerListAdapter;
     private String[] genders;
+    private String firstNameText;
+    private String lastNameText;
+    private String birthDateText;
+    private String genderText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,47 +50,50 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            //set up spinner picker for swimming style
+            this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
+            this.spinner = findViewById(R.id.temp_register_gender);
+            this.spinnerListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, genders) {
+
+                @Override
+                public boolean isEnabled(int position){
+                    return position != 0;
+                }
+
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(Color.GRAY);
+                    }
+                    else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+                    return view;
+                }
+            };
+
+            this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            this.spinner.setAdapter(spinnerListAdapter);
+
+            this.firstName = findViewById(R.id.temp_register_first_name);
+            this.lastName = findViewById(R.id.temp_register_last_name);
+            this.birthDateButton = findViewById(R.id.temp_register_birth_date);
+
+            this.dateView = findViewById(R.id.temp_birth_date_view);
+            this.calendar = Calendar.getInstance();
+            this.year = calendar.get(Calendar.YEAR);
+
+            this.month = calendar.get(Calendar.MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
+            showDate(year, month + 1, day);
+        }
+        else {
+            switchToLogInActivity();
         }
 
-        //set up spinner picker for swimming style
-        this.genders = new String[]{"בחר מין", "זכר", "נקבה"};
-        this.spinner = findViewById(R.id.temp_register_gender);
-        this.spinnerListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, genders) {
-
-            @Override
-            public boolean isEnabled(int position){
-                return position != 0;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-
-        this.spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        this.spinner.setAdapter(spinnerListAdapter);
-
-        this.firstName = findViewById(R.id.temp_register_first_name);
-        this.lastName = findViewById(R.id.temp_register_last_name);
-        this.birthDateButton = findViewById(R.id.temp_register_birth_date);
-
-        this.dateView = findViewById(R.id.temp_birth_date_view);
-        this.calendar = Calendar.getInstance();
-        this.year = calendar.get(Calendar.YEAR);
-
-        this.month = calendar.get(Calendar.MONTH);
-        this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDate(year, month + 1, day);
     }
 
     public void setDate(View view) {
@@ -109,39 +116,65 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
     };
 
     public void registerTempUser(View view) {
-        String firstNameText = this.firstName.getText().toString();
-        String lastNameText = this.lastName.getText().toString();
-        String birthDateText = this.dateView.getText().toString() + " 00:00";
-        String genderText;
+        if(isValid()) {
+            JSONObject registerData = new JSONObject();
 
-        if(this.spinner.getSelectedItem().toString().equals("זכר")) {
-            genderText = "male";
+            try {
+                registerData.put("urlSuffix", "/joinToCompetition");
+                registerData.put("httpMethod", "POST");
+                registerData.put("firstName", this.firstNameText);
+                registerData.put("lastName", this.lastNameText);
+                registerData.put("gender", this.genderText);
+                registerData.put("birthDate", this.birthDateText);
+                registerData.put("competitionId", this.selectedCompetition.getId());
+            }
+            catch (JSONException e) {
+                showToast("RegisterTempUserActivity registerTempUser: Error creating JSONObject");
+            }
+
+            showProgressDialog("מוסיף מתחרה חדש...");
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+
+            this.jsonAsyncTaskPost.execute(registerData.toString());
         }
-        else {
-            genderText = "female";
+    }
+
+    public Boolean isValid() {
+        DateUtils dateUtils = new DateUtils();
+        this.firstNameText = this.firstName.getText().toString();
+        if(this.firstNameText.isEmpty()) {
+            this.firstName.setError("חובה למלא שם פרטי");
+            return false;
         }
 
-        JSONObject registerData = new JSONObject();
-
-        try {
-            registerData.put("urlSuffix", "/joinToCompetition");
-            registerData.put("httpMethod", "POST");
-            registerData.put("firstName", firstNameText);
-            registerData.put("lastName", lastNameText);
-            registerData.put("gender", genderText);
-            registerData.put("birthDate", birthDateText);
-            registerData.put("competitionId", this.selectedCompetition.getId());
+        this.lastNameText = this.lastName.getText().toString();
+        if(this.lastNameText.isEmpty()) {
+            this.lastName.setError("חובה למלא שם משפחה");
+            return false;
         }
-        catch (JSONException e) {
-            showToast("RegisterTempUserActivity registerTempUser: Error creating JSONObject");
+        this.birthDateText = this.dateView.getText().toString();
+        int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+
+        int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
+        int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
+
+        if(participantAge < competitionFromAge) {
+            showToast("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+            return false;
         }
-
-        showProgressDialog("מוסיף מתחרה חדש...");
-
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        this.jsonAsyncTaskPost.delegate = this;
-
-        this.jsonAsyncTaskPost.execute(registerData.toString());
+        if(participantAge > competitionToAge) {
+            showToast("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
+            return false;
+        }
+        String selectedOptions = this.spinner.getSelectedItem().toString();
+        if(selectedOptions.equals("בחר מגדר")) {
+            showToast("חובה לבחור מגדר");
+            return false;
+        }
+        this.genderText = this.spinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
+        return true;
     }
 
     private void showToast(String message) {
@@ -174,6 +207,11 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         intent.putExtra("currentUser", this.currentUser);
         intent.putExtra("selectedCompetition", this.selectedCompetition);
         intent.putExtra("newParticipant", newParticipant.toString());
+        startActivity(intent);
+    }
+
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
     }
 }

@@ -77,7 +77,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
     }
 
     private void initParticipantUser() {
-        String[] genders = new String[]{"בחר מין", "זכר", "נקבה"};
+        String[] genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
 
         ArrayAdapter<String> spinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
@@ -180,7 +180,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
             }
             this.genderText = spinner.getSelectedItem().toString();
-            if(this.genderText.isEmpty()) {
+            if(this.genderText.equals("בחר מגדר")) {
                 showToast("חובה למלא מגדר");
                 return false;
             }

@@ -38,6 +38,8 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
     private TextView dateView;
     private EditText email;
     private int year, month, day;
+    private String birthDateText;
+    private String emailText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,29 +68,62 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
         }
     }
 
+    public boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
     public void addExistingUserToCompetition(View view) {
-        String birthDateText = this.dateView.getText().toString();
-        String eMailText = this.email.getText().toString();
+        if(isValid()) {
+            JSONObject registerData = new JSONObject();
 
-        JSONObject registerData = new JSONObject();
+            try {
+                registerData.put("urlSuffix", "/addExistingUserToCompetition");
+                registerData.put("httpMethod", "POST");
+                registerData.put("competitionId", this.selectedCompetition.getId());
+                registerData.put("email", this.emailText);
+                registerData.put("birthDate", this.birthDateText);
+            }
+            catch (JSONException e) {
+                showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+            }
 
-        try {
-            registerData.put("urlSuffix", "/addExistingUserToCompetition");
-            registerData.put("httpMethod", "POST");
-            registerData.put("competitionId", this.selectedCompetition.getId());
-            registerData.put("email", eMailText);
-            registerData.put("birthDate", birthDateText);
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+
+            showProgressDialog("מאמת את המידע...");
+
+            this.jsonAsyncTaskPost.execute(registerData.toString());
         }
-        catch (JSONException e) {
-            showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+    }
+
+    public Boolean isValid() {
+        DateUtils dateUtils = new DateUtils();
+
+        this.birthDateText = this.dateView.getText().toString();
+        int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+
+        int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
+        int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
+
+        if(participantAge < competitionFromAge) {
+            showToast("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+            return false;
+        }
+        if(participantAge > competitionToAge) {
+            showToast("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
+            return false;
         }
 
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        this.jsonAsyncTaskPost.delegate = this;
-
-        showProgressDialog("מאמת את המידע...");
-
-        this.jsonAsyncTaskPost.execute(registerData.toString());
+        this.emailText = this.email.getText().toString();
+        if(this.emailText.isEmpty()) {
+            this.email.setError("חובה למלא כתובת אימייל");
+            return false;
+        }
+        if(!isValidEmail(this.emailText)) {
+            this.email.setError("כתובת אימייל שגוייה");
+            return false;
+        }
+        return true;
     }
 
     public void setDate(View view) {
@@ -117,7 +152,7 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
     @Override
     public void processFinish(String result) {
         try {
-            if(!result.equals("null")) {
+            if(result == null) {
                 showToast("התאמה נמצאה, ההרשמה בוצעה בהצלחה");
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
