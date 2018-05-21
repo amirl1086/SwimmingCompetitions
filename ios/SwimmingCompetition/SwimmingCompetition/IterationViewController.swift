@@ -117,7 +117,7 @@ class IterationViewController: UIViewController {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
         var start:Int = 0
         for i in 0...participantsIndex.count-1 {
-            let name = UILabel(frame: CGRect(x: start, y: Int(self.endIterationButtonOutlet.frame.origin.y-10), width: width, height: 30))
+            let name = UILabel(frame: CGRect(x: start, y: Int(self.view.frame.size.height/2), width: width, height: 30))
             name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
             name.textAlignment = .center
             

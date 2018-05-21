@@ -47,7 +47,7 @@ class MainViewController: UIViewController {
     @IBAction func competitions(_ sender: UIButton) {
     }
     @IBAction func personalScores(_ sender: UIButton) {
-        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: ["uid": currentUser.uid as AnyObject]) { (response) in
+        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: ["uid": currentUser.uid as AnyObject, "competition": "{\"id\":\"-L2jyf8HegUxdqPwW37o\"}" as AnyObject]) { (response) in
             print("**********personal result***********")
             print(response)
             print("************************************")
@@ -66,7 +66,9 @@ class MainViewController: UIViewController {
     @IBAction func settings(_ sender: UIButton) {
     }
     @IBAction func files(_ sender: UIButton) {
-        
+        Service.shared.connectToServer(path: "addChildToParent", method: .post, params: ["email": "ref@mad.com" as AnyObject, "birthDate": "13/4/2006" as AnyObject]) { (response) in
+            print(response)
+        }
     }
     
     //Function for sign out
