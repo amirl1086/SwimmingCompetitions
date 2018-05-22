@@ -42,8 +42,8 @@ module.exports =  {
 		});
 	},
 
-	getUser: function(uid, callback) {
-		getUser(uid, callback);
+	getUser: function(uid, response, callback) {
+		getUser(uid, response, callback);
 	},
 
 	addNewFirebaseUser: function(params, response) {
@@ -84,13 +84,24 @@ module.exports =  {
 
 };
 
-let getUser = (uid, callback) => {
+let getUser = (uid, response, callback) => {
 	let db = admin.database();
 	let userRef = db.ref('users/' + uid);
 
 	userRef.on('value', function(snapshot) {
-		callback(true, snapshot.val());
+		if(callback) {
+			callback(true, snapshot.val());
+		}
+		else {
+			utilities.sendResponse(response, null, snapshot.val()); 
+		}
 	}, function(error) {
-		callback(false, error);
+		if(callback) {
+			callback(false, error);
+		}
+		else {
+			utilities.sendResponse(response, error, null); 
+		}
+		
 	});
 };

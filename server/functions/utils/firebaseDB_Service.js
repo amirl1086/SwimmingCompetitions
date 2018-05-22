@@ -177,7 +177,7 @@ module.exports = {
 	getPersonalResults: function(params, response) {
 		let uid = params.uid;
 		let db = admin.database();
-		authentication.getUser(uid, function(sucess, result) {
+		authentication.getUser(uid, null, function(sucess, result) {
 			if(sucess) {
 				let personalResultsRef = db.ref('personalResults/');
 				let currentUser = result;
