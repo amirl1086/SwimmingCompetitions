@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30010C1320B4030F0064F27A /* MenuViewController.swift */; };
+		30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30010C1520B403450064F27A /* MenuTableViewCell.swift */; };
 		30034C74207FEA4F0004CFB3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A951FE72BBA00201A20 /* Info.plist */; };
 		300613B91FF428BF0016E325 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300613B81FF428BF0016E325 /* Service.swift */; };
+		300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300B12F220B2AE1F003F6711 /* SettingsViewController.swift */; };
 		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
 		3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3027DA97203C9D3F009D8A17 /* Participant.swift */; };
 		30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */; };
@@ -66,7 +69,10 @@
 		102184E7B2AF81E8E9EEB52F /* Pods-SwimmingCompetitionTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionTests/Pods-SwimmingCompetitionTests.release.xcconfig"; sourceTree = "<group>"; };
 		2EA3B8D4F64D8725A21CB637 /* Pods_SwimmingCompetitionUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwimmingCompetitionUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests.release.xcconfig"; sourceTree = "<group>"; };
+		30010C1320B4030F0064F27A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		30010C1520B403450064F27A /* MenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuTableViewCell.swift; path = /Users/aviel/Dropbox/FinalProject/SwimmingCompetitions/ios/SwimmingCompetition/SwimmingCompetition/TableCell/MenuTableViewCell.swift; sourceTree = "<absolute>"; };
 		300613B81FF428BF0016E325 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		300B12F220B2AE1F003F6711 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		3019617B1FE8076C00046300 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3027DA97203C9D3F009D8A17 /* Participant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionTableViewCell.swift; sourceTree = "<group>"; };
@@ -144,6 +150,7 @@
 		3029136D205B3D9400D293F2 /* TableCell */ = {
 			isa = PBXGroup;
 			children = (
+				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
 				3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */,
 				308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */,
@@ -206,6 +213,8 @@
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
 				304C621720A839840073E490 /* NavigationController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				300B12F220B2AE1F003F6711 /* SettingsViewController.swift */,
+				30010C1320B4030F0064F27A /* MenuViewController.swift */,
 				3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */,
 				30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */,
 				305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */,
@@ -588,12 +597,14 @@
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
+				30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,
 				30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */,
 				30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */,
 				305EAF532013F1420059C789 /* IterationViewController.swift in Sources */,
 				30C13D842011D71D000AAE4E /* Competition.swift in Sources */,
+				30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */,
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
 				30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */,
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,
@@ -605,6 +616,7 @@
 				30FE9A8F1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld in Sources */,
 				30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */,
 				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
+				300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

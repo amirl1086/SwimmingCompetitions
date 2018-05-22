@@ -14,28 +14,26 @@ import GoogleSignIn
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
-
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         
+        /* Firebase */
         FirebaseApp.configure()
         
-        //new
+        /* Sign in with google */
         GIDSignIn.sharedInstance().clientID = "197819058733-uua0nj6o4j2cjuuk3dlbt75anavj59cl.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self
        
+        /* Start navigation controller that checking if the user already sign in */
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        
         window?.rootViewController = NavigationController()
         
-        //
         return true
     }
     
+    /* Function for sign in with google */
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
             print("\(error.localizedDescription)")
@@ -45,57 +43,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             guard let auth = user.authentication else {return}
             let credential = GoogleAuthProvider.credential(withIDToken: auth.idToken, accessToken: auth.accessToken)
             
-            Auth.auth().signIn(with: credential) { (user, error) in
-                if error != nil {
-                    print("error: \(error!)")
-                } else {
+            /* Send credential to get the firebase token */
+            Service.shared.firebaseAuthCredential(credential: credential) { (getToken) in
+                let parameters = [
+                    "idToken": getToken
+                    ] as [String: AnyObject]
+                /* Send request to get the user */
+                Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
                     
-                    user?.getIDToken(completion: { (token, error) in
-                        if error != nil {
-                            
-                        }
-                        else {
-                            let parameters = [
-                                "idToken": token!
-                                ] as [String: AnyObject]
-                            Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
-                                
-                                let sb = UIStoryboard(name: "Main", bundle: nil)
-                                
-                                if response.data["uid"] == nil {
-                                    Service.shared.connectToServer(path: "logIn", method: .post, params: parameters, completion: { (response) in
-                                        if response.succeed {
-                                            if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
-                                                registerView.googleUser = googleUser
-                                                let root = self.window!.rootViewController as! UINavigationController
-                                                root.pushViewController(registerView, animated: true)
-                                            }
-                                        }
-                                    })
-                                    
-                                } else if response.data["type"] as! String == "" {
-                                    if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
-                                        registerView.googleUser = googleUser
-                                        let root = self.window!.rootViewController as! UINavigationController
-                                        root.pushViewController(registerView, animated: true)
-                                    }
-                                } else {
-                                    if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
-                                        UserDefaults.standard.set(true, forKey: "loggedIn")
-                                        UserDefaults.standard.synchronize()
-                                        mainView.currentUser = User(json: response.data)
-                                        let root = self.window!.rootViewController as! UINavigationController
-                                        root.pushViewController(mainView, animated: true)
-                                    }
-                                    
+                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                 
+                    /* If null - the user not exist. Send request for login that create the user */
+                    if response.data["uid"] == nil {
+                        Service.shared.connectToServer(path: "logIn", method: .post, params: parameters, completion: { (response) in
+                            if response.succeed {
+                                if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
+                                    registerView.googleUser = googleUser
+                                    let root = self.window!.rootViewController as! UINavigationController
+                                    root.pushViewController(registerView, animated: true)
                                 }
                             }
-                            
+                        })
+                      
+                      /* If the user exist and the type is empty - the user need to complete the register process */
+                    } else if response.data["type"] as! String == "" {
+                        if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
+                            registerView.googleUser = googleUser
+                            let root = self.window!.rootViewController as! UINavigationController
+                            root.pushViewController(registerView, animated: true)
                         }
-                    })
+                      /* Get the user's details ang go to the main controller */
+                    } else {
+                        if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                            UserDefaults.standard.set(true, forKey: "loggedIn")
+                            UserDefaults.standard.synchronize()
+                            mainView.currentUser = User(json: response.data)
+                            let root = self.window!.rootViewController as! UINavigationController
+                            root.pushViewController(mainView, animated: true)
+                        }
+                    }
                 }
             }
-            // ...
         }
     }
     

@@ -22,27 +22,27 @@ class Competition {
     var currentParticipants = [Participant]()
     
     init(json: JSON, id: String) {
-            let name = json["name"] as? String
-            let activityDate = json["activityDate"] as? String
-            let swimmingStyle = json["swimmingStyle"] as? String
-            let length = json["length"] as? String
-            let numOfParticipants = json["numOfParticipants"] as? String
-            let fromAge = json["fromAge"] as? String
-            let toAge = json["toAge"] as? String
-            let id = id as? String
-            let participants = json["participants"] as? JSON
-            let currentParticipants = json["currentParticipants"] as? JSON
-            //else{return nil}
+        let name = json["name"] as? String
+        let activityDate = json["activityDate"] as? String
+        let swimmingStyle = json["swimmingStyle"] as? String
+        let length = json["length"] as? String
+        let numOfParticipants = json["numOfParticipants"] as? String
+        let fromAge = json["fromAge"] as? String
+        let toAge = json["toAge"] as? String
+        let id = id
+        let participants = json["participants"] as? JSON
+        let currentParticipants = json["currentParticipants"] as? JSON
         
         
-        self.name = name!
-        self.activityDate = activityDate!
-        self.swimmingStyle = swimmingStyle!
-        self.length = length!
-        self.numOfParticipants = numOfParticipants!
-        self.fromAge = fromAge!
-        self.toAge = toAge!
-        self.id = id!
+        
+        self.name = name != nil ? name! : ""
+        self.activityDate = activityDate != nil ? activityDate! : ""
+        self.swimmingStyle = swimmingStyle != nil ? swimmingStyle! : ""
+        self.length = length != nil ? length! : ""
+        self.numOfParticipants = numOfParticipants != nil ? numOfParticipants! : ""
+        self.fromAge = fromAge != nil ? fromAge! : ""
+        self.toAge = toAge != nil ? toAge! : ""
+        self.id = id
         self.participants = []
         self.currentParticipants = []
         

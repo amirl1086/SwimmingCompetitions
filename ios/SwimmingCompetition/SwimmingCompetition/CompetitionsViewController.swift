@@ -10,7 +10,7 @@ import UIKit
 
 class CompetitionsViewController: UIViewController {
     
-    var currenUser: User!
+    var currentUser: User!
     var competitions = [Competition]()
     var controllerType = ""
     
@@ -46,12 +46,12 @@ class CompetitionsViewController: UIViewController {
             let nextView = segue.destination as! CompetitionDetailsViewController
             let competition = sender as? Competition
             nextView.currentCompetition = competition
-            nextView.currentUser = self.currenUser
+            nextView.currentUser = self.currentUser
         }
     }
     
     func addButtonView() {
-        if(currenUser.type == "coach") {
+        if(currentUser.type == "coach") {
             let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCompetition))
             self.navigationItem.rightBarButtonItem = addButton
         }
@@ -82,7 +82,7 @@ class CompetitionsViewController: UIViewController {
         
         let parameters = [
             "currentUser": [
-                "uid":currenUser.uid
+                "uid":currentUser.uid
             ]
         ] as [String: AnyObject]
      

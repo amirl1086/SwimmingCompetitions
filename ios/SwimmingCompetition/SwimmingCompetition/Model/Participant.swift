@@ -21,26 +21,25 @@ class Participant {
     
     init(json: JSON, id: String) {
         let firstName = json["firstName"] as? String
-            let lastName = json["lastName"] as? String
-            let gender = json["gender"] as? String
-            let birthDate = json["birthDate"] as? String
+        let lastName = json["lastName"] as? String
+        let gender = json["gender"] as? String
+        let birthDate = json["birthDate"] as? String
         var competed:Bool = false
         if(json["competed"] as? String == "true" || json["competed"] as? String == "1" || json["competed"] as? Bool == true) {
             competed = true
         }
         
-       
-            let score = json["score"] as? String
-            let uid = id as? String
+        let score = json["score"] as? String
+        let uid = id
             
         
-        self.firstName = firstName!
-        self.lastName = lastName!
-        self.gender = gender!
-        self.birthDate = birthDate!
+        self.firstName = firstName != nil ? firstName! : ""
+        self.lastName = lastName != nil ? lastName! : ""
+        self.gender = gender != nil ? gender! : ""
+        self.birthDate = birthDate != nil ? birthDate! : ""
         self.competed = competed
-        self.score = score!
-        self.uid = uid!
+        self.score = score != nil ? score! : ""
+        self.uid = uid
         self.rank = 0
     }
     

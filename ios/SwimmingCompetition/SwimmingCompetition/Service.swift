@@ -17,11 +17,31 @@ class Service {
     
     static let shared = Service()
     
+    
     private init() {}
+    
+    func firebaseAuthCredential(credential: AuthCredential, completion: @escaping (String) -> Void) {
+       
+        Auth.auth().signIn(with: credential) { (user, error) in
+            if error != nil {
+                print("error: \(error!)")
+            } else {
+                user?.getIDToken(completion: { (token, error) in
+                    if error != nil {
+                        
+                    }
+                    else {
+                        completion(token!)
+                    }
+                })
+            }
+        }
+        
+    }
     
     func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         
-        var alert: UIAlertView = UIAlertView(title: activityMessage(path: path), message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
+        let alert: UIAlertView = UIAlertView(title: activityMessage(path: path), message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
         loadingIndicator.center = UIViewController().view.center;
         loadingIndicator.hidesWhenStopped = true
@@ -29,11 +49,8 @@ class Service {
         loadingIndicator.startAnimating();
         alert.setValue(loadingIndicator, forKey: "accessoryView")
         loadingIndicator.startAnimating()
-        if path != "getUser" {
-            alert.show();
-        }
-        
-        
+        alert.show();
+      
         
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else {
                         alert.dismiss(withClickedButtonIndex: -1, animated: true)
@@ -43,24 +60,23 @@ class Service {
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
         
             alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            
             switch(response.result) {
             case .success(let json):
-                    print(json)
-                    break;
+                guard let json = json as? JSON else{return}
+                do {
+                    let getData = try responseData(json: json)
+                    completion(getData)
+                } catch {}
+                
+                break;
+                
             case .failure(let error):
                     print(error)
-                    
                     let alert = self.systemErrorMessage(data: error._code)
                     UIApplication.top()?.present(alert, animated: true, completion: nil)
                     break;
             }
-            guard let json = response.result.value as? JSON else{return}
-            do {
-                //print(json)
-                let getData = try responseData(json: json)
-                completion(getData)
-            } catch {}
-            
         }
     }
     
@@ -109,7 +125,7 @@ class Service {
             break;
         default:
             title = "שגיאת מערכת";
-            message = "נא לאתחל את האפליקציה";
+            message = "אתחל את האפליקציה ונסה שוב";
         }
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

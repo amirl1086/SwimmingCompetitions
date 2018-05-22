@@ -21,7 +21,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     var data:JSON = [:]
     var controllerType = ""
     var competition: Competition!
-    var realTimeArray = [String]()
+    
+    var realTimeArray = [Participant]()
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -35,8 +36,25 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         if controllerType == "" {
             getCompetitionResults()
         } else {
-            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childChanged) { (snapshot) in
+            
+            Database.database().reference().child("personalResults/\(competition.getId())").observeSingleEvent(of: .value) { (snapshot) in
+                for part in snapshot.children.allObjects as! [DataSnapshot]{
+                    let data = part.value as! JSON
+                    let participant = Participant(json: data, id: part.key)
+                    self.realTimeArray.append(participant)
+                    print(participant.firstName)
+                    
+                }
+                print(self.realTimeArray.count)
+                self.tableView.reloadData()
+            }
+            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
+                let data = snapshot.value as! JSON
+                let participant = Participant(json: data, id: "")
+                self.realTimeArray.insert(participant, at: 0)
+                
                 print(snapshot)
+                self.tableView.reloadData()
             }
         }
         
@@ -114,7 +132,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return array[section].maleResults.count + array[section].femaleResults.count + 2
+        if controllerType == "" {
+            return array[section].maleResults.count + array[section].femaleResults.count + 2
+        }
+        return self.realTimeArray.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -126,76 +147,97 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
         
-        if indexPath.row == 0 {
-            cell.cellView.backgroundColor = UIColor.blue
-            title.text = "בנים"
-            cell.name.text = title.text
-            cell.rankImage.isHidden = true
-            cell.score.isHidden = true
-            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
-            cell.name.font = cell.name.font.withSize(35)
-           
-            //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
-        
-        }
-        else if indexPath.row-1 < array[indexPath.section].maleResults.count {
-            cell.cellView.backgroundColor = UIColor.clear
-            cell.name.text = "\(array[indexPath.section].maleResults[indexPath.row-1].lastName) \(array[indexPath.section].maleResults[indexPath.row-1].firstName)"
-            cell.score.text = array[indexPath.section].maleResults[indexPath.row-1].score
-            cell.rankImage.image = UIImage(named: "\(array[indexPath.section].maleResults[indexPath.row-1].rank).png")
-            cell.rankImage.isHidden = false
-            cell.score.isHidden = false
-            cell.contentView.backgroundColor = UIColor.clear
-            cell.name.font = cell.name.font.withSize(20)
-            //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+        if controllerType == "" {
+            if indexPath.row == 0 {
+                cell.cellView.backgroundColor = UIColor.blue
+                title.text = "בנים"
+                cell.name.text = title.text
+                cell.rankImage.isHidden = true
+                cell.score.isHidden = true
+                cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+                cell.name.font = cell.name.font.withSize(35)
+                
+                //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+                
+            }
+            else if indexPath.row-1 < array[indexPath.section].maleResults.count {
+                cell.cellView.backgroundColor = UIColor.clear
+                cell.name.text = "\(array[indexPath.section].maleResults[indexPath.row-1].lastName) \(array[indexPath.section].maleResults[indexPath.row-1].firstName)"
+                cell.score.text = array[indexPath.section].maleResults[indexPath.row-1].score
+                cell.rankImage.image = UIImage(named: "\(array[indexPath.section].maleResults[indexPath.row-1].rank).png")
+                cell.rankImage.isHidden = false
+                cell.score.isHidden = false
+                cell.contentView.backgroundColor = UIColor.clear
+                cell.name.font = cell.name.font.withSize(20)
+                //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+                
+            }
+            else if indexPath.row-1 == array[indexPath.section].maleResults.count {
+                cell.cellView.backgroundColor = UIColor.purple
+                title.text = "בנות"
+                cell.name.text = title.text
+                cell.rankImage.isHidden = true
+                cell.score.isHidden = true
+                
+                cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
+                cell.name.font = cell.name.font.withSize(35)
+                
+                //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+            }
+            else {
+                cell.cellView.backgroundColor = UIColor.clear
+                cell.name.text = "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].lastName) \(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].firstName)"
+                cell.score.text = array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].score
+                cell.rankImage.image = UIImage(named: "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].rank).png")
+                cell.rankImage.isHidden = false
+                cell.score.isHidden = false
+                cell.contentView.backgroundColor = UIColor.clear
+                cell.name.font = cell.name.font.withSize(20)
+                //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+            }
             
-        }
-        else if indexPath.row-1 == array[indexPath.section].maleResults.count {
-            cell.cellView.backgroundColor = UIColor.purple
-            title.text = "בנות"
-            cell.name.text = title.text
-            cell.rankImage.isHidden = true
-            cell.score.isHidden = true
+            cell.layer.backgroundColor = UIColor.clear.cgColor
             
-            cell.cellView.layer.cornerRadius = cell.cellView.frame.height/2
-            cell.name.font = cell.name.font.withSize(35)
-           
-            //cell.name.frame = CGRect(x: (cell.cellView.frame.width/2)-(cell.name.frame.width/2), y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
-        }
-        else {
-            cell.cellView.backgroundColor = UIColor.clear
-            cell.name.text = "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].lastName) \(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].firstName)"
-            cell.score.text = array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].score
-            cell.rankImage.image = UIImage(named: "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].rank).png")
-            cell.rankImage.isHidden = false
-            cell.score.isHidden = false
-            cell.contentView.backgroundColor = UIColor.clear
-            cell.name.font = cell.name.font.withSize(20)
-            //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
+            
+            return cell
         }
         
-        cell.layer.backgroundColor = UIColor.clear.cgColor
-        
+        cell.cellView.backgroundColor = UIColor.clear
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.name.text = "\(self.realTimeArray[indexPath.row].firstName) \(self.realTimeArray[indexPath.row].lastName)"
+        cell.rankImage.isHidden = true
+        cell.score.isHidden = false
+        cell.score.text = self.realTimeArray[indexPath.row].score
         
         return cell
+        
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return array.count
+        if controllerType == "" {
+            return array.count
+        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         let view = UIView()
-        view.backgroundColor = UIColor.black
-        let label = UILabel()
-        label.text = "גילאי \(array[section].age!)"
-        label.textAlignment = .center
-        label.font = label.font.withSize(25)
-        label.textColor = UIColor.white
-        label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
-        view.addSubview(label)
+        if controllerType == "" {
+            
+            view.backgroundColor = UIColor.black
+            let label = UILabel()
+            label.text = "גילאי \(array[section].age!)"
+            label.textAlignment = .center
+            label.font = label.font.withSize(25)
+            label.textColor = UIColor.white
+            label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
+            view.addSubview(label)
+            
+        }
         
         return view
+        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

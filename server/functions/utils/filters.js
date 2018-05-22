@@ -1,11 +1,11 @@
 
-var moment = require('moment');
+const moment = require('moment');
 
 module.exports = {
 
 	filterCompetedParticipants: function(participants) {
-		var newParticipants = {};
-		for(var key in participants) {
+		let newParticipants = {};
+		for(let key in participants) {
 			if(!participants[key].competed || participants[key].competed === 'false') {
 				newParticipants[key] = participants[key];
 			}
@@ -14,12 +14,12 @@ module.exports = {
 	},
 
 	sortParticipantsByAge: function(participants) {
-		var today = moment(new Date());
+		let today = moment(new Date());
 		//map results by age
 		return Object.keys(participants).reduce(function(totalResults, key) {
-			var participant = participants[key];
-			var compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
-			var participantAge = Math.floor(today.diff(compare, 'years', true));
+			let participant = participants[key];
+			let compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
+			let participantAge = Math.floor(today.diff(compare, 'years', true));
 
 			if(!totalResults[participantAge]) {
 				totalResults[participantAge] = { 'males': [], 'females': [] };
@@ -31,17 +31,17 @@ module.exports = {
 
 	removeBlankSpots: function(competition, sortedParticipants) {
 		Object.keys(sortedParticipants).forEach(function(ageKey) {
-			var currentAgeParticipants = sortedParticipants[ageKey];
+			let currentAgeParticipants = sortedParticipants[ageKey];
 
 			//loop over the gender
 			Object.keys(currentAgeParticipants).forEach(function(genderKey) {
-				var currentGenderParticipants = currentAgeParticipants[genderKey];
+				let currentGenderParticipants = currentAgeParticipants[genderKey];
 
 				console.log('currentGenderParticipants ' + JSON.stringify(currentGenderParticipants));
 				console.log('genderKey ' + JSON.stringify(genderKey));
 
 				//check if there are missing participants for the current age and gender
-				var leftovers = currentGenderParticipants.length % parseInt(competition.numOfParticipants);
+				let leftovers = currentGenderParticipants.length % parseInt(competition.numOfParticipants);
 
 				console.log('leftovers ' + JSON.stringify(leftovers));
 
@@ -49,7 +49,7 @@ module.exports = {
 					if(!sortedParticipants['0']) {
 						sortedParticipants['0'] = { 'males': [], 'females': [] };
 					}
-					for(var i = currentGenderParticipants.length - leftovers; i < currentGenderParticipants.length; i++) {
+					for(let i = currentGenderParticipants.length - leftovers; i < currentGenderParticipants.length; i++) {
 						//add it to the missing map
 						sortedParticipants['0'][genderKey].push(Object.assign({}, currentGenderParticipants[i]));
 						//remove it from the participants map
@@ -61,38 +61,34 @@ module.exports = {
 	},
 
 	filterCompetitions : function(competitions, params) {
-		var currentUser = params.currentUser;
-		var today = moment();
-		var birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
-		var userAge = Math.floor(today.diff(birthDate, 'years', true));
-		var filters = params.filters.split(',');
+		let currentUser = params.currentUser;
+		let today = moment();
+		let birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
+		let userAge = Math.floor(today.diff(birthDate, 'years', true));
+		let filters = params.filters.split(',');
 
-		var filteredCompetitions = {};
+		let filteredCompetitions = {};
 
-		for(var key in competitions) {
-			var currentCompetition = competitions[key];
+		for(let key in competitions) {
+			let currentCompetition = competitions[key];
 
-			for(var i = 0; i < filters.length; i++) {
-				switch(filters[i]) {
-					case 'uid': {
-						if(searchInParticipants(currentCompetition, currentUser.uid)) {
-							filteredCompetitions[key] = competitions[key];
-						}
-						break;
+			for(let i = 0; i < filters.length; i++) {
+				let filterName = filters[i];
+				if(filterName === 'uid') {
+					if(searchInParticipants(currentCompetition, currentUser.uid)) {
+						filteredCompetitions[key] = competitions[key];
 					}
-					case 'age': {
-						var fromAge = parseInt(currentCompetition.fromAge);
-						var toAge = parseInt(currentCompetition.toAge);
-						if(userAge >= fromAge && userAge <= toAge) {
-							filteredCompetitions[key] = competitions[key];
-						}
-						break;
+				}
+				else if(filterName === 'age') {
+					let fromAge = parseInt(currentCompetition.fromAge);
+					let toAge = parseInt(currentCompetition.toAge);
+					if(userAge >= fromAge && userAge <= toAge) {
+						filteredCompetitions[key] = competitions[key];
 					}
-					case 'isDone': {
-						if(currentCompetition.isDone) {
-							filteredCompetitions[key] = competitions[key];
-						}
-						break;
+				}
+				else if(filterName === 'isDone') {
+					if(currentCompetition.isDone) {
+						filteredCompetitions[key] = competitions[key];
 					}
 				}
 			}
