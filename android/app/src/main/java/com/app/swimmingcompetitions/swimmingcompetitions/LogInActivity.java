@@ -205,8 +205,8 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
 
     @Override
     public void processFinish(String result) {
-        try {
-            if(result != null) {
+        if(result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
                 JSONObject userData = response.getJSONObject("data");
                 this.currentUser = new User(userData);
@@ -217,13 +217,14 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                     switchToHomePageActivity();
                 }
             }
-            else {
-                showToast("שגיאה בכניסה למערכת, נסה שוב");
+            catch (Exception e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        else {
+            showToast("שגיאה בטעינת המידע מהשרת, נסה לאתחל את האפליקציה");
         }
+
         hideProgressDialog();
     }
 
