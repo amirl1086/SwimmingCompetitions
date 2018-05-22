@@ -13,9 +13,12 @@ import GoogleSignIn
 class MainViewController: UIViewController {
 
     var currentUser: User!
+    var menu_vc : MenuViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initMenuBar()
         
         //Remove back button from main controller
         self.navigationItem.leftBarButtonItem = nil
@@ -25,11 +28,11 @@ class MainViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = addButton
         
         //Set background
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")
-        self.view.insertSubview(imageView, at: 0)
+        //let imageView = UIImageView(frame: self.view.bounds)
+        //imageView.image = UIImage(named: "abstract_swimming_pool.jpg")
+        //self.view.insertSubview(imageView, at: 0)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "abstract_swimming_pool.jpg")!)
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -38,10 +41,46 @@ class MainViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //Send data to the next controller
-        let nextView = segue.destination as! CompetitionsViewController
-        let user = self.currentUser
-        nextView.currenUser = user
+        if segue.identifier == "goToCompetitions" {
+            let nextView = segue.destination as! CompetitionsViewController
+            let user = self.currentUser
+            nextView.currentUser = user
+        }
+        if segue.identifier == "goToSettings" {
+            let nextView = segue.destination as! SettingsViewController
+            let user = self.currentUser
+            nextView.currentUser = user
+        }
+        
     }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
+    }
+    
+    
+    
     
     //===== The buttons of the menu =====//
     @IBAction func competitions(_ sender: UIButton) {
@@ -59,7 +98,7 @@ class MainViewController: UIViewController {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
             competitionsView.controllerType = "realTime"
-            competitionsView.currenUser = self.currentUser
+            competitionsView.currentUser = self.currentUser
             self.navigationController?.pushViewController(competitionsView, animated: true)
         }
     }
@@ -86,11 +125,10 @@ class MainViewController: UIViewController {
         //Go back to login controller
         self.dismiss(animated: true, completion: nil)
         let sb = UIStoryboard(name: "Main", bundle: nil)
-        if let mainView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
-            self.navigationController?.viewControllers = [mainView]
+        if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
+            self.navigationController?.viewControllers = [loginView]
         }
     }
     //====================================//
   
 }
-

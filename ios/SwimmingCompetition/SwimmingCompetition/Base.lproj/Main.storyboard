@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9lB-Ty-PVo">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,18 +16,18 @@
             <objects>
                 <viewController storyboardIdentifier="loginID" title="התחברות" id="BYZ-38-t0r" userLabel="LoginViewController" customClass="LoginViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hrU-40-lmN">
-                                <rect key="frame" x="138" y="68" width="100" height="100"/>
+                                <rect key="frame" x="283.5" y="48" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="2f2-7j-fOd"/>
                                     <constraint firstAttribute="height" constant="100" id="Jry-8B-h9M"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="247" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="כתובת אימייל" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mhh-eN-Pgh" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="36" y="270" width="302" height="53"/>
+                            <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="247" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="כתובת אימייל" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mhh-eN-Pgh" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="36" y="250" width="594" height="53"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="Ynf-US-ULZ"/>
                                 </constraints>
@@ -47,12 +48,27 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderSize">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="activeBorderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="activeBackgroundColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="inactiveBorderColor">
+                                        <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X9f-wD-4nI" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="36" y="435" width="110" height="42"/>
+                                <rect key="frame" x="36" y="415" width="110" height="42"/>
                                 <color key="backgroundColor" red="0.1383508534" green="1" blue="0.1964782772" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="Hng-RX-inz"/>
@@ -72,7 +88,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Vr-HG-nrX" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="228" y="435" width="110" height="42"/>
+                                <rect key="frame" x="520" y="415" width="110" height="42"/>
                                 <color key="backgroundColor" red="1" green="0.046772837529804212" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="Auf-1n-na8"/>
@@ -92,7 +108,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hd6-2J-1Hm" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="36" y="351" width="302" height="50"/>
+                                <rect key="frame" x="36" y="331" width="594" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="S6b-de-2Sh"/>
                                 </constraints>
@@ -152,11 +168,11 @@
             <objects>
                 <viewController storyboardIdentifier="mainId" title="ראשי" id="Ye2-8Y-9cb" customClass="MainViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EGk-xb-df0">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ntw-B7-K3g" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="41" width="100" height="100"/>
+                                <rect key="frame" x="16" y="21" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="2yn-H2-3Eq"/>
                                     <constraint firstAttribute="width" constant="100" id="k6e-Nu-4Ch"/>
@@ -175,11 +191,11 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="competitions:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="PLF-4l-gqd"/>
-                                    <segue destination="Fqc-rk-ITT" kind="show" identifier="goToAddCompetition" id="Ngt-Hw-RSc"/>
+                                    <segue destination="Fqc-rk-ITT" kind="show" identifier="goToCompetitions" id="Ngt-Hw-RSc"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0oD-tF-8bf" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="247" y="173" width="100" height="100"/>
+                                <rect key="frame" x="539" y="153" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="yn9-W0-x69"/>
                                     <constraint firstAttribute="width" constant="100" id="zpf-bl-zoJ"/>
@@ -198,10 +214,11 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="statistics:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="stv-t3-GA3"/>
+                                    <segue destination="xN7-3N-fvJ" kind="show" id="veN-Bc-r2R"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEA-UR-XaS" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="173" width="100" height="100"/>
+                                <rect key="frame" x="16" y="153" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="AF0-LS-IPl"/>
                                     <constraint firstAttribute="height" constant="100" id="CBk-cV-NGz"/>
@@ -223,7 +240,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WmW-Si-gOE" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="249" y="306" width="96" height="100"/>
+                                <rect key="frame" x="541" y="286" width="96" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="55E-eB-7C6"/>
                                     <constraint firstAttribute="width" constant="96" id="DDu-Ab-rc5"/>
@@ -244,7 +261,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n7G-dv-K6r" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="249" y="41" width="96" height="100"/>
+                                <rect key="frame" x="541" y="21" width="96" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="Jab-rT-fht"/>
                                     <constraint firstAttribute="width" constant="96" id="waq-gU-HjI"/>
@@ -266,7 +283,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ch4-Mn-xgd" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="306" width="100" height="100"/>
+                                <rect key="frame" x="16" y="286" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="JKP-9P-TGN"/>
                                     <constraint firstAttribute="height" constant="100" id="vQd-Ne-u0e"/>
@@ -285,6 +302,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="settings:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="khQ-Tt-qRa"/>
+                                    <segue destination="XWv-pk-reg" kind="show" identifier="goToSettings" id="yz5-bk-I15"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -315,11 +333,11 @@
             <objects>
                 <viewController title="פרטי תחרות" id="8G7-kT-ObH" customClass="CompetitionDetailsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VYv-vH-iq5">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="שם התחרות" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XbZ-gS-7BH">
-                                <rect key="frame" x="72" y="36" width="230" height="89"/>
+                                <rect key="frame" x="72" y="16" width="522" height="89"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="89" id="sXb-xV-g9s"/>
                                 </constraints>
@@ -328,7 +346,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="תאריך" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROe-fW-nVm">
-                                <rect key="frame" x="72" y="165" width="230" height="50"/>
+                                <rect key="frame" x="72" y="145" width="522" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="or7-nR-vVY"/>
                                 </constraints>
@@ -337,7 +355,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מרחק וסגנון שחייה:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fAe-XC-Lsn">
-                                <rect key="frame" x="76" y="223" width="223" height="24"/>
+                                <rect key="frame" x="76" y="203" width="515" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="8q6-JE-QID"/>
                                     <constraint firstAttribute="width" constant="223" id="Et6-19-nSy"/>
@@ -347,7 +365,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מידע" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U6B-o9-m87">
-                                <rect key="frame" x="55" y="255" width="264" height="21"/>
+                                <rect key="frame" x="55" y="235" width="556" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="0xw-0Z-9kP"/>
                                     <constraint firstAttribute="width" constant="264" id="gUS-eG-aIF"/>
@@ -357,7 +375,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מס׳ משתתפים בכל מקצה:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xnF-PI-lyA">
-                                <rect key="frame" x="41" y="284" width="292" height="24"/>
+                                <rect key="frame" x="41" y="264" width="584" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="292" id="POh-gW-a8d"/>
                                     <constraint firstAttribute="height" constant="24" id="j3C-UV-FUN"/>
@@ -367,7 +385,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מס" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jkZ-GC-IcI">
-                                <rect key="frame" x="122" y="316" width="130" height="21"/>
+                                <rect key="frame" x="122" y="296" width="422" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="8rB-Gc-tmj"/>
                                     <constraint firstAttribute="width" constant="130" id="qTs-HD-b1n"/>
@@ -377,7 +395,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LR3-Vj-yiv" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="365" width="119" height="50"/>
+                                <rect key="frame" x="16" y="345" width="411" height="50"/>
                                 <color key="backgroundColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="x1J-Tp-vqe"/>
@@ -396,7 +414,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cOb-DS-CY3" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="176" y="363" width="183" height="54"/>
+                                <rect key="frame" x="468" y="343" width="183" height="54"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="183" id="8aG-FQ-uX1"/>
@@ -416,13 +434,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מתקיימת בתאריך:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tM0-0a-SKO">
-                                <rect key="frame" x="71" y="133" width="233" height="24"/>
+                                <rect key="frame" x="71" y="113" width="525" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOI-QC-Gb3">
-                                <rect key="frame" x="93" y="438" width="149" height="42"/>
+                                <rect key="frame" x="93" y="418" width="441" height="42"/>
                                 <color key="backgroundColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="149" id="KzS-va-lVH"/>
@@ -490,11 +508,11 @@
             <objects>
                 <viewController storyboardIdentifier="iterationId" id="pxa-Zl-704" customClass="IterationViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2o6-0A-BAE">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ryy-tR-HNl">
-                                <rect key="frame" x="136" y="554" width="103" height="42"/>
+                                <rect key="frame" x="282" y="262" width="103" height="42"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="סיום מקצה">
@@ -505,7 +523,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lrP-zN-7Hf">
-                                <rect key="frame" x="153" y="176" width="69" height="36"/>
+                                <rect key="frame" x="299" y="156" width="69" height="36"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="69" id="cXm-pd-ATQ"/>
@@ -519,7 +537,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0B-iq-WP3" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="118.5" y="75" width="138" height="48"/>
+                                <rect key="frame" x="264.5" y="55" width="138" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="138" id="r3e-g8-bla"/>
@@ -538,7 +556,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tP8-dr-SHq">
-                                <rect key="frame" x="134.5" y="138" width="106.5" height="30"/>
+                                <rect key="frame" x="280.5" y="118" width="106.5" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -574,19 +592,19 @@
             <objects>
                 <viewController storyboardIdentifier="competitionsId" title="תחרויות" id="Fqc-rk-ITT" customClass="CompetitionsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vy9-Ui-ftI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NRc-a1-gbv">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="-20" width="667" height="395"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="competitionCell" rowHeight="168" id="Vm7-4i-Zqq" customClass="CompetitionTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="168"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="competitionCell" rowHeight="168" id="Vm7-4i-Zqq" customClass="CompetitionTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="667" height="168"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vm7-4i-Zqq" id="Utu-4v-VnW">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="168"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="667" height="168"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zmT-xP-7mj">
@@ -685,11 +703,11 @@
             <objects>
                 <viewController storyboardIdentifier="addCompetitionID" title="הוספת תחרות" id="a7i-Il-LgQ" customClass="AddCompetitionViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1sB-6F-mvl">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="מספר משתתפים בכל מקצה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FDz-7E-rvw" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="72" y="233" width="230" height="39"/>
+                                <rect key="frame" x="72" y="213" width="522" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="ZNm-TO-D56"/>
                                 </constraints>
@@ -712,7 +730,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="תאריך" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Idp-2g-cF0" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="72" y="298" width="230" height="43"/>
+                                <rect key="frame" x="72" y="278" width="522" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="rFx-l1-Bjk"/>
                                 </constraints>
@@ -735,7 +753,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="שם התחרות" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qsi-x9-uq3" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="55" width="343" height="60"/>
+                                <rect key="frame" x="16" y="35" width="635" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="lxw-GB-yZa"/>
                                 </constraints>
@@ -764,7 +782,7 @@
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="בחר סגנון" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Nav-di-sXm" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="72" y="156" width="230" height="43"/>
+                                <rect key="frame" x="72" y="136" width="522" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="3kG-cB-y3w"/>
                                 </constraints>
@@ -787,7 +805,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="גילאים" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Rtp-LP-YjD" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="72" y="371" width="230" height="41"/>
+                                <rect key="frame" x="72" y="351" width="522" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="41" id="xq7-CP-lS4"/>
                                 </constraints>
@@ -810,7 +828,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JNe-jm-2Kl">
-                                <rect key="frame" x="150" y="443" width="74" height="30"/>
+                                <rect key="frame" x="296.5" y="423" width="74" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="7HJ-iA-8e5"/>
@@ -862,11 +880,11 @@
             <objects>
                 <viewController storyboardIdentifier="registerTypeId" title="בחר סוג רישום" id="D9E-M8-pyd" customClass="RegisterTypeViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="j01-cN-e6p">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k0b-6P-d2I" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="112" y="73" width="150" height="150"/>
+                                <rect key="frame" x="258.5" y="53" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="NY9-Od-s5W"/>
                                     <constraint firstAttribute="width" constant="150" id="Ppu-iV-lUB"/>
@@ -888,7 +906,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tyl-ru-bal" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="112" y="279" width="150" height="150"/>
+                                <rect key="frame" x="258.5" y="259" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="BLr-46-5cV"/>
                                     <constraint firstAttribute="height" constant="150" id="f1p-jl-yFA"/>
@@ -931,13 +949,13 @@
         <!--Register View Controller-->
         <scene sceneID="eRT-Ml-edW">
             <objects>
-                <viewController title="הרשמה" id="46i-Cg-s1T" userLabel="Register View Controller" customClass="RegisterViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="registerId" title="הרשמה" id="46i-Cg-s1T" userLabel="Register View Controller" customClass="RegisterViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9pz-yU-ggM">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="שם משפחה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MVA-Or-Ybb" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="42" width="167.5" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="שם משפחה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MVA-Or-Ybb" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="22" width="313.5" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Sm6-FJ-egp"/>
                                 </constraints>
@@ -955,15 +973,18 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="שנת לידה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pjv-ck-xzg" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="90" width="343" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="שנת לידה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pjv-ck-xzg" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="70" width="635" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="U6U-Y6-8Fp"/>
                                 </constraints>
@@ -981,18 +1002,21 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="dateTextBegin:" destination="46i-Cg-s1T" eventType="editingDidBegin" id="Est-kw-ujM"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="כתובת אימייל" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zxw-LM-Yuz" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="186" width="343" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="כתובת אימייל" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zxw-LM-Yuz" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="166" width="635" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="PpS-NF-DTm"/>
                                 </constraints>
@@ -1010,15 +1034,18 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MKD-jL-cvU" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="234" width="343" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MKD-jL-cvU" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="214" width="635" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="rfY-LU-zGS"/>
                                 </constraints>
@@ -1036,15 +1063,18 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="שם פרטי" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jlK-rC-zD3" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="191.5" y="42" width="167.5" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="שם פרטי" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jlK-rC-zD3" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="337.5" y="22" width="313.5" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="ypZ-AF-sg9"/>
                                 </constraints>
@@ -1062,15 +1092,18 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="מפתח מוצר" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uyd-LP-jyo" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="330" width="343" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="מפתח מוצר" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uyd-LP-jyo" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="310" width="635" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="ncs-9x-4cT"/>
                                 </constraints>
@@ -1088,15 +1121,18 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="אימות סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Y5P-O9-1oB" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="282" width="343" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="אימות סיסמה" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Y5P-O9-1oB" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="262" width="635" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="gDE-wo-Mab"/>
                                 </constraints>
@@ -1114,15 +1150,18 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Blt-Gl-m1Q" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="152" y="387" width="70" height="70"/>
+                                <rect key="frame" x="298.5" y="367" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.1383508534" green="1" blue="0.1964782772" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="YNR-ed-lNh"/>
@@ -1145,7 +1184,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="מין:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRK-CD-RbH">
-                                <rect key="frame" x="317" y="143" width="42" height="30"/>
+                                <rect key="frame" x="609" y="123" width="42" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="F5p-re-oVa"/>
                                     <constraint firstAttribute="width" constant="42" id="enl-Yy-jOF"/>
@@ -1155,7 +1194,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="aDe-I7-knl">
-                                <rect key="frame" x="226" y="144" width="83" height="29"/>
+                                <rect key="frame" x="518" y="124" width="83" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="vvv-UM-eHr"/>
                                 </constraints>
@@ -1165,8 +1204,8 @@
                                 </segments>
                                 <color key="tintColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </segmentedControl>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="מספר טלפון" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OUD-CN-0kn" userLabel="phoneNumber" customClass="HoshiTextField" customModule="TextFieldEffects">
-                                <rect key="frame" x="16" y="138" width="202" height="41"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="מספר טלפון" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OUD-CN-0kn" userLabel="phoneNumber" customClass="AkiraTextField" customModule="TextFieldEffects">
+                                <rect key="frame" x="16" y="118" width="494" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="41" id="1WQ-SW-CDD"/>
                                 </constraints>
@@ -1184,10 +1223,19 @@
                                         <color key="value" red="1" green="0.04677283753" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="value" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="placeholderFontScale">
                                         <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderSize">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="inactiveBorderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
@@ -1246,29 +1294,66 @@
             </objects>
             <point key="canvasLocation" x="2268" y="995.35232383808102"/>
         </scene>
+        <!--הגדרות-->
+        <scene sceneID="aDN-oC-KHx">
+            <objects>
+                <viewController title="הגדרות" id="XWv-pk-reg" customClass="SettingsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eiK-BY-Kif">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxl-Se-rkQ">
+                                <rect key="frame" x="106" y="70" width="162" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="עריכת פרטים אישיים">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="editPersonalDetails:" destination="XWv-pk-reg" eventType="touchUpInside" id="vOA-gO-2Cp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6qt-uJ-XJO">
+                                <rect key="frame" x="120" y="167" width="148" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="שינוי סיסמא">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="changePassword:" destination="XWv-pk-reg" eventType="touchUpInside" id="wQg-LS-i9d"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Tzk-RS-p7A"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vqi-cj-jM8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3389.5999999999999" y="953.97301349325346"/>
+        </scene>
         <!--Personal Results View Controller-->
         <scene sceneID="Eaa-pv-w5E">
             <objects>
                 <viewController storyboardIdentifier="resultsId" id="Ld4-WH-O4Y" customClass="PersonalResultsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SEg-P2-fwG">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="X5G-xO-4NU">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="resultsCell" rowHeight="92" id="rLm-q9-mgI" customClass="ResultsTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="92"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="resultsCell" rowHeight="92" id="rLm-q9-mgI" customClass="ResultsTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="667" height="92"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rLm-q9-mgI" id="vxZ-hL-2id">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="91.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rLm-q9-mgI" id="vxZ-hL-2id">
+                                            <rect key="frame" x="0.0" y="0.0" width="667" height="91.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hMA-sf-Xd4">
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hMA-sf-Xd4">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="91"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfr-MD-zPE">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfr-MD-zPE">
                                                             <rect key="frame" x="99" y="19" width="210" height="54"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="54" id="Gyg-l8-vB6"/>
@@ -1278,7 +1363,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3nO-XX-uGl">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3nO-XX-uGl">
                                                             <rect key="frame" x="0.0" y="24" width="91" height="44"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="91" id="8e1-FA-I6H"/>
@@ -1288,7 +1373,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MY0-Ex-DNm">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MY0-Ex-DNm">
                                                             <rect key="frame" x="325" y="21" width="50" height="50"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="50" id="U4I-Fs-Vt0"/>
@@ -1350,11 +1435,11 @@
             <objects>
                 <viewController storyboardIdentifier="tempRegID" id="MWL-dn-C8B" customClass="TempRegPopUpViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="S26-SI-MAp">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gF0-jP-U0B">
-                                <rect key="frame" x="16" y="52" width="343" height="421"/>
+                                <rect key="frame" x="162" y="32" width="343" height="421"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jkp-zN-c8P">
                                         <rect key="frame" x="0.0" y="367" width="150" height="54"/>
@@ -1507,13 +1592,72 @@
             </objects>
             <point key="canvasLocation" x="6600.8000000000002" y="131.78410794602701"/>
         </scene>
+        <!--Menu View Controller-->
+        <scene sceneID="oGl-kg-jeK">
+            <objects>
+                <viewController storyboardIdentifier="menuId" id="xN7-3N-fvJ" customClass="MenuViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kde-cV-teM">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="c8H-PU-Y0Y">
+                                <rect key="frame" x="427" y="0.0" width="240" height="375"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="SJM-ww-2rX"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="menuCell" id="nR3-vC-6YH" customClass="MenuTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="240" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nR3-vC-6YH" id="VM6-jK-dDi">
+                                            <rect key="frame" x="0.0" y="0.0" width="240" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4h6-JK-yjc">
+                                                    <rect key="frame" x="15" y="11" width="502" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="bottom" secondItem="VM6-jK-dDi" secondAttribute="bottomMargin" id="22o-Ca-uNe"/>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="trailing" secondItem="VM6-jK-dDi" secondAttribute="trailingMargin" id="D48-wi-QF4"/>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="top" secondItem="VM6-jK-dDi" secondAttribute="topMargin" id="fJg-ci-qgP"/>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="leading" secondItem="VM6-jK-dDi" secondAttribute="leadingMargin" id="zOB-cU-UcE"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="label" destination="4h6-JK-yjc" id="x86-yo-Lm3"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="c8H-PU-Y0Y" firstAttribute="bottom" secondItem="BpG-lg-mP7" secondAttribute="bottom" id="TK2-bS-17R"/>
+                            <constraint firstItem="c8H-PU-Y0Y" firstAttribute="trailing" secondItem="BpG-lg-mP7" secondAttribute="trailing" id="Vg4-WE-OWN"/>
+                            <constraint firstItem="c8H-PU-Y0Y" firstAttribute="top" secondItem="BpG-lg-mP7" secondAttribute="top" id="iF1-SC-VMH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="BpG-lg-mP7"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="c8H-PU-Y0Y" id="lAa-NW-r6G"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FiY-yI-CnF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7688.8000000000002" y="129.98500749625188"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="RJG-Bf-Wh8">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9lB-Ty-PVo" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ACJ-Vs-7gD">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

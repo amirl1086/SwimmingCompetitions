@@ -12,6 +12,9 @@ import GoogleSignIn
 
 class RegisterViewController: UIViewController, UITextFieldDelegate {
     
+    var currentUser: User!
+    
+    
     //===== Text fields =====//
     @IBOutlet var gender: UISegmentedControl!
     @IBOutlet weak var firstName: UITextField!
@@ -55,6 +58,11 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             self.email.isEnabled = false
         }
         
+        if currentUser != nil {
+            self.title = "פרטים אישיים"
+            cancelEditDetails()
+        }
+        
         // Do any additional setup after loading the view, typically from a nib.
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
@@ -75,6 +83,61 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
+    }
+    
+    @objc func cancelEditDetails() {
+        self.firstName.text = self.currentUser.firstName
+        self.lastName.text = self.currentUser.lastName
+        self.birthDate.text = self.currentUser.birthDate
+        self.email.text = self.currentUser.email
+        if currentUser.gender == "female" {
+            self.gender.selectedSegmentIndex = 0
+        } else {
+            self.gender.selectedSegmentIndex = 1
+        }
+        self.phoneNumber.text = self.currentUser.phoneNumber
+        
+        self.email.isEnabled = false
+        self.email.textColor = UIColor.darkGray
+        self.firstName.isEnabled = false
+        self.firstName.textColor = UIColor.darkGray
+        self.lastName.isEnabled = false
+        self.lastName.textColor = UIColor.darkGray
+        self.birthDate.isEnabled = false
+        self.birthDate.textColor = UIColor.darkGray
+        self.phoneNumber.isEnabled = false
+        self.phoneNumber.textColor = UIColor.darkGray
+        self.gender.isEnabled = false
+        self.gender.tintColor = UIColor.darkGray
+        
+        let editButton = UIBarButtonItem(title: "ערוך", style: .done, target: self, action: #selector(editDetails))
+        self.navigationItem.rightBarButtonItem = editButton
+        
+        self.confirmButton.isHidden = true
+        self.password.isHidden = true
+        self.passwordConfirmation.isHidden = true
+    }
+    
+    @objc func editDetails() {
+        
+        let cancelEditButton = UIBarButtonItem(title: "בטל עריכה", style: .done, target: self, action: #selector(cancelEditDetails))
+        self.navigationItem.rightBarButtonItem = cancelEditButton
+        
+        //self.email.isEnabled = true
+        //self.email.textColor = UIColor.black
+        self.firstName.isEnabled = true
+        self.firstName.textColor = UIColor.black
+        self.lastName.isEnabled = true
+        self.lastName.textColor = UIColor.black
+        self.birthDate.isEnabled = true
+        self.birthDate.textColor = UIColor.black
+        self.phoneNumber.isEnabled = true
+        self.phoneNumber.textColor = UIColor.black
+        self.gender.isEnabled = true
+        self.gender.tintColor = UIColor.blue
+        
+        self.confirmButton.setTitle("שמור שינויים", for: .normal)
+        self.confirmButton.isHidden = false
     }
     
     @objc func keyboardWillChange(notification: Notification) {
