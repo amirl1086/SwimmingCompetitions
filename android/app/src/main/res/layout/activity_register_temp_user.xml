@@ -2,44 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="15dp"
+    android:layout_height="match_parent"
 
+    android:background="@drawable/abstract_swimming_pool"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    android:layout_height="match_parent"
-    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.RegisterTempUserActivity"
-    android:background="@drawable/abstract_swimming_pool">
+    android:padding="15dp"
+    tools:context="com.app.swimmingcompetitions.swimmingcompetitions.RegisterTempUserActivity">
 
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp">
 
         <EditText
             android:id="@+id/temp_register_first_name"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:hint="@string/register_first_name"
-            android:textSize="26sp"
             android:inputType="textPersonName"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="26sp" />
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp">
 
         <EditText
             android:id="@+id/temp_register_last_name"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="26sp"
             android:hint="@string/register_last_name"
             android:inputType="textPersonName"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="26sp" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -55,26 +55,27 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_weight="1"
-            android:textSize="22sp"
             android:hint="@string/register_birth_date"
             android:onClick="setDate"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/temp_birth_date_view"
-            android:textSize="24sp"
-            android:textAlignment="center"
+            style="@android:style/Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
     <Spinner
         android:id="@+id/temp_register_gender"
-        android:layout_marginTop="25dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
+        android:layout_height="60dp"
+        android:layout_marginTop="25dp" />
 
     <Button
         android:id="@+id/temp_register_btn"
@@ -84,7 +85,7 @@
         android:onClick="registerTempUser"
         android:text="@string/confirm"
         android:textSize="26sp"
-        android:theme="@style/AppTheme.TransparentButton"/>
+        android:theme="@style/AppTheme.TransparentButton" />
 
 
 </LinearLayout>

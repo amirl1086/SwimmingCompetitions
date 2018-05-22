@@ -61,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:textAlignment="center"
+                style="@android:style/Widget.EditText"
                 android:layout_weight="1"
                 android:textSize="22sp" />
 

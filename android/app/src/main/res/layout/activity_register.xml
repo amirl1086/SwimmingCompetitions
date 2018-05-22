@@ -66,6 +66,7 @@
 
             <TextView
                 android:id="@+id/birth_date_view"
+                style="@android:style/Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:textAlignment="center"

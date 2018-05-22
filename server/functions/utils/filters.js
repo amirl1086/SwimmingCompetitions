@@ -102,3 +102,9 @@ module.exports = {
 	}
 
 }
+
+let searchInParticipants = (competition, uid) => {
+	let participantKey = Object.keys(competition.participants).find((participant, key) => key === uid);
+	console.log('participantKey ', participantKey);
+	return participantKey != null;
+}

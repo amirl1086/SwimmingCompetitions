@@ -16,6 +16,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,23 +26,23 @@ import java.util.Calendar;
 
 public class RegisterTempUserActivity extends LoadingDialog implements AsyncResponse {
 
+    private User currentUser;
+    private FirebaseUser fbUser;
+    private FirebaseAuth mAuth;
+
+    private Competition selectedCompetition;
     private JSON_AsyncTask jsonAsyncTaskPost;
+
     private EditText firstName;
     private EditText lastName;
-    private EditText gender;
-    private Button birthDateButton;
-    private Calendar calendar;
     private TextView dateView;
     private int year, month, day;
-    private Competition selectedCompetition;
-    private User currentUser;
     private Spinner spinner;
-    private ArrayAdapter<String> spinnerListAdapter;
-    private String[] genders;
     private String firstNameText;
     private String lastNameText;
     private String birthDateText;
     private String genderText;
+    private ArrayAdapter<String> spinnerListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,11 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
+            this.mAuth = FirebaseAuth.getInstance();
+            this.fbUser = this.mAuth.getCurrentUser();
+
             //set up spinner picker for swimming style
-            this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
+            String[] genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
             this.spinner = findViewById(R.id.temp_register_gender);
             this.spinnerListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, genders) {
 
@@ -80,10 +86,9 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
 
             this.firstName = findViewById(R.id.temp_register_first_name);
             this.lastName = findViewById(R.id.temp_register_last_name);
-            this.birthDateButton = findViewById(R.id.temp_register_birth_date);
 
             this.dateView = findViewById(R.id.temp_birth_date_view);
-            this.calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             this.year = calendar.get(Calendar.YEAR);
 
             this.month = calendar.get(Calendar.MONTH);
@@ -93,7 +98,6 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         else {
             switchToLogInActivity();
         }
-
     }
 
     public void setDate(View view) {
@@ -161,16 +165,23 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
         int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
 
         if(participantAge < competitionFromAge) {
-            showToast("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+            this.dateView.setError("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
             return false;
         }
-        if(participantAge > competitionToAge) {
-            showToast("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
+        else if(participantAge > competitionToAge) {
+            this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionFromAge);
             return false;
         }
+        else {
+            this.dateView.setError(null);
+        }
+
         String selectedOptions = this.spinner.getSelectedItem().toString();
         if(selectedOptions.equals("בחר מגדר")) {
-            showToast("חובה לבחור מגדר");
+            TextView errorText = (TextView) this.spinner.getSelectedView();
+            errorText.setError("");
+            errorText.setTextColor(Color.RED);
+            errorText.setText("חובה לבחור מגדר");
             return false;
         }
         this.genderText = this.spinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
@@ -187,18 +198,18 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
 
     @Override
     public void processFinish(String result) {
-        try {
-            JSONObject response = new JSONObject(result);
-            JSONObject dataObj = response.getJSONObject("data");
-            if (response.getBoolean("success")) {
-                hideProgressDialog();
+        if(result != null) {
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
                 switchToViewCompetitionActivity(dataObj);
             }
-            else {
-                showToast("RegisterTempUserActivity processFinish: Error registering temporary user");
+            catch (JSONException e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
             }
-        } catch (JSONException e) {
-            showToast("RegisterTempUserActivity processFinish: Error parsing JSONObject");
+        }
+        else {
+            showToast("שגיאה בהרשמה של המשתתף במערכת, נסה לאתחל את האפליקציה");
         }
     }
 

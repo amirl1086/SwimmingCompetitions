@@ -3,27 +3,16 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Calendar;
 
 public class RegisterExistingUserActivity extends LoadingDialog implements AsyncResponse {
@@ -32,8 +21,6 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
     private JSON_AsyncTask jsonAsyncTaskPost;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
-    private DrawerLayout mDrawerLayout;
-    private NavigationView navigationView;
     private Competition selectedCompetition;
     private TextView dateView;
     private EditText email;
@@ -99,21 +86,6 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
     public Boolean isValid() {
         DateUtils dateUtils = new DateUtils();
 
-        this.birthDateText = this.dateView.getText().toString();
-        int participantAge = dateUtils.getAgeByDate(this.birthDateText);
-
-        int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
-        int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
-
-        if(participantAge < competitionFromAge) {
-            showToast("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
-            return false;
-        }
-        if(participantAge > competitionToAge) {
-            showToast("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
-            return false;
-        }
-
         this.emailText = this.email.getText().toString();
         if(this.emailText.isEmpty()) {
             this.email.setError("חובה למלא כתובת אימייל");
@@ -123,6 +95,25 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
             this.email.setError("כתובת אימייל שגוייה");
             return false;
         }
+
+        this.birthDateText = this.dateView.getText().toString();
+        int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+
+        int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
+        int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
+
+        if(participantAge < competitionFromAge) {
+            this.dateView.setError("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+            return false;
+        }
+        else if(participantAge > competitionToAge) {
+            this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionFromAge);
+            return false;
+        }
+        else {
+            this.dateView.setError(null);
+        }
+
         return true;
     }
 
@@ -151,18 +142,29 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
 
     @Override
     public void processFinish(String result) {
-        try {
-            if(result == null) {
-                showToast("התאמה נמצאה, ההרשמה בוצעה בהצלחה");
+        if(result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
+                if(response.getBoolean("success")) {
+                    showToast("התאמה נמצאה, ההרשמה בוצעה בהצלחה");
+                    switchToViewCompetitionActivity(dataObj);
+                }
+                else {
+                    if(dataObj.getString("message").equals("birth_date_dont_match")) {
+                        showToast("התאמה לא נמצאה, בדוק את תאריך הלידה");
+                    }
+                    else if(dataObj.getString("message").equals("no_such_email")) {
+                        showToast("התאמה לא נמצאה, בדוק את כתובת האימייל");
+                    }
+                }
             }
-            else {
-                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
+            catch(Exception e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        else {
+            showToast("שגיאה בהרשמת המשתמש במערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();
@@ -190,6 +192,14 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
 
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewCompetitionActivity(JSONObject newParticipant) {
+        Intent intent = new Intent(this, ViewCompetitionActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
+        intent.putExtra("newParticipant", newParticipant.toString());
         startActivity(intent);
     }
 

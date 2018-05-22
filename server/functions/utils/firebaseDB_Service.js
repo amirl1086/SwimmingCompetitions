@@ -3,7 +3,6 @@ const admin = require('firebase-admin');
 const utilities = require('./utils.js');
 const filters = require('./filters.js');
 const authentication = require('../auth/auth.js');
-console.log('authentication 1 ', authentication);
 const moment = require('moment');
 
 module.exports = {
@@ -12,6 +11,7 @@ module.exports = {
 		let db = admin.database();
 		let usersRef = db.ref('users/' + firebaseUser.uid);
 
+		//create the user object
 		usersRef.set({
 			'uid': firebaseUser.uid,
 			'email': userParams.email,
@@ -22,8 +22,9 @@ module.exports = {
 			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 		});
 
+		//insert to database
 		usersRef.on('value', function(snapshot) {
-			if(userParams.joinToCompetition) {
+			if(userParams.joinToCompetition) { //if join to competition is requested after registering
 				joinToCompetition(snapshot.val(), function(success, result) {
 					callback(success, snapshot.val());
 				});
@@ -37,9 +38,9 @@ module.exports = {
 	},
 
 	addChildToParent: function(params, response) {
-		console.log('params ', params);
 		let birthDate = params.birthDate;
 		let email = params.email;
+		//get users that match the selected email
 		getCollectionByFilter('users', 'email', params.email, function(success, result) {
 			let users = result;
 			console.log('users ', users);
@@ -87,13 +88,13 @@ module.exports = {
 		getCollectionByFilter('users', 'email', params.email, function(success, result) {
 			let users = result;
 			console.log('users ', users);
-			if(!Object.keys(users).length) {
-				utilities.sendResponse(response, 'no_such_email', null);
+			if(!users) {
+				utilities.sendResponse(response, {'message': 'no_such_email'}, null);
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
-					params.uid = user.uid;
+					params = Object.assign(params, user);
 					joinToCompetition(params, function(success, result2) {
 						if(success) {
 							utilities.sendResponse(response, null, result2);
@@ -104,20 +105,9 @@ module.exports = {
 					});
 				}
 				else {
-					utilities.sendResponse(response, 'birth_date_dont_match', null);
+					utilities.sendResponse(response, {'message': 'birth_date_dont_match'}, null);
 				}
 			}
-		});
-	},
-
-	getUser: function(uid, callback) {
-		let db = admin.database();
-		let userRef = db.ref('users/' + uid);
-
-		userRef.on('value', function(snapshot) {
-			callback(true, snapshot.val());
-		}, function(error) {
-			callback(false, error);
 		});
 	},
 
@@ -187,7 +177,7 @@ module.exports = {
 	getPersonalResults: function(params, response) {
 		let uid = params.uid;
 		let db = admin.database();
-		authentication.getUser(uid, null, function(sucess, result) {
+		authentication.getUser(uid, function(sucess, result) {
 			if(sucess) {
 				let personalResultsRef = db.ref('personalResults/');
 				let currentUser = result;
@@ -551,17 +541,6 @@ let updateCompetition = function(competition) {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competition.id + '/');
 	competitionsRef.update(competition);
-}
-
-
-
-let searchInParticipants = function(competition, uid) {
-	for(let key in competition.participants) {
-		if(key === uid) {
-			return true;
-		}
-	}
-	return false;
 }
 
 let createCompetitionResults = function(competition, callback) {
