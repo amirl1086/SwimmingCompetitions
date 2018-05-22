@@ -71,6 +71,8 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                     data.put("filters", "isDone");
                 }
 
+                showProgressDialog("טוען תחרויות...");
+
                 jsonAsyncTaskPost = new JSON_AsyncTask();
                 jsonAsyncTaskPost.delegate = this;
                 jsonAsyncTaskPost.execute(data.toString());

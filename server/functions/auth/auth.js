@@ -10,7 +10,7 @@ module.exports =  {
 	logIn: function(idToken, response) {
 		admin.auth().verifyIdToken(idToken).then(function(decodedToken) {
 			var currentUid = decodedToken.uid;
-		    getUser(currentUid, function(sucess, result) {
+		    getUser(currentUid, null, function(sucess, result) {
 		    	if(sucess) {
 		    		if(!result) {
 		    			var userParams = { 
