@@ -3,15 +3,15 @@ const admin = require('firebase-admin');
 const utilities = require('./utils.js');
 const filters = require('./filters.js');
 const authentication = require('../auth/auth.js');
-console.log('authentication 1 ', authentication);
 const moment = require('moment');
 
 module.exports = {
 
-	addNewUser: function(firebaseUser, userParams, callback) {
+	addNewUser: (firebaseUser, userParams, callback) => {
 		let db = admin.database();
 		let usersRef = db.ref('users/' + firebaseUser.uid);
 
+		//create the user object
 		usersRef.set({
 			'uid': firebaseUser.uid,
 			'email': userParams.email,
@@ -22,25 +22,26 @@ module.exports = {
 			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 		});
 
-		usersRef.on('value', function(snapshot) {
-			if(userParams.joinToCompetition) {
-				joinToCompetition(snapshot.val(), function(success, result) {
+		//insert to database
+		usersRef.on('value', (snapshot) => {
+			if(userParams.joinToCompetition) { //if join to competition is requested after registering
+				joinToCompetition(snapshot.val(), (success, result) => {
 					callback(success, snapshot.val());
 				});
 			}
 			else {
 				callback(true, snapshot.val());
 			}
-		}, function(error) {
+		}, (error) => {
 			callback(false, error);
 		});
 	},
 
-	addChildToParent: function(params, response) {
-		console.log('params ', params);
+	addChildToParent: (params, response) => {
 		let birthDate = params.birthDate;
 		let email = params.email;
-		getCollectionByFilter('users', 'email', params.email, function(success, result) {
+		//get users that match the selected email
+		getCollectionByFilter('users', 'email', params.email, (success, result) => {
 			let users = result;
 			console.log('users ', users);
 			if(!Object.keys(users).length) {
@@ -58,8 +59,8 @@ module.exports = {
 		});
 	},
 
-	updateFirebaseUser: function(params, response) {
-		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then(function(userRecord) {
+	updateFirebaseUser: (params, response) => {
+		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
 			let usersRef = db.ref('users/' + params.uid);
 
@@ -71,30 +72,30 @@ module.exports = {
 				'type': params.type
 			});
 
-			usersRef.on('value', function(snapshot) {
+			usersRef.on('value', (snapshot) => {
 				utilities.sendResponse(response, null, snapshot.val());
-			}, function(error) {
+			}, (error) => {
 				utilities.sendResponse(response, error, null);
 			});
 		})
-		.catch(function(error) {
+		.catch((error) => {
 		    console.log("Error updating user:", error);
 		});
 	},
 
-	addExistingUserToCompetition: function(params, response) {
+	addExistingUserToCompetition: (params, response) => {
 		console.log('addExistingUserToCompetition params ', params);
-		getCollectionByFilter('users', 'email', params.email, function(success, result) {
+		getCollectionByFilter('users', 'email', params.email, (success, result) => {
 			let users = result;
 			console.log('users ', users);
-			if(!Object.keys(users).length) {
-				utilities.sendResponse(response, 'no_such_email', null);
+			if(!users) {
+				utilities.sendResponse(response, {'message': 'no_such_email'}, null);
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
-					params.uid = user.uid;
-					joinToCompetition(params, function(success, result2) {
+					params = Object.assign(params, user);
+					joinToCompetition(params, (success, result2) => {
 						if(success) {
 							utilities.sendResponse(response, null, result2);
 						} 
@@ -104,35 +105,24 @@ module.exports = {
 					});
 				}
 				else {
-					utilities.sendResponse(response, 'birth_date_dont_match', null);
+					utilities.sendResponse(response, {'message': 'birth_date_dont_match'}, null);
 				}
 			}
 		});
 	},
 
-	getUser: function(uid, callback) {
-		let db = admin.database();
-		let userRef = db.ref('users/' + uid);
-
-		userRef.on('value', function(snapshot) {
-			callback(true, snapshot.val());
-		}, function(error) {
-			callback(false, error);
-		});
-	},
-
-	getUsersByFilters: function(params, response) {
+	getUsersByFilters: (params, response) => {
 		let db = admin.database();
 		let usersRef = db.ref('users');
 
-		usersRef.orderByChild(params.filter).equalTo(params.value).on('value', function(snapshot) {
+		usersRef.orderByChild(params.filter).equalTo(params.value).on('value', (snapshot) => {
 			utilities.sendResponse(response, null, snapshot.val());
-		}, function(error) {
+		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	setNewCompetition: function(competitionParams, response) {
+	setNewCompetition: (competitionParams, response) => {
 		let db = admin.database();
 
 		let newCompetition = {
@@ -158,18 +148,18 @@ module.exports = {
 
 		newCompetitionRef.update(newCompetition);
 
-		newCompetitionRef.on('value', function(snapshot) {
+		newCompetitionRef.on('value', (snapshot) => {
 			utilities.sendResponse(response, null, attachIdToObject(snapshot));
-		}, function(error) {
+		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	getCompetitions: function(params, response) {
+	getCompetitions: (params, response) => {
 		let db = admin.database();
 		let competitionsRef = db.ref('competitions/');
 
-		competitionsRef.on('value', function(snapshot) {
+		competitionsRef.on('value', (snapshot) => {
 			let result;
 			if(params.filters) {
 				result = filters.filterCompetitions(snapshot.val(), params); 
@@ -179,19 +169,19 @@ module.exports = {
 			}
 
 			utilities.sendResponse(response, null, result);
-		}, function(error) {
+		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	getPersonalResults: function(params, response) {
+	getPersonalResults: (params, response) => {
 		let uid = params.uid;
 		let db = admin.database();
-		authentication.getUser(uid, null, function(sucess, result) {
+		authentication.getUser(uid, null, (sucess, result) => {
 			if(sucess) {
 				let personalResultsRef = db.ref('personalResults/');
 				let currentUser = result;
-				personalResultsRef.on('value', function(snapshot) {
+				personalResultsRef.on('value', (snapshot) => {
 					if(currentUser.type === 'coach') {
 						utilities.sendResponse(response, null, snapshot.val());
 					}
@@ -213,11 +203,11 @@ module.exports = {
 		});
 	},
 
-	getPersonalResultsByCompetitionId: function(params, response) {
+	getPersonalResultsByCompetitionId: (params, response) => {
 		let competition = JSON.parse(params.competition);
 		let competitionId = competition.id;
 
-		getCompetitionResults(competition, function(success, result) {
+		getCompetitionResults(competition, (success, result) => {
 			if(success) {
 				let resultsAgeMap = sortPersonalResults(competition, result);
 				utilities.sendResponse(response, null, resultsAgeMap);
@@ -229,8 +219,8 @@ module.exports = {
 		});
 	},
 	
-	joinToCompetition: function(params, response) {
-		joinToCompetition(params, function(success, result) {
+	joinToCompetition: (params, response) => {
+		joinToCompetition(params, (success, result) => {
 			if(success) {
 				utilities.sendResponse(response, null, result);
 			} 
@@ -240,27 +230,27 @@ module.exports = {
 		});
 	},
 
-	cancelRegistration: function(params, response) {
+	cancelRegistration: (params, response) => {
 		let db = admin.database();
 		competitionsRef = db.ref('competitions/' + params.competitionId + '/participants/' + params.uid);
 		competitionsRef.remove();
 
-		competitionsRef.on('value', function(snapshot) {
+		competitionsRef.on('value', (snapshot) => {
 			utilities.sendResponse(response, null, snapshot.val());
-		}, function(error) {
+		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	setCompetitionResults: function(params, response) {
+	setCompetitionResults: (params, response) => {
 		let currentCompetition = JSON.parse(params.competition);
 		//console.log('setCompetitionResults currentCompetition ', currentCompetition);
 
-		updateCompetitionIteration(currentCompetition, function(competition) {
+		updateCompetitionIteration(currentCompetition, (competition) => {
 			//console.log('setCompetitionResults competition ', competition);
 			let participantsResults = competition.currentParticipants;
 
-			updateCompetitionResults(participantsResults, competition.id, function(success, competedParticipants) {
+			updateCompetitionResults(participantsResults, competition.id, (success, competedParticipants) => {
 				if(success) {
 					//console.log('setCompetitionResults competition.participants ', competition.participants);
 					let participants = filters.filterCompetedParticipants(competition.participants);
@@ -296,15 +286,15 @@ module.exports = {
 		});
 	},
 
-	initCompetitionForIterations: function(params, response) {
+	initCompetitionForIterations: (params, response) => {
 
-		getCompetitionById(params.competitionId, function(success, result) {
+		getCompetitionById(params.competitionId, (success, result) => {
 			if(success) {
 				let competition = result;
 				let newParticipants = filters.filterCompetedParticipants(competition.participants);
 
 				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
-					getCompetitionResults(competition, function(success, result) {
+					getCompetitionResults(competition, (success, result) => {
 						if(success) {
 							let resultsAgeMap = sortPersonalResults(competition, result);
 							resultsAgeMap.type = 'resultsMap';
@@ -331,19 +321,19 @@ module.exports = {
 	}
 };
 
-let getCollectionByFilter = function(collectionName, filter, value, callback) {
+let getCollectionByFilter = (collectionName, filter, value, callback) => {
 	console.log('getCollectionByFilter params collectionName: ', collectionName, ', filter: ', filter, ', value: ', value);
 	let db = admin.database();
 	let collectionRef = db.ref(collectionName);
 
-	collectionRef.orderByChild(filter).equalTo(value).on('value', function(snapshot) {
+	collectionRef.orderByChild(filter).equalTo(value).on('value', (snapshot) => {
 		callback(true, snapshot.val());
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 }
 
-let joinToCompetition = function(params, callback) {
+let joinToCompetition = (params, callback) => {
 	let db = admin.database();
 	let newParticipantUid;
 	
@@ -368,14 +358,14 @@ let joinToCompetition = function(params, callback) {
 
 	competitionsRef.set(newParticipant);
 
-	competitionsRef.on('value', function(snapshot) {
+	competitionsRef.on('value', (snapshot) => {
 		callback(true, snapshot.val());
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 };
 
-let updateCompetitionResults = function(participantsResults, competitionId, callback) {
+let updateCompetitionResults = (participantsResults, competitionId, callback) => {
 	let db = admin.database();
 	let presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
 
@@ -393,32 +383,32 @@ let updateCompetitionResults = function(participantsResults, competitionId, call
 	}
 	
 	presonalResultsRef.update(personalResults);
-	presonalResultsRef.on('value', function(snapshot) {
+	presonalResultsRef.on('value', (snapshot) => {
 		callback(true, snapshot.val());
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 }
 
-let getCompetitionResults = function(competition, callback) {
+let getCompetitionResults = (competition, callback) => {
 	let db = admin.database();
 	let presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
 
-	presonalResultsRef.on('value', function(snapshot) {
+	presonalResultsRef.on('value', (snapshot) => {
 		if(!snapshot.val()) {
-			createCompetitionResults(competition, function(success) {
+			createCompetitionResults(competition, (success) => {
 				callback(success, snapshot.val());
 			});	
 		}
 		else {
 			callback(true, snapshot.val());
 		}
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 }
 
-let getNewParticipants = function(competition, sortedParticipants) {
+let getNewParticipants = (competition, sortedParticipants) => {
 	let newParticipants;
 	let currentAge = parseInt(competition.toAge);
 	let fromAge = parseInt(competition.fromAge);
@@ -445,7 +435,7 @@ let getNewParticipants = function(competition, sortedParticipants) {
 }
 
 
-let getNewParticipantsFromGendger = function(participants, numOfParticipants) {
+let getNewParticipantsFromGendger = (participants, numOfParticipants) => {
 	let newParticipants = {};
 	let totalSelected = 0;
 	for(let i = 0; i < participants.length; i++) {
@@ -457,17 +447,17 @@ let getNewParticipantsFromGendger = function(participants, numOfParticipants) {
 	return newParticipants;
 }
 
-let getCompetitionById = function(competitionId, callback) {
+let getCompetitionById = (competitionId, callback) => {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competitionId);
 
-	competitionsRef.on('value', function(snapshot) { 
+	competitionsRef.on('value', (snapshot) => { 
 		callback(true, snapshot.val());
 
 		
 		/*let competition;
 		competitionsRef = db.ref('competitions/-LAXsGT3ZyzpPsfjcmve');
-		competitionsRef.on('value', function(snapshot2) { 
+		competitionsRef.on('value', (snapshot2) => { 
 			competition = snapshot2.val();
 			console.log('competition ', competition);
 			//competition.participants = {};
@@ -484,24 +474,24 @@ let getCompetitionById = function(competitionId, callback) {
 		});*/
 
 
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 }
 
-let attachIdToObject = function(snapshot) {
+let attachIdToObject = (snapshot) => {
 	let resObj = snapshot.val();
 	let resObjId = Object.assign({}, resObj, { 'id': snapshot.key }); //add the id to the object
 	return resObjId;
 }
 
-let sortPersonalResults = function(currentCompetition, results) {
+let sortPersonalResults = (currentCompetition, results) => {
 	let today = moment(new Date());
 	//map results by age
 	let resultsMap = filters.sortParticipantsByAge(results);
 
 	//order results by gender
-	Object.keys(resultsMap).forEach(function(resultsByAge) {
+	Object.keys(resultsMap).forEach((resultsByAge) => {
 		let currentAgeResults = resultsMap[resultsByAge];
 
 		arraySortByScore(currentAgeResults.males);
@@ -510,9 +500,9 @@ let sortPersonalResults = function(currentCompetition, results) {
 	return resultsMap;
 }
 
-let arraySortByScore = function(arrayList) {
+let arraySortByScore = (arrayList) => {
 	let today = moment(new Date());
-	arrayList.sort(function(itemA, itemB) {
+	arrayList.sort((itemA, itemB) => {
 	    if (parseFloat(itemA.score) < parseFloat(itemB.score)) {
 	        return -1;
 	    }
@@ -523,7 +513,7 @@ let arraySortByScore = function(arrayList) {
 	});
 }
 
-let updateCompetitionIteration = function(competition, callback) {
+let updateCompetitionIteration = (competition, callback) => {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competition.id + '/');
 
@@ -540,31 +530,20 @@ let updateCompetitionIteration = function(competition, callback) {
 
 	competitionsRef.update(competition);
 
-	competitionsRef.on('value', function(snapshot) {
+	competitionsRef.on('value', (snapshot) => {
 		callback(snapshot.val());
-	}, function(error) {
+	}, (error) => {
 		callback(null);
 	});
 }
 
-let updateCompetition = function(competition) {
+let updateCompetition = (competition) => {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competition.id + '/');
 	competitionsRef.update(competition);
 }
 
-
-
-let searchInParticipants = function(competition, uid) {
-	for(let key in competition.participants) {
-		if(key === uid) {
-			return true;
-		}
-	}
-	return false;
-}
-
-let createCompetitionResults = function(competition, callback) {
+let createCompetitionResults = (competition, callback) => {
 	let db = admin.database();
 	let presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
 
@@ -582,9 +561,9 @@ let createCompetitionResults = function(competition, callback) {
 	}
 	
 	presonalResultsRef.update(personalResults);
-	presonalResultsRef.on('value', function(snapshot) {
+	presonalResultsRef.on('value', (snapshot) => {
 		callback(true, snapshot.val());
-	}, function(error) {
+	}, (error) => {
 		callback(false, error);
 	});
 }

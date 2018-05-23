@@ -3,7 +3,7 @@ const moment = require('moment');
 
 module.exports = {
 
-	filterCompetedParticipants: function(participants) {
+	filterCompetedParticipants: (participants) => {
 		let newParticipants = {};
 		for(let key in participants) {
 			if(!participants[key].competed || participants[key].competed === 'false') {
@@ -13,10 +13,10 @@ module.exports = {
 		return newParticipants;
 	},
 
-	sortParticipantsByAge: function(participants) {
+	sortParticipantsByAge: (participants) => {
 		let today = moment(new Date());
 		//map results by age
-		return Object.keys(participants).reduce(function(totalResults, key) {
+		return Object.keys(participants).reduce((totalResults, key) => {
 			let participant = participants[key];
 			let compare = moment(participant.birthDate, 'DD/MM/YYYY hh:mm');
 			let participantAge = Math.floor(today.diff(compare, 'years', true));
@@ -29,12 +29,12 @@ module.exports = {
 		}, {});
 	},
 
-	removeBlankSpots: function(competition, sortedParticipants) {
-		Object.keys(sortedParticipants).forEach(function(ageKey) {
+	removeBlankSpots: (competition, sortedParticipants) => {
+		Object.keys(sortedParticipants).forEach((ageKey) => {
 			let currentAgeParticipants = sortedParticipants[ageKey];
 
 			//loop over the gender
-			Object.keys(currentAgeParticipants).forEach(function(genderKey) {
+			Object.keys(currentAgeParticipants).forEach((genderKey) => {
 				let currentGenderParticipants = currentAgeParticipants[genderKey];
 
 				console.log('currentGenderParticipants ' + JSON.stringify(currentGenderParticipants));
@@ -60,7 +60,7 @@ module.exports = {
 		});
 	},
 
-	filterCompetitions : function(competitions, params) {
+	filterCompetitions : (competitions, params) => {
 		let currentUser = params.currentUser;
 		let today = moment();
 		let birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
@@ -97,4 +97,10 @@ module.exports = {
 		return filteredCompetitions;
 	}
 
+}
+
+let searchInParticipants = (competition, uid) => {
+	let participantKey = Object.keys(competition.participants).find((participant, key) => key === uid);
+	console.log('participantKey ', participantKey);
+	return participantKey != null;
 }

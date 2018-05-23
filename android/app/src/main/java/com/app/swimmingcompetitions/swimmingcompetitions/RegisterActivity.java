@@ -142,6 +142,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             }
             catch (JSONException e) {
                 showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
+                System.out.println("RegisterActivity Exception " + e.getStackTrace());
             }
 
         }
@@ -163,25 +164,47 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         this.birthDateText = "";
 
         if (this.registerType.equals("student")) {
+
             this.birthDateText = dateView.getText().toString();
-            if(this.birthDateText.isEmpty()) {
-                return false;
+            if(this.selectedCompetition != null) {
+                int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+
+                int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
+                int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
+
+                if(participantAge < competitionFromAge) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+                    return false;
+                }
+                else if(participantAge > competitionToAge) {
+                    this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
+                    return false;
+                }
+                else {
+                    this.dateView.setError(null);
+                }
             }
             else {
                 int participantAge = dateUtils.getAgeByDate(this.birthDateText);
                 if(participantAge < 4) {
-                    showToast("הגיל המינימלי להשתתפות הוא 4");
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 4");
                     return false;
                 }
-                if(participantAge > 18) {
-                    showToast("הגיל המקסימלי להשתתפות הוא 18");
+                else if(participantAge > 18) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 18");
                     return false;
                 }
-
+                else {
+                    this.dateView.setError(null);
+                }
             }
-            this.genderText = spinner.getSelectedItem().toString();
+
+            this.genderText = this.spinner.getSelectedItem().toString();
             if(this.genderText.equals("בחר מגדר")) {
-                showToast("חובה למלא מגדר");
+                TextView errorText = (TextView) this.spinner.getSelectedView();
+                errorText.setError("");
+                errorText.setTextColor(Color.RED);
+                errorText.setText("חובה לבחור מגדר");
                 return false;
             }
         }
@@ -248,13 +271,12 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
     @Override
     public void processFinish(String result) {
-        try {
-            if(result != null) {
+        if(result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
                 if(this.currentUser != null) {
-                    showToast("המתחרה נוסף בהצלחה");
                     switchToViewCompetitionActivity(dataObj);
                 }
                 else {
@@ -263,12 +285,13 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                     switchToMainMenuActivity(newUser);
                 }
             }
-            else {
-                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
+            catch (Exception e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+                System.out.println("RegisterActivity Exception " + e.getStackTrace());
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        else {
+            showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();

@@ -67,6 +67,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 ArrayList<Participant> participants = this.selectedCompetition.getParticipants();
 
                 if(intent.hasExtra("newParticipant")) {
+                    showToast("המתחרה נוסף בהצלחה");
                     JSONObject newParticipantJson = new JSONObject(intent.getStringExtra("newParticipant"));
                     Participant newParticipant = new Participant(newParticipantJson.getString("uid"), newParticipantJson);
 

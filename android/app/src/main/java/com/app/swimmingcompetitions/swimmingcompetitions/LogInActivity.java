@@ -143,8 +143,9 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                     logInWithIdToken(task.getResult().getToken());
                 }
                 else {
-                    showProgressDialog("מבצע כניסה...");
+                    hideProgressDialog();
                     showToast("ההתחברות נכשלה, נסה שוב");
+                    System.out.println("LogInActivity getIdToken " + task.getException());
                 }
             }
         });
@@ -163,6 +164,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         catch (JSONException e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+            System.out.println("LogInActivity Exception " + e.getStackTrace());
         }
 
         jsonAsyncTaskPost.execute(logInData.toString());
@@ -180,6 +182,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             catch (ApiException e) {
                 hideProgressDialog();
                 showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
+                System.out.println("LogInActivity Exception " + e.getStackTrace());
             }
         }
     }
@@ -198,6 +201,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 else {
                     hideProgressDialog();
                     showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
+                    System.out.println("LogInActivity getIdToken " + task.getException());
                 }
             }
         });
@@ -217,12 +221,13 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                     switchToHomePageActivity();
                 }
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity Exception " + e.getStackTrace());
             }
         }
         else {
-            showToast("שגיאה בטעינת המידע מהשרת, נסה לאתחל את האפליקציה");
+            showToast("שגיאה בכניסה למערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();

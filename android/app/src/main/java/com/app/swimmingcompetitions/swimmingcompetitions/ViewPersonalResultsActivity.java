@@ -5,7 +5,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -66,36 +65,45 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                 data.put("currentUser", currentUserJson.toString());
 
                 if(this.currentUser.getType().equals("student")) {
-                    data.put("filters", "uid, isDone, age");
+                    data.put("filters", "uid, isDone");
                 }
                 else {
                     data.put("filters", "isDone");
                 }
 
+                showProgressDialog("טוען תחרויות...");
+
+                jsonAsyncTaskPost = new JSON_AsyncTask();
+                jsonAsyncTaskPost.delegate = this;
+                jsonAsyncTaskPost.execute(data.toString());
             }
             catch (JSONException e) {
-                showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
+                hideProgressDialog();
+                showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
             }
-
-            showProgressDialog("טוען תחרויות...");
-
-            jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
-            jsonAsyncTaskPost.execute(data.toString());
         }
         else {
             switchToLogInActivity();
         }
     }
 
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void processFinish(String result) {
-        if (result != null) {
+        if(result != null) {
             try {
                 JSONObject response = new JSONObject(result);
-                this.competitions = new ArrayList<>();
                 JSONObject dataObj = response.getJSONObject("data");
                 Iterator<String> competitionIds = dataObj.keys();
+                this.competitions = new ArrayList<>();
 
                 while (competitionIds.hasNext()) {
                     String currentId = competitionIds.next();
@@ -103,7 +111,6 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
 
                     this.competitions.add(new Competition(currentId, currentCompetition));
                 }
-
                 sortCompetitionsByField(R.id.name_sort);
             }
             catch(Exception e) {
@@ -297,15 +304,6 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                 return true;
             }
         });
-    }
-
-    public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void switchToLogInActivity() {
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
     }
 
     public void switchToViewCompetitionResultsActivity(Competition competition) {
