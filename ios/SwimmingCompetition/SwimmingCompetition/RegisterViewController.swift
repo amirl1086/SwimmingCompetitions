@@ -14,6 +14,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     var currentUser: User!
     
+    @IBOutlet var scrollView: UIScrollView!
     
     //===== Text fields =====//
     @IBOutlet var gender: UISegmentedControl!
@@ -38,7 +39,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
         firstName.delegate = self
         lastName.delegate = self
         birthDate.delegate = self
@@ -48,7 +50,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         passwordConfirmation.delegate = self
         productNumber.delegate = self
         productNumber.isHidden = true
-        
+       
         activeTextField = firstName
         
         if isGoogleRegister {
@@ -83,6 +85,17 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
+    }
+    
+    override func viewDidLayoutSubviews() {
+        firstName.bottomLineBorder()
+        lastName.bottomLineBorder()
+        birthDate.bottomLineBorder()
+        phoneNumber.bottomLineBorder()
+        email.bottomLineBorder()
+        password.bottomLineBorder()
+        passwordConfirmation.bottomLineBorder()
+        productNumber.bottomLineBorder()
     }
     
     @objc func cancelEditDetails() {
@@ -141,21 +154,16 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillChange(notification: Notification) {
-        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
+        guard let userInfo = notification.userInfo,
+            let frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{return}
+        var contentInset = UIEdgeInsets.zero
+        
         if notification.name == Notification.Name.UIKeyboardWillShow ||
             notification.name == Notification.Name.UIKeyboardWillChangeFrame {
-            if ((view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
-                view.frame.origin.y = -keyboardRect.height
-            
-            } else {
-                view.frame.origin.y = 0
-            }
-            
-        } else {
-            view.frame.origin.y = 0
+            contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
         }
+        
+        scrollView.contentInset = contentInset
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

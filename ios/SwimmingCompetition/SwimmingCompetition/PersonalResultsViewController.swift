@@ -37,17 +37,6 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             getCompetitionResults()
         } else {
             
-            Database.database().reference().child("personalResults/\(competition.getId())").observeSingleEvent(of: .value) { (snapshot) in
-                for part in snapshot.children.allObjects as! [DataSnapshot]{
-                    let data = part.value as! JSON
-                    let participant = Participant(json: data, id: part.key)
-                    self.realTimeArray.append(participant)
-                    print(participant.firstName)
-                    
-                }
-                print(self.realTimeArray.count)
-                self.tableView.reloadData()
-            }
             Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
                 let data = snapshot.value as! JSON
                 let participant = Participant(json: data, id: "")

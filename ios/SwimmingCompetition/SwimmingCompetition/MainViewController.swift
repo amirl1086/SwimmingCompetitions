@@ -13,7 +13,7 @@ import GoogleSignIn
 class MainViewController: UIViewController {
 
     var currentUser: User!
-    var menu_vc : MenuViewController!
+    var menu_vc: MenuViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()

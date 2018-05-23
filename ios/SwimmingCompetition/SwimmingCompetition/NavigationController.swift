@@ -12,6 +12,7 @@ import Firebase
 class NavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .white
         let gifImage = UIImage.gif(name: "stll-swimming-logo")
         let imageView = UIImageView(image: gifImage)
@@ -26,7 +27,7 @@ class NavigationController: UINavigationController {
             let sb = UIStoryboard(name: "Main", bundle: nil)
             if let loginView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
                 Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
-                    if response.succeed && response.data != nil {
+                    if response.succeed {
                         imageView.removeFromSuperview()
                         loginView.currentUser = User(json: response.data)
                         self.pushViewController(loginView, animated: true)

@@ -40,11 +40,7 @@ class IterationViewController: UIViewController {
         iterationNumber = Int(competition.numOfParticipants)!
       
         startNewIteration()
-        
-        //initIteration()
-        
-        
-        
+    
         let imageView = UIImageView(frame: self.view.bounds)
         imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
         self.view.insertSubview(imageView, at: 0)
@@ -57,6 +53,7 @@ class IterationViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     @IBAction func endIterationButton(_ sender: Any) {
         timer.invalidate()
         resetButton(sender)
@@ -82,16 +79,6 @@ class IterationViewController: UIViewController {
         
     }
     
-    @IBAction func resetButton(_ sender: Any) {
-        startButtonOutlet.setTitle("התחל", for: .normal)
-        startButtonOutlet.backgroundColor = .green
-        validTimer = false
-        minutes = 0
-        seconds = 0
-        fractions = 0
-        self.timeLabel.text = "00:00:00"
-    }
-    
     @objc func updateTimer() {
         fractions += 1
         if fractions == 100 {
@@ -112,6 +99,18 @@ class IterationViewController: UIViewController {
         self.userTime = "\(asSeconds).\(fractions)"
         self.timeLabel.text = "\(minutesString):\(secondsString):\(fractionsString)"
     }
+    
+    @IBAction func resetButton(_ sender: Any) {
+        startButtonOutlet.setTitle("התחל", for: .normal)
+        startButtonOutlet.backgroundColor = .green
+        validTimer = false
+        minutes = 0
+        seconds = 0
+        fractions = 0
+        self.timeLabel.text = "00:00:00"
+    }
+    
+    
     
     func createButtonsLabels() {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
@@ -170,7 +169,7 @@ class IterationViewController: UIViewController {
     
     @objc func labelTapped(gesture : UITapGestureRecognizer) {
         let id = gesture.view!.tag
-        let alert = UIAlertController(title: "\(String(describing: namesArray[id]?.text!))", message: "\(String(describing: timesArray[id]?.text!))", preferredStyle: .alert)
+        let alert = UIAlertController(title: "\(String(describing: namesArray[id]!.text!))", message: "\(String(describing: timesArray[id]!.text!))", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
