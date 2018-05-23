@@ -29,19 +29,23 @@ const firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 /* AUTHENTICATION FUNCTIONS LISTENERS */
 /* ================================== */
-exports.addNewUser = functions.https.onRequest(function(request, response) {
+exports.addNewUser = functions.https.onRequest((request, response) => {
 	authentication.addNewFirebaseUser(request.body, response);
 });
 
-exports.getUser = functions.https.onRequest(function(request, response) {
+exports.getUser = functions.https.onRequest((request, response) => {
 	authentication.getUser(request.body.currentUserUid, response);
 });
 
-exports.logIn = functions.https.onRequest(function(request, response) {
+exports.logIn = functions.https.onRequest((request, response) => {
 	authentication.logIn(request.body.idToken, response);
 });
 
-exports.updateFirebaseUser = functions.https.onRequest(function(request, response) {
+exports.updateUserDetails = functions.https.onRequest((request, response) => {
+	authentication.updateUserDetails(request.body, response);
+});
+
+exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.updateFirebaseUser(request.body, response);
 });
 
@@ -52,39 +56,39 @@ exports.updateFirebaseUser = functions.https.onRequest(function(request, respons
 
 /* COMPETITIONS FUNCTIONS LISTENERS */
 /* ================================ */
-exports.getCompetitions = functions.https.onRequest(function(request, response) {
+exports.getCompetitions = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.getCompetitions(request.body, response);
 });
 
-exports.setNewCompetition = functions.https.onRequest(function(request, response) {
+exports.setNewCompetition = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.setNewCompetition(request.body, response);
 });
 
-exports.joinToCompetition = functions.https.onRequest(function(request, response) {
+exports.joinToCompetition = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.joinToCompetition(request.body, response);
 });
 
-exports.setCompetitionResults = functions.https.onRequest(function(request, response) {
+exports.setCompetitionResults = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.setCompetitionResults(request.body, response);
 });
 
-exports.addExistingUserToCompetition = functions.https.onRequest(function(request, response) {
+exports.addExistingUserToCompetition = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.addExistingUserToCompetition(request.body, response);
 });
 
-exports.initCompetitionForIterations = functions.https.onRequest(function(request, response) {
+exports.initCompetitionForIterations = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.initCompetitionForIterations(request.body, response);
 });
 
-exports.getUsersByParentId = functions.https.onRequest(function(request, response) {
+exports.getUsersByParentId = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.getUsersByFilters(request.body, response);
 });
 
-exports.addChildToParent = functions.https.onRequest(function(request, response) {
+exports.addChildToParent = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.addChildToParent(request.body, response);
 });
 
-exports.getPersonalResults = functions.https.onRequest(function(request, response) {
+exports.getPersonalResults = functions.https.onRequest((request, response) => {
 	var params = request.body;
 
 	if(params.competition) {
@@ -95,7 +99,7 @@ exports.getPersonalResults = functions.https.onRequest(function(request, respons
 	}
 });
 
-exports.cancelRegistration = functions.https.onRequest(function(request, response) {
+exports.cancelRegistration = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.cancelRegistration(request.body, response);
 });
 /* ================================ */

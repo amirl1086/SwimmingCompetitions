@@ -1,7 +1,7 @@
 
 module.exports = {
 
-	sendResponse: function(response, error, resultObj) {
+	sendResponse: (response, error, resultObj) => {
 
 		if(error) {
 			response.send({ 'success': false, 'data': error });
@@ -11,11 +11,11 @@ module.exports = {
 		}
 	},
 
-	mapToList: function(map) {
+	mapToList: (map) => {
 
 	},
 
-	listToMap: function(list, key) {
+	listToMap: (list, key) => {
 
 	}
 }

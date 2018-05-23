@@ -107,7 +107,7 @@ public class RegisterExistingUserActivity extends LoadingDialog implements Async
             return false;
         }
         else if(participantAge > competitionToAge) {
-            this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionFromAge);
+            this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
             return false;
         }
         else {

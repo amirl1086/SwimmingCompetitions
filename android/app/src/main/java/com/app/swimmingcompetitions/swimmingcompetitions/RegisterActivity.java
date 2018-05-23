@@ -142,6 +142,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             }
             catch (JSONException e) {
                 showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
+                System.out.println("RegisterActivity Exception " + e.getStackTrace());
             }
 
         }
@@ -163,44 +164,41 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         this.birthDateText = "";
 
         if (this.registerType.equals("student")) {
+
             this.birthDateText = dateView.getText().toString();
-            if(this.birthDateText.isEmpty()) {
-                return false;
-            }
-            else {
-                if(this.selectedCompetition != null) {
-                    int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+            if(this.selectedCompetition != null) {
+                int participantAge = dateUtils.getAgeByDate(this.birthDateText);
 
-                    int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
-                    int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
+                int competitionFromAge = Integer.valueOf(this.selectedCompetition.getFromAge());
+                int competitionToAge = Integer.valueOf(this.selectedCompetition.getToAge());
 
-                    if(participantAge < competitionFromAge) {
-                        this.dateView.setError("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
-                        return false;
-                    }
-                    else if(participantAge > competitionToAge) {
-                        this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionFromAge);
-                        return false;
-                    }
-                    else {
-                        this.dateView.setError(null);
-                    }
+                if(participantAge < competitionFromAge) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא " + competitionFromAge);
+                    return false;
+                }
+                else if(participantAge > competitionToAge) {
+                    this.dateView.setError("הגיל המקסימלי להשתתפות הוא " + competitionToAge);
+                    return false;
                 }
                 else {
-                    int participantAge = dateUtils.getAgeByDate(this.birthDateText);
-                    if(participantAge < 4) {
-                        this.dateView.setError("הגיל המינימלי להשתתפות הוא 4");
-                        return false;
-                    }
-                    else if(participantAge > 18) {
-                        this.dateView.setError("הגיל המינימלי להשתתפות הוא 18");
-                        return false;
-                    }
-                    else {
-                        this.dateView.setError(null);
-                    }
+                    this.dateView.setError(null);
                 }
             }
+            else {
+                int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+                if(participantAge < 4) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 4");
+                    return false;
+                }
+                else if(participantAge > 18) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 18");
+                    return false;
+                }
+                else {
+                    this.dateView.setError(null);
+                }
+            }
+
             this.genderText = this.spinner.getSelectedItem().toString();
             if(this.genderText.equals("בחר מגדר")) {
                 TextView errorText = (TextView) this.spinner.getSelectedView();
@@ -287,8 +285,9 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                     switchToMainMenuActivity(newUser);
                 }
             }
-            catch (JSONException e) {
+            catch (Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+                System.out.println("RegisterActivity Exception " + e.getStackTrace());
             }
         }
         else {

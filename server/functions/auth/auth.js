@@ -7,10 +7,10 @@ const firebaseDB_Service = require('./../utils/firebaseDB_Service.js');
 
 module.exports =  {
 
-	logIn: function(idToken, response) {
-		admin.auth().verifyIdToken(idToken).then(function(decodedToken) {
+	logIn: (idToken, response) => {
+		admin.auth().verifyIdToken(idToken).then((decodedToken) => {
 			var currentUid = decodedToken.uid;
-		    getUser(currentUid, null, function(sucess, result) {
+		    getUser(currentUid, null, (sucess, result) => {
 		    	if(sucess) {
 		    		if(!result) {
 		    			var userParams = { 
@@ -19,7 +19,7 @@ module.exports =  {
 		    				'email': decodedToken.email,
 		    				'uid': currentUid
 		    			};
-		    			firebaseDB_Service.addNewUser({ 'uid': currentUid }, userParams, function(success, result) { 
+		    			firebaseDB_Service.addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
 							if(success) {
 								utilities.sendResponse(response, null, result); 
 							}
@@ -37,16 +37,16 @@ module.exports =  {
 		    	}
 			});
 		})
-		.catch(function(error) {
+		.catch((error) => {
 		  	utilities.sendResponse(response, error, null);
 		});
 	},
 
-	getUser: function(uid, response, callback) {
+	getUser: (uid, response, callback) => {
 		getUser(uid, response, callback);
 	},
 
-	addNewFirebaseUser: function(params, response) {
+	addNewFirebaseUser: (params, response) => {
 		//create new user in with credantials
 		console.log('params ', params);
 		var newUser = {
@@ -55,10 +55,10 @@ module.exports =  {
 			'displayName': params.firstName + ' ' + params.lastName
 		}
 
-		admin.auth().createUser(newUser).then(function(userRecord) {
+		admin.auth().createUser(newUser).then((userRecord) => {
 			console.log('firebaseUser ', userRecord);
 			//utilities.sendResponse(response, null, userRecord);
-			firebaseDB_Service.addNewUser(userRecord, params, function(success, result) { 
+			firebaseDB_Service.addNewUser(userRecord, params, (success, result) => { 
 				if(success) {
 					utilities.sendResponse(response, null, result); 
 				}
@@ -67,19 +67,23 @@ module.exports =  {
 				}
 			});
 		})
-		.catch(function(error) {
+		.catch((error) => {
 			console.log('addNewFirebaseUser error: ', error);
 			utilities.sendResponse(response, error, null);
 		});
 	},
 
-	getFirebaseUser: function(uid, callback) {
-		admin.auth().getUser(uid).then(function(result) {
+	getFirebaseUser: (uid, callback) => {
+		admin.auth().getUser(uid).then((result) => {
 			callback(true, result);
 		})
-		.catch(function(error) {
+		.catch((error) => {
 			callback(false, error);
 		});
+	},
+
+	updateUserDetails: (params, response) => {
+
 	}
 
 };
@@ -88,14 +92,14 @@ let getUser = (uid, response, callback) => {
 	let db = admin.database();
 	let userRef = db.ref('users/' + uid);
 
-	userRef.on('value', function(snapshot) {
+	userRef.on('value', (snapshot) => {
 		if(callback) {
 			callback(true, snapshot.val());
 		}
 		else {
 			utilities.sendResponse(response, null, snapshot.val()); 
 		}
-	}, function(error) {
+	}, (error) => {
 		if(callback) {
 			callback(false, error);
 		}

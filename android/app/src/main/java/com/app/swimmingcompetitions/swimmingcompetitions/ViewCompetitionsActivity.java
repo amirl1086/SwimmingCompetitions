@@ -70,8 +70,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                 }
                 data.put("currentUser", currentUserJson);
             }
-            catch (JSONException e) {
+            catch (Exception e) {
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
+                System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
             }
 
             showProgressDialog("טוען תחרויות...");
@@ -294,8 +295,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
                 sortCompetitionsByField(R.id.name_sort);
             }
-            catch (JSONException e) {
+            catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
+                System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
             }
         }
         else {
