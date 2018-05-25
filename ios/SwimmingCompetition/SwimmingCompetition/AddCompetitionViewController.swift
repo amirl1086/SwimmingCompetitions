@@ -232,28 +232,6 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         
     }
     
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == self.styleTextField.inputView {
-            if component == 0 {
-                return "סגנון שחייה"
-            }
-            if component == 1 {
-                return "מרחק"
-            }
-        }
-        else if pickerView == self.agesTextField.inputView {
-            if component == 0 {
-                return "עד גיל"
-            }
-            if component == 1 {
-                return "מגיל"
-            }
-        }
-        else if pickerView == self.numberTextField.inputView {
-            return "מס׳ משתתפים למקצה"
-        }
-        return "בחר תאריך ושעה"
-    }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == self.styleTextField.inputView {

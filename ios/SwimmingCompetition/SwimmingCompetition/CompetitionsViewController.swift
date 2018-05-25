@@ -10,6 +10,8 @@ import UIKit
 
 class CompetitionsViewController: UIViewController {
     
+    var menu_vc: MenuViewController!
+    
     var currentUser: User!
     var competitions = [Competition]()
     var controllerType = ""
@@ -19,11 +21,15 @@ class CompetitionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initMenuBar()
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
         if controllerType == "" {
             addButtonView()
+        } else {
+            self.title = "בחר תחרות"
         }
         
         getCompetitionsData()
@@ -53,11 +59,9 @@ class CompetitionsViewController: UIViewController {
     func addButtonView() {
         if(currentUser.type == "coach") {
             let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCompetition))
-            self.navigationItem.rightBarButtonItem = addButton
+            self.navigationItem.leftBarButtonItem = addButton
         }
         
-        let addButton = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(addCompetition(_:)))
-        self.navigationItem.rightBarButtonItem = addButton
     }
     
     @objc func addCompetition(_ sender: UIBarButtonItem) {
@@ -82,13 +86,14 @@ class CompetitionsViewController: UIViewController {
         
         let parameters = [
             "currentUser": [
-                "uid":currentUser.uid
+                "uid":currentUser.uid,
+                "birthDate":currentUser.birthDate
             ]
         ] as [String: AnyObject]
      
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
-            
+            print(response)
             for data in response.data {
                 var competition : Competition!
                 let compData = response.data[data.0] as! JSON
@@ -98,12 +103,37 @@ class CompetitionsViewController: UIViewController {
             let formatDate = DateFormatter()
             formatDate.dateFormat = "dd/MM/yyyy HH:mm"
             self.competitions = compArray
-            self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
+            //self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
             
             self.tableView.reloadData()
             //alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
         }
+    }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
     }
     
   

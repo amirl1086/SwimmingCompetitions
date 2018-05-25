@@ -11,11 +11,12 @@ import Firebase
 
 class SettingsViewController: UIViewController {
     
+    var menu_vc: MenuViewController!
     var currentUser: User!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        initMenuBar()
         // Do any additional setup after loading the view.
     }
 
@@ -56,7 +57,7 @@ class SettingsViewController: UIViewController {
                         self.present(alert, animated: true, completion: nil)
                     } else {
                         Auth.auth().currentUser?.updatePassword(to: alert.textFields![1].text!, completion: { (error) in
-                            print(error)
+                            print(error!)
                         })
                     }
                 })
@@ -64,6 +65,31 @@ class SettingsViewController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
         //Auth.auth().currentUser?.updatePassword(to: <#T##String#>, completion: <#T##UserProfileChangeCallback?##UserProfileChangeCallback?##(Error?) -> Void#>)
+    }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
     }
     
 }

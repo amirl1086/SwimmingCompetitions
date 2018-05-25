@@ -25,6 +25,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     @IBOutlet weak var passwordTextFiled: UITextField!
     var activeTextField: UITextField!
     
+    @IBOutlet var scrollView: UIScrollView!
+    @IBOutlet var loginButton: RoundButton!
+    var signInWithGooogleButton: GIDSignInButton!
     var mainView = MainViewController()
     var user: User!
     
@@ -34,6 +37,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
+        
+       
         activeTextField = emailTextFiled
      
         /* Set the logo image */
@@ -54,10 +59,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         
         /* Set the sign in with google method and create the button */
         GIDSignIn.sharedInstance().uiDelegate = self
-        let signInWithGooogleButton = GIDSignInButton(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 100, height: 50)))
-        signInWithGooogleButton.center = view.center
-        view.addSubview(signInWithGooogleButton)
+        signInWithGooogleButton = GIDSignInButton(frame: CGRect(origin: CGPoint(x: 0, y: self.loginButton.frame.origin.y + self.loginButton.frame.height + 20), size: CGSize(width: 100, height: 50)))
+        scrollView.addSubview(signInWithGooogleButton)
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
         
+        
+        //view.addSubview(signInWithGooogleButton)
+        
+    }
+    
+    
+    
+    override func viewDidLayoutSubviews() {
+
+        signInWithGooogleButton.center.x = self.view.center.x
+        emailTextFiled.bottomLineBorder()
+       /* let border = CALayer()
+        let lineWidth = CGFloat(0.8)
+        border.borderColor = UIColor.black.cgColor
+        border.frame = CGRect(x: 0, y: emailTextFiled.frame.height - lineWidth, width:  emailTextFiled.frame.width, height: emailTextFiled.frame.height)
+        border.borderWidth = lineWidth
+        emailTextFiled.layer.addSublayer(border)
+        emailTextFiled.layer.masksToBounds = true*/
     }
  
     /* For remove the observer of the keayboard */
@@ -88,23 +112,33 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     
     /* Function to pick up the view when the keyboard hiding the text fields */
     @objc func keyboardWillChange(notification: Notification) {
-        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let userInfo = notification.userInfo,
+            let frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{return}
+        var contentInset = UIEdgeInsets.zero
+        
+        if notification.name == Notification.Name.UIKeyboardWillShow ||
+            notification.name == Notification.Name.UIKeyboardWillChangeFrame {
+            contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
+        }
+        
+        scrollView.contentInset = contentInset
+        /*guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
         if notification.name == Notification.Name.UIKeyboardWillShow ||
             notification.name == Notification.Name.UIKeyboardWillChangeFrame {
             print(keyboardRect.height)
-            if ((self.view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
-                self.view.frame.origin.y = -keyboardRect.height
+            if ((self.scrollView.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
+                self.scrollView.frame.origin.y = -keyboardRect.height
                 
             } else {
-                view.frame.origin.y = 0
+                scrollView.frame.origin.y = 0
             }
             
         } else {
-            view.frame.origin.y = 0
+            scrollView.frame.origin.y = 0
         }
-        
+        */
         
     }
     
@@ -179,3 +213,4 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
   
     
 }
+

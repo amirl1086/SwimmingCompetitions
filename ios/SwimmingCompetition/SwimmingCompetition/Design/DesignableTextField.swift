@@ -49,3 +49,15 @@ class DesignableTextField: UITextField {
     */
 
 }
+
+extension UITextField {
+    func bottomLineBorder() {
+        let border = CALayer()
+        let lineWidth = CGFloat(0.8)
+        border.borderColor = UIColor.black.cgColor
+        border.frame = CGRect(x: 0, y: self.frame.height - lineWidth, width:  self.frame.width, height: self.frame.height)
+        border.borderWidth = lineWidth
+        self.layer.addSublayer(border)
+        self.layer.masksToBounds = true
+    }
+}

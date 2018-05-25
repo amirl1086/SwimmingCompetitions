@@ -10,6 +10,7 @@ import Foundation
 import Firebase
 import Alamofire
 import SwiftyJSON
+import GoogleSignIn
 
 typealias JSON = [String: Any]
 
@@ -163,6 +164,18 @@ class Service {
             alert.dismiss(animated: true, completion: nil)
         }))
         return alert
+    }
+    
+    func signOut() {
+        //Sign out from firebase user
+        do {
+            try Auth.auth().signOut()
+        } catch {}
+        
+        //Sign out from google acount
+        GIDSignIn.sharedInstance().signOut()
+        UserDefaults.standard.set(false, forKey: "loggedIn")
+        UserDefaults.standard.synchronize()
     }
 }
 

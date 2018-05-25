@@ -101,12 +101,12 @@ class CompetitionDetailsViewController: UIViewController {
                 competition = Competition(json: data, id: self.currentCompetition.getId())
                 if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
                     iterationView.competition = competition
-                    //self.navigationController?.pushViewController(iterationView, animated: true)
+                    self.navigationController?.pushViewController(iterationView, animated: true)
                 }
                 
                 //let iterationView = IterationViewController()
                 //iterationView.competition = competition
-                self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
+                //self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
             }
         })
         
