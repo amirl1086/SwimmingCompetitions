@@ -65,7 +65,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                 data.put("currentUser", currentUserJson.toString());
 
                 if(this.currentUser.getType().equals("student")) {
-                    data.put("filters", "uid, isDone");
+                    data.put("filters", "uid,isDone");
                 }
                 else {
                     data.put("filters", "isDone");
@@ -93,7 +93,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
     }
 
     public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override

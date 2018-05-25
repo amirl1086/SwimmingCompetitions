@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,7 +40,6 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private JSON_AsyncTask jsonAsyncTaskPost;
-    private String registerType;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
@@ -50,13 +51,12 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     private int year, month, day;
 
     private Spinner genderSpinner;
-    private Spinner typeSpinner;
 
     private String genderText;
-    private String typeText;
     private String firstNameText;
     private String lastNameText;
     private String birthDateText;
+    private String[] genders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,36 +70,45 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
             this.fbUser = this.mAuth.getCurrentUser();
 
             setUpSidebar();
-
-            this.firstName = findViewById(R.id.edit_first_name);
-            this.lastName = findViewById(R.id.edit_last_name);
-            this.genderSpinner = findViewById(R.id.edit_gender);
-            this.typeSpinner = findViewById(R.id.edit_type);
-            this.dateView = findViewById(R.id.birth_date_view);
-
-            Button birthDateButton = findViewById(R.id.edit_birth_date);
-
-            if(this.currentUser.getType().equals("parent")) {
-                birthDateButton.setVisibility(View.GONE);
-                this.genderSpinner.setVisibility(View.GONE);
-                this.dateView.setVisibility(View.GONE);
-            }
-            else if(this.currentUser.getType().equals("student")) {
-                initParticipantUser();
-            }
-
-            this.firstName.setText(this.currentUser.getFirstName());
-            this.lastName.setText(this.currentUser.getLastName());
-            this.dateView.setText(this.currentUser.getBirthDate());
+            bindView();
         }
         else {
             switchToLogInActivity();
         }
     }
 
+    private void bindView() {
+        this.firstName = findViewById(R.id.edit_first_name);
+        this.lastName = findViewById(R.id.edit_last_name);
+        this.genderSpinner = findViewById(R.id.edit_gender);
+        this.dateView = findViewById(R.id.birth_date_view);
+
+        Button birthDateButton = findViewById(R.id.edit_birth_date);
+
+        if(!this.currentUser.getType().equals("student")) {
+            birthDateButton.setVisibility(View.GONE);
+            this.genderSpinner.setVisibility(View.GONE);
+            this.dateView.setVisibility(View.GONE);
+        }
+        else {
+            initParticipantUser();
+        }
+
+        this.firstName.setText(this.currentUser.getFirstName());
+        this.lastName.setText(this.currentUser.getLastName());
+        this.dateView.setText(this.currentUser.getBirthDate());
+
+        String gender = this.currentUser.getGender().equals("male") ? "זכר" : "נקבה";
+        for(int i = 0; i < this.genders.length; i++) {
+            if(this.genders[i].equals(gender)) {
+                this.genderSpinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
     private void initParticipantUser() {
-        String[] genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
-        String[] types = new String[]{"בחר סוג משתמש", "חניך", "הורה"};
+        this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
 
         ArrayAdapter<String> genderSpinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
@@ -109,23 +118,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                tv.setTextColor((position == 0) ? Color.GRAY : Color.BLACK);
-                return view;
-            }
-        };
-
-        ArrayAdapter<String> typeSpinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, types) {
-
-            @Override
-            public boolean isEnabled(int position) {
-                return !(position == 0);
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 tv.setTextColor((position == 0) ? Color.GRAY : Color.BLACK);
@@ -134,10 +127,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         };
 
         genderSpinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        typeSpinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-
         this.genderSpinner.setAdapter(genderSpinnerListAdapter);
-        this.typeSpinner.setAdapter(typeSpinnerListAdapter);
 
         this.dateView = findViewById(R.id.birth_date_view);
         Calendar calendar = Calendar.getInstance();
@@ -151,31 +141,29 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     public void updateUserDetails(View view) {
         if(isValid()) {
             try {
+                showProgressDialog("שומר את הפרטי המשתמש...");
+
                 JSONObject data = new JSONObject();
-                data.put("urlSuffix", "/updateUserDetails");
+                data.put("urlSuffix", "/updateFirebaseUser");
                 data.put("httpMethod", "POST");
                 data.put("uid", this.currentUser.getUid());
+                data.put("type", this.currentUser.getType());
                 data.put("firstName", this.firstNameText);
                 data.put("lastName", this.lastNameText);
                 data.put("birthDate", this.birthDateText);
                 data.put("gender", this.genderText);
-                data.put("type", this.typeText);
 
-                showProgressDialog("טוען תחרויות...");
 
-                JSON_AsyncTask jsonAsyncTaskPost = new JSON_AsyncTask();
-                jsonAsyncTaskPost.delegate = this;
-                jsonAsyncTaskPost.execute(data.toString());
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
+                this.jsonAsyncTaskPost.execute(data.toString());
             }
             catch (Exception e) {
+                hideProgressDialog();
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
                 System.out.println("MyPersonalInformationActivity Exception " + e.getStackTrace());
             }
-
-
-
         }
-
     }
 
     @Override
@@ -185,7 +173,9 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
-
+                this.currentUser = new User(dataObj);
+                showToast("הפרטים נשמרו בהצלחה");
+                switchToHomePageActivity();
             }
             catch (Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
@@ -200,6 +190,8 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     }
 
     private boolean isValid() {
+        DateUtils dateUtils = new DateUtils();
+
         this.firstNameText = this.firstName.getText().toString();
         if(this.firstNameText.isEmpty()) {
             this.firstName.setError("חובה למלא שם פרטי");
@@ -214,8 +206,31 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         this.genderText = "";
         this.birthDateText = "";
 
-        if (this.registerType.equals("student")) {
+        if (this.currentUser.getType().equals("student")) {
 
+            this.birthDateText = dateView.getText().toString();
+            int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+            if(participantAge < 4) {
+                this.dateView.setError("הגיל המינימלי להשתתפות הוא 4");
+                return false;
+            }
+            else if(participantAge > 18) {
+                this.dateView.setError("הגיל המינימלי להשתתפות הוא 18");
+                return false;
+            }
+            else {
+                this.dateView.setError(null);
+            }
+
+            this.genderText = this.genderSpinner.getSelectedItem().toString();
+            if(this.genderText.equals("בחר מגדר")) {
+                TextView errorText = (TextView) this.genderSpinner.getSelectedView();
+                errorText.setError("");
+                errorText.setTextColor(Color.RED);
+                errorText.setText("חובה לבחור מגדר");
+                return false;
+            }
+            this.genderText = this.genderSpinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
         }
 
         return true;
@@ -291,7 +306,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("בחר את סוג המתחרה");
+        toolbar.setTitle("שנה את הפרטים האישיים שלך");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -309,7 +324,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
 
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 menuItem.setChecked(true);
 
                 switch (menuItem.getItemId()) {

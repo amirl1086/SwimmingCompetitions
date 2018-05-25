@@ -189,7 +189,7 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
     }
 
     private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void showDate(int year, int month, int day) {

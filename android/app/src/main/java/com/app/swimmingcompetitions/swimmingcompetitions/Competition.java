@@ -76,22 +76,6 @@ public class Competition implements Serializable {
         return data;
     }
 
-/*
-    public ArrayList<Participant> getNewParticipants(ArrayList<Participant> participants) {
-        ArrayList<Participant> newParticipants = new ArrayList<>();
-
-        for(int i = 0; i < participants.size(); i++) {
-            if(!participants.get(i).isCompeted()) {
-                newParticipants.add(participants.get(i));
-            }
-            if(newParticipants.size() == this.getNumOfParticipants()) {
-                break;
-            }
-        }
-
-        return newParticipants;
-    }*/
-
     public ArrayList<Participant> getParticipants() throws JSONException {
         ArrayList<Participant> participants = new ArrayList<>();
         if(this.participants != null) {

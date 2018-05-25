@@ -83,22 +83,14 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
             @Override
             public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                }
-                return true;
+                return !(position == 0);
             }
 
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0) {
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
+                tv.setTextColor((position == 0) ? Color.GRAY : Color.BLACK);
                 return view;
             }
         };
@@ -207,6 +199,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                 errorText.setText("חובה לבחור מגדר");
                 return false;
             }
+            this.genderText = this.spinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
         }
 
         this.eMailText = this.email.getText().toString();
@@ -287,7 +280,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             }
             catch (Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("RegisterActivity Exception " + e.getStackTrace());
+                System.out.println("RegisterActivity Exception " + e.getMessage());
             }
         }
         else {

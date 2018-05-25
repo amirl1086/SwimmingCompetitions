@@ -30,15 +30,20 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
     private User currentUser;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
-    private DateUtils dateUtils;
+    private JSON_AsyncTask jsonAsyncTaskPost;
+
     private Competition selectedCompetition;
     private ArrayList<Competition> competitions;
+
     private CompetitionAdapter competitionsListAdapter;
     private Boolean isAscending;
     private int lastSelectedFilter;
     private ListView listView;
+
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+
+    private DateUtils dateUtils;
 
 
     @Override
@@ -77,9 +82,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
             showProgressDialog("טוען תחרויות...");
 
-            JSON_AsyncTask jsonAsyncTaskPost = new JSON_AsyncTask();
-            jsonAsyncTaskPost.delegate = this;
-            jsonAsyncTaskPost.execute(data.toString());
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(data.toString());
         }
         else {
             switchToLogInActivity();
@@ -297,7 +302,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
+                System.out.println("ViewCompetitionsActivity Exception " + e.getMessage());
             }
         }
         else {
@@ -308,7 +313,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
     }
 
     public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void switchToLogInActivity() {
