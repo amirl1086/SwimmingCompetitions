@@ -64,6 +64,10 @@ exports.setNewCompetition = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.setNewCompetition(request.body, response);
 });
 
+exports.getParticipantStatistics = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getParticipantStatistics(request.body, response);
+});
+
 exports.joinToCompetition = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.joinToCompetition(request.body, response);
 });

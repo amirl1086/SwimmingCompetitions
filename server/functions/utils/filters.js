@@ -63,10 +63,14 @@ module.exports = {
 	filterCompetitions : (competitions, params) => {
 		let currentUser = params.currentUser;
 		let today = moment();
-		let birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
-		let userAge = Math.floor(today.diff(birthDate, 'years', true));
-		let filters = params.filters.split(',');
+		let userAge;
 
+		if(currentUser) {
+			let birthDate = moment(currentUser.birthDate, 'DD/MM/YYYY hh:mm');
+			userAge = Math.floor(today.diff(birthDate, 'years', true));
+		}
+
+		let filters = params.filters.split(',');
 		let filteredCompetitions = {};
 
 		for(let key in competitions) {
@@ -74,22 +78,18 @@ module.exports = {
 
 			for(let i = 0; i < filters.length; i++) {
 				let filterName = filters[i];
-				if(filterName === 'uid') {
-					if(searchInParticipants(currentCompetition, currentUser.uid)) {
-						filteredCompetitions[key] = competitions[key];
-					}
-				}
-				else if(filterName === 'age') {
+				if(filterName === 'age') {
 					let fromAge = parseInt(currentCompetition.fromAge);
 					let toAge = parseInt(currentCompetition.toAge);
-					if(userAge >= fromAge && userAge <= toAge) {
+					if(userAge && userAge >= fromAge && userAge <= toAge) {
 						filteredCompetitions[key] = competitions[key];
 					}
 				}
-				else if(filterName === 'isDone') {
-					if(currentCompetition.isDone) {
-						filteredCompetitions[key] = competitions[key];
-					}
+				else if((filterName === 'swimmingStyle' && competitions[key].swimmingStyle === params.swimmingStyle) || 
+						(currentUser && filterName === 'uid' && searchInParticipants(currentCompetition, currentUser.uid)) ||
+						(filterName === 'isDone' && currentCompetition.isDone)) {
+
+					filteredCompetitions[key] = competitions[key];
 				}
 			}
 		}
@@ -100,7 +100,9 @@ module.exports = {
 }
 
 let searchInParticipants = (competition, uid) => {
-	let participantKey = Object.keys(competition.participants).find((participant, key) => key === uid);
-	console.log('participantKey ', participantKey);
-	return participantKey != null;
+	if(competition.participants) {
+		let participantKey = Object.keys(competition.participants).find((participant, key) => key === uid);
+		return participantKey != null;
+	}
+	return false;
 }
