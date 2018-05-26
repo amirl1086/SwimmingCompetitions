@@ -2,6 +2,7 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,8 +26,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,16 +84,27 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             bindView();
             setUpSidebar();
             getParticipantStatistics();
+            initGraph();
         }
         else {
             switchToLogInActivity();
         }
     }
 
+    private void initGraph() {
+        this.graphView.getViewport().setXAxisBoundsManual(true);
+        this.graphView.getViewport().setMinX(0);
+        this.graphView.getViewport().setMaxX(0);
+        this.graphView.getViewport().setYAxisBoundsManual(true);
+        this.graphView.getViewport().setMinY(0);
+        this.graphView.getViewport().setMaxY(0);
+    }
+
     private void bindView() {
         this.styleSpinner = findViewById(R.id.swimming_style_spinner);
         this.lengthsSpinner = findViewById(R.id.lengths_spinner);
         this.graphView = findViewById(R.id.graph);
+        this.selectedLength = "";
     }
 
     @Override
@@ -125,6 +141,8 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
     private void setUpGraphView() {
         final DateUtils dateUtils = new DateUtils();
+
+        //sort by date
         Collections.sort(this.statistics, new Comparator<Statistic>() {
             @Override
             public int compare(Statistic s1, Statistic s2) {
@@ -132,61 +150,99 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             }
         });
 
-        ArrayList<Statistic> selectedStatistics = new ArrayList<>();
+        //take the statistics that match the swimming style
+        final ArrayList<Statistic> selectedStatistics = new ArrayList<>();
         for(int i = 0; i < this.statistics.size(); i++) {
             if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle)) {
                 selectedStatistics.add(this.statistics.get(i));
             }
         }
 
+        //create the points and titles
+        String[] titles = new String[selectedStatistics.size()];
         DataPoint[] points = new DataPoint[selectedStatistics.size()];
         for(int i = 0; i < selectedStatistics.size(); i++) {
+            int score;
+            if(this.selectedLength.isEmpty()) {
+                score = 
+            }
+            else {
+
+            }
             points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
+            titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
+            System.out.println("points[" + i + "]: " + points[i]);
+            System.out.println("titles[" + i + "]: " + titles[i]);
         }
 
-/*        graphView.getViewport().setYAxisBoundsManual(true);
-        graphView.getViewport().setMinY(0);
-        graphView.getViewport().setMaxY(3000);
-
-        graphView.getViewport().setXAxisBoundsManual(true);
-        graphView.getViewport().setMinX(0);
-        graphView.getViewport().setMaxX(59);*/
-
-        //enable scrolling
-        this.graphView.getViewport().setScrollable(true);
+        final String[] finalTitles = titles;
+        Arrays.sort(finalTitles);
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
         this.graphView.addSeries(series);
 
+        this.graphView.getViewport().setXAxisBoundsManual(true);
+        this.graphView.getViewport().setMinX(0);
+        this.graphView.getViewport().setMaxX(2);
+
+        //dateUtils.stringToCalendar(selectedStatistics.get(0).getCompetition().getActivityDate()).get(Calendar.YEAR)
+
+        Collections.sort(selectedStatistics, new Comparator<Statistic>() {
+            @Override
+            public int compare(Statistic s1, Statistic s2) {
+                return Float.compare(s1.getScore(), s2.getScore());
+            }
+        });
+
+        this.graphView.getViewport().setYAxisBoundsManual(true);
+        this.graphView.getViewport().setMinY(0);
+        this.graphView.getViewport().setMaxY(selectedStatistics.get(selectedStatistics.size() - 1).getScore());
+
+        series.setDrawDataPoints(true);
+        series.setDataPointsRadius(15);
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                showToast("test");
+                System.out.println("dataPoint " + dataPoint);
+            }
+        });
+
         this.graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    // show normal x values
-                    return super.formatLabel(value, isValueX);
+                if(isValueX) {
+                    if(value % 1 == 0 || (((int)(value + 2)) > selectedStatistics.size())) {
+                        System.out.println("value" + value + ",  " + finalTitles[(int) value]);
+                        return finalTitles[(int) value];
+                    }
+                    return "";
                 }
                 else {
                     // show currency for y values
-                    return super.formatLabel(value, isValueX) + " €";
+                    return super.formatLabel(value, false);
                 }
             }
         });
+
+        this.graphView.getViewport().setScrollable(true);
     }
 
     private void setUpLengths() {
-        Set<String> lengths = new HashSet<>();
+        Set<Integer> lengthsSet = new HashSet<>();
         for(int i = 0; i < this.statistics.size(); i++) {
             if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle)) {
-                lengths.add(this.statistics.get(i).getCompetition().getLength() + " מטרים");
+                lengthsSet.add(Integer.valueOf(this.statistics.get(i).getCompetition().getLength()));
             }
         }
 
-        this.lengths = new String[lengths.size() + 1];
+        this.lengths = new String[lengthsSet.size() + 1];
         this.lengths[0] = "בחר מרחק";
 
-        int i = 1;
-        for(String length : lengths) {
-            this.lengths[i++] = length;
+        Integer[] lengths = lengthsSet.toArray(new Integer[0]);
+        Arrays.sort(lengths);
+        for(int i = 0; i < lengths.length; i++) {
+            this.lengths[i + 1] = String.valueOf(lengths[i]) + " מטרים";
         }
 
         this.selectedLength = "";

@@ -44,13 +44,13 @@ module.exports = {
 		getCollectionByFilter('users', 'email', params.email, (success, result) => {
 			let users = result;
 			console.log('users ', users);
-			if(!Object.keys(users).length) {
+			if(!users) {
 				utilities.sendResponse(response, 'no_such_email', null);
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
-					utilities.sendResponse(response, null, child);
+					utilities.sendResponse(response, null, user);
 				}
 				else {
 					utilities.sendResponse(response, 'birth_date_dont_match', null);
@@ -202,7 +202,7 @@ module.exports = {
 						for(let i in statisticsResults) {
 							statisticsResults[i].competition = filteredCompetitions[statisticsResults[i].competition];
 						}
-						
+
 						console.log('statisticsResults ', statisticsResults);
 						utilities.sendResponse(response, null, statisticsResults);
 					}
