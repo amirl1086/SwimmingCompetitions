@@ -162,13 +162,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
         String[] titles = new String[selectedStatistics.size()];
         DataPoint[] points = new DataPoint[selectedStatistics.size()];
         for(int i = 0; i < selectedStatistics.size(); i++) {
-            int score;
-            if(this.selectedLength.isEmpty()) {
-                score = 
-            }
-            else {
-
-            }
             points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
             titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
             System.out.println("points[" + i + "]: " + points[i]);
