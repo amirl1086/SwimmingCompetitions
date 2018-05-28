@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -66,9 +67,10 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
     private ArrayList<Statistic> statistics;
     private String selectedSwimmingStyle;
     private String selectedLength;
-    private Calendar maxDate;
-    private Calendar minDate;
     private GraphView graphView;
+    private CompetitionAdapter competitionsListAdapter;
+    private ListView listView;
+    private ArrayList<Competition> competitions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,26 +86,17 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             bindView();
             setUpSidebar();
             getParticipantStatistics();
-            initGraph();
         }
         else {
             switchToLogInActivity();
         }
     }
 
-    private void initGraph() {
-        this.graphView.getViewport().setXAxisBoundsManual(true);
-        this.graphView.getViewport().setMinX(0);
-        this.graphView.getViewport().setMaxX(0);
-        this.graphView.getViewport().setYAxisBoundsManual(true);
-        this.graphView.getViewport().setMinY(0);
-        this.graphView.getViewport().setMaxY(0);
-    }
-
     private void bindView() {
         this.styleSpinner = findViewById(R.id.swimming_style_spinner);
         this.lengthsSpinner = findViewById(R.id.lengths_spinner);
         this.graphView = findViewById(R.id.graph);
+        this.listView = findViewById(R.id.competitions_list);
         this.selectedLength = "";
     }
 
@@ -140,6 +133,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
     }
 
     private void setUpGraphView() {
+        this.graphView.removeAllSeries();
         final DateUtils dateUtils = new DateUtils();
 
         //sort by date
@@ -151,81 +145,87 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
         });
 
         //take the statistics that match the swimming style
+        this.competitions = new ArrayList<>();
         final ArrayList<Statistic> selectedStatistics = new ArrayList<>();
         for(int i = 0; i < this.statistics.size(); i++) {
-            if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle)) {
+            String[] lengthArr = this.selectedLength.split(" ");
+            if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle) && this.statistics.get(i).getCompetition().getLength().equals(lengthArr[0])) {
                 selectedStatistics.add(this.statistics.get(i));
             }
+
+            this.competitions.add(this.statistics.get(i).getCompetition());
         }
 
-        //create the points and titles
-        String[] titles = new String[selectedStatistics.size()];
-        DataPoint[] points = new DataPoint[selectedStatistics.size()];
-        for(int i = 0; i < selectedStatistics.size(); i++) {
-            int score;
-            if(this.selectedLength.isEmpty()) {
-                score = 
+        //update the competitions list
+        this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
+        this.listView.setAdapter(this.competitionsListAdapter);
+        this.competitionsListAdapter.notifyDataSetChanged();
+
+        if(selectedStatistics.size() > 1) {
+            //create the points and titles
+            String[] titles = new String[selectedStatistics.size()];
+            DataPoint[] points = new DataPoint[selectedStatistics.size()];
+            for(int i = 0; i < selectedStatistics.size(); i++) {
+                points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
+                titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
+                System.out.println("points[" + i + "]: " + points[i]);
+                System.out.println("titles[" + i + "]: " + titles[i]);
             }
-            else {
 
-            }
-            points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
-            titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
-            System.out.println("points[" + i + "]: " + points[i]);
-            System.out.println("titles[" + i + "]: " + titles[i]);
-        }
+            final String[] finalTitles = titles;
+            Arrays.sort(finalTitles);
 
-        final String[] finalTitles = titles;
-        Arrays.sort(finalTitles);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
+            this.graphView.addSeries(series);
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        this.graphView.addSeries(series);
+            this.graphView.getViewport().setXAxisBoundsManual(true);
+            this.graphView.getViewport().setMinX(0);
+            this.graphView.getViewport().setMaxX(2);
 
-        this.graphView.getViewport().setXAxisBoundsManual(true);
-        this.graphView.getViewport().setMinX(0);
-        this.graphView.getViewport().setMaxX(2);
+            //dateUtils.stringToCalendar(selectedStatistics.get(0).getCompetition().getActivityDate()).get(Calendar.YEAR)
 
-        //dateUtils.stringToCalendar(selectedStatistics.get(0).getCompetition().getActivityDate()).get(Calendar.YEAR)
+            Collections.sort(selectedStatistics, new Comparator<Statistic>() {
+                @Override
+                public int compare(Statistic s1, Statistic s2) {
+                    return Float.compare(s1.getScore(), s2.getScore());
+                }
+            });
 
-        Collections.sort(selectedStatistics, new Comparator<Statistic>() {
-            @Override
-            public int compare(Statistic s1, Statistic s2) {
-                return Float.compare(s1.getScore(), s2.getScore());
-            }
-        });
+            this.graphView.getViewport().setYAxisBoundsManual(true);
+            this.graphView.getViewport().setMinY(0);
+            this.graphView.getViewport().setMaxY(selectedStatistics.get(selectedStatistics.size() - 1).getScore());
 
-        this.graphView.getViewport().setYAxisBoundsManual(true);
-        this.graphView.getViewport().setMinY(0);
-        this.graphView.getViewport().setMaxY(selectedStatistics.get(selectedStatistics.size() - 1).getScore());
+            series.setDrawDataPoints(true);
+            series.setDataPointsRadius(15);
+            series.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    showToast("test");
+                    System.out.println("dataPoint " + dataPoint);
+                }
+            });
 
-        series.setDrawDataPoints(true);
-        series.setDataPointsRadius(15);
-        series.setOnDataPointTapListener(new OnDataPointTapListener() {
-            @Override
-            public void onTap(Series series, DataPointInterface dataPoint) {
-                showToast("test");
-                System.out.println("dataPoint " + dataPoint);
-            }
-        });
-
-        this.graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if(isValueX) {
-                    if(value % 1 == 0 || (((int)(value + 2)) > selectedStatistics.size())) {
-                        System.out.println("value" + value + ",  " + finalTitles[(int) value]);
-                        return finalTitles[(int) value];
+            this.graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if(isValueX) {
+                        if(value < finalTitles.length && (value % 1 == 0.0 || (((int)(value + 2)) > selectedStatistics.size()))) {
+                            return finalTitles[(int) value];
+                        }
+                        return "";
                     }
-                    return "";
+                    else {
+                        // show currency for y values
+                        return super.formatLabel(value, false);
+                    }
                 }
-                else {
-                    // show currency for y values
-                    return super.formatLabel(value, false);
-                }
-            }
-        });
+            });
 
-        this.graphView.getViewport().setScrollable(true);
+            this.graphView.getViewport().setScrollable(true);
+        }
+        else {
+            showToast("לא נמצאו מספיק תחרויות על מנת להראות התקדמות בגרף");
+        }
     }
 
     private void setUpLengths() {
@@ -291,7 +291,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
                 if(position > 0) {
                     selectedSwimmingStyle = swimmingStyles[position];
                     setUpLengths();
-                    setUpGraphView();
                     System.out.println("position " + position);
                 }
             }
@@ -398,7 +397,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("צפה בהתקדמות שלך לפי סגנון");
+        toolbar.setTitle("סטטיסטיקות");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();

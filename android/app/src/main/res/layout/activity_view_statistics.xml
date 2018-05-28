@@ -37,6 +37,16 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
+                <TextView
+                    android:id="@+id/register_temp_user_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/choose_style_and_length"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:weightSum="2"
@@ -46,30 +56,47 @@
                         android:id="@+id/swimming_style_spinner"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="50dp"
-                        android:textSize="22sp" />
+                        android:layout_height="50dp" />
 
                     <Spinner
                         android:id="@+id/lengths_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:textSize="22sp" />
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:padding="20dp">
+                    android:layout_marginTop="10dp">
 
                     <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graph"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:id="@+id/graph" />
+                        android:layout_height="220dp" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/competitions_header"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/the_chosen_competitions"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/competitions_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15sp"
+                    android:layout_marginTop="10sp"
+                    android:divider="@color/purple"
+                    android:dividerHeight="1dp" />
 
             </LinearLayout>
         </ScrollView>

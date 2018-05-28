@@ -61,27 +61,6 @@
                     android:weightSum="11">
 
                     <TextView
-                        android:id="@+id/in_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_weight="2"
-                        android:text="@string/in_time"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/competition_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_weight="2"
-                        android:text="@string/time_of_competition"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="22sp" />
-
-
-                    <TextView
                         android:id="@+id/take_place_in_date"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -102,6 +81,25 @@
                         android:textColorHint="@color/black"
                         android:textSize="22sp" />
 
+                    <TextView
+                        android:id="@+id/in_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="2"
+                        android:text="@string/in_time"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/competition_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="2"
+                        android:text="@string/time_of_competition"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="22sp" />
                 </LinearLayout>
 
                 <RelativeLayout

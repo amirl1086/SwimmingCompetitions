@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -50,12 +51,15 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         setContentView(R.layout.activity_register);
 
         Intent intent = getIntent();
+        TextView header = findViewById(R.id.register_header);
         if(intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
             this.registerType = "student";
+            header.setText("הוספת מתחרה חדש");
         }
         else {
+            header.setText("הרשמה");
             this.registerType = intent.getStringExtra("registerType");
         }
         this.spinner = findViewById(R.id.register_gender);

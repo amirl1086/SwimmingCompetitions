@@ -24,6 +24,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 
 public class LogInActivity extends LoadingDialog implements View.OnClickListener, AsyncResponse {
 
@@ -164,7 +166,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         catch (JSONException e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-            System.out.println("LogInActivity Exception " + e.getStackTrace());
+            System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
         }
 
         jsonAsyncTaskPost.execute(logInData.toString());
@@ -182,7 +184,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             catch (ApiException e) {
                 hideProgressDialog();
                 showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
-                System.out.println("LogInActivity Exception " + e.getStackTrace());
+                System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
             }
         }
     }
@@ -223,7 +225,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             }
             catch(Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("LogInActivity Exception " + e.getStackTrace());
+                System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {

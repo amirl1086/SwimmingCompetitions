@@ -13,14 +13,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-public class CompetitionAdapter extends ArrayAdapter {
-
+public class StatisticsAdapter extends ArrayAdapter {
     private Context mContext;
     private int mResource;
     private List<Competition> competitions;
 
-    public CompetitionAdapter(Context context, int resource, ArrayList<Competition> list) {
+    public StatisticsAdapter(Context context, int resource, ArrayList<Competition> list) {
         super(context, resource, list);
         this.mContext = context;
         this.mResource = resource;
@@ -35,7 +33,7 @@ public class CompetitionAdapter extends ArrayAdapter {
         DateUtils dateUtils = new DateUtils();
 
         if(listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.statistics_list_item, parent, false);
         }
         Competition currentCompetition = competitions.get(position);
 
@@ -46,14 +44,6 @@ public class CompetitionAdapter extends ArrayAdapter {
         Calendar calendar = dateUtils.dateToCalendar(new Date(currentCompetition.getActivityDate()));
         competitionDate.setText(dateUtils.getCompleteDate(calendar));
 
-        TextView competitionAges = listItem.findViewById(R.id.competition_list_item_ages);
-        competitionAges.setText(currentCompetition.getAgesString());
-
-        TextView competitionStyle = listItem.findViewById(R.id.competition_list_item_style);
-        competitionStyle.setText(currentCompetition.getSwimmingStyle());
-
-        TextView competitionLength = listItem.findViewById(R.id.competition_list_item_length);
-        competitionLength.setText(currentCompetition.getLength());
 
         return listItem;
     }

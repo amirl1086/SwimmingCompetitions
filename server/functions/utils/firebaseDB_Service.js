@@ -195,12 +195,12 @@ module.exports = {
 				getCollectionByName('competitions', (success, result) => {
 					if(success) {
 						//map to list and list to map to reduce runtime for searching 
-						let competitions = utilities.mapToList(result);
-						let filteredCompetitions = utilities.listToMap(competitions.filter((competition) => selectedCompetitions.has(competition.id)), 'id');
+						let competitions = result;
+						//let filteredCompetitions = utilities.listToMap(competitions.filter((competition) => selectedCompetitions.has(competition.id)), 'id');
 
 						//attach the competition object to the correct place in the array
 						for(let i in statisticsResults) {
-							statisticsResults[i].competition = filteredCompetitions[statisticsResults[i].competition];
+							statisticsResults[i].competition = competitions[statisticsResults[i].competition];
 						}
 
 						console.log('statisticsResults ', statisticsResults);

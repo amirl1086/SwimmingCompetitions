@@ -21,6 +21,10 @@
             android:icon="@drawable/ic_live"
             android:title="@string/menu_realtime_view_btn" />
 
+        <item
+            android:id="@+id/media_nav_item"
+            android:icon="@drawable/ic_projector"
+            android:title="@string/media_nav_item" />
 
         <item
             android:id="@+id/settings_nav_item"
