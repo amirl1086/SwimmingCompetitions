@@ -152,8 +152,16 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle) && this.statistics.get(i).getCompetition().getLength().equals(lengthArr[0])) {
                 selectedStatistics.add(this.statistics.get(i));
             }
-
             this.competitions.add(this.statistics.get(i).getCompetition());
+        }
+        //create the points and titles
+        String[] titles = new String[selectedStatistics.size()];
+        DataPoint[] points = new DataPoint[selectedStatistics.size()];
+        for(int i = 0; i < selectedStatistics.size(); i++) {
+            points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
+            titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
+            System.out.println("points[" + i + "]: " + points[i]);
+            System.out.println("titles[" + i + "]: " + titles[i]);
         }
 
         //update the competitions list

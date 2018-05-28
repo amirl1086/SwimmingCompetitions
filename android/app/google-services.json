@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "197819058733-l085hfvktlcgad92pheulgj2utqalbrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
+            "certificate_hash": "24c360060831d63b91bc487332747c76b4f770fe"
+          }
+        },
+        {
           "client_id": "197819058733-s94393gh4amhdbckdfpu4l48u48mgume.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
