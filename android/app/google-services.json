@@ -64,15 +64,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
               "client_id": "197819058733-uua0nj6o4j2cjuuk3dlbt75anavj59cl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.app.swimmingcompetitions"
               }
+            },
+            {
+              "client_id": "197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
         },

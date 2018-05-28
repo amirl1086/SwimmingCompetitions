@@ -154,15 +154,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             }
             this.competitions.add(this.statistics.get(i).getCompetition());
         }
-        //create the points and titles
-        String[] titles = new String[selectedStatistics.size()];
-        DataPoint[] points = new DataPoint[selectedStatistics.size()];
-        for(int i = 0; i < selectedStatistics.size(); i++) {
-            points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
-            titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
-            System.out.println("points[" + i + "]: " + points[i]);
-            System.out.println("titles[" + i + "]: " + titles[i]);
-        }
 
         //update the competitions list
         this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
@@ -170,7 +161,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
         this.competitionsListAdapter.notifyDataSetChanged();
 
         if(selectedStatistics.size() > 1) {
-            //create the points and titles
             String[] titles = new String[selectedStatistics.size()];
             DataPoint[] points = new DataPoint[selectedStatistics.size()];
             for(int i = 0; i < selectedStatistics.size(); i++) {
@@ -234,6 +224,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
         else {
             showToast("לא נמצאו מספיק תחרויות על מנת להראות התקדמות בגרף");
         }
+
     }
 
     private void setUpLengths() {
