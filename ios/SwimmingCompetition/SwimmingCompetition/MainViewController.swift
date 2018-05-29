@@ -15,6 +15,8 @@ class MainViewController: UIViewController {
     var currentUser: User!
     var menu_vc: MenuViewController!
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,15 +30,19 @@ class MainViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = addButton
         
         //Set background
-        //let imageView = UIImageView(frame: self.view.bounds)
-        //imageView.image = UIImage(named: "abstract_swimming_pool.jpg")
-        //self.view.insertSubview(imageView, at: 0)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")
+        self.view.insertSubview(self.backgroundView, at: 0)
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "abstract_swimming_pool.jpg")!)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -86,7 +92,7 @@ class MainViewController: UIViewController {
     @IBAction func competitions(_ sender: UIButton) {
     }
     @IBAction func personalScores(_ sender: UIButton) {
-        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: ["uid": currentUser.uid as AnyObject, "competition": "{\"id\":\"-L2jyf8HegUxdqPwW37o\"}" as AnyObject]) { (response) in
+        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: ["uid": currentUser.uid as AnyObject]) { (response) in
             print("**********personal result***********")
             print(response)
             print("************************************")

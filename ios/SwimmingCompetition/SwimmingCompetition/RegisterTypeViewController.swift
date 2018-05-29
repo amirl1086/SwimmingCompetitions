@@ -15,13 +15,19 @@ class RegisterTypeViewController: UIViewController {
     var type = String()
     var googleUser: GIDGoogleUser! = nil
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //The background image
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        backgroundView = UIImageView(frame: self.view.bounds)
+        backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(backgroundView, at: 0)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        backgroundView.frame = self.view.bounds
     }
     
     override func didReceiveMemoryWarning() {

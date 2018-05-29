@@ -28,8 +28,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var loginButton: RoundButton!
     var signInWithGooogleButton: GIDSignInButton!
+    
     var mainView = MainViewController()
     var user: User!
+    
+    var backgroundView: UIImageView!
     
     override func viewDidLoad() {
   
@@ -45,9 +48,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         self.logo.image = UIImage(named: "logo.png")
         
         /* Set the background */
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "waterpool_bottom.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        backgroundView = UIImageView(frame: self.view.bounds)
+        backgroundView.image = UIImage(named: "waterpool_bottom.jpg")//if its in images.xcassets
+        self.view.insertSubview(backgroundView, at: 0)
         
         /* Observer for keyboard */
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -64,24 +67,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         scrollView.isScrollEnabled = true
         scrollView.isUserInteractionEnabled = true
         
-        
-        //view.addSubview(signInWithGooogleButton)
-        
     }
     
-    
-    
     override func viewDidLayoutSubviews() {
-
+        backgroundView.frame = self.view.bounds
         signInWithGooogleButton.center.x = self.view.center.x
         emailTextFiled.bottomLineBorder()
-       /* let border = CALayer()
-        let lineWidth = CGFloat(0.8)
-        border.borderColor = UIColor.black.cgColor
-        border.frame = CGRect(x: 0, y: emailTextFiled.frame.height - lineWidth, width:  emailTextFiled.frame.width, height: emailTextFiled.frame.height)
-        border.borderWidth = lineWidth
-        emailTextFiled.layer.addSublayer(border)
-        emailTextFiled.layer.masksToBounds = true*/
     }
  
     /* For remove the observer of the keayboard */
@@ -106,7 +97,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         self.view.endEditing(true)
     }
     
@@ -191,10 +181,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                         //alert.dismiss(withClickedButtonIndex: -1, animated: true)
                         if response.succeed {
                             
-                            self.user = User(json: response.data)
                             UserDefaults.standard.set(true, forKey: "loggedIn")
                             UserDefaults.standard.synchronize()
-                            self.performSegue(withIdentifier: "goToMain", sender: self)
+                            if let mainView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                                mainView.currentUser = User(json: response.data)
+                                self.navigationController?.viewControllers = [mainView]
+                            }
                         }
                         else {
                             

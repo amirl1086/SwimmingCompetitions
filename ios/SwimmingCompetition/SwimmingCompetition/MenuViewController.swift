@@ -13,7 +13,7 @@ import GoogleSignIn
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     /* Labels array for the menu bar */
-    let menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","סטטיסטיקות","תמונות וסרטונים","הגדרות","התנתק"]
+    let menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","סטטיסטיקות","תמונות וסרטונים","הילדים שלי","הגדרות","התנתק"]
     
     var currentUser: User!
     
@@ -48,39 +48,44 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.dismiss(animated: true, completion: nil)
         let sb = UIStoryboard(name: "Main", bundle: nil)
         
-        switch(indexPath.row) {
-        case 0:
+        switch(self.menuArray[indexPath.row]) {
+        case "ראשי":
             if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
                 mainView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [mainView]
             }
             break
-        case 1:
+        case "תחרויות":
             if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [competitionsView]
             }
             break
-        case 2:
+        case "תוצאות":
             /*if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
                 //resultsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [resultsView]
             }*/
             break
-        case 3:
+        case "צפייה בזמן אמת":
             if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.controllerType = "realTime"
                 competitionsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [competitionsView]
             }
             break
-        case 6:
+        case "הילדים שלי":
+            if let myChildrenView = sb.instantiateViewController(withIdentifier: "myChildrenId") as? MyChildrenViewController {
+                self.navigationController?.viewControllers = [myChildrenView]
+            }
+            break
+        case "הגדרות":
             if let settingsView = sb.instantiateViewController(withIdentifier: "settingsId") as? SettingsViewController {
                 settingsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [settingsView]
             }
             break
-        case 7:
+        case "התנתק":
             Service.shared.signOut()
             if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
                 self.navigationController?.viewControllers = [loginView]

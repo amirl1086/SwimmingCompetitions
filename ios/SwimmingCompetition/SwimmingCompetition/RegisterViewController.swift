@@ -28,17 +28,22 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var productNumber: UITextField!
     var activeTextField: UITextField!
     //========================//
+    
     @IBOutlet weak var confirmButton: UIButton!
     
     let datePicker = UIDatePicker()
     var dateToSend = ""
     
     var userType = String()
+    
     var isGoogleRegister = false
     var googleUser: GIDGoogleUser! = nil
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         scrollView.isScrollEnabled = true
         scrollView.isUserInteractionEnabled = true
         firstName.delegate = self
@@ -54,9 +59,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         activeTextField = firstName
         
         if isGoogleRegister {
-            self.firstName.text = googleUser.profile.givenName!
-            self.lastName.text = googleUser.profile.familyName!
-            self.email.text = googleUser.profile.email!
+            self.firstName.text = googleUser.profile.givenName != nil ? googleUser.profile.givenName! : ""
+            self.lastName.text = googleUser.profile.familyName != nil ? googleUser.profile.familyName! : ""
+            self.email.text = googleUser.profile.email != nil ? googleUser.profile.email! : ""
             self.email.isEnabled = false
         }
         
@@ -66,9 +71,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         }
         
         // Do any additional setup after loading the view, typically from a nib.
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        backgroundView = UIImageView(frame: self.view.bounds)
+        backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(backgroundView, at: 0)
         toolBar()
         //go to for change the register view
         //changeRegisterView()
@@ -88,6 +93,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewDidLayoutSubviews() {
+        
+        backgroundView.frame = self.view.bounds
+        
         firstName.bottomLineBorder()
         lastName.bottomLineBorder()
         birthDate.bottomLineBorder()

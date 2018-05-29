@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30010C1320B4030F0064F27A /* MenuViewController.swift */; };
 		30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30010C1520B403450064F27A /* MenuTableViewCell.swift */; };
+		3001846420BBF733001BD831 /* MyChildrenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846320BBF733001BD831 /* MyChildrenViewController.swift */; };
+		3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */; };
 		30034C74207FEA4F0004CFB3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A951FE72BBA00201A20 /* Info.plist */; };
 		300613B91FF428BF0016E325 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300613B81FF428BF0016E325 /* Service.swift */; };
 		300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300B12F220B2AE1F003F6711 /* SettingsViewController.swift */; };
@@ -71,6 +73,8 @@
 		2F00EBFD4C515C096E9A8076 /* Pods-SwimmingCompetitionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwimmingCompetitionUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwimmingCompetitionUITests/Pods-SwimmingCompetitionUITests.release.xcconfig"; sourceTree = "<group>"; };
 		30010C1320B4030F0064F27A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		30010C1520B403450064F27A /* MenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuTableViewCell.swift; path = /Users/aviel/Dropbox/FinalProject/SwimmingCompetitions/ios/SwimmingCompetition/SwimmingCompetition/TableCell/MenuTableViewCell.swift; sourceTree = "<absolute>"; };
+		3001846320BBF733001BD831 /* MyChildrenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChildrenViewController.swift; sourceTree = "<group>"; };
+		3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildrenTableViewCell.swift; sourceTree = "<group>"; };
 		300613B81FF428BF0016E325 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		300B12F220B2AE1F003F6711 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		3019617B1FE8076C00046300 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -151,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
+				3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */,
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
 				3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */,
 				308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */,
@@ -213,6 +218,7 @@
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
 				304C621720A839840073E490 /* NavigationController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				3001846320BBF733001BD831 /* MyChildrenViewController.swift */,
 				300B12F220B2AE1F003F6711 /* SettingsViewController.swift */,
 				30010C1320B4030F0064F27A /* MenuViewController.swift */,
 				3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */,
@@ -597,6 +603,7 @@
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
+				3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */,
 				30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,
@@ -614,6 +621,7 @@
 				30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */,
 				3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */,
 				30FE9A8F1FE72BBA00201A20 /* SwimmingCompetition.xcdatamodeld in Sources */,
+				3001846420BBF733001BD831 /* MyChildrenViewController.swift in Sources */,
 				30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */,
 				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
 				300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */,

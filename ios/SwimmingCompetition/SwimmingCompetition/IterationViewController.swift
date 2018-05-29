@@ -18,6 +18,8 @@ class IterationViewController: UIViewController {
     @IBOutlet weak var resetButtonOutlet: UIButton!
     @IBOutlet weak var endIterationButtonOutlet: UIButton!
   
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     var competition: Competition!
     var jsonData: JSON = [:]
     
@@ -35,15 +37,17 @@ class IterationViewController: UIViewController {
     
     var iterationNumber:Int = 0
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
       
         startNewIteration()
     
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
        
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
@@ -52,6 +56,25 @@ class IterationViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        backgroundView.frame = self.view.bounds
+        
+        let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
+        var start: Int = 0
+        var count = 1
+        
+        for view in subviews {
+            view.frame = CGRect(x: start, y: Int(view.frame.origin.y), width: width, height: 30)
+            
+            if count == 3 {
+                start += width + 10
+                count = 1
+            } else {
+                count += 1
+            }
+        }
     }
     
     @IBAction func endIterationButton(_ sender: Any) {
@@ -116,9 +139,10 @@ class IterationViewController: UIViewController {
         let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
         var start:Int = 0
         for i in 0...participantsIndex.count-1 {
-            let name = UILabel(frame: CGRect(x: start, y: Int(self.view.frame.size.height/2), width: width, height: 30))
+            let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y + self.resetButtonOutlet.frame.height + 20), width: width, height: 30))
             name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
             name.textAlignment = .center
+            self.scrollView.addSubview(name)
             
             let time = UILabel(frame: CGRect(x: start, y: Int(name.frame.origin.y+name.frame.height+10), width: width, height: 30))
             time.text = "00:00:00"
@@ -127,16 +151,16 @@ class IterationViewController: UIViewController {
             time.isUserInteractionEnabled = true
             let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             time.addGestureRecognizer(gestureRecognizer)
-            self.view.addSubview(time)
+            self.scrollView.addSubview(time)
             
             let button = UIButton(frame: CGRect(x: start, y: Int(time.frame.origin.y+time.frame.height+10), width: width, height: 50))
             button.backgroundColor = .red
             button.tag = i
             button.setTitle("עצור", for: .normal)
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
-            self.view.addSubview(button)
+            self.scrollView.addSubview(button)
             
-            self.view.addSubview(name)
+            
             subviews.append(name)
             subviews.append(time)
             subviews.append(button)
