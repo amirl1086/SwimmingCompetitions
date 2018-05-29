@@ -162,6 +162,7 @@ public class GoogleRegisterActivity extends LoadingDialog implements AsyncRespon
             registerData.put("gender", genderText);
             registerData.put("birthDate", birthDateText);
             registerData.put("type", this.registerType);
+
             if(this.currentUser != null) {
                 registerData.put("joinToCompetition", true);
             }

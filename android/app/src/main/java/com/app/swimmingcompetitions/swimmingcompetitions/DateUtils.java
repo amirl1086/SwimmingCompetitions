@@ -22,6 +22,12 @@ public class DateUtils {
         return "מתקיימת ביום " + hebrewDayOfWeek + ", ה - " + monthDay + " ל" + hebrewMonth + ", " + year + ", בשעה - " + hours + ":" + minutes;
     }
 
+    public String getShortDate(String dateTime) {
+        String[] arrDateTime = dateTime.split(" ");
+        String[] arrDate = arrDateTime[0].split("/");
+        return arrDate[1] + "/" + arrDate[2];
+    }
+
     public String getCompleteDate(Calendar calendar) {
         int hours = calendar.get(Calendar.HOUR);
         if(calendar.get(Calendar.AM_PM) == Calendar.AM) {

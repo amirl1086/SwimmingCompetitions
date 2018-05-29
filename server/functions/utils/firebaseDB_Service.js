@@ -44,13 +44,13 @@ module.exports = {
 		getCollectionByFilter('users', 'email', params.email, (success, result) => {
 			let users = result;
 			console.log('users ', users);
-			if(!Object.keys(users).length) {
+			if(!users) {
 				utilities.sendResponse(response, 'no_such_email', null);
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
-					utilities.sendResponse(response, null, child);
+					utilities.sendResponse(response, null, user);
 				}
 				else {
 					utilities.sendResponse(response, 'birth_date_dont_match', null);
@@ -172,6 +172,50 @@ module.exports = {
 		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
+	},
+
+	getParticipantStatistics: (params, response) => {
+		getCollectionByName('personalResults', (success, result) => {
+			if(success) {
+				let personalResults = result;
+				let statisticsResults = [];
+				let selectedCompetitions = new Set();
+				console.log('getParticipantStatistics result ', personalResults);
+
+				//create the array of scores by competition id
+				for(let competitionId in personalResults) {
+					let participants = personalResults[competitionId];
+					if(participants[params.uid]) {
+						selectedCompetitions.add(competitionId);
+						statisticsResults.push({'competition': competitionId, 'score': participants[params.uid].score});
+					}
+				}
+
+				//retreive the competitions data to assign it by styles and years
+				getCollectionByName('competitions', (success, result) => {
+					if(success) {
+						//map to list and list to map to reduce runtime for searching 
+						let competitions = result;
+						//let filteredCompetitions = utilities.listToMap(competitions.filter((competition) => selectedCompetitions.has(competition.id)), 'id');
+
+						//attach the competition object to the correct place in the array
+						for(let i in statisticsResults) {
+							statisticsResults[i].competition = competitions[statisticsResults[i].competition];
+						}
+
+						console.log('statisticsResults ', statisticsResults);
+						utilities.sendResponse(response, null, statisticsResults);
+					}
+					else {
+						utilities.sendResponse(response, result, null);
+					}
+				});
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
+
+		})
 	},
 
 	getPersonalResults: (params, response) => {
@@ -322,11 +366,21 @@ module.exports = {
 };
 
 let getCollectionByFilter = (collectionName, filter, value, callback) => {
-	console.log('getCollectionByFilter params collectionName: ', collectionName, ', filter: ', filter, ', value: ', value);
 	let db = admin.database();
 	let collectionRef = db.ref(collectionName);
 
 	collectionRef.orderByChild(filter).equalTo(value).on('value', (snapshot) => {
+		callback(true, snapshot.val());
+	}, (error) => {
+		callback(false, error);
+	});
+}
+
+let getCollectionByName = (collectionName, callback) => {
+	let db = admin.database();
+	let collectionRef = db.ref(collectionName);
+
+	collectionRef.on('value', (snapshot) => {
 		callback(true, snapshot.val());
 	}, (error) => {
 		callback(false, error);

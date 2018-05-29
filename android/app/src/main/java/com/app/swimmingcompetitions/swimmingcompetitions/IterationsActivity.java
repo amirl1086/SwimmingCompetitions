@@ -160,7 +160,7 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
     }
 
     public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void resetClicked() {

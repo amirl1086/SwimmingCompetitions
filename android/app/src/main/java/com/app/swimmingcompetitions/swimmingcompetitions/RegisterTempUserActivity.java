@@ -63,20 +63,14 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
 
                 @Override
                 public boolean isEnabled(int position){
-                    return position != 0;
+                    return (position != 0);
                 }
 
                 @Override
                 public View getDropDownView(int position, View convertView, ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
-                    if(position == 0){
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    }
-                    else {
-                        tv.setTextColor(Color.BLACK);
-                    }
+                    tv.setTextColor((position == 0) ? Color.GRAY: Color.BLACK);
                     return view;
                 }
             };
@@ -189,7 +183,7 @@ public class RegisterTempUserActivity extends LoadingDialog implements AsyncResp
     }
 
     private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void showDate(int year, int month, int day) {

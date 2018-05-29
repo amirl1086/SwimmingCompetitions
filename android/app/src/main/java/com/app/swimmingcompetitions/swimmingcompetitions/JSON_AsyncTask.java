@@ -16,16 +16,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
-
-    //delegate the response from the server to the caller requesting function
     public AsyncResponse delegate;
 
     @Override
     protected String doInBackground(String... params) {
 
         StringBuilder result = new StringBuilder();
-        BufferedWriter bufferedWriter = null;
-        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter;
+        BufferedReader bufferedReader;
 
         //setup the connection
         try {
@@ -34,7 +32,6 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
             //set up the url
             String urlAddress = "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net" + data.getString("urlSuffix");
             URL url = new URL(urlAddress);
-            //URL url = new URL("http://localhost:5000/firebase-swimmingcompetitions/us-central1" + data.getString("urlSuffix"));
             data.remove("urlSuffix");
 
             //initialize the connection

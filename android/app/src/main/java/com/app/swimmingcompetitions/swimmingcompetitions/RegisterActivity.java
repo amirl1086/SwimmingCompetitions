@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -50,12 +51,15 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
         setContentView(R.layout.activity_register);
 
         Intent intent = getIntent();
+        TextView header = findViewById(R.id.register_header);
         if(intent.hasExtra("currentUser")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
             this.registerType = "student";
+            header.setText("הוספת מתחרה חדש");
         }
         else {
+            header.setText("הרשמה");
             this.registerType = intent.getStringExtra("registerType");
         }
         this.spinner = findViewById(R.id.register_gender);
@@ -83,22 +87,14 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
 
             @Override
             public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                }
-                return true;
+                return !(position == 0);
             }
 
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0) {
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
+                tv.setTextColor((position == 0) ? Color.GRAY : Color.BLACK);
                 return view;
             }
         };
@@ -207,6 +203,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
                 errorText.setText("חובה לבחור מגדר");
                 return false;
             }
+            this.genderText = this.spinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
         }
 
         this.eMailText = this.email.getText().toString();
@@ -287,7 +284,7 @@ public class RegisterActivity extends LoadingDialog implements AsyncResponse {
             }
             catch (Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("RegisterActivity Exception " + e.getStackTrace());
+                System.out.println("RegisterActivity Exception " + e.getMessage());
             }
         }
         else {

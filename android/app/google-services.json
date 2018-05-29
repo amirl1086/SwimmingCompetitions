@@ -15,11 +15,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "197819058733-viutts2tem5tfl305fmrfqjug65kgbj0.apps.googleusercontent.com",
+          "client_id": "197819058733-l085hfvktlcgad92pheulgj2utqalbrk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
-            "certificate_hash": "ef7a5d5bffaa424ad866f89db9622ce8bbb134ef"
+            "certificate_hash": "24c360060831d63b91bc487332747c76b4f770fe"
+          }
+        },
+        {
+          "client_id": "197819058733-s94393gh4amhdbckdfpu4l48u48mgume.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
+            "certificate_hash": "a2a7ca5766bfb1ebc6457793b449f978cbe79bf4"
+          }
+        },
+        {
+          "client_id": "197819058733-3cs8vonvo63986e4o4lasncdiqh3in45.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
+            "certificate_hash": "13410c483952912f9353c8b332bdd3826fca54a0"
           }
         },
         {
@@ -27,15 +43,11 @@
           "client_type": 3
         },
         {
-          "client_id": "197819058733-33l7850i92luq9rc1n301d5a2kc3c4p4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.app.swimmingcompetitions.swimmingcompetitions",
-            "certificate_hash": "b5e96c9fa5b44baf8d3935f7453c1e10c97a99bc"
-          }
+          "client_id": "197819058733-b8hjad78jmlhrric8jm24kl97u23kfpm.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
-          "client_id": "197819058733-b8hjad78jmlhrric8jm24kl97u23kfpm.apps.googleusercontent.com",
+          "client_id": "197819058733-tgr1h1654aqi9k7a22slkhotlqdvjt49.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
