@@ -11,6 +11,8 @@ import UIKit
 class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+    let datePicker = UIDatePicker()
+    var alert = UIAlertController()
     
     var myChildren = [User]()
     let a = ["fff"]
@@ -22,7 +24,13 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
      
         tableView.delegate = self
         tableView.dataSource = self
+        
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func doneClicked() {
+        self.alert.dismiss(animated: true, completion: nil)
+        self.present(self.alert, animated: false, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,25 +39,41 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func addChild() {
-        let alert = UIAlertController(title: "הוסף ילד", message: nil, preferredStyle: .alert)
+        self.alert = UIAlertController(title: "הוסף ילד", message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.placeholder = "כתובת אימייל"
         }
-        alert.addTextField { (textField) in
+        self.alert.addTextField { (textField) in
             textField.placeholder = "תאריך לידה"
+            self.datePicker.datePickerMode = .date
+            self.datePicker.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
+            
+            let toolBar = UIToolbar()
+            toolBar.sizeToFit()
+            let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.doneClicked))
+            toolBar.setItems([doneButton], animated: false)
+            textField.inputView = self.datePicker
+            textField.inputAccessoryView = toolBar
+            
+            let formatDate = DateFormatter()
+            formatDate.dateFormat = "dd/MM/YYYY"
+            
+                textField.text = formatDate.string(from: self.datePicker.date)
+            
+            //
         }
-        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+        self.alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
             let parameters = [
-                "email": alert.textFields![0],
-                "birthDate": alert.textFields![1]
+                "email": self.alert.textFields![0],
+                "birthDate": self.alert.textFields![1]
             ] as [String:AnyObject]
             
-            alert.dismiss(animated: true, completion: nil)
+            self.alert.dismiss(animated: true, completion: nil)
         }))
-        alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
+        self.alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
+            self.alert.dismiss(animated: true, completion: nil)
         }))
-        self.present(alert, animated: true, completion: nil)
+        self.present(self.alert, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

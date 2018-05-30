@@ -90,12 +90,16 @@ class CompetitionsViewController: UIViewController {
         
         alert.show();*/
         
-        let parameters = [
+        var parameters = [
             "currentUser": [
                 "uid":currentUser.uid,
                 "birthDate":currentUser.birthDate
             ]
         ] as [String: AnyObject]
+        
+        if currentUser.type == "student" {
+            parameters["filters"] = "age" as AnyObject
+        }
      
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()

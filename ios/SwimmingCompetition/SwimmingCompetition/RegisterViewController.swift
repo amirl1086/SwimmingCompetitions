@@ -213,7 +213,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             genderToSend = "female"
         }
         
-        let parameters = [
+        var parameters = [
             "uid": Auth.auth().currentUser != nil ? Auth.auth().currentUser!.uid : "",
             "firstName": firstName.text!,
             "lastName": lastName.text!,
@@ -227,8 +227,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             ] as [String: AnyObject]
         
         if isGoogleRegister {
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" {
-                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" {
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                     alert.dismiss(animated: true, completion: nil)
                 }))
@@ -239,9 +239,25 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                     
                 }
             }
+        } else if self.currentUser != nil {
+            parameters["type"] = self.currentUser.type as AnyObject
+            if firstName.text == "" || lastName.text == "" || birthDate.text == ""{
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
+                    if response.succeed {
+                        
+                    }
+                }
+            }
+            
         } else {
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
-                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                     alert.dismiss(animated: true, completion: nil)
                 }))
@@ -255,8 +271,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                
-                
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
                     
                     if response.succeed {

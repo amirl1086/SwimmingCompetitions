@@ -21,7 +21,9 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         
         initMenuBar()
-        
+        Service.shared.connectToServer(path: "getParticipantStatistics", method: .post, params: ["uid": currentUser.uid as AnyObject]) { (response) in
+            print(response)
+        }
         //Remove back button from main controller
         self.navigationItem.leftBarButtonItem = nil
         
@@ -33,7 +35,7 @@ class MainViewController: UIViewController {
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")
         self.view.insertSubview(self.backgroundView, at: 0)
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "abstract_swimming_pool.jpg")!)
+        
     }
     
     override func didReceiveMemoryWarning() {

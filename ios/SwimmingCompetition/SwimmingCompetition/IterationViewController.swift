@@ -136,11 +136,11 @@ class IterationViewController: UIViewController {
     
     
     func createButtonsLabels() {
-        let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
+        let width: Int = (Int(self.view.frame.width)/self.competition.currentParticipants.count) - 10
         var start:Int = 0
-        for i in 0...participantsIndex.count-1 {
+        for i in 0...self.competition.currentParticipants.count-1 {
             let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y + self.resetButtonOutlet.frame.height + 20), width: width, height: 30))
-            name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
+            name.text = "\(self.competition.currentParticipants[i].firstName) \(self.competition.currentParticipants[i].lastName)"
             name.textAlignment = .center
             self.scrollView.addSubview(name)
             
@@ -177,8 +177,8 @@ class IterationViewController: UIViewController {
         
         self.timesArray[sender.tag]?.text = "\(self.timeLabel.text!)"
         
-        competition.currentParticipants[participantsIndex[sender.tag]].setCompeted(competed: true)
-        competition.currentParticipants[participantsIndex[sender.tag]].score = self.userTime
+        competition.currentParticipants[sender.tag].setCompeted(competed: true)
+        competition.currentParticipants[sender.tag].score = self.userTime
         
         var i = 0
         for button in buttonsArray {
@@ -204,24 +204,14 @@ class IterationViewController: UIViewController {
         
         namesArray.removeAll()
         timesArray.removeAll()
-        participantsIndex.removeAll()
-        
-        for (index, part) in self.competition.currentParticipants.enumerated() {
-            if self.participantsIndex.count == iterationNumber {
-                break
-            }
-            
-            if (part.competed == false) {
-                self.participantsIndex.append(index)
-            }
-        }
+       
         
         for view in subviews {
             view.removeFromSuperview()
         }
         subviews.removeAll()
         
-        if participantsIndex.count != 0 {
+        if self.competition.currentParticipants.count != 0 {
             createButtonsLabels()
         }
         
@@ -240,17 +230,17 @@ class IterationViewController: UIViewController {
     
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
-        for i in 0..<self.participantsIndex.count {
-            let id = self.competition.currentParticipants[participantsIndex[i]].uid
-            let firstName = self.competition.currentParticipants[participantsIndex[i]].firstName
-            let lastName = self.competition.currentParticipants[participantsIndex[i]].lastName
-            let birthDate = self.competition.currentParticipants[participantsIndex[i]].birthDate
-            let gender = self.competition.currentParticipants[participantsIndex[i]].gender
-            let score = self.competition.currentParticipants[participantsIndex[i]].score
-            let competed = self.competition.currentParticipants[participantsIndex[i]].competed
+        for i in 0..<self.self.competition.currentParticipants.count {
+            let id = self.competition.currentParticipants[i].uid
+            let firstName = self.competition.currentParticipants[i].firstName
+            let lastName = self.competition.currentParticipants[i].lastName
+            let birthDate = self.competition.currentParticipants[i].birthDate
+            let gender = self.competition.currentParticipants[i].gender
+            let score = self.competition.currentParticipants[i].score
+            let competed = self.competition.currentParticipants[i].competed
             
             sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"id\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
-            if i != self.participantsIndex.count-1 {
+            if i != self.competition.currentParticipants.count-1 {
                 sendString += ","
             }
         }

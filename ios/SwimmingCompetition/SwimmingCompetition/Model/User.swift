@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct User: Codable {
+struct User {
     
     var firstName:String
     var lastName:String
@@ -18,6 +18,7 @@ struct User: Codable {
     var type:String
     var phoneNumber:String
     var uid:String
+    var children = [User]()
     
     init(json: JSON) {
         let firstName = json["firstName"] as? String
@@ -28,7 +29,7 @@ struct User: Codable {
         let type = json["type"] as? String
         let phoneNumber = json["phoneNumber"] as? String
         let uid = json["uid"] as? String
-        
+        let children = json["children"] as? JSON
         
         self.firstName = firstName != nil ? firstName! : ""
         self.lastName = lastName != nil ? lastName! : ""
@@ -38,6 +39,16 @@ struct User: Codable {
         self.type = type != nil ? type! : ""
         self.phoneNumber = phoneNumber != nil ? phoneNumber! : ""
         self.uid = uid != nil ? uid! : ""
+        self.children = []
+        
+        if children != nil {
+            for child in children! {
+                var user : User!
+                let data = children![child.0] as! JSON
+                user = User(json: data)
+                self.children.append(user)
+            }
+        }
         
     }
     

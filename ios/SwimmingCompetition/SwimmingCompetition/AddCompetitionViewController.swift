@@ -21,7 +21,10 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     let rangePicker:[Int] = Array(0...100)
     let rangeSwimPicker:[Int] = Array(0...5)
     let datePicker = UIDatePicker()
-   
+    
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var styleTextField: UITextField!
     @IBOutlet weak var numberTextField: UITextField!
@@ -38,6 +41,8 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     var fromAge: Int = 0
     var toAge: Int = 0
     var dateToSend = ""
+    
+    var backgroundView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,9 +64,9 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         }
         
         toolBar()
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
         //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -75,26 +80,31 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
+        
+        nameTextField.bottomLineBorder()
+        styleTextField.bottomLineBorder()
+        numberTextField.bottomLineBorder()
+        dateTextField.bottomLineBorder()
+        agesTextField.bottomLineBorder()
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
     }
     
     @objc func keyboardWillChange(notification: Notification) {
-        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
+        guard let userInfo = notification.userInfo,
+            let frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{return}
+        var contentInset = UIEdgeInsets.zero
+        
         if notification.name == Notification.Name.UIKeyboardWillShow ||
             notification.name == Notification.Name.UIKeyboardWillChangeFrame {
-            if ((view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
-                view.frame.origin.y = -keyboardRect.height
-                
-            } else {
-                view.frame.origin.y = 0
-            }
-            
-        } else {
-            view.frame.origin.y = 0
+            contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
         }
+        
+        scrollView.contentInset = contentInset
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -179,7 +189,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                     alert.dismiss(animated: true, completion: nil)
                     if response.succeed {
                         if self.isEdit {
-                            self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numOfParticipants)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
+                            self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numberTextField.text!)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
                         }
                         _ = self.navigationController?.popViewController(animated: true)
                     }

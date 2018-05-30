@@ -71,8 +71,10 @@ class CompetitionDetailsViewController: UIViewController {
         super.viewDidAppear(animated)
         
         nameLabel.text = currentCompetition.name
+        dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
+        agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
