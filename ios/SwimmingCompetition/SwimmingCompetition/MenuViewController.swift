@@ -76,6 +76,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             break
         case "הילדים שלי":
             if let myChildrenView = sb.instantiateViewController(withIdentifier: "myChildrenId") as? MyChildrenViewController {
+                myChildrenView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [myChildrenView]
             }
             break

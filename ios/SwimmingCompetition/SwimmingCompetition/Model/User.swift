@@ -46,6 +46,7 @@ struct User {
                 var user : User!
                 let data = children![child.0] as! JSON
                 user = User(json: data)
+                user.uid = child.0
                 self.children.append(user)
             }
         }
