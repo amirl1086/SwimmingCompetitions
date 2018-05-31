@@ -90,5 +90,7 @@
     <string name="choose_style_and_length">בחר סגנון ומרחק</string>
     <string name="the_chosen_competitions">התחרויות שנבחרו</string>
     <string name="score">תוצאה:</string>
+    <string name="seconds">שניות</string>
+    <string name="took_place_in_date">התקיימה ב:</string>
 
 </resources>

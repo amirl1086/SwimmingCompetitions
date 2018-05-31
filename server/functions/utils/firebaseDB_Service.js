@@ -37,6 +37,25 @@ module.exports = {
 		});
 	},
 
+	getCompetitionInProgress: (response) => {
+		getCollectionByFilter('compeitions', 'inProgress', 'true', (success, result) => {
+			if(success) {
+				if(!result) {
+					utilities.sendResponse(response, 'no_live_competition', null);
+				}
+				else {
+					getCollectionByName('personalResults', (success, result) => {
+						competition.results = result;
+					});
+					utilities.sendResponse(response, null, result);
+				}
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
+		});
+	},
+
 	addChildToParent: (params, response) => {
 		let birthDate = params.birthDate;
 		let email = params.email;
@@ -353,6 +372,11 @@ module.exports = {
 					let sortedParticipants = filters.sortParticipantsByAge(newParticipants);
 					filters.removeBlankSpots(competition, sortedParticipants);
 					competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+
+					//mark compeition started for real-time view
+					competition.inProgress = 'true';
+					updateCompetition(competition);
+
 					competition.type = 'newIteration';
 					utilities.sendResponse(response, null, competition);
 				}
@@ -362,6 +386,10 @@ module.exports = {
 			}
 
 		});
+	},
+
+	getCompetitionInProgress: function() {
+
 	}
 };
 

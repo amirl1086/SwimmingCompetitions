@@ -9,20 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class StatisticsAdapter extends ArrayAdapter {
     private Context mContext;
     private int mResource;
-    private List<Competition> competitions;
+    private List<Statistic> statistics;
 
-    public StatisticsAdapter(Context context, int resource, ArrayList<Competition> list) {
+    public StatisticsAdapter(Context context, int resource, ArrayList<Statistic> list) {
         super(context, resource, list);
         this.mContext = context;
         this.mResource = resource;
-        competitions = list;
+        this.statistics = list;
     }
 
 
@@ -35,15 +33,18 @@ public class StatisticsAdapter extends ArrayAdapter {
         if(listItem == null) {
             listItem = LayoutInflater.from(mContext).inflate(R.layout.statistics_list_item, parent, false);
         }
-        Competition currentCompetition = competitions.get(position);
+        Statistic currentStatistics = this.statistics.get(position);
 
-        TextView competitionName = listItem.findViewById(R.id.competition_list_item_name);
-        competitionName.setText(currentCompetition.getName());
+        TextView competitionName = listItem.findViewById(R.id.competition_name);
+        competitionName.setText(currentStatistics.getCompetition().getName());
 
-        TextView competitionDate = listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = dateUtils.dateToCalendar(new Date(currentCompetition.getActivityDate()));
-        competitionDate.setText(dateUtils.getCompleteDate(calendar));
+        TextView competitionDate = listItem.findViewById(R.id.competition_date);
+        competitionDate.setText(dateUtils.getFullDate(currentStatistics.getCompetition().getActivityDate()) + ", ");
 
+        System.out.println("score: " + currentStatistics.getScore());
+
+        /*TextView scoreResult = listItem.findViewById(R.id.statistics_score_result);
+        scoreResult.setText(currentStatistics.getScore());*/
 
         return listItem;
     }

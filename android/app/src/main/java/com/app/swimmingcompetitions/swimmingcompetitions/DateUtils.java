@@ -28,6 +28,10 @@ public class DateUtils {
         return arrDate[1] + "/" + arrDate[2];
     }
 
+    public String getFullDate(String dateTime) {
+        return dateTime.split(" ")[0];
+    }
+
     public String getCompleteDate(Calendar calendar) {
         int hours = calendar.get(Calendar.HOUR);
         if(calendar.get(Calendar.AM_PM) == Calendar.AM) {
@@ -144,6 +148,4 @@ public class DateUtils {
         Integer ageInt = age;
         return ageInt;
     }
-
-
 }

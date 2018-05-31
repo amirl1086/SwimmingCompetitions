@@ -64,8 +64,11 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
             setUpSidebar();
 
-            JSONObject data = new JSONObject();
+
             try {
+                JSONObject data = new JSONObject();
+                showProgressDialog("טוען תחרויות...");
+
                 data.put("urlSuffix", "/getCompetitions");
                 data.put("httpMethod", "GET");
                 JSONObject currentUserJson = this.currentUser.getJSON_Object();
@@ -74,17 +77,17 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                     data.put("filters", "age");
                 }
                 data.put("currentUser", currentUserJson);
+
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
+                this.jsonAsyncTaskPost.execute(data.toString());
             }
             catch (Exception e) {
+                hideProgressDialog();
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
                 System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
             }
 
-            showProgressDialog("טוען תחרויות...");
-
-            this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            this.jsonAsyncTaskPost.delegate = this;
-            this.jsonAsyncTaskPost.execute(data.toString());
         }
         else {
             switchToLogInActivity();
@@ -272,6 +275,10 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -384,6 +391,12 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
     public void switchToChangeEmailActivity() {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

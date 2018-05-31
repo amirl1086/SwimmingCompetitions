@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,55 +11,72 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:orientation="horizontal"
         android:weightSum="1">
 
         <TextView
-            android:id="@+id/competition_list_item_name"
+            android:id="@+id/competition_name"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold|italic" />
-
-        <TextView
-            android:id="@+id/competition_list_item_date"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:orientation="horizontal">
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:weightSum="7">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:text="@string/took_place_in_date"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/competition_date"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:text="@string/score"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/competition_result"
+            android:id="@+id/statistics_score_result"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/seconds"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

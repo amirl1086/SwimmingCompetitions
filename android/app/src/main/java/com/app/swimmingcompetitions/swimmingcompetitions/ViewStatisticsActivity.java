@@ -2,13 +2,11 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -39,12 +35,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class ViewStatisticsActivity extends LoadingDialog implements AsyncResponse {
@@ -68,7 +61,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
     private String selectedSwimmingStyle;
     private String selectedLength;
     private GraphView graphView;
-    private CompetitionAdapter competitionsListAdapter;
+    private StatisticsAdapter statisticsAdapter;
     private ListView listView;
     private ArrayList<Competition> competitions;
 
@@ -152,13 +145,12 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle) && this.statistics.get(i).getCompetition().getLength().equals(lengthArr[0])) {
                 selectedStatistics.add(this.statistics.get(i));
             }
-            this.competitions.add(this.statistics.get(i).getCompetition());
         }
 
         //update the competitions list
-        this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
-        this.listView.setAdapter(this.competitionsListAdapter);
-        this.competitionsListAdapter.notifyDataSetChanged();
+        this.statisticsAdapter = new StatisticsAdapter(this, R.layout.statistics_list_item, selectedStatistics);
+        this.listView.setAdapter(this.statisticsAdapter);
+        this.statisticsAdapter.notifyDataSetChanged();
 
         if(selectedStatistics.size() > 1) {
             String[] titles = new String[selectedStatistics.size()];

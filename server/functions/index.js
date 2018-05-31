@@ -49,6 +49,16 @@ exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.updateFirebaseUser(request.body, response);
 });
 
+exports.getCompetitionInProgress = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getCompetitionInProgress(request.body, response);
+});
+
+
+
+
+
+
+
 /* ================================== */
 
 
