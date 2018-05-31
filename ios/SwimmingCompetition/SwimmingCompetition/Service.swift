@@ -52,14 +52,20 @@ class Service {
         loadingIndicator.startAnimating()
         alert.show();
       
-        
+       /* let alert: UIAlertController = UIAlertController(title: activityMessage(path: path), message: "אנא המתן...", preferredStyle: .alert)
+        alert.addTextField { (text) in
+            text.isHidden = true
+        }
+        UIApplication.top()?.present(alert, animated: true, completion: nil)
+        */
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else {
                         alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            //alert.dismiss(animated: true, completion: nil)
                         return
             
         }
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
-        
+        //alert.dismiss(animated: true, completion: nil)
             alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
             switch(response.result) {
@@ -75,7 +81,7 @@ class Service {
             case .failure(let error):
                     print(error)
                     let alert = self.systemErrorMessage(data: error._code)
-                    UIApplication.top()?.present(alert, animated: true, completion: nil)
+                    //UIApplication.top()?.present(alert, animated: true, completion: nil)
                     break;
             }
         }

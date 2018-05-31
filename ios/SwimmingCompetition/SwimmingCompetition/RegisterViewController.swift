@@ -28,17 +28,22 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var productNumber: UITextField!
     var activeTextField: UITextField!
     //========================//
+    
     @IBOutlet weak var confirmButton: UIButton!
     
     let datePicker = UIDatePicker()
     var dateToSend = ""
     
     var userType = String()
+    
     var isGoogleRegister = false
     var googleUser: GIDGoogleUser! = nil
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         scrollView.isScrollEnabled = true
         scrollView.isUserInteractionEnabled = true
         firstName.delegate = self
@@ -54,9 +59,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         activeTextField = firstName
         
         if isGoogleRegister {
-            self.firstName.text = googleUser.profile.givenName!
-            self.lastName.text = googleUser.profile.familyName!
-            self.email.text = googleUser.profile.email!
+            self.firstName.text = googleUser.profile.givenName != nil ? googleUser.profile.givenName! : ""
+            self.lastName.text = googleUser.profile.familyName != nil ? googleUser.profile.familyName! : ""
+            self.email.text = googleUser.profile.email != nil ? googleUser.profile.email! : ""
             self.email.isEnabled = false
         }
         
@@ -66,9 +71,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         }
         
         // Do any additional setup after loading the view, typically from a nib.
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        backgroundView = UIImageView(frame: self.view.bounds)
+        backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(backgroundView, at: 0)
         toolBar()
         //go to for change the register view
         //changeRegisterView()
@@ -88,6 +93,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewDidLayoutSubviews() {
+        
+        backgroundView.frame = self.view.bounds
+        
         firstName.bottomLineBorder()
         lastName.bottomLineBorder()
         birthDate.bottomLineBorder()
@@ -205,7 +213,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             genderToSend = "female"
         }
         
-        let parameters = [
+        var parameters = [
             "uid": Auth.auth().currentUser != nil ? Auth.auth().currentUser!.uid : "",
             "firstName": firstName.text!,
             "lastName": lastName.text!,
@@ -219,8 +227,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             ] as [String: AnyObject]
         
         if isGoogleRegister {
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" {
-                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" {
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                     alert.dismiss(animated: true, completion: nil)
                 }))
@@ -231,9 +239,25 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                     
                 }
             }
+        } else if self.currentUser != nil {
+            parameters["type"] = self.currentUser.type as AnyObject
+            if firstName.text == "" || lastName.text == "" || birthDate.text == ""{
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
+                    if response.succeed {
+                        
+                    }
+                }
+            }
+            
         } else {
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || phoneNumber.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
-                let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
+                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                     alert.dismiss(animated: true, completion: nil)
                 }))
@@ -247,8 +271,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                
-                
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
                     
                     if response.succeed {

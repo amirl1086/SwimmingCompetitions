@@ -138,7 +138,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         
         if controllerType == "" {
             if indexPath.row == 0 {
-                cell.cellView.backgroundColor = UIColor.blue
+                //cell.cellView.backgroundColor = UIColor.blue
                 title.text = "בנים"
                 cell.name.text = title.text
                 cell.rankImage.isHidden = true
@@ -162,7 +162,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 
             }
             else if indexPath.row-1 == array[indexPath.section].maleResults.count {
-                cell.cellView.backgroundColor = UIColor.purple
+                //cell.cellView.backgroundColor = UIColor.purple
                 title.text = "בנות"
                 cell.name.text = title.text
                 cell.rankImage.isHidden = true
@@ -184,7 +184,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 cell.name.font = cell.name.font.withSize(20)
                 //cell.name.frame = CGRect(x: 322, y: cell.name.frame.origin.y, width: cell.name.frame.width, height: cell.name.frame.height)
             }
-            
+            cell.cellView.backgroundColor = UIColor.clear
             cell.layer.backgroundColor = UIColor.clear.cgColor
             
             
@@ -197,7 +197,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         cell.rankImage.isHidden = true
         cell.score.isHidden = false
         cell.score.text = self.realTimeArray[indexPath.row].score
-        
+        cell.layer.backgroundColor = UIColor.clear.cgColor
         return cell
         
     }

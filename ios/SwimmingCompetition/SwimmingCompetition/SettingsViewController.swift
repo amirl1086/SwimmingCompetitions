@@ -13,10 +13,16 @@ class SettingsViewController: UIViewController {
     
     var menu_vc: MenuViewController!
     var currentUser: User!
+    
+    var backgroundView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         initMenuBar()
+        
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")
+        self.view.insertSubview(self.backgroundView, at: 0)
         // Do any additional setup after loading the view.
     }
 
@@ -24,6 +30,11 @@ class SettingsViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
+    }
+    
     @IBAction func editPersonalDetails(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let registerView = sb.instantiateViewController(withIdentifier: "registerId") as? RegisterViewController {
@@ -36,12 +47,18 @@ class SettingsViewController: UIViewController {
         let alert = UIAlertController(title: "שינוי סיסמא", message: "", preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.placeholder = "סיסמא נוכחית"
+            textField.textAlignment = .center
+            textField.isSecureTextEntry = true
         }
         alert.addTextField { (textField) in
             textField.placeholder = "סיסמא חדשה (לפחות 6 תוים)"
+            textField.textAlignment = .center
+            textField.isSecureTextEntry = true
         }
         alert.addTextField { (textField) in
             textField.placeholder = "אימות סיסמא חדשה"
+            textField.textAlignment = .center
+            textField.isSecureTextEntry = true
         }
         alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
             alert.dismiss(animated: false, completion: nil)
@@ -57,7 +74,19 @@ class SettingsViewController: UIViewController {
                         self.present(alert, animated: true, completion: nil)
                     } else {
                         Auth.auth().currentUser?.updatePassword(to: alert.textFields![1].text!, completion: { (error) in
-                            print(error!)
+                            var title = ""
+                            var message = ""
+                            if error != nil {
+                                title = "שגיאה"
+                                message = "הסיסמא לא שונתה, נסה שוב"
+                            } else {
+                                message = "הסיסמא שונתה בהצלחה"
+                            }
+                            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+                                alert.dismiss(animated: true, completion: nil)
+                            }))
+                            self.present(alert, animated: true, completion: nil)
                         })
                     }
                 })

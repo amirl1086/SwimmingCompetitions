@@ -19,25 +19,28 @@ class CompetitionDetailsViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var styleNrangeLabel: UILabel!
     @IBOutlet weak var numOfParticipantsLabel: UILabel!
+    @IBOutlet weak var agesLabel: UILabel!
     
     @IBOutlet var joinButtonOutlet: RoundButton!
     @IBOutlet var tempJoinButtonOutlet: RoundButton!
     @IBOutlet var editButtonOutlet: UIButton!
+    @IBOutlet weak var startCompetitionButtonOutlet: RoundButton!
+    
+    var backgroundView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        startCompetitionButtonOutlet.tag = 0
         if(currentUser.type == "coach"){
-            let startButton = UIBarButtonItem(title: "התחל תחרות", style: .plain, target: self, action: #selector(goToStart))
-            self.navigationItem.rightBarButtonItem = startButton
             joinButtonOutlet.isHidden = true
-            tempJoinButtonOutlet.center.x = self.view.center.x
         } else if currentUser.type == "parent" {
             joinButtonOutlet.isHidden = true
             editButtonOutlet.isHidden = true
-            tempJoinButtonOutlet.center.x = self.view.center.x
+            startCompetitionButtonOutlet.isHidden = true
         } else {
             editButtonOutlet.isHidden = true
+            startCompetitionButtonOutlet.isHidden = true
         }
         
 
@@ -45,10 +48,9 @@ class CompetitionDetailsViewController: UIViewController {
         dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
+        agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
         
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")
-        self.view.insertSubview(imageView, at: 0)
+        
         
         if userExist() {
             joinButtonOutlet.setTitle("בטל רישום", for: .normal)
@@ -56,14 +58,23 @@ class CompetitionDetailsViewController: UIViewController {
             joinButtonOutlet.tag = 1
         }
         
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")
+        self.view.insertSubview(self.backgroundView, at: 0)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         nameLabel.text = currentCompetition.name
+        dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
+        agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,53 +84,6 @@ class CompetitionDetailsViewController: UIViewController {
         }
     }
     
-    @objc func goToStart() {
-        
-        let param = [
-            "competitionId": currentCompetition.getId()
-            ] as [String:AnyObject]
-        
-        Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
-            if response.data["type"] as? String == "resultsMap" {
-                let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
-                let resultsButton = UIBarButtonItem(title: "צפה בתוצאות", style: .plain, target: self, action: #selector(self.goToResults))
-                self.navigationItem.rightBarButtonItem = resultsButton
-                //let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
-                //self.navigationItem.rightBarButtonItem = resultsButton
-                
-                self.jsonData = response.data
-                
-            }
-            else {
-                var competition: Competition!
-                let data = response.data
-                let sb = UIStoryboard(name: "Main", bundle: nil)
-                competition = Competition(json: data, id: self.currentCompetition.getId())
-                if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
-                    iterationView.competition = competition
-                    self.navigationController?.pushViewController(iterationView, animated: true)
-                }
-                
-                //let iterationView = IterationViewController()
-                //iterationView.competition = competition
-                //self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
-            }
-        })
-        
-        
-    }
-    
-    @objc func goToResults() {
-        let sb = UIStoryboard(name: "Main", bundle: nil)
-        if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
-            resultsView.data = self.jsonData
-            self.navigationController?.pushViewController(resultsView, animated: true)
-        }
-    }
     
     //Function to check if the user already sign up to current competition
     func userExist() -> Bool {
@@ -206,6 +170,52 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    @IBAction func startCompetitionButton(_ sender: UIButton) {
+        if sender.tag == 0 {
+            let param = [
+                "competitionId": currentCompetition.getId()
+                ] as [String:AnyObject]
+            
+            Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
+                if response.data["type"] as? String == "resultsMap" {
+                    let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                        alert.dismiss(animated: true, completion: nil)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    sender.setTitle("צפה בתוצאות", for: .normal)
+                    sender.tag = 1
+                    //let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
+                    //self.navigationItem.rightBarButtonItem = resultsButton
+                    
+                    self.jsonData = response.data
+                    
+                }
+                else {
+                    var competition: Competition!
+                    let data = response.data
+                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                    competition = Competition(json: data, id: self.currentCompetition.getId())
+                    if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
+                        iterationView.competition = competition
+                        self.navigationController?.pushViewController(iterationView, animated: true)
+                    }
+                    
+                    //let iterationView = IterationViewController()
+                    //iterationView.competition = competition
+                    //self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
+                }
+            })
+        } else {
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
+                resultsView.data = self.jsonData
+                self.navigationController?.pushViewController(resultsView, animated: true)
+            }
+        }
+        
+        
+    }
 }
 
 extension CompetitionDetailsViewController: dataProtocol {

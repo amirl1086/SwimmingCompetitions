@@ -18,6 +18,8 @@ class CompetitionsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,12 +36,16 @@ class CompetitionsViewController: UIViewController {
         
         getCompetitionsData()
         
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
-        
         self.tableView.backgroundColor = UIColor.clear
         
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,12 +90,16 @@ class CompetitionsViewController: UIViewController {
         
         alert.show();*/
         
-        let parameters = [
+        var parameters = [
             "currentUser": [
                 "uid":currentUser.uid,
                 "birthDate":currentUser.birthDate
             ]
         ] as [String: AnyObject]
+        
+        if currentUser.type == "student" {
+            parameters["filters"] = "age" as AnyObject
+        }
      
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             var compArray = [Competition]()

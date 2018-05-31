@@ -18,6 +18,8 @@ class IterationViewController: UIViewController {
     @IBOutlet weak var resetButtonOutlet: UIButton!
     @IBOutlet weak var endIterationButtonOutlet: UIButton!
   
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     var competition: Competition!
     var jsonData: JSON = [:]
     
@@ -35,15 +37,17 @@ class IterationViewController: UIViewController {
     
     var iterationNumber:Int = 0
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         iterationNumber = Int(competition.numOfParticipants)!
       
         startNewIteration()
     
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
        
         //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
@@ -52,6 +56,25 @@ class IterationViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        backgroundView.frame = self.view.bounds
+        
+        let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
+        var start: Int = 0
+        var count = 1
+        
+        for view in subviews {
+            view.frame = CGRect(x: start, y: Int(view.frame.origin.y), width: width, height: 30)
+            
+            if count == 3 {
+                start += width + 10
+                count = 1
+            } else {
+                count += 1
+            }
+        }
     }
     
     @IBAction func endIterationButton(_ sender: Any) {
@@ -113,12 +136,13 @@ class IterationViewController: UIViewController {
     
     
     func createButtonsLabels() {
-        let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
+        let width: Int = (Int(self.view.frame.width)/self.competition.currentParticipants.count) - 10
         var start:Int = 0
-        for i in 0...participantsIndex.count-1 {
-            let name = UILabel(frame: CGRect(x: start, y: Int(self.view.frame.size.height/2), width: width, height: 30))
-            name.text = "\(self.competition.currentParticipants[participantsIndex[i]].firstName) \(self.competition.currentParticipants[participantsIndex[i]].lastName)"
+        for i in 0...self.competition.currentParticipants.count-1 {
+            let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y + self.resetButtonOutlet.frame.height + 20), width: width, height: 30))
+            name.text = "\(self.competition.currentParticipants[i].firstName) \(self.competition.currentParticipants[i].lastName)"
             name.textAlignment = .center
+            self.scrollView.addSubview(name)
             
             let time = UILabel(frame: CGRect(x: start, y: Int(name.frame.origin.y+name.frame.height+10), width: width, height: 30))
             time.text = "00:00:00"
@@ -127,16 +151,16 @@ class IterationViewController: UIViewController {
             time.isUserInteractionEnabled = true
             let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             time.addGestureRecognizer(gestureRecognizer)
-            self.view.addSubview(time)
+            self.scrollView.addSubview(time)
             
             let button = UIButton(frame: CGRect(x: start, y: Int(time.frame.origin.y+time.frame.height+10), width: width, height: 50))
             button.backgroundColor = .red
             button.tag = i
             button.setTitle("עצור", for: .normal)
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
-            self.view.addSubview(button)
+            self.scrollView.addSubview(button)
             
-            self.view.addSubview(name)
+            
             subviews.append(name)
             subviews.append(time)
             subviews.append(button)
@@ -153,8 +177,8 @@ class IterationViewController: UIViewController {
         
         self.timesArray[sender.tag]?.text = "\(self.timeLabel.text!)"
         
-        competition.currentParticipants[participantsIndex[sender.tag]].setCompeted(competed: true)
-        competition.currentParticipants[participantsIndex[sender.tag]].score = self.userTime
+        competition.currentParticipants[sender.tag].setCompeted(competed: true)
+        competition.currentParticipants[sender.tag].score = self.userTime
         
         var i = 0
         for button in buttonsArray {
@@ -180,24 +204,14 @@ class IterationViewController: UIViewController {
         
         namesArray.removeAll()
         timesArray.removeAll()
-        participantsIndex.removeAll()
-        
-        for (index, part) in self.competition.currentParticipants.enumerated() {
-            if self.participantsIndex.count == iterationNumber {
-                break
-            }
-            
-            if (part.competed == false) {
-                self.participantsIndex.append(index)
-            }
-        }
+       
         
         for view in subviews {
             view.removeFromSuperview()
         }
         subviews.removeAll()
         
-        if participantsIndex.count != 0 {
+        if self.competition.currentParticipants.count != 0 {
             createButtonsLabels()
         }
         
@@ -216,17 +230,17 @@ class IterationViewController: UIViewController {
     
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
-        for i in 0..<self.participantsIndex.count {
-            let id = self.competition.currentParticipants[participantsIndex[i]].uid
-            let firstName = self.competition.currentParticipants[participantsIndex[i]].firstName
-            let lastName = self.competition.currentParticipants[participantsIndex[i]].lastName
-            let birthDate = self.competition.currentParticipants[participantsIndex[i]].birthDate
-            let gender = self.competition.currentParticipants[participantsIndex[i]].gender
-            let score = self.competition.currentParticipants[participantsIndex[i]].score
-            let competed = self.competition.currentParticipants[participantsIndex[i]].competed
+        for i in 0..<self.self.competition.currentParticipants.count {
+            let id = self.competition.currentParticipants[i].uid
+            let firstName = self.competition.currentParticipants[i].firstName
+            let lastName = self.competition.currentParticipants[i].lastName
+            let birthDate = self.competition.currentParticipants[i].birthDate
+            let gender = self.competition.currentParticipants[i].gender
+            let score = self.competition.currentParticipants[i].score
+            let competed = self.competition.currentParticipants[i].competed
             
             sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"id\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
-            if i != self.participantsIndex.count-1 {
+            if i != self.competition.currentParticipants.count-1 {
                 sendString += ","
             }
         }

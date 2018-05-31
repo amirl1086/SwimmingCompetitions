@@ -16,6 +16,8 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var birthDate: UIDatePicker!
     var activeTextField: UITextField!
 
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -46,21 +48,16 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillChange(notification: Notification) {
-        guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
+        guard let userInfo = notification.userInfo,
+            let frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{return}
+        var contentInset = UIEdgeInsets.zero
+        
         if notification.name == Notification.Name.UIKeyboardWillShow ||
             notification.name == Notification.Name.UIKeyboardWillChangeFrame {
-            if ((view.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
-                view.frame.origin.y = -keyboardRect.height
-               
-            } else {
-                view.frame.origin.y = 0
-            }
-            
-        } else {
-            view.frame.origin.y = 0
+            contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
         }
+        
+        scrollView.contentInset = contentInset
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

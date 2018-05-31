@@ -57,6 +57,7 @@ module.exports = {
 	},
 
 	addChildToParent: (params, response) => {
+		let db = admin.database();
 		let birthDate = params.birthDate;
 		let email = params.email;
 		//get users that match the selected email
@@ -69,6 +70,10 @@ module.exports = {
 			else {
 				let user = users[Object.keys(users)[0]];
 				if(user.birthDate === params.birthDate) {
+					let userRef = db.ref('users/' + params.uid + '/children/' + user.uid);
+					userRef.set({
+						"firstName": user.firstName
+					});
 					utilities.sendResponse(response, null, user);
 				}
 				else {
