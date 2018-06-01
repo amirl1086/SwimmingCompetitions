@@ -103,14 +103,7 @@ exports.addChildToParent = functions.https.onRequest((request, response) => {
 });
 
 exports.getPersonalResults = functions.https.onRequest((request, response) => {
-	var params = request.body;
-
-	if(params.competition) {
-		firebaseDB_Service.getPersonalResultsByCompetitionId(params, response);
-	}
-	else {
-		firebaseDB_Service.getPersonalResults(params, response);
-	}
+	firebaseDB_Service.getPersonalResultsByCompetitionId(request.body, response);
 });
 
 exports.cancelRegistration = functions.https.onRequest((request, response) => {

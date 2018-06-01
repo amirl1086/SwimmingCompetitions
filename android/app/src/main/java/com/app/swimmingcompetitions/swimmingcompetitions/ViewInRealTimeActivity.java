@@ -26,6 +26,7 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private Competition competition;
 
     private JSON_AsyncTask jsonAsyncTaskPost;
 
@@ -79,7 +80,7 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
             try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
-                //this.competitions = new ArrayList<>();
+                this.competition = new Competition(dataObj);
 
                 Iterator<String> competitionIds = dataObj.keys();
                 while (competitionIds.hasNext()) {

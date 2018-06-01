@@ -3,7 +3,6 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 
 const utilities = require('./../utils/utils.js');
-const firebaseDB_Service = require('./../utils/firebaseDB_Service.js');
 
 module.exports =  {
 
@@ -19,7 +18,7 @@ module.exports =  {
 		    				'email': decodedToken.email,
 		    				'uid': currentUid
 		    			};
-		    			firebaseDB_Service.addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
+		    			addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
 							if(success) {
 								utilities.sendResponse(response, null, result); 
 							}
@@ -58,7 +57,7 @@ module.exports =  {
 		admin.auth().createUser(newUser).then((userRecord) => {
 			console.log('firebaseUser ', userRecord);
 			//utilities.sendResponse(response, null, userRecord);
-			firebaseDB_Service.addNewUser(userRecord, params, (success, result) => { 
+			addNewUser(userRecord, params, (success, result) => { 
 				if(success) {
 					utilities.sendResponse(response, null, result); 
 				}
@@ -107,5 +106,35 @@ let getUser = (uid, response, callback) => {
 			utilities.sendResponse(response, error, null); 
 		}
 		
+	});
+};
+
+let addNewUser = (firebaseUser, userParams, callback) => {
+	let db = admin.database();
+	let usersRef = db.ref('users/' + firebaseUser.uid);
+
+	//create the user object
+	usersRef.set({
+		'uid': firebaseUser.uid,
+		'email': userParams.email,
+		'firstName': userParams.firstName,
+		'lastName': userParams.lastName,
+		'birthDate': userParams.birthDate || '',
+		'gender': userParams.gender || '',
+		'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
+	});
+
+	//insert to database
+	usersRef.on('value', (snapshot) => {
+		if(userParams.joinToCompetition) { //if join to competition is requested after registering
+			joinToCompetition(snapshot.val(), (success, result) => {
+				callback(success, snapshot.val());
+			});
+		}
+		else {
+			callback(true, snapshot.val());
+		}
+	}, (error) => {
+		callback(false, error);
 	});
 };

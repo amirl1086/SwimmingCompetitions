@@ -7,47 +7,18 @@ const moment = require('moment');
 
 module.exports = {
 
-	addNewUser: (firebaseUser, userParams, callback) => {
-		let db = admin.database();
-		let usersRef = db.ref('users/' + firebaseUser.uid);
-
-		//create the user object
-		usersRef.set({
-			'uid': firebaseUser.uid,
-			'email': userParams.email,
-			'firstName': userParams.firstName,
-			'lastName': userParams.lastName,
-			'birthDate': userParams.birthDate || '',
-			'gender': userParams.gender || '',
-			'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
-		});
-
-		//insert to database
-		usersRef.on('value', (snapshot) => {
-			if(userParams.joinToCompetition) { //if join to competition is requested after registering
-				joinToCompetition(snapshot.val(), (success, result) => {
-					callback(success, snapshot.val());
-				});
-			}
-			else {
-				callback(true, snapshot.val());
-			}
-		}, (error) => {
-			callback(false, error);
-		});
-	},
-
 	getCompetitionInProgress: (response) => {
 		getCollectionByFilter('compeitions', 'inProgress', 'true', (success, result) => {
 			if(success) {
-				if(!result) {
-					utilities.sendResponse(response, 'no_live_competition', null);
+				if(result) {
+					let competition = result;
+					getCollectionByName('personalResults', (success, result2) => {
+						competition.personalResults = result2;
+					});
+					utilities.sendResponse(response, null, competition);
 				}
 				else {
-					getCollectionByName('personalResults', (success, result) => {
-						competition.results = result;
-					});
-					utilities.sendResponse(response, null, result);
+					utilities.sendResponse(response, 'no_live_competition', null);
 				}
 			}
 			else {
@@ -60,6 +31,7 @@ module.exports = {
 		let db = admin.database();
 		let birthDate = params.birthDate;
 		let email = params.email;
+
 		//get users that match the selected email
 		getCollectionByFilter('users', 'email', params.email, (success, result) => {
 			let users = result;
@@ -205,6 +177,7 @@ module.exports = {
 				let statisticsResults = [];
 				let selectedCompetitions = new Set();
 				console.log('getParticipantStatistics result ', personalResults);
+				console.log('getParticipantStatistics selectedCompetitions ', selectedCompetitions);
 
 				//create the array of scores by competition id
 				for(let competitionId in personalResults) {
@@ -242,7 +215,7 @@ module.exports = {
 		})
 	},
 
-	getPersonalResults: (params, response) => {
+/* 	getPersonalResults: (params, response) => {
 		let uid = params.uid;
 		let db = admin.database();
 		authentication.getUser(uid, null, (sucess, result) => {
@@ -257,7 +230,8 @@ module.exports = {
 						let competitions = snapshot.val();
 						let selectedCompetitions = [];
 						for(competitionId in competitions) {
-							if(competitions[competitionId].child(uid).exists()) {
+							personalResultsRef = db.ref('personalResults/' + competitionId);
+							if(personalResultsRef.child(uid).exists()) {
 								selectedCompetitions.push(competitions[competitionId]);
 							}
 						}
@@ -269,7 +243,7 @@ module.exports = {
 				utilities.sendResponse(response, result, null);
 			}
 		});
-	},
+	}, */
 
 	getPersonalResultsByCompetitionId: (params, response) => {
 		let competition = JSON.parse(params.competition);
@@ -277,7 +251,7 @@ module.exports = {
 
 		getCompetitionResults(competition, (success, result) => {
 			if(success) {
-				let resultsAgeMap = sortPersonalResults(competition, result);
+				let resultsAgeMap = filters.sortPersonalResults(competition, result);
 				utilities.sendResponse(response, null, resultsAgeMap);
 			}
 			else {
@@ -312,45 +286,62 @@ module.exports = {
 
 	setCompetitionResults: (params, response) => {
 		let currentCompetition = JSON.parse(params.competition);
-		//console.log('setCompetitionResults currentCompetition ', currentCompetition);
+		console.log('setCompetitionResults currentCompetition ', currentCompetition);
 
-		updateCompetitionIteration(currentCompetition, (competition) => {
-			//console.log('setCompetitionResults competition ', competition);
-			let participantsResults = competition.currentParticipants;
+		updateCompetitionPerIteration(currentCompetition, (success, result) => {
+			if(success) {
+				let competition = result;
+				console.log('setCompetitionResults competition ', competition);
+				let participantsResults = currentCompetition.currentParticipants;
 
-			updateCompetitionResults(participantsResults, competition.id, (success, competedParticipants) => {
-				if(success) {
-					//console.log('setCompetitionResults competition.participants ', competition.participants);
-					let participants = filters.filterCompetedParticipants(competition.participants);
+				updateCompetitionResults(participantsResults, competition.id, (success, competedParticipants) => {
+					if(success) {
+						console.log('setCompetitionResults competition.participants ', competition.participants);
+						console.log('setCompetitionResults competedParticipants ', competedParticipants);
+						let newParticipants = filters.filterCompetedParticipants(competition.participants);
+						console.log('setCompetitionResults newParticipants ', newParticipants);
 
-					if(Object.keys(participants).length === 0) {
-						currentCompetition.isDone = 'true';
-						//updateCompetition(currentCompetition);
-						//TODO - maybe needs to query all results
-						let resultsAgeMap = sortPersonalResults(competition, competedParticipants);
-						resultsAgeMap.type = 'resultsMap';
-						utilities.sendResponse(response, null, resultsAgeMap);
+						if(newParticipants && Object.keys(newParticipants).length === 0) {
+							competition.isDone = 'true';
+							competition.inProgress = 'false';
+							updateCompetition(competition);
+							
+							//query all results
+							let db = admin.database();
+							let personalResultsRef = db.ref('personalResults/' + competition.id);
+						
+							personalResultsRef.on('value', (snapshot) => {
+								let personalResults = snapshot.val();
+								let resultsAgeMap = filters.sortPersonalResults(competition, personalResults);
+								resultsAgeMap.type = 'resultsMap';
+								utilities.sendResponse(response, null, resultsAgeMap);
+							}, 
+							(error) => {
+								utilities.sendResponse(response, error, null);
+							});
+						}
+						else {
+							//competition.participants = participants;
+							let sortedParticipants = filters.sortParticipantsByAge(newParticipants);
+							//console.log('setCompetitionResults sortedParticipants ', sortedParticipants);
+							filters.removeBlankSpots(competition, sortedParticipants);
+							//console.log('setCompetitionResults removeBlankSpots sortedParticipants ', sortedParticipants);
+							competition.currentParticipants = filters.getNewParticipants(competition, sortedParticipants);
+							//console.log('setCompetitionResults currentParticipants ', competition.currentParticipants);
+
+							//console.log('competition ', competition);
+							competition.type = 'newIteration';
+							utilities.sendResponse(response, null, competition);
+						}
 					}
 					else {
-						//competition.participants = participants;
-						let sortedParticipants = filters.sortParticipantsByAge(participants);
-						//console.log('setCompetitionResults sortedParticipants ', sortedParticipants);
-						filters.removeBlankSpots(competition, sortedParticipants);
-						//console.log('setCompetitionResults removeBlankSpots sortedParticipants ', sortedParticipants);
-						competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
-						//console.log('setCompetitionResults currentParticipants ', competition.currentParticipants);
-
-						//console.log('competition ', competition);
-						competition.type = 'newIteration';
-						utilities.sendResponse(response, null, competition);
+						utilities.sendResponse(response, result, null);
 					}
-
-					
-				}
-				else {
-					utilities.sendResponse(response, result, null);
-				}
-			});
+				});
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
 		});
 	},
 
@@ -360,11 +351,11 @@ module.exports = {
 			if(success) {
 				let competition = result;
 				let newParticipants = filters.filterCompetedParticipants(competition.participants);
-
+				console.log('newParticipants ', newParticipants);
 				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
 					getCompetitionResults(competition, (success, result) => {
 						if(success) {
-							let resultsAgeMap = sortPersonalResults(competition, result);
+							let resultsAgeMap = filters.sortPersonalResults(competition, result);
 							resultsAgeMap.type = 'resultsMap';
 							utilities.sendResponse(response, null, resultsAgeMap);
 						}
@@ -375,8 +366,12 @@ module.exports = {
 				}
 				else {
 					let sortedParticipants = filters.sortParticipantsByAge(newParticipants);
+					console.log('initCompetitionForIterations sortedParticipants ', sortedParticipants);
 					filters.removeBlankSpots(competition, sortedParticipants);
-					competition.currentParticipants = getNewParticipants(competition, sortedParticipants);
+					console.log('initCompetitionForIterations removeBlankSpots ', sortedParticipants);
+					competition.currentParticipants = filters.getNewParticipants(competition, sortedParticipants);
+
+					console.log('competition.currentParticipants ', competition.currentParticipants);
 
 					//mark compeition started for real-time view
 					competition.inProgress = 'true';
@@ -391,10 +386,6 @@ module.exports = {
 			}
 
 		});
-	},
-
-	getCompetitionInProgress: function() {
-
 	}
 };
 
@@ -439,7 +430,6 @@ let joinToCompetition = (params, callback) => {
 		'birthDate': params.birthDate,
 		'gender': params.gender,
 		'uid': newParticipantUid,
-		'score': params.score || '0', 
 		'competed': 'false'
 	};
 
@@ -456,16 +446,20 @@ let updateCompetitionResults = (participantsResults, competitionId, callback) =>
 	let db = admin.database();
 	let presonalResultsRef = db.ref('personalResults/' + competitionId + '/');
 
+
+	console.log('participantsResults ', participantsResults);
+
 	let personalResults = {};
 	for(let key in participantsResults) {
+		console.log('key ', key);
 		let currentParticipant = participantsResults[key];
-		personalResults[currentParticipant.id] = {
+		personalResults[currentParticipant.uid] = {
 			'firstName': currentParticipant.firstName,
 			'lastName': currentParticipant.lastName,
 			'birthDate': currentParticipant.birthDate,
 			'gender': currentParticipant.gender,
 			'score': currentParticipant.score,
-			'uid': currentParticipant.id
+			'uid': currentParticipant.uid
 		};
 	}
 	
@@ -483,9 +477,10 @@ let getCompetitionResults = (competition, callback) => {
 
 	presonalResultsRef.on('value', (snapshot) => {
 		if(!snapshot.val()) {
-			createCompetitionResults(competition, (success) => {
+			callback(success, snapshot.val());
+			/* createCompetitionResults(competition, (success) => {
 				callback(success, snapshot.val());
-			});	
+			});	 */
 		}
 		else {
 			callback(true, snapshot.val());
@@ -495,71 +490,35 @@ let getCompetitionResults = (competition, callback) => {
 	});
 }
 
-let getNewParticipants = (competition, sortedParticipants) => {
-	let newParticipants;
-	let currentAge = parseInt(competition.toAge);
-	let fromAge = parseInt(competition.fromAge);
-
-	while(currentAge >= 0) {
-		if(sortedParticipants[currentAge.toString()]) {
-			if(sortedParticipants[currentAge.toString()].males.length) {
-				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].males, parseInt(competition.numOfParticipants));
-				if(Object.keys(newParticipants).length) {
-					break;
-				}
-			}
-			if(sortedParticipants[currentAge.toString()].females.length) {
-				newParticipants = getNewParticipantsFromGendger(sortedParticipants[currentAge.toString()].females, parseInt(competition.numOfParticipants));
-				if(Object.keys(newParticipants).length) {
-					break;
-				}
-			}
-
-		}
-		currentAge--;
-	}
-	return newParticipants;
-}
-
-
-let getNewParticipantsFromGendger = (participants, numOfParticipants) => {
-	let newParticipants = {};
-	let totalSelected = 0;
-	for(let i = 0; i < participants.length; i++) {
-		if((!participants[i].competed || participants[i].competed === 'false') && totalSelected < numOfParticipants) {
-			newParticipants[participants[i].id] = participants[i];
-			totalSelected++
-		}
-	}
-	return newParticipants;
-}
-
 let getCompetitionById = (competitionId, callback) => {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competitionId);
 
 	competitionsRef.on('value', (snapshot) => { 
-		callback(true, snapshot.val());
-
 		
-		/*let competition;
-		competitionsRef = db.ref('competitions/-LAXsGT3ZyzpPsfjcmve');
+/* 		let competition;
+		competitionsRef = db.ref('competitions/' + competitionId);
 		competitionsRef.on('value', (snapshot2) => { 
-			competition = snapshot2.val();
+			competition = snapshot.val();
+			let competition2 = snapshot2.val();
+			competition2.participants = {};
 			console.log('competition ', competition);
 			//competition.participants = {};
 			for(let key in competition.participants) {
-				competition.participants[key].uid = competition.participants[key].id;
-				delete competition.participants[key].id;
+				competition2.participants[key] = competition.participants[key];
+				competition2.participants[key].competed = 'false';
+				competition2.participants[key].birthDate = competition.participants[key].birthDate.split(' ')[0];
+				delete competition2.participants[key].score;
+				//delete competition.participants[key].id;
 			}
-			let key = db.ref('competitions').push().key;
-			competitionsRef = db.ref('competitions/' + key);
+			let keyw = db.ref('competitions').push().key;
+			competitionsRef = db.ref('competitions/' + keyw);
 			//console.log('competitionParams ', competitionParams);
 			console.log('competition2 ', competition);
-			competitionsRef.update(competition);
+			competitionsRef.update(competition2);
 			//callback(true, snapshot1.val());
-		});*/
-
+		}); */
+		callback(true, snapshot.val());
 
 	}, (error) => {
 		callback(false, error);
@@ -572,45 +531,19 @@ let attachIdToObject = (snapshot) => {
 	return resObjId;
 }
 
-let sortPersonalResults = (currentCompetition, results) => {
-	let today = moment(new Date());
-	//map results by age
-	let resultsMap = filters.sortParticipantsByAge(results);
-
-	//order results by gender
-	Object.keys(resultsMap).forEach((resultsByAge) => {
-		let currentAgeResults = resultsMap[resultsByAge];
-
-		arraySortByScore(currentAgeResults.males);
-		arraySortByScore(currentAgeResults.females);
-	});
-	return resultsMap;
-}
-
-let arraySortByScore = (arrayList) => {
-	let today = moment(new Date());
-	arrayList.sort((itemA, itemB) => {
-	    if (parseFloat(itemA.score) < parseFloat(itemB.score)) {
-	        return -1;
-	    }
-	    else if (parseFloat(itemA.score) > parseFloat(itemB.score)) {
-	        return 1;
-	    }
-	    return 0;
-	});
-}
-
-let updateCompetitionIteration = (competition, callback) => {
+let updateCompetitionPerIteration = (competition, callback) => {
 	let db = admin.database();
 	let competitionsRef = db.ref('competitions/' + competition.id + '/');
 
 	competition.participants = JSON.parse(competition.participants);
 	competition.currentParticipants = JSON.parse(competition.currentParticipants);
 
-	for(let key in competition.participants) {
-		let competedParticipant = competition.currentParticipants[key];
-		if(competition.currentParticipants[key]) {
-			competition.participants[key].score = competition.currentParticipants[key].score;
+	console.log('competition.participants ', competition.participants);
+	console.log('competition.currentParticipants ', competition.currentParticipants);
+
+
+	for(let key in competition.currentParticipants) {
+		if(competition.participants[key]) {
 			competition.participants[key].competed = 'true';
 		}
 	}
@@ -618,9 +551,9 @@ let updateCompetitionIteration = (competition, callback) => {
 	competitionsRef.update(competition);
 
 	competitionsRef.on('value', (snapshot) => {
-		callback(snapshot.val());
+		callback(true, snapshot.val());
 	}, (error) => {
-		callback(null);
+		callback(false, error);
 	});
 }
 
@@ -630,7 +563,7 @@ let updateCompetition = (competition) => {
 	competitionsRef.update(competition);
 }
 
-let createCompetitionResults = (competition, callback) => {
+/* let createCompetitionResults = (competition, callback) => {
 	let db = admin.database();
 	let presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
 
@@ -653,4 +586,4 @@ let createCompetitionResults = (competition, callback) => {
 	}, (error) => {
 		callback(false, error);
 	});
-}
+} */
