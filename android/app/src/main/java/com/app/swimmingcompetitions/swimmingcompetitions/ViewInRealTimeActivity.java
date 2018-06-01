@@ -79,16 +79,16 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
             try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
-                this.competitions = new ArrayList<>();
+                //this.competitions = new ArrayList<>();
 
                 Iterator<String> competitionIds = dataObj.keys();
                 while (competitionIds.hasNext()) {
                     String currentId = competitionIds.next();
                     JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
-                    this.competitions.add(new Competition(currentId, currentCompetition));
+                    //this.competitions.add(new Competition(currentId, currentCompetition));
                 }
 
-                sortCompetitionsByField(R.id.name_sort);
+               // sortCompetitionsByField(R.id.name_sort);
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
