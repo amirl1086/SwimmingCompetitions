@@ -3,19 +3,19 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 import org.json.JSONObject;
 
 public class Statistic {
-    private int score;
-
+    private String score;
     private Competition competition;
-    public Statistic(int score, JSONObject competition) throws Exception {
+
+    public Statistic(String score, JSONObject competition) throws Exception {
         this.score = score;
         this.competition = new Competition(competition);
     }
 
-    public int getScore() {
+    public String getScore() {
         return this.score;
     }
 
-    public void setScore(int score) {
+    public void setScore(String score) {
         this.score = score;
     }
 

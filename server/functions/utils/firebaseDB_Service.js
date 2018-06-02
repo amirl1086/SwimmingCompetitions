@@ -347,7 +347,7 @@ module.exports = {
 
 	initCompetitionForIterations: (params, response) => {
 
-		getCompetitionById(params.competitionId, (success, result) => {
+		getObjectById('competitions', params.competitionId, (success, result) => {
 			if(success) {
 				let competition = result;
 				let newParticipants = filters.filterCompetedParticipants(competition.participants);
@@ -490,40 +490,37 @@ let getCompetitionResults = (competition, callback) => {
 	});
 }
 
-let getCompetitionById = (competitionId, callback) => {
+let getObjectById = (collectionName, keyValue, callback) => {
 	let db = admin.database();
-	let competitionsRef = db.ref('competitions/' + competitionId);
+	let competitionsRef = db.ref(collectionName + '/' + keyValue);
 
-	competitionsRef.on('value', (snapshot) => { 
-		
-/* 		let competition;
-		competitionsRef = db.ref('competitions/' + competitionId);
-		competitionsRef.on('value', (snapshot2) => { 
-			competition = snapshot.val();
-			let competition2 = snapshot2.val();
-			competition2.participants = {};
-			console.log('competition ', competition);
-			//competition.participants = {};
-			for(let key in competition.participants) {
-				competition2.participants[key] = competition.participants[key];
-				competition2.participants[key].competed = 'false';
-				competition2.participants[key].birthDate = competition.participants[key].birthDate.split(' ')[0];
-				delete competition2.participants[key].score;
-				//delete competition.participants[key].id;
-			}
-			let keyw = db.ref('competitions').push().key;
-			competitionsRef = db.ref('competitions/' + keyw);
-			//console.log('competitionParams ', competitionParams);
-			console.log('competition2 ', competition);
-			competitionsRef.update(competition2);
-			//callback(true, snapshot1.val());
-		}); */
+	competitionsRef.on('value', (snapshot) => {
 		callback(true, snapshot.val());
-
 	}, (error) => {
 		callback(false, error);
 	});
 }
+/* let competition;
+competitionsRef = db.ref('competitions/' + competitionId);
+competitionsRef.on('value', (snapshot2) => { 
+	competition = snapshot.val();
+	let competition2 = snapshot2.val();
+	competition2.participants = {};
+	console.log('competition ', competition);
+	//competition.participants = {};
+	for(let key in competition.participants) {
+		competition2.participants[key] = competition.participants[key];
+		competition2.participants[key].competed = 'false';
+		//delete competition.participants[key].id;
+	}
+	let keyw = db.ref('competitions').push().key;
+	competitionsRef = db.ref('competitions/' + keyw);
+	competition2.id = keyw;
+	//console.log('competitionParams ', competitionParams);
+	console.log('competition2 ', competition);
+	competitionsRef.update(competition2);
+	//callback(true, snapshot1.val());
+}); */
 
 let attachIdToObject = (snapshot) => {
 	let resObj = snapshot.val();

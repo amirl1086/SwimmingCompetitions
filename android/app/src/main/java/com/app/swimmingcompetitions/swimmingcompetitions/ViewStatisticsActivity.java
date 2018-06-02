@@ -103,11 +103,9 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
                 for(int i=0; i < dataList.length(); i++) {
                     JSONObject obj = dataList.getJSONObject(i);
-
                     String score = obj.getString("score");
                     JSONObject competition = obj.getJSONObject("competition");
-
-                    this.statistics.add(new Statistic(Integer.valueOf(score), competition));
+                    this.statistics.add(new Statistic(score, competition));
                 }
 
                 setUpLengths();
@@ -156,7 +154,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             String[] titles = new String[selectedStatistics.size()];
             DataPoint[] points = new DataPoint[selectedStatistics.size()];
             for(int i = 0; i < selectedStatistics.size(); i++) {
-                points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
+                points[i] = new DataPoint(i, Integer.valueOf(selectedStatistics.get(i).getScore()));
                 titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
                 System.out.println("points[" + i + "]: " + points[i]);
                 System.out.println("titles[" + i + "]: " + titles[i]);
@@ -177,13 +175,13 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             Collections.sort(selectedStatistics, new Comparator<Statistic>() {
                 @Override
                 public int compare(Statistic s1, Statistic s2) {
-                    return Float.compare(s1.getScore(), s2.getScore());
+                    return Float.compare(Integer.valueOf(s1.getScore()), Integer.valueOf(s2.getScore()));
                 }
             });
 
             this.graphView.getViewport().setYAxisBoundsManual(true);
             this.graphView.getViewport().setMinY(0);
-            this.graphView.getViewport().setMaxY(selectedStatistics.get(selectedStatistics.size() - 1).getScore());
+            this.graphView.getViewport().setMaxY(Integer.valueOf(selectedStatistics.get(selectedStatistics.size() - 1).getScore()));
 
             series.setDrawDataPoints(true);
             series.setDataPointsRadius(15);

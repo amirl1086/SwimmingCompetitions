@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class IterationsActivity extends LoadingDialog implements AsyncResponse {
 
@@ -126,8 +127,8 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             this.currentParticipants = this.selectedCompetition.getCurrentParticipants();
             this.allParticipants = this.selectedCompetition.getParticipants();
 
-            resetClicked();
             setParticipantsView();
+            resetClicked();
         }
         catch (JSONException e) {
             showToast("IterationsActivity onCreate: Error getting participants");
@@ -264,20 +265,20 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
             }
         }
 
-        Double score = seconds + (60 * minutes) + (0.001 * milliSeconds);
+        Double score = this.seconds + (60 * this.minutes) + (0.001 * this.milliSeconds);
         selectedParticipant.setScore(score.toString());
 
         TextView resultView = findViewById(selectedParticipant.getListviewIndex());
         String result = "";
 
-        if(minutes > 0 && minutes < 10) {
-            result += /*"0" +*/ minutes + ":";
+        if(this.minutes > 0 && this.minutes < 10) {
+            result += /*"0" +*/ this.minutes + ":";
         }
         if(seconds < 10) {
-            result += /*"0" + */(seconds + ":" + milliSeconds);
+            result += /*"0" + */(this.seconds + ":" + this.milliSeconds);
         }
         else {
-            result += (seconds + ":" + milliSeconds);
+            result += (this.seconds + ":" + this.milliSeconds);
         }
         resultView.setText(result);
     }
@@ -307,8 +308,8 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
 
     @Override
     public void processFinish(String result) {
-        try {
-            if(result != null) {
+        if(result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
                 if(response.getBoolean("success")) {
@@ -325,12 +326,13 @@ public class IterationsActivity extends LoadingDialog implements AsyncResponse {
                     showToast("LogInActivity processFinish: Error saving competition results");
                 }
             }
-            else {
-                showToast("LogInActivity processFinish: Error saving competition results");
+            catch(Exception e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
             }
         }
-        catch (JSONException e) {
-            e.printStackTrace();
+        else {
+            showToast("שגיאה בכניסה למערכת, נסה לאתחל את האפליקציה");
         }
         hideProgressDialog();
     }
