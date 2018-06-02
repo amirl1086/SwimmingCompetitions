@@ -308,7 +308,23 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
     }
 
     private void showDate(int year, int month, int day) {
-        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+        StringBuilder str = new StringBuilder();
+
+        if(day < 10) {
+            str.append("0");
+        }
+        str.append(day);
+        str.append("/");
+
+        if(month < 10) {
+            str.append("0");
+        }
+        str.append(month);
+        str.append("/");
+
+        str.append(year);
+
+        this.dateView.setText(str);
     }
 
     private void showTime(int hourOfDay, int minutes) {
@@ -446,6 +462,10 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -459,6 +479,12 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements Async
 
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

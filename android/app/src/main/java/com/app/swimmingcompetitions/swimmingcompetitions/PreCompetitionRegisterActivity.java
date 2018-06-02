@@ -137,6 +137,10 @@ public class PreCompetitionRegisterActivity extends AppCompatActivity {
                         switchToChangeEmailActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.change_password_nav_item: {
                         switchToChangePasswordActivity();
                         break;
@@ -177,6 +181,12 @@ public class PreCompetitionRegisterActivity extends AppCompatActivity {
     public void switchToHomePageActivity() {
         Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

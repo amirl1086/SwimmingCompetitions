@@ -1,7 +1,10 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtils {
 
@@ -78,6 +81,31 @@ public class DateUtils {
 
         calendar.set(Calendar.HOUR_OF_DAY, hours);
         calendar.set(Calendar.MINUTE, minutes);
+
+        return calendar;
+    }
+
+    public Calendar strTimeStampToCalendar(String isoDate) {
+        Calendar calendar = Calendar.getInstance();
+        String[] birthDateArr = isoDate.split(" ");
+
+        String[] dateArr = birthDateArr[0].split("/");
+        int day = Integer.valueOf(dateArr[0]);
+        int month = Integer.valueOf(dateArr[1]) - 1;
+        int year = Integer.valueOf(dateArr[2]);
+
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+
+        String[] timeArr = birthDateArr[1].split(":");
+        int hours = Integer.valueOf(timeArr[0]);
+        int minutes = Integer.valueOf(timeArr[1]);
+        int seconds = Integer.valueOf(timeArr[2]);
+
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+        calendar.set(Calendar.SECOND, seconds);
 
         return calendar;
     }

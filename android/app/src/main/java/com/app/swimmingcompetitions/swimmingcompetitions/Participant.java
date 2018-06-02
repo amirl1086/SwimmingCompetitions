@@ -84,7 +84,7 @@ class Participant implements Serializable {
     }
 
     public String getBirthDate() {
-        return birthDate;
+        return this.birthDate;
     }
 
     public void setBirthDate(String birthDate) {
@@ -92,7 +92,7 @@ class Participant implements Serializable {
     }
 
     public String getScore() {
-        return this.score.length() > 4 ? this.score.substring(0, 3) : this.score;
+        return (this.score != null && this.score.length() > 4) ? this.score.substring(0, 3) : this.score;
     }
 
     public void setScore(String score) {
@@ -116,7 +116,7 @@ class Participant implements Serializable {
     }
 
     public String getGender() {
-        return gender;
+        return this.gender;
     }
 
     public void setGender(String gender) {

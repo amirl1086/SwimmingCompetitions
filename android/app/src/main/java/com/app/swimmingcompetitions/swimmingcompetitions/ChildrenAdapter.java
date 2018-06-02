@@ -13,24 +13,20 @@ import java.util.List;
 
 public class ChildrenAdapter extends ArrayAdapter {
     private Context mContext;
-    private int mResource;
-    private List<Participant> children = new ArrayList<>();
+    private List<Participant> children;
 
     public ChildrenAdapter(Context context, int resource, ArrayList<Participant> list) {
         super(context, resource, list);
         this.mContext = context;
-        this.mResource = resource;
         this.children = list;
     }
 
 
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    @NonNull @Override public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
 
         if(listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.competition_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.child_list_item, parent, false);
         }
         Participant currentUser = children.get(position);
 

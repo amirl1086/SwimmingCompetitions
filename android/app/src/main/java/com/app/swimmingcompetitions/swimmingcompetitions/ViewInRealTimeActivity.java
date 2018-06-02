@@ -1,6 +1,8 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -8,30 +10,50 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+
 
 public class ViewInRealTimeActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    private FirebaseDatabase db;
+    private JSON_AsyncTask jsonAsyncTaskPost;
+
     private Competition competition;
 
-    private JSON_AsyncTask jsonAsyncTaskPost;
+    private ListView listView;
+    private LiveResultsAdapter liveResultAdapter;
+    private ArrayList<PersonalResult> liveResults;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +65,11 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
-            this.db = FirebaseFirestore.getInstance();
+
+            this.db = FirebaseDatabase.getInstance();
+
+            this.liveResults = new ArrayList<>();
+            this.listView = findViewById(R.id.live_results_list);
 
             getCompetitionInProgress();
 
@@ -61,7 +87,6 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
 
             data.put("urlSuffix", "/getCompetitionInProgress");
             data.put("httpMethod", "GET");
-            JSONObject currentUserJson = this.currentUser.getJSON_Object();
 
             this.jsonAsyncTaskPost = new JSON_AsyncTask();
             this.jsonAsyncTaskPost.delegate = this;
@@ -70,7 +95,7 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         catch (Exception e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-            System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
+            System.out.println("ViewInRealTimeActivity getCompetitionInProgress Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -79,21 +104,22 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         if (result != null) {
             try {
                 JSONObject response = new JSONObject(result);
-                JSONObject dataObj = response.getJSONObject("data");
-                this.competition = new Competition(dataObj);
+                if(response.getBoolean("success")) {
+                    JSONObject dataObj = response.getJSONObject("data");
 
-                Iterator<String> competitionIds = dataObj.keys();
-                while (competitionIds.hasNext()) {
-                    String currentId = competitionIds.next();
-                    JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
-                    //this.competitions.add(new Competition(currentId, currentCompetition));
+                    Iterator<String> competitionIds = dataObj.keys();
+                    String competitionId = competitionIds.next();
+                    this.competition = new Competition(dataObj.getJSONObject(competitionId));
+
+                    setUpLiveView();
                 }
-
-               // sortCompetitionsByField(R.id.name_sort);
+                else {
+                    showToast("אין כרגע תחרות שמתקיימת");
+                }
             }
             catch (Exception e) {
-                showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getMessage());
+                showToast("שגיאה ביצירה של רשימת התוצאות, נסה לאתחל את האפליקציה");
+                System.out.println("ViewInRealTimeActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {
@@ -101,6 +127,54 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         }
 
         hideProgressDialog();
+    }
+
+    private void setUpLiveView() {
+        DatabaseReference personalResultsRef = db.getReference("personalResults/" + this.competition.getId());
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                showProgressDialog("מעדכן נתונים");
+                PersonalResult currPersonalResult = dataSnapshot.getValue(PersonalResult.class);
+                addResultToLiveList(currPersonalResult);
+                hideProgressDialog();
+            }
+
+            @Override public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            @Override public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+            @Override public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            @Override public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+
+        personalResultsRef.addChildEventListener(childEventListener);
+    }
+
+    private void addResultToLiveList(PersonalResult value) {
+        this.liveResults.add(value);
+
+        Collections.sort(this.liveResults, new Comparator<Object>(){
+
+            @Override
+            public int compare(Object a, Object b) {
+                PersonalResult resultA = (PersonalResult) a;
+                PersonalResult resultB = (PersonalResult) b;
+
+                try {
+                    return resultB.getTimeStamp().compareTo(resultA.getTimeStamp());
+                }
+                catch (Exception e) {
+                    showToast("שגיאה במיון התוצאות, נסה לאתחל את האפליקציה");
+                    System.out.println("ViewInRealTimeActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                    return 0;
+                }
+
+            }
+        });
+
+        this.liveResultAdapter = new LiveResultsAdapter(this, R.layout.live_result_list_item, this.liveResults);
+        this.listView.setAdapter(this.liveResultAdapter);
+        this.liveResultAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -121,7 +195,6 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemClicked = item.getItemId();
         switch(item.getItemId()) {
             case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);

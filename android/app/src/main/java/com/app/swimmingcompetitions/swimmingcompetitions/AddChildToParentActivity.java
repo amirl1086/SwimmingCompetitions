@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class AddChildToParentActivity extends LoadingDialog implements AsyncResponse {
@@ -33,19 +34,21 @@ public class AddChildToParentActivity extends LoadingDialog implements AsyncResp
         setContentView(R.layout.activity_add_child_to_parent);
         Intent intent = getIntent();
 
-        if(!intent.hasExtra("currentUser")) {
+        if(intent.hasExtra("currentUser")) {
+            this.currentUser = (User) intent.getSerializableExtra("currentUser");
+
+            this.email = findViewById(R.id.child_email);
+            this.dateView = findViewById(R.id.birth_date_view);
+            Calendar calendar = Calendar.getInstance();
+            this.year = calendar.get(Calendar.YEAR);
+
+            this.month = calendar.get(Calendar.MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
+            showDate(year, month + 1, day);
+        }
+        else {
             switchToLogInActivity();
         }
-        this.currentUser = (User) intent.getSerializableExtra("currentUser");
-
-        this.email = findViewById(R.id.child_email);
-        this.dateView = findViewById(R.id.birth_date_view);
-        Calendar calendar = Calendar.getInstance();
-        this.year = calendar.get(Calendar.YEAR);
-
-        this.month = calendar.get(Calendar.MONTH);
-        this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDate(year, month + 1, day);
     }
 
     private void switchToLogInActivity() {
@@ -73,52 +76,86 @@ public class AddChildToParentActivity extends LoadingDialog implements AsyncResp
     };
 
     private void showDate(int year, int month, int day) {
-        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+        StringBuilder str = new StringBuilder();
+
+        if(day < 10) {
+            str.append("0");
+        }
+        str.append(day);
+        str.append("/");
+
+        if(month < 10) {
+            str.append("0");
+        }
+        str.append(month);
+        str.append("/");
+
+        str.append(year);
+
+        this.dateView.setText(str);
     }
 
     public void addChildToParent(View view) {
         String birthDateText = this.dateView.getText().toString();
         String eMailText = this.email.getText().toString();
 
-        JSONObject registerData = new JSONObject();
-
         try {
+            showProgressDialog("מאמת את המידע...");
+
+            JSONObject registerData = new JSONObject();
             registerData.put("urlSuffix", "/addChildToParent");
             registerData.put("httpMethod", "POST");
             registerData.put("uid", this.currentUser.getUid());
             registerData.put("email", eMailText);
             registerData.put("birthDate", birthDateText);
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(registerData.toString());
+
         }
         catch (JSONException e) {
+            hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+            System.out.println("AddChildToParentActivity addChildToParent Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
         }
-
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        this.jsonAsyncTaskPost.delegate = this;
-
-        showProgressDialog("מאמת את המידע...");
-
-        this.jsonAsyncTaskPost.execute(registerData.toString());
     }
 
     @Override
     public void processFinish(String result) {
-        try {
-            if(result != null) {
-                showToast("התאמה נמצאה, הפעולה הושלמה בהצלחה");
+        if(result != null) {
+            try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
+                if(response.getBoolean("success")) {
+                    showToast("התאמה נמצאה, ההרשמה בוצעה בהצלחה");
+                    switchToMyChildrenActivityActivity();
+                }
+                else {
+                    if(dataObj.getString("message").equals("birth_date_dont_match")) {
+                        showToast("התאמה לא נמצאה, בדוק את תאריך הלידה");
+                    }
+                    else if(dataObj.getString("message").equals("no_such_email")) {
+                        showToast("התאמה לא נמצאה, בדוק את כתובת האימייל");
+                    }
+                }
             }
-            else {
-                showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
+            catch (Exception e) {
+                showToast("שגיאה בטעינת המידע מהמערכת, נסה לאתחל את האפליקציה");
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+        else {
+            showToast("שגיאה בהרשמה למערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();
+    }
+
+    public void switchToMyChildrenActivityActivity() {
+        Intent googleRegIntent = new Intent(this, MyChildrenActivity.class);
+        googleRegIntent.putExtra("currentUser", this.currentUser);
+        startActivity(googleRegIntent);
     }
 
     public void showToast(String message) {

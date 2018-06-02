@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -85,7 +86,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             catch (Exception e) {
                 hideProgressDialog();
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
+                System.out.println("ViewCompetitionsActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
 
         }
@@ -309,7 +310,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getMessage());
+                System.out.println("ViewCompetitionsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {

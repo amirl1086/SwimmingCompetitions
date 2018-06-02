@@ -185,6 +185,8 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
             series.setDrawDataPoints(true);
             series.setDataPointsRadius(15);
+            series.setThickness(15);
+
             series.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
@@ -436,6 +438,10 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
                         switchToChangeEmailActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.change_password_nav_item: {
                         switchToChangePasswordActivity();
                         break;
@@ -453,6 +459,12 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

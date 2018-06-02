@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -80,6 +81,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
             catch (JSONException e) {
                 hideProgressDialog();
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+                System.out.println("ViewPersonalResultsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {
@@ -115,6 +117,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
             }
             catch(Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
+                System.out.println("ViewPersonalResultsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {
@@ -295,6 +298,10 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -310,6 +317,12 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         Intent intent = new Intent(this, ViewCompetitionResultsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         intent.putExtra("selectedCompetition", competition);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
