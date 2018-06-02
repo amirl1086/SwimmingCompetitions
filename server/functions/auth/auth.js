@@ -79,10 +79,6 @@ module.exports =  {
 		.catch((error) => {
 			callback(false, error);
 		});
-	},
-
-	updateUserDetails: (params, response) => {
-
 	}
 
 };

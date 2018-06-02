@@ -50,7 +50,7 @@ exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 });
 
 exports.getCompetitionInProgress = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.getCompetitionInProgress(request.body, response);
+	firebaseDB_Service.getCompetitionInProgress(response);
 });
 
 
@@ -95,7 +95,7 @@ exports.initCompetitionForIterations = functions.https.onRequest((request, respo
 });
 
 exports.getUsersByParentId = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.getUsersByFilters(request.body, response);
+	firebaseDB_Service.getUsersByParentId(request.body, response);
 });
 
 exports.addChildToParent = functions.https.onRequest((request, response) => {
@@ -113,7 +113,7 @@ exports.cancelRegistration = functions.https.onRequest((request, response) => {
 
 
 //db manipulation
-exports.resetCompetitions = functions.https.onRequest((request, response) => {
+/*  exports.resetCompetitions = functions.https.onRequest((request, response) => {
 	let db = admin.database();
 	let collectionRef = db.ref('competitions');
 
@@ -136,4 +136,4 @@ exports.resetCompetitions = functions.https.onRequest((request, response) => {
 	}, (error) => {
 		response.send('error ', error, '\n');
 	});
-})
+}); */

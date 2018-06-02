@@ -2,7 +2,6 @@
 module.exports = {
 
 	sendResponse: (response, error, resultObj) => {
-
 		if(error) {
 			response.send({ 'success': false, 'data': error });
 		}

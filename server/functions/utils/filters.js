@@ -4,13 +4,13 @@ const moment = require('moment');
 module.exports = {
 
 	filterCompetedParticipants: (participants) => {
-		let newParticipants = {};
-		for(let key in participants) {
-			if(!participants[key].competed || participants[key].competed === 'false') {
-				newParticipants[key] = participants[key];
+		return Object.keys(participants).reduce((result, key) => {
+			let participant = participants[key];
+			if(participant.competed === 'false') {
+				result[key] = participant;
 			}
-		}
-		return newParticipants;
+			return result;
+		}, {});
 	},
 
 	sortParticipantsByAge: (participants) => {
@@ -99,7 +99,7 @@ module.exports = {
 				}
 				else if((filterName === 'swimmingStyle' && competitions[key].swimmingStyle === params.swimmingStyle) || 
 						(currentUser && filterName === 'uid' && searchInParticipants(currentCompetition, currentUser.uid)) ||
-						(filterName === 'isDone' && currentCompetition.isDone)) {
+						(filterName === 'isDone' && currentCompetition.isDone === 'true')) {
 
 					filteredCompetitions[key] = competitions[key];
 				}
@@ -167,7 +167,7 @@ let getNewParticipantsFromGendger = (participants, numOfParticipants) => {
 	let newParticipants = {};
 	let totalSelected = 0;
 	for(let i = 0; i < participants.length; i++) {
-		if((!participants[i].competed || participants[i].competed === 'false') && totalSelected < numOfParticipants) {
+		if(participants[i].competed === 'false' && totalSelected < numOfParticipants) {
 			newParticipants[participants[i].uid] = participants[i];
 			totalSelected++
 		}

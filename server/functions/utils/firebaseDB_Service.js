@@ -8,14 +8,10 @@ const moment = require('moment');
 module.exports = {
 
 	getCompetitionInProgress: (response) => {
-		getCollectionByFilter('compeitions', 'inProgress', 'true', (success, result) => {
+		getCollectionByFilter('competitions', 'inProgress', 'true', (success, result) => {
 			if(success) {
 				if(result) {
-					let competition = result;
-					getCollectionByName('personalResults', (success, result2) => {
-						competition.personalResults = result2;
-					});
-					utilities.sendResponse(response, null, competition);
+					utilities.sendResponse(response, null, result);
 				}
 				else {
 					utilities.sendResponse(response, 'no_live_competition', null);
@@ -41,12 +37,16 @@ module.exports = {
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
+				console.log('params.birthDate' + params.birthDate);
 				if(user.birthDate === params.birthDate) {
-					let userRef = db.ref('users/' + params.uid + '/children/' + user.uid);
-					userRef.set({
-						"firstName": user.firstName
-					});
-					utilities.sendResponse(response, null, user);
+					user.parentId = params.uid;
+					let userRef = db.ref('users/' + user.uid);
+					userRef.update(user);
+					userRef.on('value', (snapshot) => {
+						utilities.sendResponse(response, null, snapshot.val());
+					}, (error) => {
+						utilities.sendResponse(response, error, null);
+					})
 				}
 				else {
 					utilities.sendResponse(response, 'birth_date_dont_match', null);
@@ -107,16 +107,7 @@ module.exports = {
 		});
 	},
 
-	getUsersByFilters: (params, response) => {
-		let db = admin.database();
-		let usersRef = db.ref('users');
 
-		usersRef.orderByChild(params.filter).equalTo(params.value).on('value', (snapshot) => {
-			utilities.sendResponse(response, null, snapshot.val());
-		}, (error) => {
-			utilities.sendResponse(response, error, null);
-		});
-	},
 
 	setNewCompetition: (competitionParams, response) => {
 		let db = admin.database();
@@ -145,7 +136,7 @@ module.exports = {
 		newCompetitionRef.update(newCompetition);
 
 		newCompetitionRef.on('value', (snapshot) => {
-			utilities.sendResponse(response, null, attachIdToObject(snapshot));
+			utilities.sendResponse(response, null, snapshot.val());
 		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});
@@ -323,7 +314,9 @@ module.exports = {
 			if(success) {
 				let competition = result;
 				let newParticipants = filters.filterCompetedParticipants(competition.participants);
+
 				console.log('newParticipants ', newParticipants);
+
 				if(!Object.keys(newParticipants).length && Object.keys(competition.participants).length) {
 					getCompetitionResults(competition, (success, result) => {
 						if(success) {
@@ -338,12 +331,11 @@ module.exports = {
 				}
 				else {
 					let sortedParticipants = filters.sortParticipantsByAge(newParticipants);
-					console.log('initCompetitionForIterations sortedParticipants ', sortedParticipants);
+					//console.log('initCompetitionForIterations sortedParticipants ', sortedParticipants);
 					filters.removeBlankSpots(competition, sortedParticipants);
-					console.log('initCompetitionForIterations removeBlankSpots ', sortedParticipants);
+					//console.log('initCompetitionForIterations removeBlankSpots ', sortedParticipants);
 					competition.currentParticipants = filters.getNewParticipants(competition, sortedParticipants);
-
-					console.log('competition.currentParticipants ', competition.currentParticipants);
+					//console.log('competition.currentParticipants ', competition.currentParticipants);
 
 					//mark compeition started for real-time view
 					competition.inProgress = 'true';
@@ -357,6 +349,17 @@ module.exports = {
 				utilities.sendResponse(response, result, null);
 			}
 
+		});
+	},
+
+	getUsersByParentId: function (params, response) {
+		getCollectionByFilter('users', params.filters, params.value, (success, result) => {
+			if(success) {
+				utilities.sendResponse(response, null, result);
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
 		});
 	}
 };
@@ -431,7 +434,8 @@ let updateCompetitionResults = (participantsResults, competitionId, callback) =>
 			'birthDate': currentParticipant.birthDate,
 			'gender': currentParticipant.gender,
 			'score': currentParticipant.score,
-			'uid': currentParticipant.uid
+			'uid': currentParticipant.uid,
+			'timeStamp': moment().format('DD/MM/YYYY HH:mm:ss')
 		};
 	}
 	
@@ -449,10 +453,7 @@ let getCompetitionResults = (competition, callback) => {
 
 	presonalResultsRef.on('value', (snapshot) => {
 		if(!snapshot.val()) {
-			callback(success, snapshot.val());
-			/* createCompetitionResults(competition, (success) => {
-				callback(success, snapshot.val());
-			});	 */
+			callback(false, null);
 		}
 		else {
 			callback(true, snapshot.val());
@@ -471,12 +472,6 @@ let getObjectById = (collectionName, keyValue, callback) => {
 	}, (error) => {
 		callback(false, error);
 	});
-}
-
-let attachIdToObject = (snapshot) => {
-	let resObj = snapshot.val();
-	let resObjId = Object.assign({}, resObj, { 'id': snapshot.key }); //add the id to the object
-	return resObjId;
 }
 
 let updateCompetitionPerIteration = (competition, callback) => {
