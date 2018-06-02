@@ -215,36 +215,6 @@ module.exports = {
 		})
 	},
 
-/* 	getPersonalResults: (params, response) => {
-		let uid = params.uid;
-		let db = admin.database();
-		authentication.getUser(uid, null, (sucess, result) => {
-			if(sucess) {
-				let personalResultsRef = db.ref('personalResults/');
-				let currentUser = result;
-				personalResultsRef.on('value', (snapshot) => {
-					if(currentUser.type === 'coach') {
-						utilities.sendResponse(response, null, snapshot.val());
-					}
-					else {
-						let competitions = snapshot.val();
-						let selectedCompetitions = [];
-						for(competitionId in competitions) {
-							personalResultsRef = db.ref('personalResults/' + competitionId);
-							if(personalResultsRef.child(uid).exists()) {
-								selectedCompetitions.push(competitions[competitionId]);
-							}
-						}
-						utilities.sendResponse(response, null, selectedCompetitions);
-					}
-				});
-			}
-			else {
-				utilities.sendResponse(response, result, null);
-			}
-		});
-	}, */
-
 	getPersonalResultsByCompetitionId: (params, response) => {
 		let competition = JSON.parse(params.competition);
 		let competitionId = competition.id;
@@ -302,8 +272,10 @@ module.exports = {
 						console.log('setCompetitionResults newParticipants ', newParticipants);
 
 						if(newParticipants && Object.keys(newParticipants).length === 0) {
+							//set flags and update the competition
 							competition.isDone = 'true';
 							competition.inProgress = 'false';
+							delete competition.currentParticipants;
 							updateCompetition(competition);
 							
 							//query all results
@@ -500,27 +472,6 @@ let getObjectById = (collectionName, keyValue, callback) => {
 		callback(false, error);
 	});
 }
-/* let competition;
-competitionsRef = db.ref('competitions/' + competitionId);
-competitionsRef.on('value', (snapshot2) => { 
-	competition = snapshot.val();
-	let competition2 = snapshot2.val();
-	competition2.participants = {};
-	console.log('competition ', competition);
-	//competition.participants = {};
-	for(let key in competition.participants) {
-		competition2.participants[key] = competition.participants[key];
-		competition2.participants[key].competed = 'false';
-		//delete competition.participants[key].id;
-	}
-	let keyw = db.ref('competitions').push().key;
-	competitionsRef = db.ref('competitions/' + keyw);
-	competition2.id = keyw;
-	//console.log('competitionParams ', competitionParams);
-	console.log('competition2 ', competition);
-	competitionsRef.update(competition2);
-	//callback(true, snapshot1.val());
-}); */
 
 let attachIdToObject = (snapshot) => {
 	let resObj = snapshot.val();
@@ -559,28 +510,3 @@ let updateCompetition = (competition) => {
 	let competitionsRef = db.ref('competitions/' + competition.id + '/');
 	competitionsRef.update(competition);
 }
-
-/* let createCompetitionResults = (competition, callback) => {
-	let db = admin.database();
-	let presonalResultsRef = db.ref('personalResults/' + competition.id + '/');
-
-	let personalResults = {};
-	for(let key in competition.participants) {
-		let currentParticipant = competition.participants[key];
-		personalResults[currentParticipant.id] = {
-			'firstName': currentParticipant.firstName,
-			'lastName': currentParticipant.lastName,
-			'birthDate': currentParticipant.birthDate,
-			'gender': currentParticipant.gender,
-			'score': currentParticipant.score,
-			'uid': currentParticipant.id
-		};
-	}
-	
-	presonalResultsRef.update(personalResults);
-	presonalResultsRef.on('value', (snapshot) => {
-		callback(true, snapshot.val());
-	}, (error) => {
-		callback(false, error);
-	});
-} */
