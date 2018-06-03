@@ -123,6 +123,10 @@ public class HomePageActivity extends LoadingDialog {
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -147,6 +151,12 @@ public class HomePageActivity extends LoadingDialog {
 
     public void switchToChangePasswordActivity() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

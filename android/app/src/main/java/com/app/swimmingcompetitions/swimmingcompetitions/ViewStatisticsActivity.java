@@ -2,13 +2,11 @@ package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -39,12 +35,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class ViewStatisticsActivity extends LoadingDialog implements AsyncResponse {
@@ -68,7 +61,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
     private String selectedSwimmingStyle;
     private String selectedLength;
     private GraphView graphView;
-    private CompetitionAdapter competitionsListAdapter;
+    private StatisticsAdapter statisticsAdapter;
     private ListView listView;
     private ArrayList<Competition> competitions;
 
@@ -110,11 +103,9 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
                 for(int i=0; i < dataList.length(); i++) {
                     JSONObject obj = dataList.getJSONObject(i);
-
                     String score = obj.getString("score");
                     JSONObject competition = obj.getJSONObject("competition");
-
-                    this.statistics.add(new Statistic(Integer.valueOf(score), competition));
+                    this.statistics.add(new Statistic(score, competition));
                 }
 
                 setUpLengths();
@@ -152,19 +143,18 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             if(this.statistics.get(i).getCompetition().getSwimmingStyle().equals(this.selectedSwimmingStyle) && this.statistics.get(i).getCompetition().getLength().equals(lengthArr[0])) {
                 selectedStatistics.add(this.statistics.get(i));
             }
-            this.competitions.add(this.statistics.get(i).getCompetition());
         }
 
         //update the competitions list
-        this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
-        this.listView.setAdapter(this.competitionsListAdapter);
-        this.competitionsListAdapter.notifyDataSetChanged();
+        this.statisticsAdapter = new StatisticsAdapter(this, R.layout.statistics_list_item, selectedStatistics);
+        this.listView.setAdapter(this.statisticsAdapter);
+        this.statisticsAdapter.notifyDataSetChanged();
 
         if(selectedStatistics.size() > 1) {
             String[] titles = new String[selectedStatistics.size()];
             DataPoint[] points = new DataPoint[selectedStatistics.size()];
             for(int i = 0; i < selectedStatistics.size(); i++) {
-                points[i] = new DataPoint(i, selectedStatistics.get(i).getScore());
+                points[i] = new DataPoint(i, Integer.valueOf(selectedStatistics.get(i).getScore()));
                 titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
                 System.out.println("points[" + i + "]: " + points[i]);
                 System.out.println("titles[" + i + "]: " + titles[i]);
@@ -185,16 +175,18 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             Collections.sort(selectedStatistics, new Comparator<Statistic>() {
                 @Override
                 public int compare(Statistic s1, Statistic s2) {
-                    return Float.compare(s1.getScore(), s2.getScore());
+                    return Float.compare(Integer.valueOf(s1.getScore()), Integer.valueOf(s2.getScore()));
                 }
             });
 
             this.graphView.getViewport().setYAxisBoundsManual(true);
             this.graphView.getViewport().setMinY(0);
-            this.graphView.getViewport().setMaxY(selectedStatistics.get(selectedStatistics.size() - 1).getScore());
+            this.graphView.getViewport().setMaxY(Integer.valueOf(selectedStatistics.get(selectedStatistics.size() - 1).getScore()));
 
             series.setDrawDataPoints(true);
             series.setDataPointsRadius(15);
+            series.setThickness(15);
+
             series.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
@@ -446,6 +438,10 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
                         switchToChangeEmailActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.change_password_nav_item: {
                         switchToChangePasswordActivity();
                         break;
@@ -463,6 +459,12 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

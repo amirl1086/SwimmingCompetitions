@@ -49,6 +49,16 @@ exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.updateFirebaseUser(request.body, response);
 });
 
+exports.getCompetitionInProgress = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getCompetitionInProgress(response);
+});
+
+
+
+
+
+
+
 /* ================================== */
 
 
@@ -85,7 +95,7 @@ exports.initCompetitionForIterations = functions.https.onRequest((request, respo
 });
 
 exports.getUsersByParentId = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.getUsersByFilters(request.body, response);
+	firebaseDB_Service.getUsersByParentId(request.body, response);
 });
 
 exports.addChildToParent = functions.https.onRequest((request, response) => {
@@ -93,17 +103,37 @@ exports.addChildToParent = functions.https.onRequest((request, response) => {
 });
 
 exports.getPersonalResults = functions.https.onRequest((request, response) => {
-	var params = request.body;
-
-	if(params.competition) {
-		firebaseDB_Service.getPersonalResultsByCompetitionId(params, response);
-	}
-	else {
-		firebaseDB_Service.getPersonalResults(params, response);
-	}
+	firebaseDB_Service.getPersonalResultsByCompetitionId(request.body, response);
 });
 
 exports.cancelRegistration = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.cancelRegistration(request.body, response);
 });
 /* ================================ */
+
+
+//db manipulation
+/*  exports.resetCompetitions = functions.https.onRequest((request, response) => {
+	let db = admin.database();
+	let collectionRef = db.ref('competitions');
+
+	collectionRef.on('value', (snapshot) => {
+		let competitions = snapshot.val();
+		for (let compId in competitions) {
+			for (let userId in competitions[compId].participants) {
+				competitions[compId].participants[userId].competed = 'false';
+			}
+			competitions[compId].isDone = 'false';
+			competitions[compId].inProgress = 'false';
+			delete competitions[compId].currentParticipants;
+		}
+		collectionRef.update(competitions);
+
+		collectionRef = db.ref('personalResults');
+		collectionRef.remove();
+
+		response.send('success\n');
+	}, (error) => {
+		response.send('error ', error, '\n');
+	});
+}); */

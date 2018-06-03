@@ -189,7 +189,23 @@ public class GoogleRegisterActivity extends LoadingDialog implements AsyncRespon
     }
 
     private void showDate(int year, int month, int day) {
-        this.dateView.setText(new StringBuilder().append(day).append("/").append(month).append("/").append(year));
+        StringBuilder str = new StringBuilder();
+
+        if(day < 10) {
+            str.append("0");
+        }
+        str.append(day);
+        str.append("/");
+
+        if(month < 10) {
+            str.append("0");
+        }
+        str.append(month);
+        str.append("/");
+
+        str.append(year);
+
+        this.dateView.setText(str);
     }
 
     @Override

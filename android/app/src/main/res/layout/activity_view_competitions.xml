@@ -40,16 +40,6 @@
                 android:divider="@color/purple"
                 android:dividerHeight="1dp" />
 
-<!--            <Button
-            android:id="@+id/add_competition_btn"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:onClick="switchToCreateNewCompetitionActivity"
-            android:text="@string/add_competition_text_btn"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:theme="@style/AppTheme.TransparentButton" />-->
-
         </LinearLayout>
     </FrameLayout>
 

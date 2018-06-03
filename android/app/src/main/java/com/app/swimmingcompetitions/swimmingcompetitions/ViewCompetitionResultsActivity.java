@@ -181,6 +181,10 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
                         switchToChangeEmailActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.change_password_nav_item: {
                         switchToChangePasswordActivity();
                         break;
@@ -255,6 +259,12 @@ public class ViewCompetitionResultsActivity extends LoadingDialog implements Asy
 
     public void switchToViewCompetitionsActivity() {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

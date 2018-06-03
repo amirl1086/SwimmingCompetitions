@@ -360,6 +360,10 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -373,6 +377,12 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
 
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

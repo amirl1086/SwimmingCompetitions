@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -64,8 +65,11 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
             setUpSidebar();
 
-            JSONObject data = new JSONObject();
+
             try {
+                JSONObject data = new JSONObject();
+                showProgressDialog("טוען תחרויות...");
+
                 data.put("urlSuffix", "/getCompetitions");
                 data.put("httpMethod", "GET");
                 JSONObject currentUserJson = this.currentUser.getJSON_Object();
@@ -74,17 +78,17 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                     data.put("filters", "age");
                 }
                 data.put("currentUser", currentUserJson);
+
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
+                this.jsonAsyncTaskPost.execute(data.toString());
             }
             catch (Exception e) {
+                hideProgressDialog();
                 showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getStackTrace());
+                System.out.println("ViewCompetitionsActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
 
-            showProgressDialog("טוען תחרויות...");
-
-            this.jsonAsyncTaskPost = new JSON_AsyncTask();
-            this.jsonAsyncTaskPost.delegate = this;
-            this.jsonAsyncTaskPost.execute(data.toString());
         }
         else {
             switchToLogInActivity();
@@ -272,6 +276,10 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                         switchToChangePasswordActivity();
                         break;
                     }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
+                        break;
+                    }
                     case R.id.log_out_nav_item: {
                         logOut();
                         break;
@@ -302,7 +310,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionsActivity Exception " + e.getMessage());
+                System.out.println("ViewCompetitionsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
             }
         }
         else {
@@ -384,6 +392,12 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
     public void switchToChangeEmailActivity() {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
