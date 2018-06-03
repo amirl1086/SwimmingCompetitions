@@ -30,6 +30,9 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         showAnimate()
         birthDate.datePickerMode = .date
         birthDate.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
+        
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
        
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -87,7 +90,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
             let currentCompetition = (self.parent as! CompetitionDetailsViewController).currentCompetition
             
             let formatDate = DateFormatter()
-            formatDate.dateFormat = "dd/MM/YYYY HH:mm"
+            formatDate.dateFormat = "dd/MM/YYYY"
             var genderToSend = ""
             if gender.titleForSegment(at: gender.selectedSegmentIndex)! == "זכר" {
                 genderToSend = "male"
