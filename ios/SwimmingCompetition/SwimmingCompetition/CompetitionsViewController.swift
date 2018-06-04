@@ -14,7 +14,9 @@ class CompetitionsViewController: UIViewController {
     
     var currentUser: User!
     var competitions = [Competition]()
-    var controllerType = ""
+    
+    var controllerType = "competitions"
+    var pathString = "getCompetitions"
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -28,16 +30,17 @@ class CompetitionsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        if controllerType == "" {
+        if controllerType == "competitions" {
             addButtonView()
+        } else if controllerType == "realTime" {
+            self.title = "צפייה בזמן אמת"
         } else {
-            self.title = "בחר תחרות"
+            self.title = "תוצאות תחרות"
         }
         
         getCompetitionsData()
         
         self.tableView.backgroundColor = UIColor.clear
-        
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(self.backgroundView, at: 0)
@@ -101,7 +104,7 @@ class CompetitionsViewController: UIViewController {
             parameters["filters"] = "age" as AnyObject
         }
      
-        Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
+        Service.shared.connectToServer(path: self.pathString, method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
             print(response)
             for data in response.data {
@@ -164,9 +167,9 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "competitionCell", for: indexPath) as! CompetitionTableViewCell
         cell.name.text = competitions[indexPath.row].name
-        cell.date.text = "מתקיימת בתאריך \(Date().getDate(fullDate: competitions[indexPath.row].activityDate)) ביום \(Date().getWeekDay(fullDate: competitions[indexPath.row].activityDate))"
+        cell.date.text = "מתקיימת בתאריך \(DateConvert().getDate(fullDate: competitions[indexPath.row].activityDate)) ביום \(DateConvert().getWeekDay(fullDate: competitions[indexPath.row].activityDate))"
 
-        cell.time.text = "בשעה \(Date().getHour(fullDate: competitions[indexPath.row].activityDate))"
+        cell.time.text = "בשעה \(DateConvert().getHour(fullDate: competitions[indexPath.row].activityDate))"
         cell.ages.text = "לגילאי \(competitions[indexPath.row].fromAge) עד \(competitions[indexPath.row].toAge)"
         
         cell.layer.backgroundColor = UIColor.clear.cgColor
@@ -181,17 +184,20 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if controllerType == "realTime" {
+        
+        if controllerType == "competitions" {
+            performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
+            tableView.deselectRow(at: indexPath, animated: true)
+        } else {
             let sb = UIStoryboard(name: "Main", bundle: nil)
             if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
-                resultsView.controllerType = "realTime"
+                resultsView.controllerType = self.controllerType
                 resultsView.competition = competitions[indexPath.row]
                 self.navigationController?.pushViewController(resultsView, animated: true)
             }
-        } else {
-            performSegue(withIdentifier: "goToCompetitionDetails", sender: competitions[indexPath.row])
-            tableView.deselectRow(at: indexPath, animated: true)
         }
+        
+       
         
     }
   

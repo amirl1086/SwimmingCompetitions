@@ -68,14 +68,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             break
         case "תוצאות":
-            /*if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
-                //resultsView.currentUser = self.currentUser
-                self.navigationController?.viewControllers = [resultsView]
-            }*/
+            if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+                competitionsView.currentUser = self.currentUser
+                competitionsView.controllerType = "results"
+                self.navigationController?.viewControllers = [competitionsView]
+            }
             break
         case "צפייה בזמן אמת":
             if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.controllerType = "realTime"
+                competitionsView.pathString = "getCompetitionInProgress"
                 competitionsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [competitionsView]
             }
@@ -98,6 +100,11 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.navigationController?.viewControllers = [loginView]
             }
             break
+        case "סטטיסטיקות":
+            if let statisticsView = sb.instantiateViewController(withIdentifier: "statisticsId") as? StatisticsViewController {
+                statisticsView.currentUser = self.currentUser
+                self.navigationController?.viewControllers = [statisticsView]
+            }
         default:
             break
         }

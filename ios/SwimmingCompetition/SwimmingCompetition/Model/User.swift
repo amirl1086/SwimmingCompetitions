@@ -41,15 +41,7 @@ struct User {
         self.uid = uid != nil ? uid! : ""
         self.children = []
         
-        if children != nil {
-            for child in children! {
-                var user : User!
-                let data = children![child.0] as! JSON
-                user = User(json: data)
-                user.uid = child.0
-                self.children.append(user)
-            }
-        }
+        
         
     }
     

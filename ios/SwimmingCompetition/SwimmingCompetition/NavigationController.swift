@@ -25,12 +25,12 @@ class NavigationController: UINavigationController {
             UserDefaults.standard.set(true, forKey: "loggedIn")
             UserDefaults.standard.synchronize()
             let sb = UIStoryboard(name: "Main", bundle: nil)
-            if let loginView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+            if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
                 Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
                     if response.succeed {
                         imageView.removeFromSuperview()
-                        loginView.currentUser = User(json: response.data)
-                        self.pushViewController(loginView, animated: true)
+                        mainView.currentUser = User(json: response.data)
+                        self.pushViewController(mainView, animated: true)
                     }
                 }
                 

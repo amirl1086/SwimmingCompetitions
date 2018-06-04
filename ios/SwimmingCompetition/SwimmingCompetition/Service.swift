@@ -12,7 +12,12 @@ import Alamofire
 import SwiftyJSON
 import GoogleSignIn
 
+
 typealias JSON = [String: Any]
+
+enum ErrorThrow: Error {
+    case notFount
+}
 
 class Service {
     
@@ -21,24 +26,7 @@ class Service {
     
     private init() {}
     
-    func firebaseAuthCredential(credential: AuthCredential, completion: @escaping (String) -> Void) {
-       
-        Auth.auth().signIn(with: credential) { (user, error) in
-            if error != nil {
-                print("error: \(error!)")
-            } else {
-                user?.getIDToken(completion: { (token, error) in
-                    if error != nil {
-                        
-                    }
-                    else {
-                        completion(token!)
-                    }
-                })
-            }
-        }
-        
-    }
+    
     
     func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         
@@ -74,7 +62,9 @@ class Service {
                 do {
                     let getData = try responseData(json: json)
                     completion(getData)
-                } catch {}
+                } catch {
+                    print("hh")
+                }
                 
                 break;
                 
@@ -170,6 +160,29 @@ class Service {
             alert.dismiss(animated: true, completion: nil)
         }))
         return alert
+    }
+    
+    func firebaseAuthCredential(credential: AuthCredential, completion: @escaping (String) -> Void) {
+        
+        Auth.auth().signIn(with: credential) { (user, error) in
+            if error != nil {
+                print("error: \(error!)")
+            } else {
+                user?.getIDToken(completion: { (token, error) in
+                    if error != nil {
+                        
+                    }
+                    else {
+                        completion(token!)
+                    }
+                })
+            }
+        }
+        
+    }
+    
+    func firebaseSignIn(email: String, password: String) {
+        
     }
     
     func signOut() {

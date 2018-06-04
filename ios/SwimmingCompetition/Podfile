@@ -15,6 +15,7 @@ target 'SwimmingCompetition' do
     pod 'Alamofire'
     pod 'GoogleSignIn'
     pod 'Google'
+    pod 'Charts'
 
 
   target 'SwimmingCompetitionTests' do

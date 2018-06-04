@@ -112,23 +112,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         }
         
         scrollView.contentInset = contentInset
-        /*guard let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-        if notification.name == Notification.Name.UIKeyboardWillShow ||
-            notification.name == Notification.Name.UIKeyboardWillChangeFrame {
-            print(keyboardRect.height)
-            if ((self.scrollView.frame.height - keyboardRect.height) <= (activeTextField.frame.origin.y+activeTextField.frame.height)) {
-                self.scrollView.frame.origin.y = -keyboardRect.height
-                
-            } else {
-                scrollView.frame.origin.y = 0
-            }
-            
-        } else {
-            scrollView.frame.origin.y = 0
-        }
-        */
         
     }
     

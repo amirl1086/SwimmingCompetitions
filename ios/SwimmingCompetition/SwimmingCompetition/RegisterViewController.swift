@@ -277,7 +277,19 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                         let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                             alert.dismiss(animated: true, completion: nil)
-                            _ = self.navigationController?.popViewController(animated: true)
+                            Auth.auth().signIn(withEmail: self.email.text!, password: self.password.text!, completion: { (user, error) in
+                                if error != nil {
+                                    
+                                } else {
+                                    UserDefaults.standard.set(true, forKey: "loggedIn")
+                                    UserDefaults.standard.synchronize()
+                                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                                    if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                                        mainView.currentUser = User(json: response.data)
+                                        self.navigationController?.viewControllers = [mainView]
+                                    }
+                                }
+                            })
                         }))
                         self.present(alert, animated: true, completion: nil)
                         

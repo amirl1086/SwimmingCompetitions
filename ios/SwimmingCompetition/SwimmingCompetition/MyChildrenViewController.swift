@@ -10,31 +10,68 @@ import UIKit
 
 class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    var menu_vc: MenuViewController!
+    
     @IBOutlet weak var tableView: UITableView!
     let datePicker = UIDatePicker()
     var alert = UIAlertController()
     var currentUser: User!
     
     var myChildren = [User]()
-    let a = ["fff"]
+    
+    var backgroundView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initMenuBar()
         self.title = "הילדים שלי"
         let addButton = UIBarButtonItem(title: "הוסף ילד", style: .plain, target: self, action: #selector(self.addChild))
         self.navigationItem.leftBarButtonItem = addButton
-     
+        getChildren()
+        
         tableView.delegate = self
         tableView.dataSource = self
+        
+        self.tableView.backgroundColor = UIColor.clear
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
         
         // Do any additional setup after loading the view.
     }
     
-    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func getChildren() {
+        let parameters = [
+            "value": self.currentUser.uid,
+            "filters": "parentId"
+            ] as [String:AnyObject]
+        Service.shared.connectToServer(path: "getUsersByParentId", method: .post, params: parameters) { (response) in
+            if response.succeed {
+                for data in response.data {
+                    var user : User!
+                    let data = response.data[data.0] as! JSON
+                    user = User(json: data)
+                    self.currentUser.children.append(user)
+                    self.tableView.reloadData()
+                }
+                if self.currentUser.children.isEmpty {
+                    self.present(Alert().confirmAlert(title: "", message: "אין ילדים להצגה"), animated: true, completion: nil)
+                }
+            } else{
+                self.present(Alert().confirmAlert(title: "", message: "לא ניתן להציג ילדים"), animated: true, completion: nil)
+            }
+            
+        }
     }
     
     @objc func addChild() {
@@ -43,52 +80,10 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         popOverVC.view.frame = self.view.frame
         popOverVC.toolBar.items![0].title = "הוסף ילד"
         popOverVC.currentUser = self.currentUser
+        popOverVC.senderView = self
         self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParentViewController: self)
-        /*
-        self.alert = UIAlertController(title: "הוסף ילד", message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = "כתובת אימייל"
-        }
-        self.alert.addTextField { (textField) in
-            textField.placeholder = "תאריך לידה"
-           
-            
-            
-            //
-        }
-        self.alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-            let parameters = [
-                "uid": self.currentUser.uid,
-                "email": self.alert.textFields![0].text!,
-                "birthDate": self.alert.textFields![1].text!
-            ] as [String:AnyObject]
-           
-            Service.shared.connectToServer(path: "addChildToParent", method: .post, params: parameters, completion: { (response) in
-                self.alert.dismiss(animated: true, completion: nil)
-                if response.succeed {
-                    var user = User(json: response.data)
-                    user.uid = response.data["uid"] as! String
-                    if !self.currentUser.children.contains(where: {$0.uid == user.uid}) {
-                        self.currentUser.children.append(user)
-                        self.tableView.reloadData()
-                    }
-                    
-                    
-                } else {
-                    let alert = UIAlertController(title: "הוספה נכשלה", message: "נא לוודא שהנתונים נכונים", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-                        alert.dismiss(animated: true, completion: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
-            })
-            
-        }))
-        self.alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
-            self.alert.dismiss(animated: true, completion: nil)
-        }))
-        self.present(self.alert, animated: true, completion: nil)*/
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -97,9 +92,37 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "childCell", for: indexPath) as! ChildrenTableViewCell
-        cell.label.text = "\(self.currentUser.children[indexPath.row].firstName) \(self.currentUser.children[indexPath.row].uid)"
+        cell.label.textAlignment = .center
+        cell.label.text = "\(self.currentUser.children[indexPath.row].firstName)"
+        cell.layer.backgroundColor = UIColor.clear.cgColor
+        cell.contentView.backgroundColor = UIColor.clear
         
         return cell
+    }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
     }
 
 }
