@@ -12,13 +12,18 @@ import Charts
 class StatisticsViewController: UIViewController {
 
     struct statisticResult {
-        var competition: String!
+        var competition: Competition!
         var score: String!
     }
-    var pickerView = UIPickerView()
+    //var pickerView = UIPickerView()
+    @IBOutlet weak var pickerView: UIPickerView!
+    @IBOutlet weak var toolbarPicker: UIToolbar!
     let style = ["חזה","גב","חתירה","חופשי"]
     let range = Array(0...100)
+    var styleToShow = ""
+    var rangeToShow = ""
     
+    var filteredArray = [statisticResult]()
     var array = [statisticResult]()
     var titleArray = ["12/04/2018","12/05/2018","12/06/2018","12/07/2018","12/08/2018","12/09/2018"]
     @IBOutlet weak var lineChartView: LineChartView!
@@ -32,23 +37,20 @@ class StatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        toolbarPicker.isHidden = true
+        tableView.delegate = self
+        tableView.dataSource = self
         
+        pickerView.isHidden = true
+        pickerView.backgroundColor = UIColor.lightGray
         let button = UIBarButtonItem(title: "בחר", style: .done, target: self, action: #selector(pickerViewStart))
         self.navigationItem.leftBarButtonItem = button
         
-        array.append(statisticResult(competition: "12/04/2018", score: "1.2"))
-        array.append(statisticResult(competition: "12/05/2018", score: "3.5"))
-        array.append(statisticResult(competition: "12/06/2018", score: "0.7"))
-        array.append(statisticResult(competition: "12/07/2018", score: "13.7"))
-        array.append(statisticResult(competition: "12/08/2018", score: "40"))
-        array.append(statisticResult(competition: "12/09/2018", score: "6.9"))
         setChart(self.array.count)
         initMenuBar()
+        getData()
         
-        Service.shared.connectToServer(path: "getParticipantStatistics", method: .post, params: ["uid":currentUser.uid as AnyObject]) { (response) in
-            print(response)
-        }
-        
+        self.tableView.backgroundColor = UIColor.clear
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(self.backgroundView, at: 0)
@@ -64,16 +66,40 @@ class StatisticsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func getData() {
+        Service.shared.connectToServer(path: "getParticipantStatistics", method: .post, params: ["uid":currentUser.uid as AnyObject]) { (response) in
+            if response.succeed {
+                let resultsData = response.jsonAll["data"]! as? NSArray
+                for data in resultsData! {
+                    let jsonData = data as! JSON
+                    let jsonCompetition = jsonData["competition"] as! JSON
+                    let newCompetition = Competition(json: jsonCompetition, id: jsonCompetition["id"] as! String)
+                    let score = jsonData["score"] as! String
+                    self.array.append(statisticResult(competition: newCompetition, score: score))
+                    self.tableView.reloadData()
+                    print(self.array.count)
+                }
+            }
+          
+        }
+    }
+    
     func setChart(_ count: Int) {
+        var dateArray = [String]()
+        let formatDate = DateFormatter()
         let values = (0..<count).map { (i) -> ChartDataEntry in
-            let val = Double(arc4random_uniform(UInt32(count)) + 4	)
-            return ChartDataEntry(x: Double(i), y: Double(self.array[i].score)!)
+            formatDate.dateFormat = "dd/MM/yyyy HH:mm"
+            let oldDate = formatDate.date(from: self.filteredArray[i].competition.activityDate)
+            formatDate.dateFormat = "dd/MM/yyyy"
+            let newDate = formatDate.string(from: oldDate!)
+            dateArray.append(newDate)
+            return ChartDataEntry(x: Double(i), y: Double(self.filteredArray[i].score)!)
             
         }
-        let set1 = LineChartDataSet(values: values, label: "fffff")
+        let set1 = LineChartDataSet(values: values, label: "תוצאות")
         let data = LineChartData(dataSet: set1)
         
-        self.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: self.titleArray)
+        self.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: dateArray)
         self.lineChartView.xAxis.granularity = 1
         self.lineChartView.data = data
         self.lineChartView.chartDescription?.text = ""
@@ -109,10 +135,29 @@ class StatisticsViewController: UIViewController {
     @objc func pickerViewStart() {
         pickerView.delegate = self
         pickerView.dataSource = self
-        pickerView.isHidden = false
+        pickerView.isHidden = !pickerView.isHidden
+        toolbarPicker.isHidden = !toolbarPicker.isHidden
     }
 
-
+    @IBAction func confirmButton(_ sender: Any) {
+        print("push")
+        self.titleTable.text = "\(self.rangeToShow) מטר \(self.styleToShow)"
+        pickerView.isHidden = true
+        toolbarPicker.isHidden = true
+        self.filteredArray.removeAll()
+        for result in self.array {
+            if result.competition.getLength() == self.rangeToShow && result.competition.getSwimmingStyle() == self.styleToShow {
+                let data = statisticResult(competition: result.competition, score: result.score)
+                self.filteredArray.append(data)
+            }
+        }
+        let formatDate = DateFormatter()
+        formatDate.dateFormat = "dd/MM/yyyy HH:mm"
+        self.filteredArray.sort(by: {formatDate.date(from:$0.competition.activityDate)! <	 formatDate.date(from:$1.competition.activityDate)!})
+        setChart(self.filteredArray.count)
+        self.tableView.reloadData()
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -137,5 +182,42 @@ extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource
         return self.range.count
     }
     
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return self.style[row]
+        }
+        return String(self.range[row])
+    }
     
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        var styleString = style[pickerView.selectedRow(inComponent: 0)]
+        var rangeString = range[pickerView.selectedRow(inComponent: 1)]
+        if component == 0 {
+            styleString = style[row]
+        }
+        else {
+            rangeString = range[row]
+        }
+        self.rangeToShow = String(rangeString)
+        self.styleToShow = styleString
+    }
+    
+}
+
+extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.filteredArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "statisticCell", for: indexPath) as! StatisticsTableViewCell
+        cell.label.textAlignment = .center
+        cell.title.text = "\(self.filteredArray[indexPath.row].competition.name)"
+        cell.label.text = "התקיימה ב: \(self.filteredArray[indexPath.row].competition.activityDate)  , תוצאה: \(self.filteredArray[indexPath.row].score!) שניות"
+        cell.layer.backgroundColor = UIColor.clear.cgColor
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = .clear
+        
+        return cell
+    }
 }

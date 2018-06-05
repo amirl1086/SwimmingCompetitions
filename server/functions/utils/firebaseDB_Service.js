@@ -112,16 +112,6 @@ module.exports = {
 	setNewCompetition: (competitionParams, response) => {
 		let db = admin.database();
 
-		let newCompetition = {
-			'name': competitionParams.name,
-			'activityDate': competitionParams.activityDate,
-			'swimmingStyle': competitionParams.swimmingStyle,
-			'numOfParticipants': competitionParams.numOfParticipants,
-			'length': competitionParams.length,
-			'toAge': competitionParams.toAge,
-			'fromAge': competitionParams.fromAge
-		};
-
 		let newCompetitionKey;
 		if(competitionParams.id) {
 			newCompetitionKey = competitionParams.id;
@@ -129,6 +119,17 @@ module.exports = {
 		else {
 			newCompetitionKey = db.ref('competitions').push().key;
 		}
+		
+		let newCompetition = {
+			'name': competitionParams.name,
+			'activityDate': competitionParams.activityDate,
+			'swimmingStyle': competitionParams.swimmingStyle,
+			'numOfParticipants': competitionParams.numOfParticipants,
+			'length': competitionParams.length,
+			'toAge': competitionParams.toAge,
+			'fromAge': competitionParams.fromAge,
+			"id": newCompetitionKey
+		};
 
 		let newCompetitionRef = db.ref('competitions/' + newCompetitionKey);
 		//console.log('competitionParams ', competitionParams);

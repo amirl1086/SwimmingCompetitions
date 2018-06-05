@@ -199,6 +199,8 @@ class CompetitionDetailsViewController: UIViewController {
     
     @IBAction func startCompetitionButton(_ sender: UIButton) {
         if sender.tag == 0 {
+            print("thissss iss the id")
+            print(currentCompetition.getId())
             let param = [
                 "competitionId": currentCompetition.getId()
                 ] as [String:AnyObject]

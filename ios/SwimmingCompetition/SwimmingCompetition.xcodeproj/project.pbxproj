@@ -37,6 +37,8 @@
 		30E857BD20C40EAE002D6AAC /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E857BC20C40EAE002D6AAC /* Alert.swift */; };
 		30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220BF205E0A9E00A1E5F0 /* Date.swift */; };
 		30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */; };
+		30F8B3FC20C65AEE00D751FD /* StatisticsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */; };
+		30F8B3FE20C6CA5000D751FD /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */; };
 		30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A861FE72BB900201A20 /* AppDelegate.swift */; };
 		30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A881FE72BB900201A20 /* MainViewController.swift */; };
 		30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A8A1FE72BB900201A20 /* Main.storyboard */; };
@@ -104,6 +106,8 @@
 		30E857BC20C40EAE002D6AAC /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		30F220BF205E0A9E00A1E5F0 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalResultsViewController.swift; sourceTree = "<group>"; };
+		30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsTableViewCell.swift; sourceTree = "<group>"; };
+		30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
 		30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwimmingCompetition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FE9A861FE72BB900201A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30FE9A881FE72BB900201A20 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 			children = (
 				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
 				3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */,
+				30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */,
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
 				3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */,
 				308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */,
@@ -235,6 +240,7 @@
 				305EAF522013F1420059C789 /* IterationViewController.swift */,
 				3068F8D820061DBD009518AD /* CompetitionsViewController.swift */,
 				30FE9AB71FE72C5200201A20 /* LoginViewController.swift */,
+				30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */,
 				30FE9A881FE72BB900201A20 /* MainViewController.swift */,
 				30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */,
 				300613B81FF428BF0016E325 /* Service.swift */,
@@ -612,6 +618,7 @@
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
+				30F8B3FC20C65AEE00D751FD /* StatisticsTableViewCell.swift in Sources */,
 				3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */,
 				30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
@@ -624,6 +631,7 @@
 				30C13D842011D71D000AAE4E /* Competition.swift in Sources */,
 				30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */,
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
+				30F8B3FE20C6CA5000D751FD /* FilesViewController.swift in Sources */,
 				30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */,
 				30E857BD20C40EAE002D6AAC /* Alert.swift in Sources */,
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,

@@ -288,6 +288,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
+       
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.doneClicked))
         
         toolBar.setItems([doneButton], animated: false)

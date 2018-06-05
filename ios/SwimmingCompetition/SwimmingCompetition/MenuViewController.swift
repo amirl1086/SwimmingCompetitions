@@ -105,6 +105,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 statisticsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [statisticsView]
             }
+            break
+        case "תמונות וסרטונים":
+            if let filesView = sb.instantiateViewController(withIdentifier: "filesId") as? FilesViewController {
+                self.navigationController?.viewControllers = [filesView]
+            }
+            break
         default:
             break
         }

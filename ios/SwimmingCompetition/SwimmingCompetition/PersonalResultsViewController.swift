@@ -89,7 +89,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     func setCompetitionResults() {
         for age in data {
             if age.0 != "type" {
-                let getAge = age.0
+                var getAge = age.0
+                if Int(getAge) == nil {
+                    getAge = "0"
+                }
                 
                 var maleArray = [Participant]()
                 var femaleArray = [Participant]()

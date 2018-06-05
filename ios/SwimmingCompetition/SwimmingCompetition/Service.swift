@@ -200,19 +200,26 @@ class Service {
 
 
 struct responseData {
+    let jsonAll:JSON
     var data:JSON
     let succeed:Bool
     
     init(json: JSON) throws {
+        if (json["data"] as? NSMutableArray) != nil {
+            print(json["data"]!)
+        }
+        let jsonData = json
         let result = json["data"] as? JSON
         let success = json["success"] as? Bool
         self.data = [:]
         if result != nil {
             self.data = result!
         }
-        
+        self.jsonAll = jsonData
         self.succeed = success!
     }
+    
+    
 }
 
 extension UIApplication {
