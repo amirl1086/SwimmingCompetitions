@@ -43,8 +43,9 @@ public class StatisticsAdapter extends ArrayAdapter {
 
         System.out.println("score: " + currentStatistics.getScore());
 
-        /*TextView scoreResult = listItem.findViewById(R.id.statistics_score_result);
-        scoreResult.setText(currentStatistics.getScore());*/
+        TextView scoreResult = listItem.findViewById(R.id.statistics_score_result);
+        String score = currentStatistics.getScore();
+        scoreResult.setText(score);
 
         return listItem;
     }

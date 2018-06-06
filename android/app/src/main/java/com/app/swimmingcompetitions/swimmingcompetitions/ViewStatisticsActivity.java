@@ -156,8 +156,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             for(int i = 0; i < selectedStatistics.size(); i++) {
                 points[i] = new DataPoint(i, Integer.valueOf(selectedStatistics.get(i).getScore()));
                 titles[i] = dateUtils.getShortDate(selectedStatistics.get(i).getCompetition().getActivityDate());
-                System.out.println("points[" + i + "]: " + points[i]);
-                System.out.println("titles[" + i + "]: " + titles[i]);
             }
 
             final String[] finalTitles = titles;
@@ -168,7 +166,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
 
             this.graphView.getViewport().setXAxisBoundsManual(true);
             this.graphView.getViewport().setMinX(0);
-            this.graphView.getViewport().setMaxX(2);
+            this.graphView.getViewport().setMaxX(3);
 
             //dateUtils.stringToCalendar(selectedStatistics.get(0).getCompetition().getActivityDate()).get(Calendar.YEAR)
 
@@ -184,28 +182,19 @@ public class ViewStatisticsActivity extends LoadingDialog implements AsyncRespon
             this.graphView.getViewport().setMaxY(Integer.valueOf(selectedStatistics.get(selectedStatistics.size() - 1).getScore()));
 
             series.setDrawDataPoints(true);
-            series.setDataPointsRadius(15);
+            series.setDataPointsRadius(25);
             series.setThickness(15);
-
-            series.setOnDataPointTapListener(new OnDataPointTapListener() {
-                @Override
-                public void onTap(Series series, DataPointInterface dataPoint) {
-                    showToast("test");
-                    System.out.println("dataPoint " + dataPoint);
-                }
-            });
 
             this.graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                 @Override
                 public String formatLabel(double value, boolean isValueX) {
                     if(isValueX) {
-                        if(value < finalTitles.length && (value % 1 == 0.0 || (((int)(value + 2)) > selectedStatistics.size()))) {
+                        if(value < finalTitles.length && (value % 1 == 0.0)) {
                             return finalTitles[(int) value];
                         }
                         return "";
                     }
                     else {
-                        // show currency for y values
                         return super.formatLabel(value, false);
                     }
                 }
