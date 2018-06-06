@@ -30,6 +30,9 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         showAnimate()
         birthDate.datePickerMode = .date
         birthDate.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
+        
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
        
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -75,19 +78,23 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func confirmButton(_ sender: Any) {
+        
+        let currentCompetition = (self.parent as! CompetitionDetailsViewController).currentCompetition
+        
+        let formatDate = DateFormatter()
+        formatDate.dateFormat = "dd/MM/YYYY"
+        
         if firstName.text == "" || lastName.text == "" {
             let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
             }))
             self.present(alert, animated: true, completion: nil)
+        } else if DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! < Int((currentCompetition?.fromAge)!)! || DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! > Int((currentCompetition?.toAge)!)! {
+            self.present(Alert().confirmAlert(title: "\(DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))!)", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
         }
         else {
             
-            let currentCompetition = (self.parent as! CompetitionDetailsViewController).currentCompetition
-            
-            let formatDate = DateFormatter()
-            formatDate.dateFormat = "dd/MM/YYYY HH:mm"
             var genderToSend = ""
             if gender.titleForSegment(at: gender.selectedSegmentIndex)! == "זכר" {
                 genderToSend = "male"

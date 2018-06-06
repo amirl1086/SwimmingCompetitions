@@ -19,6 +19,8 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
     var activeTextField: UITextField!
     @IBOutlet weak var viewIn: UIView!
     
+    var senderView = UIViewController()
+    
     var currentUser: User!
     
     override func viewDidLoad() {
@@ -73,45 +75,69 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     @IBAction func confirmButton(_ sender: Any) {
-        var alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
+        
         if email.text == "" || birthDate.text == "" {
-            alert.message = "חובה למלא את השדות"
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            let parameters = [
-                "uid": self.currentUser.uid as AnyObject,
-                "email": self.email.text as AnyObject,
-                "birthDate": self.birthDate.text as AnyObject
-                ] as [String:AnyObject]
             
-            Service.shared.connectToServer(path: "addChildToParent", method: .post, params: parameters, completion: { (response) in
+            self.present(Alert().confirmAlert(title: "", message: "חובה למלא את השדות"), animated: true, completion: nil)
+        } else {
+            
+            if ((self.senderView as? CompetitionDetailsViewController) != nil) {
+                addExistingUserToCompetition()
                 
-                if response.succeed {
-                    var user = User(json: response.data)
-                    user.uid = response.data["uid"] as! String
-                    if !self.currentUser.children.contains(where: {$0.uid == user.uid}) {
-                        self.currentUser.children.append(user)
-                        let childrenView = (self.parent as! MyChildrenViewController)
-                        childrenView.currentUser = self.currentUser
-                        childrenView.tableView.reloadData()
-                        self.removeAnimate()
-                    }
-                    
-                    
-                } else {
-                    alert.title = "הוספה נכשלה"
-                    alert.message = "וודא שהנתונים שהכנסת נכונים"
-                    self.present(alert, animated: true, completion: nil)
-                }
-            })
+            } else if ((self.senderView as? MyChildrenViewController) != nil)  {
+                addChild()
+            }
         }
+      
         
     }
     @IBAction func cancelButton(_ sender: Any) {
         removeAnimate()
+    }
+    
+    func addChild() {
+        let parameters = [
+            "uid": self.currentUser.uid as AnyObject,
+            "email": self.email.text as AnyObject,
+            "birthDate": self.birthDate.text as AnyObject
+            ] as [String:AnyObject]
+        Service.shared.connectToServer(path: "addChildToParent", method: .post, params: parameters) { (response) in
+            if response.succeed {
+                let passData = self.senderView as! MyChildrenViewController
+                let user = User(json: response.data)
+                passData.currentUser.children.append(user)
+                passData.tableView.reloadData()
+                self.present(Alert().confirmAlert(title: "", message: "הוספה בוצעה בהצלחה"), animated: true, completion: {
+                    self.removeAnimate()
+                })
+            } else {
+                self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func addExistingUserToCompetition() {
+        let currentCompetition = (self.senderView as! CompetitionDetailsViewController).currentCompetition
+        let parameters = [
+            "competitionId": currentCompetition?.getId() as AnyObject,
+            "uid": self.currentUser.uid as AnyObject,
+            "email": self.email.text as AnyObject,
+            "birthDate": self.birthDate.text as AnyObject
+            ] as [String:AnyObject]
+        if !validateBirthDate(birthDate: self.birthDate.text!, fromAge: Int((currentCompetition?.fromAge)!)!, toAge: Int((currentCompetition?.toAge)!)!) {
+            self.present(Alert().confirmAlert(title: "", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
+        } else {
+            Service.shared.connectToServer(path: "addExistingUserToCompetition", method: .post, params: parameters) { (response) in
+                if response.succeed {
+                    self.present(Alert().confirmAlert(title: "", message: "הרשמה בוצעה בהצלחה"), animated: true, completion: {
+                        self.removeAnimate()
+                    })
+                    
+                } else {
+                    self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     func showAnimate() {
@@ -157,14 +183,15 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func validateBirthDate(birthDate:String, fromAge: Int, toAge: Int) -> Bool {
+        print(birthDate)
+        print(DateConvert().getHowOld(date: birthDate)!)
+        print(fromAge)
+        print(toAge)
+        if DateConvert().getHowOld(date: birthDate)! < fromAge || DateConvert().getHowOld(date: birthDate)! > toAge {
+            return false
+        }
+        return true
     }
-    */
 
 }

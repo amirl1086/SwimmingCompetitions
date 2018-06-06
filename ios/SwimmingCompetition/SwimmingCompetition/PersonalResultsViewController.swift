@@ -33,18 +33,18 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.tableView.dataSource = self
         tableView.allowsSelection = false
         
-        if controllerType == "" {
-            getCompetitionResults()
-        } else {
-            
+        if controllerType == "results" {
+            getResults()
+        } else if controllerType == "realTime" {
             Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
                 let data = snapshot.value as! JSON
                 let participant = Participant(json: data, id: "")
                 self.realTimeArray.insert(participant, at: 0)
-                
                 print(snapshot)
                 self.tableView.reloadData()
             }
+        } else {
+            setCompetitionResults()
         }
         
         let imageView = UIImageView(frame: self.view.bounds)
@@ -60,10 +60,39 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         // Do any additional setup after loading the view.
     }
     
-    func getCompetitionResults() {
+    func getRealTimeResults() {
+        Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
+            let data = snapshot.value as! JSON
+            let participant = Participant(json: data, id: "")
+            self.realTimeArray.insert(participant, at: 0)
+            self.tableView.reloadData()
+        }
+    }
+    
+    func getResults() {
+        let parameters = [
+            "competition": "{\"id\":\"\(self.competition.getId())\"}"
+        ] as [String: AnyObject]
+        Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: parameters) { (response) in
+            if response.succeed {
+                print(response)
+                self.data = response.data
+                self.setCompetitionResults()
+                self.tableView.reloadData()
+            }else {
+                self.present(Alert().confirmAlert(title: "", message: "לא ניתן להציג תוצאות"), animated: true, completion: nil)
+                
+            }
+        }
+    }
+    
+    func setCompetitionResults() {
         for age in data {
             if age.0 != "type" {
-                let getAge = age.0
+                var getAge = age.0
+                if Int(getAge) == nil {
+                    getAge = "0"
+                }
                 
                 var maleArray = [Participant]()
                 var femaleArray = [Participant]()
@@ -113,6 +142,9 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         self.array = self.array.sorted(by: {Int($0.age)! < Int($1.age)!})
+        if self.array.isEmpty {
+            self.present(Alert().confirmAlert(title: "", message: "אין תוצאות להציג"), animated: true, completion: nil)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -121,10 +153,13 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if controllerType == "" {
-            return array[section].maleResults.count + array[section].femaleResults.count + 2
+        if controllerType == "realTime" {
+            return self.realTimeArray.count
         }
-        return self.realTimeArray.count
+       
+        return array[section].maleResults.count + array[section].femaleResults.count + 2
+     
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -136,7 +171,15 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: title.font.pointSize)
         
-        if controllerType == "" {
+        if controllerType == "realTime" {
+            cell.cellView.backgroundColor = UIColor.clear
+            cell.contentView.backgroundColor = UIColor.clear
+            cell.name.text = "\(self.realTimeArray[indexPath.row].firstName) \(self.realTimeArray[indexPath.row].lastName)"
+            cell.rankImage.isHidden = true
+            cell.score.isHidden = false
+            cell.score.text = self.realTimeArray[indexPath.row].score
+            cell.layer.backgroundColor = UIColor.clear.cgColor
+        } else {
             if indexPath.row == 0 {
                 //cell.cellView.backgroundColor = UIColor.blue
                 title.text = "בנים"
@@ -186,46 +229,39 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             }
             cell.cellView.backgroundColor = UIColor.clear
             cell.layer.backgroundColor = UIColor.clear.cgColor
-            
-            
-            return cell
         }
         
-        cell.cellView.backgroundColor = UIColor.clear
-        cell.contentView.backgroundColor = UIColor.clear
-        cell.name.text = "\(self.realTimeArray[indexPath.row].firstName) \(self.realTimeArray[indexPath.row].lastName)"
-        cell.rankImage.isHidden = true
-        cell.score.isHidden = false
-        cell.score.text = self.realTimeArray[indexPath.row].score
-        cell.layer.backgroundColor = UIColor.clear.cgColor
         return cell
         
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        if controllerType == "" {
-            return array.count
+        
+        if controllerType == "realTime" {
+            return 1
         }
-        return 1
+        return array.count
+        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let view = UIView()
-        if controllerType == "" {
-            
-            view.backgroundColor = UIColor.black
-            let label = UILabel()
-            label.text = "גילאי \(array[section].age!)"
-            label.textAlignment = .center
-            label.font = label.font.withSize(25)
-            label.textColor = UIColor.white
-            label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
-            view.addSubview(label)
-            
+        if controllerType == "realTime" {
+            return nil
         }
         
+        let view = UIView()
+        view.backgroundColor = UIColor.black
+        let label = UILabel()
+        label.text = "גילאי \(array[section].age!)"
+        label.textAlignment = .center
+        label.font = label.font.withSize(25)
+        label.textColor = UIColor.white
+        label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
+        view.addSubview(label)
         return view
+        
+        
         
     }
     

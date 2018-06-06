@@ -59,7 +59,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
             nameTextField.text = competitionName
             styleTextField.text = "\(range) מטר \(style)"
             numberTextField.text = numOfParticipants
-            dateTextField.text = "\(Date().getHour(fullDate: dateToSend)) \(Date().getDate(fullDate: dateToSend))"
+            dateTextField.text = "\(DateConvert().getHour(fullDate: dateToSend)) \(DateConvert().getDate(fullDate: dateToSend))"
             agesTextField.text = "מגיל \(fromAge) עד גיל \(toAge)"
         }
         
@@ -288,6 +288,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
+       
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.doneClicked))
         
         toolBar.setItems([doneButton], animated: false)

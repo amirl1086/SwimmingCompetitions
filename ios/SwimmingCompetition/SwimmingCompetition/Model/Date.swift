@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Date {
+class DateConvert {
     
     let days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"]
     
@@ -50,5 +50,23 @@ class Date {
             return ""
         }
         return self.days[date!.weekday!-1]
+    }
+    
+    func getHowOld(date: String) -> Int? {
+        let now = Date()
+        let formatDate = DateFormatter()
+        formatDate.isLenient = true
+        formatDate.dateFormat = "dd/MM/yyyy"
+        
+        let convertDate = formatDate.date(from:date)
+        if convertDate == nil {
+            return nil
+        }
+        
+        let calendar = Calendar.current
+        
+        let components = calendar.dateComponents([.year], from: convertDate!, to: now)
+        
+        return components.year!
     }
 }

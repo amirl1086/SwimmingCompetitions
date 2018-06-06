@@ -45,7 +45,7 @@ class CompetitionDetailsViewController: UIViewController {
         
 
         nameLabel.text = currentCompetition.name
-        dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
@@ -71,7 +71,7 @@ class CompetitionDetailsViewController: UIViewController {
         super.viewDidAppear(animated)
         
         nameLabel.text = currentCompetition.name
-        dateLabel.text = Date().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
@@ -141,12 +141,39 @@ class CompetitionDetailsViewController: UIViewController {
     }
     
     @IBAction func joinTempUserButton(_ sender: UIButton) {
+        let alert = UIAlertController(title: "בחר אפשרות רישום", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "משתמש זמני", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+            let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tempRegID") as! TempRegPopUpViewController
+            self.addChildViewController(popOverVC)
+            popOverVC.view.frame = self.view.frame
+            self.view.addSubview(popOverVC.view)
+            popOverVC.didMove(toParentViewController: self)
+        }))
+        alert.addAction(UIAlertAction(title: "משתמש קיים", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+            let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "popUpId") as! PopUpViewController
+            self.addChildViewController(popOverVC)
+            popOverVC.view.frame = self.view.frame
+            popOverVC.currentUser = self.currentUser
+            popOverVC.toolBar.items![0].title = "רישום משתמש קיים"
+            popOverVC.senderView = self
+            self.view.addSubview(popOverVC.view)
+            popOverVC.didMove(toParentViewController: self)
+        }))
+        alert.addAction(UIAlertAction(title: "משתמש חדש", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
         
-        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tempRegID") as! TempRegPopUpViewController
+        /*let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tempRegID") as! TempRegPopUpViewController
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
         self.view.addSubview(popOverVC.view)
-        popOverVC.didMove(toParentViewController: self)
+        popOverVC.didMove(toParentViewController: self)*/
         
     }
     
@@ -172,6 +199,8 @@ class CompetitionDetailsViewController: UIViewController {
     
     @IBAction func startCompetitionButton(_ sender: UIButton) {
         if sender.tag == 0 {
+            print("thissss iss the id")
+            print(currentCompetition.getId())
             let param = [
                 "competitionId": currentCompetition.getId()
                 ] as [String:AnyObject]

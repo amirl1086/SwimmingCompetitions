@@ -239,7 +239,7 @@ class IterationViewController: UIViewController {
             let score = self.competition.currentParticipants[i].score
             let competed = self.competition.currentParticipants[i].competed
             
-            sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"id\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
+            sendString += "\\\"\(id)\\\":{\\\"firstName\\\":\\\"\(firstName)\\\",\\\"lastName\\\":\\\"\(lastName)\\\",\\\"birthDate\\\":\\\"\(birthDate)\\\",\\\"gender\\\":\\\"\(gender)\\\",\\\"score\\\":\\\"\(score)\\\",\\\"uid\\\":\\\"\(id)\\\",\\\"competed\\\":\\\"\(competed)\\\"}"
             if i != self.competition.currentParticipants.count-1 {
                 sendString += ","
             }
@@ -247,7 +247,7 @@ class IterationViewController: UIViewController {
         
         var participantsString = ""
         for participants in competition.participants {
-            participantsString += "\\\"\(participants.uid)\\\":{\\\"birthDate\\\":\\\"\(participants.birthDate)\\\",\\\"firstName\\\":\\\"\(participants.firstName)\\\",\\\"lastName\\\":\\\"\(participants.lastName)\\\",\\\"gender\\\":\\\"\(participants.gender)\\\",\\\"score\\\":\\\"\(participants.score)\\\",\\\"id\\\":\\\"\(participants.uid)\\\",\\\"competed\\\":\\\"\(participants.competed)\\\"}"
+            participantsString += "\\\"\(participants.uid)\\\":{\\\"birthDate\\\":\\\"\(participants.birthDate)\\\",\\\"firstName\\\":\\\"\(participants.firstName)\\\",\\\"lastName\\\":\\\"\(participants.lastName)\\\",\\\"gender\\\":\\\"\(participants.gender)\\\",\\\"score\\\":\\\"\(participants.score)\\\",\\\"uid\\\":\\\"\(participants.uid)\\\",\\\"competed\\\":\\\"\(participants.competed)\\\"}"
                         if participants.uid != competition.participants.last?.uid {
                 participantsString += ","
             }
@@ -268,7 +268,7 @@ class IterationViewController: UIViewController {
                 
                 let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
                 self.navigationItem.rightBarButtonItem = resultsButton
-                
+                self.startNewIteration()
                 self.jsonData = response.data
                 
             } else {

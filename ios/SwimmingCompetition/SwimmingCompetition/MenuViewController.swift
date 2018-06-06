@@ -24,6 +24,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
+       
         // Do any additional setup after loading the view.
     }
 
@@ -40,6 +42,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath) as! MenuTableViewCell
         cell.label.text = menuArray[indexPath.row]
+        cell.label.textColor = .white
+        cell.menuIcon.image = UIImage(named: "swimmingIcon.png")
+        cell.layer.backgroundColor = UIColor.clear.cgColor
+        cell.backgroundColor = UIColor.clear
         return cell
     }
     
@@ -62,14 +68,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             break
         case "תוצאות":
-            /*if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
-                //resultsView.currentUser = self.currentUser
-                self.navigationController?.viewControllers = [resultsView]
-            }*/
+            if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+                competitionsView.currentUser = self.currentUser
+                competitionsView.controllerType = "results"
+                self.navigationController?.viewControllers = [competitionsView]
+            }
             break
         case "צפייה בזמן אמת":
             if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.controllerType = "realTime"
+                competitionsView.pathString = "getCompetitionInProgress"
                 competitionsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [competitionsView]
             }
@@ -90,6 +98,17 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             Service.shared.signOut()
             if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
                 self.navigationController?.viewControllers = [loginView]
+            }
+            break
+        case "סטטיסטיקות":
+            if let statisticsView = sb.instantiateViewController(withIdentifier: "statisticsId") as? StatisticsViewController {
+                statisticsView.currentUser = self.currentUser
+                self.navigationController?.viewControllers = [statisticsView]
+            }
+            break
+        case "תמונות וסרטונים":
+            if let filesView = sb.instantiateViewController(withIdentifier: "filesId") as? FilesViewController {
+                self.navigationController?.viewControllers = [filesView]
             }
             break
         default:

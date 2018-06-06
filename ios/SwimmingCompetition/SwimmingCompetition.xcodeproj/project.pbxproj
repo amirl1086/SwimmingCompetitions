@@ -11,7 +11,6 @@
 		30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30010C1520B403450064F27A /* MenuTableViewCell.swift */; };
 		3001846420BBF733001BD831 /* MyChildrenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846320BBF733001BD831 /* MyChildrenViewController.swift */; };
 		3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */; };
-		30034C74207FEA4F0004CFB3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A951FE72BBA00201A20 /* Info.plist */; };
 		300613B91FF428BF0016E325 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300613B81FF428BF0016E325 /* Service.swift */; };
 		300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300B12F220B2AE1F003F6711 /* SettingsViewController.swift */; };
 		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
@@ -21,6 +20,7 @@
 		303DB12E20BECA0B00894800 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303DB12D20BECA0B00894800 /* PopUpViewController.swift */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
+		304855BA20C517D200F6A8EE /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304855B920C517D200F6A8EE /* StatisticsViewController.swift */; };
 		3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */; };
 		304C621820A839840073E490 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304C621720A839840073E490 /* NavigationController.swift */; };
 		305EAF512013B0A40059C789 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EAF502013B0A40059C789 /* CompetitionDetailsViewController.swift */; };
@@ -34,8 +34,11 @@
 		308CB6A82066BC2B005565BA /* ResultsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */; };
 		3096CDD11FF855A00045E0D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3096CDD01FF855A00045E0D6 /* User.swift */; };
 		30C13D842011D71D000AAE4E /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C13D832011D71D000AAE4E /* Competition.swift */; };
+		30E857BD20C40EAE002D6AAC /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E857BC20C40EAE002D6AAC /* Alert.swift */; };
 		30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220BF205E0A9E00A1E5F0 /* Date.swift */; };
 		30F220C2205E27AD00A1E5F0 /* PersonalResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */; };
+		30F8B3FC20C65AEE00D751FD /* StatisticsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */; };
+		30F8B3FE20C6CA5000D751FD /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */; };
 		30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A861FE72BB900201A20 /* AppDelegate.swift */; };
 		30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FE9A881FE72BB900201A20 /* MainViewController.swift */; };
 		30FE9A8C1FE72BB900201A20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30FE9A8A1FE72BB900201A20 /* Main.storyboard */; };
@@ -85,6 +88,7 @@
 		303DB12D20BECA0B00894800 /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
+		304855B920C517D200F6A8EE /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempRegPopUpViewController.swift; sourceTree = "<group>"; };
 		304C621720A839840073E490 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		30541B602002D9940080CC58 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
@@ -99,8 +103,11 @@
 		308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResultsTableViewCell.xib; sourceTree = "<group>"; };
 		3096CDD01FF855A00045E0D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		30C13D832011D71D000AAE4E /* Competition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
+		30E857BC20C40EAE002D6AAC /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		30F220BF205E0A9E00A1E5F0 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		30F220C1205E27AD00A1E5F0 /* PersonalResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalResultsViewController.swift; sourceTree = "<group>"; };
+		30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsTableViewCell.swift; sourceTree = "<group>"; };
+		30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
 		30FE9A831FE72BB900201A20 /* SwimmingCompetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwimmingCompetition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FE9A861FE72BB900201A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30FE9A881FE72BB900201A20 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -158,6 +165,7 @@
 			children = (
 				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
 				3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */,
+				30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */,
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
 				3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */,
 				308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */,
@@ -173,6 +181,7 @@
 				30C13D832011D71D000AAE4E /* Competition.swift */,
 				3027DA97203C9D3F009D8A17 /* Participant.swift */,
 				30F220BF205E0A9E00A1E5F0 /* Date.swift */,
+				30E857BC20C40EAE002D6AAC /* Alert.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -221,6 +230,7 @@
 				304C621720A839840073E490 /* NavigationController.swift */,
 				303DB12D20BECA0B00894800 /* PopUpViewController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
+				304855B920C517D200F6A8EE /* StatisticsViewController.swift */,
 				3001846320BBF733001BD831 /* MyChildrenViewController.swift */,
 				300B12F220B2AE1F003F6711 /* SettingsViewController.swift */,
 				30010C1320B4030F0064F27A /* MenuViewController.swift */,
@@ -230,6 +240,7 @@
 				305EAF522013F1420059C789 /* IterationViewController.swift */,
 				3068F8D820061DBD009518AD /* CompetitionsViewController.swift */,
 				30FE9AB71FE72C5200201A20 /* LoginViewController.swift */,
+				30F8B3FD20C6CA5000D751FD /* FilesViewController.swift */,
 				30FE9A881FE72BB900201A20 /* MainViewController.swift */,
 				30FE9AB91FE72C7B00201A20 /* RegisterViewController.swift */,
 				300613B81FF428BF0016E325 /* Service.swift */,
@@ -357,7 +368,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Aviel;
 				TargetAttributes = {
 					30FE9A821FE72BB900201A20 = {
@@ -401,7 +412,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30034C74207FEA4F0004CFB3 /* Info.plist in Resources */,
 				306C95991FF269AF00A0D266 /* stll-swimming-logo.gif in Resources */,
 				30FE9A941FE72BBA00201A20 /* LaunchScreen.storyboard in Resources */,
 				3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */,
@@ -437,6 +447,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-SwimmingCompetition/Pods-SwimmingCompetition-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
@@ -448,6 +459,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
@@ -606,9 +618,11 @@
 				3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */,
 				3049BAB22074D7A800B1D3B8 /* TempRegPopUpViewController.swift in Sources */,
 				3068F8D920061DBD009518AD /* CompetitionsViewController.swift in Sources */,
+				30F8B3FC20C65AEE00D751FD /* StatisticsTableViewCell.swift in Sources */,
 				3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */,
 				30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
+				304855BA20C517D200F6A8EE /* StatisticsViewController.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,
 				30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */,
 				30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */,
@@ -617,7 +631,9 @@
 				30C13D842011D71D000AAE4E /* Competition.swift in Sources */,
 				30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */,
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
+				30F8B3FE20C6CA5000D751FD /* FilesViewController.swift in Sources */,
 				30FE9A891FE72BB900201A20 /* MainViewController.swift in Sources */,
+				30E857BD20C40EAE002D6AAC /* Alert.swift in Sources */,
 				3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */,
 				304C621820A839840073E490 /* NavigationController.swift in Sources */,
 				30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */,
@@ -697,6 +713,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -704,6 +721,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -754,6 +772,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -761,6 +780,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

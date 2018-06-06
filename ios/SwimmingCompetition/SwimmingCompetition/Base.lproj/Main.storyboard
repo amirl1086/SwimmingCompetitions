@@ -191,158 +191,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ntw-B7-K3g" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="85" width="100" height="100"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="129-LB-g2w">
+                                <rect key="frame" x="16" y="116" width="343" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="2yn-H2-3Eq"/>
-                                    <constraint firstAttribute="width" constant="100" id="k6e-Nu-4Ch"/>
+                                    <constraint firstAttribute="height" constant="50" id="3lH-P8-Pwa"/>
+                                    <constraint firstAttribute="width" constant="343" id="5cN-Ik-eVR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="תחרויות">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="competitions:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="PLF-4l-gqd"/>
-                                    <segue destination="Fqc-rk-ITT" kind="show" identifier="goToCompetitions" id="Ngt-Hw-RSc"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0oD-tF-8bf" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="247" y="217" width="100" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="yn9-W0-x69"/>
-                                    <constraint firstAttribute="width" constant="100" id="zpf-bl-zoJ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="סטטיסטיקות">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="statistics:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="stv-t3-GA3"/>
-                                    <segue destination="xN7-3N-fvJ" kind="show" id="veN-Bc-r2R"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEA-UR-XaS" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="217" width="100" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="AF0-LS-IPl"/>
-                                    <constraint firstAttribute="height" constant="100" id="CBk-cV-NGz"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="צפייה בזמן אמת">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="realTimeShow:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="H3g-Le-oCY"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WmW-Si-gOE" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="249" y="350" width="96" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="55E-eB-7C6"/>
-                                    <constraint firstAttribute="width" constant="96" id="DDu-Ab-rc5"/>
-                                </constraints>
-                                <state key="normal" title="תמונות וסרטונים">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="files:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="N80-wv-dNM"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n7G-dv-K6r" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="249" y="85" width="96" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Jab-rT-fht"/>
-                                    <constraint firstAttribute="width" constant="96" id="waq-gU-HjI"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="תוצאות אישיות">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="personalScores:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="86n-d8-FVR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ch4-Mn-xgd" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="16" y="350" width="100" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="JKP-9P-TGN"/>
-                                    <constraint firstAttribute="height" constant="100" id="vQd-Ne-u0e"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="הגדרות">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="50"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="settings:" destination="Ye2-8Y-9cb" eventType="touchUpInside" id="khQ-Tt-qRa"/>
-                                    <segue destination="XWv-pk-reg" kind="show" identifier="goToSettings" id="yz5-bk-I15"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Ch4-Mn-xgd" firstAttribute="top" secondItem="zEA-UR-XaS" secondAttribute="bottom" constant="33" id="76x-hL-Qxd"/>
-                            <constraint firstItem="WmW-Si-gOE" firstAttribute="top" secondItem="0oD-tF-8bf" secondAttribute="bottom" constant="33" id="Cqj-F3-XI3"/>
-                            <constraint firstItem="v6I-bB-Z96" firstAttribute="trailing" secondItem="0oD-tF-8bf" secondAttribute="trailing" constant="28" id="JNP-wC-fa3"/>
-                            <constraint firstItem="Ntw-B7-K3g" firstAttribute="top" secondItem="v6I-bB-Z96" secondAttribute="top" constant="21" id="LBa-qJ-Z8q"/>
-                            <constraint firstItem="zEA-UR-XaS" firstAttribute="leading" secondItem="v6I-bB-Z96" secondAttribute="leading" constant="16" id="Ln6-5X-emE"/>
-                            <constraint firstItem="v6I-bB-Z96" firstAttribute="trailing" secondItem="n7G-dv-K6r" secondAttribute="trailing" constant="30" id="Xas-8N-iU2"/>
-                            <constraint firstItem="Ch4-Mn-xgd" firstAttribute="leading" secondItem="v6I-bB-Z96" secondAttribute="leading" constant="16" id="ckv-AE-9yn"/>
-                            <constraint firstItem="Ntw-B7-K3g" firstAttribute="leading" secondItem="v6I-bB-Z96" secondAttribute="leading" constant="16" id="cpY-UW-jBQ"/>
-                            <constraint firstItem="zEA-UR-XaS" firstAttribute="top" secondItem="Ntw-B7-K3g" secondAttribute="bottom" constant="32" id="i6c-c3-boq"/>
-                            <constraint firstItem="v6I-bB-Z96" firstAttribute="trailing" secondItem="WmW-Si-gOE" secondAttribute="trailing" constant="30" id="mAP-gX-XL4"/>
-                            <constraint firstItem="0oD-tF-8bf" firstAttribute="top" secondItem="n7G-dv-K6r" secondAttribute="bottom" constant="32" id="nFu-4t-QjZ"/>
-                            <constraint firstItem="n7G-dv-K6r" firstAttribute="top" secondItem="v6I-bB-Z96" secondAttribute="top" constant="21" id="vPQ-9h-aUC"/>
+                            <constraint firstItem="129-LB-g2w" firstAttribute="leading" secondItem="v6I-bB-Z96" secondAttribute="leading" constant="16" id="LlT-HM-mqH"/>
+                            <constraint firstItem="v6I-bB-Z96" firstAttribute="trailing" secondItem="129-LB-g2w" secondAttribute="trailing" constant="16" id="Zjx-cN-YZq"/>
+                            <constraint firstItem="129-LB-g2w" firstAttribute="top" secondItem="v6I-bB-Z96" secondAttribute="top" constant="52" id="bMS-XB-KA1"/>
+                            <constraint firstItem="v6I-bB-Z96" firstAttribute="bottom" secondItem="129-LB-g2w" secondAttribute="bottom" constant="501" id="rtB-u1-7c6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v6I-bB-Z96"/>
                     </view>
+                    <connections>
+                        <outlet property="mainLabel" destination="129-LB-g2w" id="zSw-1f-uDS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gPR-Uh-DYM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -357,7 +228,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fUo-o0-gy4">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="שם התחרות" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XbZ-gS-7BH">
                                         <rect key="frame" x="8" y="20" width="359" height="42"/>
@@ -567,7 +438,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jFG-YA-o37">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0B-iq-WP3" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
                                         <rect key="frame" x="100" y="27" width="176" height="48"/>
@@ -669,7 +540,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NRc-a1-gbv">
-                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -772,7 +643,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vqY-qs-mW5">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="שם התחרות" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qsi-x9-uq3">
                                         <rect key="frame" x="20" y="20" width="340" height="50"/>
@@ -1453,7 +1324,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxl-Se-rkQ" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="92" y="93" width="190" height="45"/>
+                                <rect key="frame" x="92" y="49" width="190" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="4b2-7Q-cx1"/>
                                     <constraint firstAttribute="width" constant="190" id="RS9-nU-Ojs"/>
@@ -1474,7 +1345,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6qt-uJ-XJO" customClass="RoundButton" customModule="SwimmingCompetition" customModuleProvider="target">
-                                <rect key="frame" x="92" y="179" width="190" height="45"/>
+                                <rect key="frame" x="92" y="135" width="190" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Qap-Jl-23K"/>
                                     <constraint firstAttribute="width" constant="190" id="lOj-zO-F1H"/>
@@ -1568,6 +1439,180 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k1l-vU-o6t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4328.8000000000002" y="960.2698650674663"/>
+        </scene>
+        <!--סטטיסטיקות-->
+        <scene sceneID="bNW-pw-2iB">
+            <objects>
+                <viewController storyboardIdentifier="statisticsId" title="סטטיסטיקות" id="uGb-LS-ryd" customClass="StatisticsViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1ia-qq-SUu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Moo-16-wE8">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oIr-6t-SKE" customClass="LineChartView" customModule="Charts">
+                                        <rect key="frame" x="8" y="58" width="359" height="284"/>
+                                        <color key="backgroundColor" red="0.66422420739999999" green="0.66424006219999998" blue="0.66423153879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="284" id="S3I-JO-wb0"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="בחר למעלה תוצאות להצגה" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99A-oG-N26">
+                                        <rect key="frame" x="8" y="350" width="359" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="wTX-Sx-1UQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LUQ-Qv-8bp">
+                                        <rect key="frame" x="8" y="403" width="359" height="236"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="statisticCell" rowHeight="78" id="EpS-2w-Gap" customClass="StatisticsTableViewCell" customModule="SwimmingCompetition" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="359" height="78"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EpS-2w-Gap" id="LVS-DA-oXE">
+                                                    <rect key="frame" x="0.0" y="0.0" width="359" height="77.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E11-Sw-PYA">
+                                                            <rect key="frame" x="15" y="11" width="329" height="24"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="329" id="C6C-Rb-lje"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sz0-6x-qbi">
+                                                            <rect key="frame" x="0.0" y="43" width="359" height="20.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="359" id="mAh-NQ-i3w"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="E11-Sw-PYA" firstAttribute="trailing" secondItem="LVS-DA-oXE" secondAttribute="trailingMargin" id="GfG-EQ-sGT"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Sz0-6x-qbi" secondAttribute="bottom" constant="14" id="J5x-TG-sHS"/>
+                                                        <constraint firstItem="E11-Sw-PYA" firstAttribute="leading" secondItem="LVS-DA-oXE" secondAttribute="leadingMargin" id="KaE-48-PjB"/>
+                                                        <constraint firstItem="Sz0-6x-qbi" firstAttribute="top" secondItem="E11-Sw-PYA" secondAttribute="bottom" constant="8" id="Oq5-6I-yal"/>
+                                                        <constraint firstItem="E11-Sw-PYA" firstAttribute="top" secondItem="LVS-DA-oXE" secondAttribute="topMargin" id="fzP-Nh-RJh"/>
+                                                        <constraint firstItem="Sz0-6x-qbi" firstAttribute="leading" secondItem="LVS-DA-oXE" secondAttribute="leading" id="j3Q-Lp-tv4"/>
+                                                        <constraint firstItem="Sz0-6x-qbi" firstAttribute="top" secondItem="E11-Sw-PYA" secondAttribute="bottom" constant="8" id="nnf-fG-KXc"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Sz0-6x-qbi" secondAttribute="trailing" id="oxW-0N-WCL"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="label" destination="Sz0-6x-qbi" id="WTJ-YK-jTv"/>
+                                                    <outlet property="title" destination="E11-Sw-PYA" id="fXD-xz-THD"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                    </tableView>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZXz-PG-YXX">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="162"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="162" id="BKa-uO-FYC"/>
+                                        </constraints>
+                                    </pickerView>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wih-TI-rbf">
+                                        <rect key="frame" x="0.0" y="162" width="375" height="44"/>
+                                        <items>
+                                            <barButtonItem style="plain" id="EKG-Lj-cqN">
+                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="W4y-Rg-Uj1">
+                                                    <rect key="frame" x="16" y="5" width="343" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                    <state key="normal" title="אישור"/>
+                                                    <connections>
+                                                        <action selector="confirmButton:" destination="uGb-LS-ryd" eventType="touchUpInside" id="Yy0-f8-Rus"/>
+                                                    </connections>
+                                                </button>
+                                            </barButtonItem>
+                                        </items>
+                                    </toolbar>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Wih-TI-rbf" firstAttribute="top" secondItem="ZXz-PG-YXX" secondAttribute="bottom" id="1Ei-N6-GCw"/>
+                                    <constraint firstItem="Wih-TI-rbf" firstAttribute="trailing" secondItem="ZXz-PG-YXX" secondAttribute="trailing" id="5Xo-VX-EKI"/>
+                                    <constraint firstItem="99A-oG-N26" firstAttribute="trailing" secondItem="oIr-6t-SKE" secondAttribute="trailing" id="5kJ-qf-RF8"/>
+                                    <constraint firstItem="Wih-TI-rbf" firstAttribute="leading" secondItem="ZXz-PG-YXX" secondAttribute="leading" id="90y-zh-RHe"/>
+                                    <constraint firstItem="ZXz-PG-YXX" firstAttribute="leading" secondItem="Moo-16-wE8" secondAttribute="leading" id="9pH-ih-oyi"/>
+                                    <constraint firstItem="LUQ-Qv-8bp" firstAttribute="leading" secondItem="99A-oG-N26" secondAttribute="leading" id="EPl-3v-lFT"/>
+                                    <constraint firstAttribute="bottom" secondItem="oIr-6t-SKE" secondAttribute="bottom" constant="305" id="Y1N-h1-gzU"/>
+                                    <constraint firstItem="ZXz-PG-YXX" firstAttribute="top" secondItem="Moo-16-wE8" secondAttribute="top" id="c7g-Sk-u6p"/>
+                                    <constraint firstItem="99A-oG-N26" firstAttribute="top" secondItem="oIr-6t-SKE" secondAttribute="bottom" constant="8" symbolic="YES" id="enE-qx-EFW"/>
+                                    <constraint firstItem="LUQ-Qv-8bp" firstAttribute="trailing" secondItem="99A-oG-N26" secondAttribute="trailing" id="iNr-Xr-lyc"/>
+                                    <constraint firstItem="oIr-6t-SKE" firstAttribute="centerX" secondItem="Moo-16-wE8" secondAttribute="centerX" id="iPz-Yj-J04"/>
+                                    <constraint firstItem="99A-oG-N26" firstAttribute="leading" secondItem="oIr-6t-SKE" secondAttribute="leading" id="pjo-68-3Kc"/>
+                                    <constraint firstItem="LUQ-Qv-8bp" firstAttribute="top" secondItem="99A-oG-N26" secondAttribute="bottom" constant="8" symbolic="YES" id="rDK-75-cUd"/>
+                                    <constraint firstItem="LUQ-Qv-8bp" firstAttribute="bottom" secondItem="Moo-16-wE8" secondAttribute="bottomMargin" id="rL6-my-2Ws"/>
+                                    <constraint firstItem="ZXz-PG-YXX" firstAttribute="centerX" secondItem="oIr-6t-SKE" secondAttribute="centerX" id="sfA-aS-frk"/>
+                                    <constraint firstItem="oIr-6t-SKE" firstAttribute="top" secondItem="Moo-16-wE8" secondAttribute="top" constant="58" id="t9j-Lp-jxe"/>
+                                    <constraint firstItem="oIr-6t-SKE" firstAttribute="trailing" secondItem="Moo-16-wE8" secondAttribute="trailingMargin" id="w8V-UL-plD"/>
+                                    <constraint firstItem="oIr-6t-SKE" firstAttribute="leading" secondItem="Moo-16-wE8" secondAttribute="leadingMargin" id="wPs-Od-k1f"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ZXz-PG-YXX" firstAttribute="top" secondItem="8FL-0m-cY7" secondAttribute="top" id="M28-Hd-B4X"/>
+                            <constraint firstAttribute="trailing" secondItem="Moo-16-wE8" secondAttribute="trailing" id="SGZ-ha-9z5"/>
+                            <constraint firstItem="Moo-16-wE8" firstAttribute="top" secondItem="8FL-0m-cY7" secondAttribute="top" id="fSL-gE-178"/>
+                            <constraint firstItem="Moo-16-wE8" firstAttribute="leading" secondItem="1ia-qq-SUu" secondAttribute="leading" id="q0x-gF-rSH"/>
+                            <constraint firstItem="Moo-16-wE8" firstAttribute="bottom" secondItem="8FL-0m-cY7" secondAttribute="bottom" id="rP5-oT-tXu"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="8FL-0m-cY7"/>
+                    </view>
+                    <connections>
+                        <outlet property="lineChartView" destination="oIr-6t-SKE" id="nbr-hU-qrf"/>
+                        <outlet property="pickerView" destination="ZXz-PG-YXX" id="VIZ-OM-bvx"/>
+                        <outlet property="tableView" destination="LUQ-Qv-8bp" id="f5H-ms-eYw"/>
+                        <outlet property="titleTable" destination="99A-oG-N26" id="UT8-8d-l02"/>
+                        <outlet property="toolbarPicker" destination="Wih-TI-rbf" id="YgZ-89-bRd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XvR-We-qXq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4597.6000000000004" y="1625.0374812593705"/>
+        </scene>
+        <!--Files View Controller-->
+        <scene sceneID="LwF-dS-cX9">
+            <objects>
+                <viewController storyboardIdentifier="filesId" id="8df-xw-Qrr" customClass="FilesViewController" customModule="SwimmingCompetition" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eHw-cH-FTc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BOk-4j-DD8">
+                                <rect key="frame" x="67" y="84" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iaI-tJ-h9V">
+                                <rect key="frame" x="126" y="283" width="123" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="button:" destination="8df-xw-Qrr" eventType="touchUpInside" id="Hbb-E4-DRm"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="eRJ-Oc-phB"/>
+                    </view>
+                    <connections>
+                        <outlet property="image" destination="BOk-4j-DD8" id="91d-pm-Grr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MVN-vb-DTP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5660" y="1731.1844077961021"/>
         </scene>
         <!--Personal Results View Controller-->
         <scene sceneID="Eaa-pv-w5E">
@@ -1752,7 +1797,7 @@
                                                     <constraint firstAttribute="height" constant="44" id="bbr-dK-ay1"/>
                                                 </constraints>
                                                 <items>
-                                                    <barButtonItem title="הרשמה לתחרות" width="445" id="f8i-aF-41g">
+                                                    <barButtonItem title="רישום מתחרה זמני" width="445" id="f8i-aF-41g">
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </barButtonItem>
                                                 </items>
@@ -1839,6 +1884,7 @@
                         <outlet property="firstName" destination="Jpc-Ec-VIM" id="9nT-xW-yN8"/>
                         <outlet property="gender" destination="RVB-Iz-eQk" id="MfA-gH-Id4"/>
                         <outlet property="lastName" destination="BS1-ci-Fao" id="Jah-A0-511"/>
+                        <outlet property="scrollView" destination="WRf-5B-Faa" id="HoI-w6-fex"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vnd-Wl-eeW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1996,7 +2042,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="c8H-PU-Y0Y">
-                                <rect key="frame" x="135" y="64" width="240" height="603"/>
+                                <rect key="frame" x="135" y="20" width="240" height="647"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="SJM-ww-2rX"/>
@@ -2010,21 +2056,36 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4h6-JK-yjc">
-                                                    <rect key="frame" x="15" y="11" width="210" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="15" y="4" width="167" height="35"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="35" id="2Ur-zq-3RC"/>
+                                                        <constraint firstAttribute="width" constant="167" id="GQK-68-nrG"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VyA-Zr-mdc">
+                                                    <rect key="frame" x="190" y="4" width="35" height="35"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="35" id="fn1-2W-Vny"/>
+                                                        <constraint firstAttribute="width" constant="35" id="kF4-KL-nWe"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="bottom" secondItem="VM6-jK-dDi" secondAttribute="bottomMargin" id="22o-Ca-uNe"/>
-                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="trailing" secondItem="VM6-jK-dDi" secondAttribute="trailingMargin" id="D48-wi-QF4"/>
-                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="top" secondItem="VM6-jK-dDi" secondAttribute="topMargin" id="fJg-ci-qgP"/>
-                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="leading" secondItem="VM6-jK-dDi" secondAttribute="leadingMargin" id="zOB-cU-UcE"/>
+                                                <constraint firstAttribute="trailing" secondItem="VyA-Zr-mdc" secondAttribute="trailing" constant="15" id="7cj-uA-ihx"/>
+                                                <constraint firstItem="VyA-Zr-mdc" firstAttribute="top" secondItem="VM6-jK-dDi" secondAttribute="top" constant="4" id="El4-wB-DjY"/>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="leading" secondItem="VM6-jK-dDi" secondAttribute="leading" constant="15" id="aFe-9d-OpH"/>
+                                                <constraint firstItem="VyA-Zr-mdc" firstAttribute="leading" secondItem="4h6-JK-yjc" secondAttribute="trailing" constant="8" id="aIr-Ns-RjW"/>
+                                                <constraint firstAttribute="bottom" secondItem="4h6-JK-yjc" secondAttribute="bottom" constant="4.5" id="g9Z-O2-0Be"/>
+                                                <constraint firstAttribute="bottom" secondItem="VyA-Zr-mdc" secondAttribute="bottom" constant="4.5" id="myu-ly-NUH"/>
+                                                <constraint firstItem="4h6-JK-yjc" firstAttribute="top" secondItem="VM6-jK-dDi" secondAttribute="top" constant="4" id="zeZ-qK-0l9"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="label" destination="4h6-JK-yjc" id="x86-yo-Lm3"/>
+                                            <outlet property="menuIcon" destination="VyA-Zr-mdc" id="9mv-jT-GUz"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
