@@ -109,6 +109,14 @@ exports.getPersonalResults = functions.https.onRequest((request, response) => {
 exports.cancelRegistration = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.cancelRegistration(request.body, response);
 });
+
+exports.addNewMedia = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.addNewMedia(request.body, response);
+});
+
+exports.getMediaByCompetitionId = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getMediaByCompetitionId(request.body, response);
+});
 /* ================================ */
 
 

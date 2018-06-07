@@ -362,6 +362,35 @@ module.exports = {
 				utilities.sendResponse(response, result, null);
 			}
 		});
+	},
+
+	addNewMedia: (params, response) => {
+		let db = admin.database();
+		let keyValue = db.ref('media/').push().key;
+		let mediaRef = db.ref('media/' + key);
+
+		let mediaDoc = { 
+			'competitionId': params.competitionId,
+			'url': params.url
+		};
+		mediaRef.set(mediaDoc);
+
+		mediaRef.on('value', (snapshot) => {
+			utilities.sendResponse(response, null, true);
+		}, (error) => {
+			utilities.sendResponse(response, error, null);
+		});
+	},
+
+	getMediaByCompetitionId: (params, response) => {
+		getCollectionByFilter('media', 'competitionId', params.competitionId, (success, result) => {
+			if(success) {
+				utilities.sendResponse(response, null, result);
+			}
+			else {
+				utilities.sendResponse(response, result, null);
+			}
+		});
 	}
 };
 

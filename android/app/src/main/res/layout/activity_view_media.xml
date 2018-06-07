@@ -41,10 +41,11 @@
                     android:id="@+id/image"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-                <Button
+
+                <ImageButton
                     android:layout_width="100dp"
-                    android:onClick="cameraClicked"
-                    android:layout_height="wrap_content" />
+                    android:onClick="launchCamera"
+                    android:layout_height="50dp" />
 
             </LinearLayout>
         </ScrollView>

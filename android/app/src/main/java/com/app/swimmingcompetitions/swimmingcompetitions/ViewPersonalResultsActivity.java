@@ -117,7 +117,8 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
             }
             catch(Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewPersonalResultsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                System.out.println("ViewPersonalResultsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
+                e.printStackTrace();
             }
         }
         else {
