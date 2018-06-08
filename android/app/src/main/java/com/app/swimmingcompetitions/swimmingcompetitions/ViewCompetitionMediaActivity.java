@@ -11,6 +11,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,16 +28,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
-
-public class ViewMediaActivity extends LoadingDialog {
+public class ViewCompetitionMediaActivity extends LoadingDialog {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -68,30 +65,95 @@ public class ViewMediaActivity extends LoadingDialog {
 
             setUpSidebar();
 
-            try {
-                JSONObject data = new JSONObject();
-                showProgressDialog("טוען תחרויות...");
-
-                data.put("urlSuffix", "/getCompetitions");
-                data.put("httpMethod", "GET");
-                JSONObject currentUserJson = this.currentUser.getJSON_Object();
-
-                data.put("currentUser", currentUserJson);
-
-                this.jsonAsyncTaskPost = new JSON_AsyncTask();
-                this.jsonAsyncTaskPost.delegate = this;
-                this.jsonAsyncTaskPost.execute(data.toString());
-            }
-            catch (Exception e) {
-                hideProgressDialog();
-                showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
-                System.out.println("ViewCompetitionsActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
-                e.printStackTrace();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
         else {
             switchToLogInActivity();
         }
+    }
+
+    public void launchCamera(View v) {
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+            }
+            catch (Exception e) {
+                showToast("שגיאה בהפעלת המצלמה, נסה לאתחל את האפליקציה");
+                System.out.println("ViewMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
+                e.printStackTrace();
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                this.currentUri = FileProvider.getUriForFile(this,
+                        "com.app.swimmingcompetitions.swimmingcompetitions.fileprovider", photoFile);
+
+                getBaseContext().grantUriPermission("com.app.swimmingcompetitions.swimmingcompetitions", this.currentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, this.currentUri);
+                startActivityForResult(takePictureIntent, ACTION_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws Exception {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return File.createTempFile(
+                imageFileName, // prefix
+                ".jpg", // suffix
+                storageDir // directory
+        );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case ACTION_IMAGE_CAPTURE: {//in case user took a picture
+                    uploadImageToFirebaseStorage();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void uploadImageToFirebaseStorage() {
+        StorageReference mainStorageRef = this.storage.getReference();
+        StorageReference riversRef = mainStorageRef.child("pics/" + this.currentUri.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(this.currentUri);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                showToast("שגיאה בהעלאת התמונה לענן, נסה שוב");
+                System.out.println("ViewMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
+                e.printStackTrace();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                showToast("התמונה הועלתה בהצלחה");
+
+                //TODO add to gallery
+            }
+        });
     }
 
     public void showToast(String message) {

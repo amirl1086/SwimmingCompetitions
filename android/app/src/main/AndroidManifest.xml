@@ -3,20 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.app.swimmingcompetitions.swimmingcompetitions">
 
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-<!--    <uses-feature
+    <!--
+        <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" />-->
-
+        android:required="false" />
+    -->
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
@@ -25,7 +28,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.app.swimmingcompetitions.swimmingcompetitions.fileprovider"
@@ -38,6 +40,7 @@
 
         <activity android:name=".LogInActivity">
             <tools:validation testUrl="http://swimming-competitions.com/swimming-competitions" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,7 +82,8 @@
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".ChangeEmailActivity" />
         <activity android:name=".RegisterExistingUserActivity" />
-        <activity android:name=".ViewMediaActivity"/>
+        <activity android:name=".ViewMediaActivity" />
+        <activity android:name=".ViewCompetitionMediaActivity"></activity>
     </application>
 
 </manifest>
