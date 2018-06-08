@@ -28,39 +28,50 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
-public class ViewCompetitionMediaActivity extends LoadingDialog {
+public class ViewCompetitionMediaActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
-    private JSON_AsyncTask jsonAsyncTaskPost;
-    private FirebaseStorage storage;
 
+    private JSON_AsyncTask jsonAsyncTaskPost;
+
+    private Competition selectedCompetition;
+    private ArrayList<JSONObject> mediaList;
+
+    private FirebaseStorage storage;
     private Uri currentUri;
     private ImageView mImageView;
     private static final int ACTION_IMAGE_CAPTURE = 1;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+    private String currentCallout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_media);
+        setContentView(R.layout.activity_view_competition_media);
 
         Intent intent = getIntent();
-        if (intent.hasExtra("currentUser")) {
+        if (intent.hasExtra("currentUser") && intent.hasExtra("selectedCompetition")) {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
-            this.mImageView = findViewById(R.id.image);
+            this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
 
+            this.mImageView = findViewById(R.id.image);
             this.storage = FirebaseStorage.getInstance("gs://firebase-swimmingcompetitions.appspot.com");
 
             setUpSidebar();
@@ -69,38 +80,99 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
                 requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
+
+            getMediaByCompetitionId();
         }
         else {
             switchToLogInActivity();
         }
     }
 
-    public void launchCamera(View v) {
+    private void getMediaByCompetitionId() {
+        try {
+            JSONObject data = new JSONObject();
+            showProgressDialog("טוען את התמונות והסרטונים...");
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
+            this.currentCallout = "getMediaByCompetitionId";
+
+            data.put("urlSuffix", "/" + this.currentCallout);
+            data.put("httpMethod", "GET");
+            data.put("competitionId", this.selectedCompetition.getId());
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(data.toString());
+        }
+        catch (Exception e) {
+            hideProgressDialog();
+            showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
+            System.out.println("ViewCompetitionsActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void processFinish(String result) {
+        if(this.currentCallout.equals("getMediaByCompetitionId")) {
+            handleMediaReceived(result);
+        }
+        else if(this.currentCallout.equals("addNewMedia")) {
+            handleNewMediaAdded(result);
+        }
+
+        hideProgressDialog();
+    }
+
+    private void handleNewMediaAdded(String result) {
+        if (result != null) {
             try {
-                photoFile = createImageFile();
-
-            }
-            catch (Exception e) {
-                showToast("שגיאה בהפעלת המצלמה, נסה לאתחל את האפליקציה");
-                System.out.println("ViewMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
+                if (response.getBoolean("success")) {
+                    showToast("הקובץ עלה בהצלחה לענן");
+                } else {
+                    showToast("שגיאה בהעלאת הקובץ לענן, נסה שוב");
+                }
+            } catch (Exception e) {
+                showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
+                System.out.println("ViewCompetitionMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
                 e.printStackTrace();
             }
+        }
+        else {
+            showToast("שגיאה בשליפת התחרויות מהמערכת, נסה לאתחל את האפליקציה");
+        }
+    }
 
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                this.currentUri = FileProvider.getUriForFile(this,
-                        "com.app.swimmingcompetitions.swimmingcompetitions.fileprovider", photoFile);
+    private void handleMediaReceived(String result) {
+        if (result != null) {
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
 
-                getBaseContext().grantUriPermission("com.app.swimmingcompetitions.swimmingcompetitions", this.currentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, this.currentUri);
-                startActivityForResult(takePictureIntent, ACTION_IMAGE_CAPTURE);
+                if(response.getBoolean("success")) {
+                    this.mediaList = new ArrayList<>();
+
+                    Iterator<String> mediaIds = dataObj.keys();
+                    while(mediaIds.hasNext()) {
+                        this.mediaList.add(new JSONObject(dataObj.get(mediaIds.next()).toString()));
+                        System.out.println("currentMedia: " + dataObj.get(mediaIds.next()).toString());
+                    }
+                }
+                else {
+                    if(dataObj.getString("message").equals("no_media")) {
+                        showToast("לא קיימים תמונות וסרטונים עבור התחרות שנבחרה");
+                    }
+                }
             }
+            catch (Exception e) {
+                showToast("שגיאה בטעינת התמונות והסרטונים, נסה לאתחל את האפליקציה");
+                System.out.println("ViewCompetitionsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
+        }
+        else {
+            showToast("שגיאה בשליפת התמונות והסרטונים מהמערכת, נסה לאתחל את האפליקציה");
         }
     }
 
@@ -134,14 +206,17 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
     }
 
     public void uploadImageToFirebaseStorage() {
+        showProgressDialog("מעלה את התמונה לענן...");
+        System.out.println("this.currentUri" + this.currentUri);
         StorageReference mainStorageRef = this.storage.getReference();
-        StorageReference riversRef = mainStorageRef.child("pics/" + this.currentUri.getLastPathSegment());
-        UploadTask uploadTask = riversRef.putFile(this.currentUri);
+        final StorageReference pictureRef = mainStorageRef.child("pics/" + this.currentUri.getLastPathSegment());
+        UploadTask uploadTask = pictureRef.putFile(this.currentUri);
 
         // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                hideProgressDialog();
                 showToast("שגיאה בהעלאת התמונה לענן, נסה שוב");
                 System.out.println("ViewMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
                 e.printStackTrace();
@@ -149,11 +224,50 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                showToast("התמונה הועלתה בהצלחה");
-
-                //TODO add to gallery
+                getFileURL(pictureRef, taskSnapshot.getMetadata().getContentType());
             }
         });
+    }
+
+    private void getFileURL(StorageReference pictureRef, final String type) {
+        pictureRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                addNewMediaToDatabase(uri, type);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                hideProgressDialog();
+                showToast("שגיאה בהעלאת התמונה לענן, נסה שוב");
+                System.out.println("ViewMediaActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: ");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void addNewMediaToDatabase(Uri uri, String type) {
+        try {
+            JSONObject data = new JSONObject();
+
+            this.currentCallout = "addNewMedia";
+
+            data.put("urlSuffix", "/" + this.currentCallout);
+            data.put("httpMethod", "POST");
+            data.put("competitionId", this.selectedCompetition.getId());
+            data.put("url", uri.toString());
+            data.put("type", type);
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(data.toString());
+        }
+        catch (Exception e) {
+            hideProgressDialog();
+            showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה ");
+            System.out.println("ViewCompetitionsActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
+        }
     }
 
     public void showToast(String message) {
@@ -187,14 +301,54 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
                 switchToHomePageActivity();
                 return true;
             }
+            case R.id.photo_camera: {
+                launchCamera();
+                return true;
+            }
+            case R.id.video_camera: {
+                launchVideoCamera();
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchVideoCamera() {
+
+    }
+
+    private void launchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+            }
+            catch (Exception e) {
+                showToast("שגיאה בהפעלת המצלמה, נסה לאתחל את האפליקציה");
+                System.out.println("ViewCompetitionMediaActivity launchCamera Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                this.currentUri = FileProvider.getUriForFile(this,
+                        "com.app.swimmingcompetitions.swimmingcompetitions.fileprovider", photoFile);
+
+                getBaseContext().grantUriPermission("com.app.swimmingcompetitions.swimmingcompetitions", this.currentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, this.currentUri);
+                startActivityForResult(takePictureIntent, ACTION_IMAGE_CAPTURE);
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        getMenuInflater().inflate(R.menu.competition_media_tool_bar_menu, menu);
         return true;
     }
 
@@ -203,7 +357,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("צפה במדיה לפי תחרות");
+        toolbar.setTitle("בחר מדיה או הוסף");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -341,3 +495,4 @@ public class ViewCompetitionMediaActivity extends LoadingDialog {
         switchToLogInActivity();
     }
 }
+

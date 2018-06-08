@@ -23,38 +23,6 @@ module.exports = {
 		});
 	},
 
-	addChildToParent: (params, response) => {
-		let db = admin.database();
-		let birthDate = params.birthDate;
-		let email = params.email;
-
-		//get users that match the selected email
-		getCollectionByFilter('users', 'email', params.email, (success, result) => {
-			let users = result;
-			console.log('users ', users);
-			if(!users) {
-				utilities.sendResponse(response, 'no_such_email', null);
-			}
-			else {
-				let user = users[Object.keys(users)[0]];
-				console.log('params.birthDate' + params.birthDate);
-				if(user.birthDate === params.birthDate) {
-					user.parentId = params.uid;
-					let userRef = db.ref('users/' + user.uid);
-					userRef.update(user);
-					userRef.on('value', (snapshot) => {
-						utilities.sendResponse(response, null, snapshot.val());
-					}, (error) => {
-						utilities.sendResponse(response, error, null);
-					})
-				}
-				else {
-					utilities.sendResponse(response, 'birth_date_dont_match', null);
-				}
-			}
-		});
-	},
-
 	updateFirebaseUser: (params, response) => {
 		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
@@ -353,17 +321,6 @@ module.exports = {
 		});
 	},
 
-	getUsersByParentId: function (params, response) {
-		getCollectionByFilter('users', params.filters, params.value, (success, result) => {
-			if(success) {
-				utilities.sendResponse(response, null, result);
-			}
-			else {
-				utilities.sendResponse(response, result, null);
-			}
-		});
-	},
-
 	addNewMedia: (params, response) => {
 		let db = admin.database();
 		let keyValue = db.ref('media/').push().key;
@@ -385,7 +342,13 @@ module.exports = {
 	getMediaByCompetitionId: (params, response) => {
 		getCollectionByFilter('media', 'competitionId', params.competitionId, (success, result) => {
 			if(success) {
-				utilities.sendResponse(response, null, result);
+				if(result) {
+					utilities.sendResponse(response, null, result);
+				}
+				else {
+					utilities.sendResponse(response, 'no_media', null);
+				}
+				
 			}
 			else {
 				utilities.sendResponse(response, result, null);

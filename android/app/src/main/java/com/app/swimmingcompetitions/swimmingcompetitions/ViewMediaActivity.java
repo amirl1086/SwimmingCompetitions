@@ -1,13 +1,7 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -16,40 +10,39 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
 
-public class ViewMediaActivity extends LoadingDialog {
+public class ViewMediaActivity extends LoadingDialog implements AsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private JSON_AsyncTask jsonAsyncTaskPost;
-    private FirebaseStorage storage;
 
-    private Uri currentUri;
-    private ImageView mImageView;
-    private static final int ACTION_IMAGE_CAPTURE = 1;
+    private Competition selectedCompetition;
+    private ArrayList<Competition> competitions;
+
+    private CompetitionAdapter competitionsListAdapter;
+    private Boolean isAscending;
+    private int lastSelectedFilter;
+    private ListView listView;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+
+    private DateUtils dateUtils;
 
 
     @Override
@@ -62,9 +55,11 @@ public class ViewMediaActivity extends LoadingDialog {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
-            this.mImageView = findViewById(R.id.image);
 
-            this.storage = FirebaseStorage.getInstance("gs://firebase-swimmingcompetitions.appspot.com");
+            this.listView = findViewById(R.id.competitions_list);
+            this.lastSelectedFilter = R.id.name_sort;
+            this.isAscending = true;
+            this.dateUtils = new DateUtils();
 
             setUpSidebar();
 
@@ -74,9 +69,7 @@ public class ViewMediaActivity extends LoadingDialog {
 
                 data.put("urlSuffix", "/getCompetitions");
                 data.put("httpMethod", "GET");
-                JSONObject currentUserJson = this.currentUser.getJSON_Object();
-
-                data.put("currentUser", currentUserJson);
+                data.put("currentUser", this.currentUser.getJSON_Object());
 
                 this.jsonAsyncTaskPost = new JSON_AsyncTask();
                 this.jsonAsyncTaskPost.delegate = this;
@@ -94,45 +87,85 @@ public class ViewMediaActivity extends LoadingDialog {
         }
     }
 
-    public void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (this.fbUser == null) {
-            switchToLogInActivity();
+    private void sortCompetitionsByField(final int fieldName) {
+        if(this.lastSelectedFilter == fieldName) {
+            this.isAscending = !this.isAscending;
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (this.fbUser == null) {
-            switchToLogInActivity();
+        else {
+            this.isAscending = true;
+            this.lastSelectedFilter = fieldName;
         }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        Collections.sort(this.competitions, new Comparator<Object>(){
+
+            @Override
+            public int compare(Object a, Object b) {
+                Competition competitionA = (Competition) a;
+                Competition competitionB = (Competition) b;
+
+                switch(fieldName) {
+                    case R.id.name_sort: {
+                        return isAscending ?
+                                competitionB.getName().toLowerCase().compareTo(competitionA.getName().toLowerCase()) :
+                                competitionA.getName().toLowerCase().compareTo(competitionB.getName().toLowerCase());
+                    }
+                    case R.id.ages_sort: {
+                        if(Integer.valueOf(competitionA.getFromAge()) > Integer.valueOf(competitionB.getFromAge())) {
+                            return isAscending ? 1 : -1;
+                        }
+                        else if(Integer.valueOf(competitionA.getFromAge()) < Integer.valueOf(competitionB.getFromAge())) {
+                            return isAscending ? -1 : 1;
+                        }
+                    }
+                    case R.id.date_sort: {
+                        if(dateUtils.stringToCalendar(competitionA.getActivityDate()).getTimeInMillis() > dateUtils.stringToCalendar(competitionB.getActivityDate()).getTimeInMillis()) {
+                            return isAscending ? 1 : -1;
+                        }
+                        else if(dateUtils.stringToCalendar(competitionA.getActivityDate()).getTimeInMillis() < dateUtils.stringToCalendar(competitionB.getActivityDate()).getTimeInMillis()) {
+                            return isAscending ? -1 : 1;
+                        }
+                    }
+                    case R.id.style_sort: {
+                        return isAscending ?
+                                competitionB.getSwimmingStyle().toLowerCase().compareTo(competitionA.getSwimmingStyle().toLowerCase()) :
+                                competitionA.getSwimmingStyle().toLowerCase().compareTo(competitionB.getSwimmingStyle().toLowerCase());
+                    }
+                    default:
+                        return 0;
+                }
             }
-            case R.id.back_to_home: {
-                switchToHomePageActivity();
-                return true;
+        });
+
+        this.competitionsListAdapter = new CompetitionAdapter(this, R.layout.competition_list_item, this.competitions);
+        this.listView.setAdapter(this.competitionsListAdapter);
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                selectedCompetition = competitions.get(position);
+                switchToViewCompetitionMediaActivity();
             }
-        }
-        return super.onOptionsItemSelected(item);
+        });
+
+        this.competitionsListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+
+        menu.add(Menu.NONE, R.id.name_sort, Menu.NONE, R.string.name_sort_text);
+        menu.add(Menu.NONE, R.id.date_sort, Menu.NONE, R.string.date_sort_text);
+        menu.add(Menu.NONE, R.id.style_sort, Menu.NONE, R.string.style_sort_text);
+        menu.add(Menu.NONE, R.id.ages_sort, Menu.NONE, R.string.ages_sort_text);
+
+        if(this.currentUser.getType().equals("coach")) {
+            getMenuInflater().inflate(R.menu.coach_competitions_tool_bar_menu, menu);
+        }
+        else if(this.currentUser.getType().equals("student") || this.currentUser.getType().equals("parent")) {
+            getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        }
+
         return true;
     }
 
@@ -150,15 +183,16 @@ public class ViewMediaActivity extends LoadingDialog {
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
-        if (this.currentUser.getType().equals("parent") || this.currentUser.getType().equals("coach")) {
+        if(this.currentUser.getType().equals("parent") || this.currentUser.getType().equals("coach")) {
             this.navigationView.inflateMenu(R.menu.parent_home_side_bar_menu);
-        } else if (this.currentUser.getType().equals("student")) {
+        }
+        else if(this.currentUser.getType().equals("student")) {
             this.navigationView.inflateMenu(R.menu.student_home_side_bar_menu);
         }
 
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
 
                 switch (menuItem.getItemId()) {
@@ -190,12 +224,12 @@ public class ViewMediaActivity extends LoadingDialog {
                         switchToChangeEmailActivity();
                         break;
                     }
-                    case R.id.media_nav_item: {
-                        switchToViewMediaActivity();
-                        break;
-                    }
                     case R.id.change_password_nav_item: {
                         switchToChangePasswordActivity();
+                        break;
+                    }
+                    case R.id.media_nav_item: {
+                        switchToViewMediaActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -209,20 +243,75 @@ public class ViewMediaActivity extends LoadingDialog {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemClicked = item.getItemId();
+        switch(item.getItemId()) {
+            case android.R.id.home: {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            }
+            case R.id.back_to_home: {
+                switchToHomePageActivity();
+                return true;
+            }
+            case R.id.name_sort: case R.id.ages_sort: case R.id.date_sort: case R.id.style_sort: {
+                sortCompetitionsByField(itemClicked);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void processFinish(String result) {
+        if (result != null) {
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONObject dataObj = response.getJSONObject("data");
+                this.competitions = new ArrayList<>();
+
+                Iterator<String> competitionIds = dataObj.keys();
+                while (competitionIds.hasNext()) {
+                    String currentId = competitionIds.next();
+                    JSONObject currentCompetition = new JSONObject(dataObj.get(currentId).toString());
+                    this.competitions.add(new Competition(currentId, currentCompetition));
+                }
+
+                sortCompetitionsByField(R.id.date_sort);
+            }
+            catch (Exception e) {
+                showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
+                System.out.println("ViewCompetitionsActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
+        }
+        else {
+            showToast("שגיאה בשליפת התחרויות מהמערכת, נסה לאתחל את האפליקציה");
+        }
+
+        hideProgressDialog();
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
     }
 
-    public void switchToViewMediaActivity() {
-        Intent intent = new Intent(this, ViewMediaActivity.class);
+    public void switchToViewCompetitionMediaActivity() {
+        Intent intent = new Intent(this, ViewCompetitionMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
         startActivity(intent);
     }
 
     public void switchToHomePageActivity() {
         Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
@@ -274,8 +363,15 @@ public class ViewMediaActivity extends LoadingDialog {
         startActivity(intent);
     }
 
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
     public void logOut() {
         this.mAuth.signOut();
         switchToLogInActivity();
     }
+
 }

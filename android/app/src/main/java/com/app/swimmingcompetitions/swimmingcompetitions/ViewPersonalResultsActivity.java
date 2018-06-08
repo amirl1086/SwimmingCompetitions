@@ -113,7 +113,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
 
                     this.competitions.add(new Competition(currentId, currentCompetition));
                 }
-                sortCompetitionsByField(R.id.name_sort);
+                sortCompetitionsByField(R.id.date_sort);
             }
             catch(Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");

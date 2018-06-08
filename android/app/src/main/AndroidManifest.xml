@@ -83,7 +83,7 @@
         <activity android:name=".ChangeEmailActivity" />
         <activity android:name=".RegisterExistingUserActivity" />
         <activity android:name=".ViewMediaActivity" />
-        <activity android:name=".ViewCompetitionMediaActivity"></activity>
+        <activity android:name=".ViewCompetitionMediaActivity" />
     </application>
 
 </manifest>

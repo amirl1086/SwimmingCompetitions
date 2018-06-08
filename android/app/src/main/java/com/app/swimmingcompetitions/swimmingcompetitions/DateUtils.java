@@ -35,13 +35,24 @@ public class DateUtils {
         return dateTime.split(" ")[0];
     }
 
-    public String getCompleteDate(Calendar calendar) {
-        int hours = calendar.get(Calendar.HOUR);
-        if(calendar.get(Calendar.AM_PM) == Calendar.AM) {
+    public String getCompleteDate(Calendar dateStr){
+        int hours = dateStr.get(Calendar.HOUR);
+        if(dateStr.get(Calendar.AM_PM) == Calendar.PM) {
             hours += 12;
         }
-        int minutes = calendar.get(Calendar.MINUTE);
-        return "מתקיימת ב: " + getDate(calendar) + ",   בשעה - " + hours + ":" + minutes;
+
+        int minutes = dateStr.get(Calendar.MINUTE);
+        String minutesStr = (minutes < 10) ? "0" + String.valueOf(minutes) : String.valueOf(minutes);
+
+        String result = "";
+        if(dateStr.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+            result +=  "התקיימה ב - ";
+        }
+        else {
+            result +=  "תתקיים ב - ";
+        }
+        result += getDate(dateStr) + ",   בשעה - " + hours + ":" + minutesStr;
+        return result;
     }
 
     public String getHebrewDate(Calendar calendar) {
@@ -63,6 +74,7 @@ public class DateUtils {
     }
 
     public Calendar stringToCalendar(String date) {
+        System.out.println("date " + date);
         Calendar calendar = Calendar.getInstance();
         String[] birthDateArr = date.split(" ");
 
@@ -81,7 +93,7 @@ public class DateUtils {
 
         calendar.set(Calendar.HOUR_OF_DAY, hours);
         calendar.set(Calendar.MINUTE, minutes);
-
+        System.out.println("date CAL " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
         return calendar;
     }
 
@@ -137,7 +149,10 @@ public class DateUtils {
         int year = calendar.get(Calendar.YEAR);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-        return day + "/" + month + "/" + year;
+        String dayStr = (day < 10) ? "0" + String.valueOf(day) : String.valueOf(day);
+        String monthStr = (month < 10) ? "0" + String.valueOf(month) : String.valueOf(month);
+
+        return dayStr + "/" + monthStr + "/" + year;
     }
 
     public int getAgeByDate(String birthDate){

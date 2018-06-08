@@ -65,7 +65,6 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
 
             setUpSidebar();
 
-
             try {
                 JSONObject data = new JSONObject();
                 showProgressDialog("טוען תחרויות...");
@@ -306,7 +305,7 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                     this.competitions.add(new Competition(currentId, currentCompetition));
                 }
 
-                sortCompetitionsByField(R.id.name_sort);
+                sortCompetitionsByField(R.id.date_sort);
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
