@@ -102,7 +102,7 @@ module.exports =  {
 			let users = result;
 			console.log('users ', users);
 			if(!users) {
-				utilities.sendResponse(response, 'no_such_email', null);
+				utilities.sendResponse(response, {'message': 'no_such_email'}, null);
 			}
 			else {
 				let user = users[Object.keys(users)[0]];
@@ -118,7 +118,7 @@ module.exports =  {
 					})
 				}
 				else {
-					utilities.sendResponse(response, 'birth_date_dont_match', null);
+					utilities.sendResponse(response, {'message': 'birth_date_dont_match'}, null);
 				}
 			}
 		});

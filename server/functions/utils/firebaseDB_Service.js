@@ -328,7 +328,8 @@ module.exports = {
 
 		let mediaDoc = { 
 			'competitionId': params.competitionId,
-			'url': params.url
+			'url': params.url,
+			'type': params.type
 		};
 		mediaRef.set(mediaDoc);
 
@@ -346,9 +347,8 @@ module.exports = {
 					utilities.sendResponse(response, null, result);
 				}
 				else {
-					utilities.sendResponse(response, 'no_media', null);
+					utilities.sendResponse(response, {'message': 'no_media'}, null);
 				}
-				
 			}
 			else {
 				utilities.sendResponse(response, result, null);
