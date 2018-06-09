@@ -41,8 +41,8 @@ public class CompetitionAdapter extends ArrayAdapter {
         competitionName.setText(currentCompetition.getName());
 
         TextView competitionDate = listItem.findViewById(R.id.competition_list_item_date);
-        Calendar calendar = dateUtils.dateToCalendar(new Date(currentCompetition.getActivityDate()));
-        competitionDate.setText(dateUtils.getCompleteDate(calendar));
+        String date = dateUtils.getCompleteDate(currentCompetition.getActivityDate());
+        competitionDate.setText(date);
 
         TextView competitionAges = listItem.findViewById(R.id.competition_list_item_ages);
         competitionAges.setText(currentCompetition.getAgesString());

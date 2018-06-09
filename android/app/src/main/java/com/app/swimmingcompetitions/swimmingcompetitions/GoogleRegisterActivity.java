@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class GoogleRegisterActivity extends LoadingDialog implements AsyncResponse {
+public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseAuth mAuth;

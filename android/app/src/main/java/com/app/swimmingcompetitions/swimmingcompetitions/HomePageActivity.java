@@ -7,9 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -68,8 +67,8 @@ public class HomePageActivity extends LoadingDialog {
     private void setUpSidebar() {
         this.mDrawerLayout = findViewById(R.id.drawer_layout);
         this.navigationView = findViewById(R.id.nav_view);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         toolbar.setTitle("תפריט ראשי");
         setSupportActionBar(toolbar);
 
@@ -92,43 +91,31 @@ public class HomePageActivity extends LoadingDialog {
 
                 switch (menuItem.getItemId()) {
                     case R.id.competitions_nav_item: {
-                        switchToViewCompetitionsActivity();
+                        switchToViewCompetitionsActivity(null);
                         break;
                     }
                     case R.id.personal_results_nav_item: {
-                        switchToViewResultsActivity();
+                        switchToViewResultsActivity(null);
                         break;
                     }
                     case R.id.statistics_nav_item: {
-                        switchToViewStatisticsActivity();
+                        switchToViewStatisticsActivity(null);
                         break;
                     }
                     case R.id.real_time_nav_item: {
-                        switchToViewInRealTimeActivity();
-                        break;
-                    }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
+                        switchToViewInRealTimeActivity(null);
                         break;
                     }
                     case R.id.media_nav_item: {
-                        switchToViewMediaActivity();
+                        switchToViewMediaActivity(null);
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity(null);
                         break;
                     }
                     case R.id.log_out_nav_item: {
-                        logOut();
+                        logOut(null);
                         break;
                     }
                 }
@@ -143,61 +130,43 @@ public class HomePageActivity extends LoadingDialog {
         startActivity(intent);
     }
 
-    private void switchToViewInRealTimeActivity() {
+    public void switchToViewInRealTimeActivity(View v) {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
+    public void switchToMySettingsActivity(View v) {
+        Intent intent = new Intent(this, MySettingsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToViewMediaActivity() {
+    public void switchToViewMediaActivity(View v) {
         Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewStatisticsActivity() {
+    public void switchToViewStatisticsActivity(View v) {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToViewCompetitionsActivity() {
+    public void switchToViewCompetitionsActivity(View v) {
         Intent intent = new Intent(this, ViewCompetitionsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToViewResultsActivity() {
+    public void switchToViewResultsActivity(View v) {
         Intent intent = new Intent(this, ViewPersonalResultsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void logOut() {
+    public void logOut(View v) {
         this.mAuth.signOut();
         switchToLogInActivity();
     }

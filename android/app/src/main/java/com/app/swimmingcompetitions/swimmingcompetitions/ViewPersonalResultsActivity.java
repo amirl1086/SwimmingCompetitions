@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncResponse {
+public class ViewPersonalResultsActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -89,11 +89,6 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         }
     }
 
-    private void switchToLogInActivity() {
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
-    }
-
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -114,6 +109,9 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                     this.competitions.add(new Competition(currentId, currentCompetition));
                 }
                 sortCompetitionsByField(R.id.date_sort);
+                if(this.competitions.size() == 0) {
+                    showToast("אין תוצאות שמורות של תחרויות במערכת");
+                }
             }
             catch(Exception e) {
                 showToast("שגיאה ביצירה של רשימת התחרויות, נסה לאתחל את האפליקציה");
@@ -126,14 +124,6 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         }
 
         hideProgressDialog();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(this.fbUser == null) {
-            switchToLogInActivity();
-        }
     }
 
     @Override
@@ -226,17 +216,9 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         this.competitionsListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        menu.add(Menu.NONE, R.id.name_sort, Menu.NONE, R.string.name_sort_text);
-        menu.add(Menu.NONE, R.id.date_sort, Menu.NONE, R.string.date_sort_text);
-        menu.add(Menu.NONE, R.id.style_sort, Menu.NONE, R.string.style_sort_text);
-        menu.add(Menu.NONE, R.id.ages_sort, Menu.NONE, R.string.ages_sort_text);
-
         getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
-
         return true;
     }
 
@@ -283,24 +265,12 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -321,32 +291,30 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         startActivity(intent);
     }
 
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewInRealTimeActivity() {
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
     public void switchToViewMediaActivity() {
         Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToViewCompetitionActivity() {
-        Intent intent = new Intent(this, ViewCompetitionActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        intent.putExtra("selectedCompetition", this.selectedCompetition);
-        startActivity(intent);
-    }
-
-    private void switchToViewInRealTimeActivity() {
-        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewStatisticsActivity() {
+    public void switchToViewStatisticsActivity() {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
@@ -364,27 +332,9 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements AsyncR
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

@@ -324,17 +324,17 @@ module.exports = {
 	addNewMedia: (params, response) => {
 		let db = admin.database();
 		let keyValue = db.ref('media/').push().key;
-		let mediaRef = db.ref('media/' + key);
+		let mediaRef = db.ref('media/' + keyValue);
 
 		let mediaDoc = { 
 			'competitionId': params.competitionId,
 			'url': params.url,
-			'type': params.type
+			'contentType': params.contentType
 		};
 		mediaRef.set(mediaDoc);
 
 		mediaRef.on('value', (snapshot) => {
-			utilities.sendResponse(response, null, true);
+			utilities.sendResponse(response, null, snapshot.val());
 		}, (error) => {
 			utilities.sendResponse(response, error, null);
 		});

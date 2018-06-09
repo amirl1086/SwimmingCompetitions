@@ -34,8 +34,6 @@
                 android:id="@+id/competitions_list"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="15sp"
-                android:layout_marginTop="15sp"
                 android:layout_weight="1"
                 android:divider="@color/purple"
                 android:dividerHeight="1dp" />

@@ -21,7 +21,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ViewCompetitionActivity extends LoadingDialog implements AsyncResponse {
+
+public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -37,6 +38,8 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
     private Button startCompetitionBtn;
     private Button registerEditBtn;
     private Button registerOtherUserBtn;
+    private DateUtils dateUtils;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +62,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                     handleNewParticipantAdded(participants, intent.getStringExtra("newParticipant"));
                 }
 
-                switch (this.currentUser.getType()) {
+                switch(this.currentUser.getType()) {
                     case "coach": {
                         handleCouchView();
                         break;
@@ -73,11 +76,28 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                         break;
                     }
                 }
+
+                if(this.dateUtils.isDatePassed(this.selectedCompetition.getActivityDate())) {
+                    this.registerEditBtn.setText("צפה בתוצאות");
+                    this.registerEditBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getCompetitionResults();
+                        }
+                    });
+                    this.registerOtherUserBtn.setVisibility(View.GONE);
+
+                    if(this.currentUser.getType().equals("coach")) {
+                        this.startCompetitionBtn.setVisibility(View.GONE);
+                    }
+                }
+
             }
             catch (Exception e) {
                 hideProgressDialog();
                 showToast("שגיאה באתחול התחרות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionActivity Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                System.out.println("ViewCompetitionActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
         else {
@@ -85,8 +105,32 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         }
     }
 
+    private void getCompetitionResults() {
+        try {
+            JSONObject data = new JSONObject();
+            //get competitions list set up action params
+            this.currentCallout = "getPersonalResults";
+            data.put("urlSuffix", "/" + this.currentCallout);
+            data.put("httpMethod", "GET");
+            data.put("competition", this.selectedCompetition.getJSON_Object().toString());
+
+            showProgressDialog("טוען תוצאות...");
+
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            this.jsonAsyncTaskPost.execute(data.toString());
+        }
+        catch(Exception e) {
+            hideProgressDialog();
+            showToast("שגיאה בשליחת הבקשה למערכת, נסה לאתחל את האפליקציה");
+            System.out.println("ViewCompetitionActivity getCompetitionResults Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
+        }
+
+    }
+
     private void handleParentView() {
-        this.registerOtherUserBtn.setText("רשום מתחרה");
+        this.registerOtherUserBtn.setText("רשום מתחרה אחר");
     }
 
     private void handleStudentView(ArrayList<Participant> participants) {
@@ -120,7 +164,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                 switchToCreateNewCompetitionActivityEditMode();
             }
         });
-        this.registerOtherUserBtn.setText("רשום מתחרה");
+        this.registerOtherUserBtn.setText("רשום מתחרה אחר");
     }
 
     private void handleNewParticipantAdded(ArrayList<Participant> participants, String participantJson) throws Exception {
@@ -137,21 +181,17 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         this.registerOtherUserBtn = findViewById(R.id.register_temporary_user_btn);
         this.startCompetitionBtn = findViewById(R.id.start_competition);
 
-        DateUtils dateUtils = new DateUtils();
+        this.dateUtils = new DateUtils();
         Calendar calendar;
 
         TextView competitionName = findViewById(R.id.competition_name);
         TextView date = findViewById(R.id.date_of_competition);
-        TextView time = findViewById(R.id.time_of_competition);
         TextView distance = findViewById(R.id.distance_of_competition);
         TextView style = findViewById(R.id.style_of_competition);
         TextView ages = findViewById(R.id.ages_range_of_competition);
         TextView participantsForIteration = findViewById(R.id.num_of_participants_for_competition);
-
-        calendar = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
-        date.setText(dateUtils.getDate(calendar));
+        date.setText(this.dateUtils.getCompleteDate(this.selectedCompetition.getActivityDate()));
         competitionName.setText(selectedCompetition.getName());
-        time.setText(dateUtils.getTime(calendar));
         distance.setText(selectedCompetition.getLength());
         style.setText(selectedCompetition.getSwimmingStyle());
         ages.setText(selectedCompetition.getAgesString());
@@ -176,7 +216,8 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         catch (Exception e) {
             hideProgressDialog();
             showToast("שגיאה בביטול הרישום לתחרות, נסה לאתחל את האפליקציה");
-            System.out.println("ViewCompetitionActivity Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("ViewCompetitionActivity Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
     }
 
@@ -197,7 +238,8 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         catch (Exception e) {
             hideProgressDialog();
             showToast("שגיאה באתחול התחרות למקצים, נסה לאתחל את האפליקציה");
-            System.out.println("ViewCompetitionActivity Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("ViewCompetitionActivity initCompetitionForIterations Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
     }
 
@@ -232,25 +274,34 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
             try {
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
-
-                switch (this.currentCallout) {
-                    case "initCompetitionForIterations": {
-                        handleInitCompetitionResult(dataObj);
-                        break;
+                if(response.getBoolean("success")) {
+                    switch (this.currentCallout) {
+                        case "initCompetitionForIterations": {
+                            handleInitCompetitionResult(dataObj);
+                            break;
+                        }
+                        case "getPersonalResults": {
+                            switchToViewCompetitionResultsActivity(dataObj);
+                            break;
+                        }
+                        case "joinToCompetition": {
+                            handleJoinToCompetitionResult();
+                            break;
+                        }
+                        case "cancelRegistration": {
+                            handleCancelRegistrationResult();
+                            break;
+                        }
                     }
-                    case "joinToCompetition": {
-                        handleJoinToCompetitionResult();
-                        break;
-                    }
-                    case "cancelRegistration": {
-                        handleCancelRegistrationResult();
-                        break;
-                    }
+                }
+                else if(dataObj.getString("message").equals("no_results")){
+                    showToast("התחרות הסתיימה ללא תוצאות, אנא פנה למאמן לפרטים נוספים");
                 }
             }
             catch (Exception e) {
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("ViewCompetitionActivity Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                System.out.println("ViewCompetitionActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
         else {
@@ -278,7 +329,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
             this.selectedCompetition = new Competition(dataObj);
 
             if (this.selectedCompetition.getParticipants().size() == 0) {
-                showToast("לא קיימים מתחרים לתחרות זו, תחילה רשום מתחרים");
+                showToast("עדיין לא נרשמו מתחרים לתחרות זו");
             }
             else {
                 switchToIterationsActivity();
@@ -308,12 +359,6 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         showToast("הרישום הוסר בהצלחה");
     }
 
-    @Override public void onStart() {
-        super.onStart();
-        if(this.fbUser == null) {
-            switchToLogInActivity();
-        }
-    }
 
     @Override public void onResume() {
         super.onResume();
@@ -385,24 +430,12 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -433,12 +466,6 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         startActivity(intent);
     }
 
-    public void switchToViewMediaActivity() {
-        Intent intent = new Intent(this, ViewMediaActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -463,19 +490,25 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         startActivity(intent);
     }
 
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewInRealTimeActivity() {
+    public void switchToViewInRealTimeActivity() {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    private void switchToViewStatisticsActivity() {
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewStatisticsActivity() {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
@@ -493,27 +526,9 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 
@@ -521,4 +536,5 @@ public class ViewCompetitionActivity extends LoadingDialog implements AsyncRespo
         this.mAuth.signOut();
         switchToLogInActivity();
     }
+
 }

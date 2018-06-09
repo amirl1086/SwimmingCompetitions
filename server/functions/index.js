@@ -33,7 +33,7 @@ exports.addNewUser = functions.https.onRequest((request, response) => {
 });
 
 exports.getUser = functions.https.onRequest((request, response) => {
-	authentication.getUser(request.body.currentUserUid, response);
+	authentication.getUser(request.body.currentUserUid, response, null);
 });
 
 exports.logIn = functions.https.onRequest((request, response) => {
@@ -124,7 +124,7 @@ exports.getMediaByCompetitionId = functions.https.onRequest((request, response) 
 
 
 //db manipulation
-/*  exports.resetCompetitions = functions.https.onRequest((request, response) => {
+/* exports.resetCompetitions = functions.https.onRequest((request, response) => {
 	let db = admin.database();
 	let collectionRef = db.ref('competitions');
 

@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Calendar;
 
-public class RegisterExistingUserActivity extends LoadingDialog implements AsyncResponse {
+public class RegisterExistingUserActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private JSON_AsyncTask jsonAsyncTaskPost;

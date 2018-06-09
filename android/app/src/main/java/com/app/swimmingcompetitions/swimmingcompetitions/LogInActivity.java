@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -24,21 +26,22 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 
-
-public class LogInActivity extends LoadingDialog implements View.OnClickListener, AsyncResponse {
+public class LogInActivity extends LoadingDialog implements View.OnClickListener, HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
+    private JSON_AsyncTask jsonAsyncTaskPost;
+    private String currentCallout;
     private EditText logInMail;
     private EditText logInPassword;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private String logInMailText;
     private String logInPasswordText;
+    private GoogleApiClient mGoogleApiClient;
 
-    private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SIGN_IN = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             View v = googleSignInButton.getChildAt(i);
             if (v instanceof TextView) {
                 TextView tv = (TextView) v;
-                tv.setText("כניסה באמצעות גוגל");
+                tv.setText("כניסה עם גוגל");
                 break;
             }
         }
@@ -68,7 +71,10 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             .requestEmail()
             .build();
 
-        this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        this.mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+
+        //this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     @Override
@@ -77,18 +83,92 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
+        redirectUser();
+    }
+
+    private void redirectUser() {
+        // check if user is signed in (non-null) and update UI accordingly.
+        this.fbUser = mAuth.getCurrentUser();
         if(this.fbUser != null) {
-            switchToHomePageActivity();
+            try {
+                showProgressDialog("מתחבר לחשבונך מחדש...");
+                this.currentCallout = "getUser";
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
+                JSONObject logInData = new JSONObject();
+                logInData.put("urlSuffix", "/" + this.currentCallout);
+                logInData.put("httpMethod", "GET");
+                logInData.put("currentUserUid", this.fbUser.getUid());
+                this.jsonAsyncTaskPost.execute(logInData.toString());
+            }
+            catch (JSONException e) {
+                hideProgressDialog();
+                showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity logInWithIdToken Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if(this.fbUser != null) {
-            switchToHomePageActivity();
+    public void processFinish(String result) {
+        switch (this.currentCallout) {
+            case "getUser": {
+                handleGetUser(result);
+                break;
+            }
+            case "logIn": {
+                handleLogIn(result);
+                break;
+            }
+        }
+
+        hideProgressDialog();
+    }
+
+    private void handleGetUser(String result) {
+        if(result != null) {
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONObject userData = response.getJSONObject("data");
+                this.currentUser = new User(userData);
+                switchToHomePageActivity();
+            }
+            catch(Exception e) {
+                showToast("שגיאה בשחזור המידע שלך, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity processFinish Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
+        }
+        else {
+            showToast("שגיאה בשחזור המידע שלך, נסה לאתחל את האפליקציה");
+        }
+    }
+
+
+    private void handleLogIn(String result) {
+        if(result != null) {
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONObject userData = response.getJSONObject("data");
+                this.currentUser = new User(userData);
+                if(this.currentUser.getType().isEmpty()) {
+                    switchToGoogleRegisterActivity();
+                }
+                else {
+                    switchToHomePageActivity();
+                }
+            }
+            catch(Exception e) {
+                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity processFinish Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
+        }
+        else {
+            showToast("שגיאה בכניסה למערכת, נסה לאתחל את האפליקציה");
         }
     }
 
@@ -147,29 +227,29 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 else {
                     hideProgressDialog();
                     showToast("ההתחברות נכשלה, נסה שוב");
-                    System.out.println("LogInActivity getIdToken " + task.getException());
+                    System.out.println("LogInActivity getIdToken Exception:\n" + task.getException());
                 }
             }
         });
     }
 
     private void logInWithIdToken(String token) {
-        JSON_AsyncTask jsonAsyncTaskPost = new JSON_AsyncTask();
-        jsonAsyncTaskPost.delegate = this;
-        JSONObject logInData = new JSONObject();
-
         try {
-            logInData.put("urlSuffix", "/logIn");
+            this.currentCallout = "logIn";
+            this.jsonAsyncTaskPost = new JSON_AsyncTask();
+            this.jsonAsyncTaskPost.delegate = this;
+            JSONObject logInData = new JSONObject();
+            logInData.put("urlSuffix", "/" + this.currentCallout);
             logInData.put("httpMethod", "POST");
             logInData.put("idToken", token);
+            this.jsonAsyncTaskPost.execute(logInData.toString());
         }
         catch (JSONException e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-            System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
+            System.out.println("LogInActivity logInWithIdToken Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
-
-        jsonAsyncTaskPost.execute(logInData.toString());
     }
 
     @Override
@@ -184,13 +264,14 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
             catch (ApiException e) {
                 hideProgressDialog();
                 showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
-                System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
+                System.out.println("LogInActivity onActivityResult Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        showProgressDialog("מבצע כניסה...");
+        showProgressDialog("מבצע כניסה באמצעות גוגל...");
 
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -203,36 +284,10 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 else {
                     hideProgressDialog();
                     showToast("הכניסה באמצעות גוגל נכשלה, נסה שוב");
-                    System.out.println("LogInActivity getIdToken " + task.getException());
+                    System.out.println("LogInActivity firebaseAuthWithGoogle Exception:\n" + task.getException());
                 }
             }
         });
-    }
-
-    @Override
-    public void processFinish(String result) {
-        if(result != null) {
-            try {
-                JSONObject response = new JSONObject(result);
-                JSONObject userData = response.getJSONObject("data");
-                this.currentUser = new User(userData);
-                if(this.currentUser.getType().isEmpty()) {
-                    switchToGoogleRegisterActivity();
-                }
-                else {
-                    switchToHomePageActivity();
-                }
-            }
-            catch(Exception e) {
-                showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("LogInActivity Exception " + Arrays.toString(e.getStackTrace()));
-            }
-        }
-        else {
-            showToast("שגיאה בכניסה למערכת, נסה לאתחל את האפליקציה");
-        }
-
-        hideProgressDialog();
     }
 
     public void showToast(String message) {
@@ -257,8 +312,10 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     }
 
     public void googleSignIn() {
-        Intent signInIntent = this.mGoogleSignInClient.getSignInIntent();
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        /*Intent signInIntent = this.mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);*/
     }
 
     public void switchToForgotPasswordActivity(View view) {

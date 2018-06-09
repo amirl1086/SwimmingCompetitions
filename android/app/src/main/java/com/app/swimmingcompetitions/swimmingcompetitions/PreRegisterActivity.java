@@ -42,8 +42,6 @@ public class PreRegisterActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void switchToLogInActivity() {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);

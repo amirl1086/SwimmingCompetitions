@@ -17,12 +17,11 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
 
-public class RegisterActivity extends LoadingDialog implements AsyncResponse {
+public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private JSON_AsyncTask jsonAsyncTaskPost;
     private EditText firstName;

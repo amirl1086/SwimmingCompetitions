@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 
-public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResponse {
+public class ViewCompetitionsActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -259,24 +258,12 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -323,19 +310,8 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void switchToLogInActivity() {
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
-    }
-
     public void switchToCreateNewCompetitionActivity() {
         Intent intent = new Intent(this, CreateNewCompetitionActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
@@ -347,13 +323,30 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
         startActivity(intent);
     }
 
-    private void switchToViewInRealTimeActivity() {
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewInRealTimeActivity() {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    private void switchToViewStatisticsActivity() {
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewStatisticsActivity() {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
@@ -371,33 +364,9 @@ public class ViewCompetitionsActivity extends LoadingDialog implements AsyncResp
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToViewMediaActivity() {
-        Intent intent = new Intent(this, ViewMediaActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 
