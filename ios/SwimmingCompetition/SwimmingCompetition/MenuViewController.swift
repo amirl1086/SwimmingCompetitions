@@ -43,7 +43,39 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath) as! MenuTableViewCell
         cell.label.text = menuArray[indexPath.row]
         cell.label.textColor = .white
-        cell.menuIcon.image = UIImage(named: "swimmingIcon.png")
+        switch(menuArray[indexPath.row]) {
+        case "ראשי":
+            cell.menuIcon.image = UIImage(named: "mainIcon.png")
+            break
+        case "תחרויות":
+            cell.menuIcon.image = UIImage(named: "swimmingIcon.png")
+            break
+        case "תוצאות":
+            cell.menuIcon.image = UIImage(named: "scoreIcon.png")
+            break
+        case "צפייה בזמן אמת":
+            cell.menuIcon.image = UIImage(named: "realtimeIcon.png")
+            break
+        case "הילדים שלי":
+            cell.menuIcon.image = UIImage(named: "childrenIcon.png")
+            break
+        case "הגדרות":
+            cell.menuIcon.image = UIImage(named: "settingsIcon.png")
+            break
+        case "התנתק":
+            cell.menuIcon.image = UIImage(named: "exitIcon.png")
+            break
+        case "סטטיסטיקות":
+            cell.menuIcon.image = UIImage(named: "statisticIcon.png")
+            break
+        case "תמונות וסרטונים":
+            cell.menuIcon.image = UIImage(named: "filesIcon.png")
+            break
+        default:
+            break
+        }
+        
+    
         cell.layer.backgroundColor = UIColor.clear.cgColor
         cell.backgroundColor = UIColor.clear
         return cell

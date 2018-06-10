@@ -20,6 +20,10 @@ class RegisterTypeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if googleUser != nil {
+            self.present(Alert().confirmAlert(title: "נא להשלים את תהליך ההרשמה", message: ""), animated: true, completion: nil)
+        }
+        
         //The background image
         backgroundView = UIImageView(frame: self.view.bounds)
         backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets

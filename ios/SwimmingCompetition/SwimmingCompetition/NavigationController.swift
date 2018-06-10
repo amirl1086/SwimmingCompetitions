@@ -13,6 +13,8 @@ class NavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Service.shared.start = true
+        
         view.backgroundColor = .white
         let gifImage = UIImage.gif(name: "stll-swimming-logo")
         let imageView = UIImageView(image: gifImage)

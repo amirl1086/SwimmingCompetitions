@@ -128,53 +128,39 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     @IBAction func loginButton(_ sender: AnyObject) {
         self.view.endEditing(true)
         
-        let alert: UIAlertView = UIAlertView(title: "מתחבר", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = self.view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        alert.show();
         
         Auth.auth().signIn(withEmail: emailTextFiled.text!, password: passwordTextFiled.text!) { (user, error) in
             
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
             if (error != nil) {
-                
                 let alertError = Service.shared.errorMessage(data: error! as NSError)
                 self.present(alertError, animated: true, completion: nil)
             }
             else {
-                
                 user?.getIDToken(completion: { (token, error) in
-                    
                     if (error != nil) {
+                        self.present(Alert().confirmAlert(title: "בעיה בהתחברות", message: ""), animated: true, completion: nil)
+                    } else {
+                        let parameters = [
+                            "idToken": token!
+                            ] as [String: AnyObject]
                         
-                    }
-                    
-                    let parameters = [
-                        "idToken": token!
-                        ] as [String: AnyObject]
-                    
-                    
-                    Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
-                        response in
-                        //alert.dismiss(withClickedButtonIndex: -1, animated: true)
-                        if response.succeed {
-                            
-                            UserDefaults.standard.set(true, forKey: "loggedIn")
-                            UserDefaults.standard.synchronize()
-                            if let mainView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainId") as? MainViewController {
-                                mainView.currentUser = User(json: response.data)
-                                self.navigationController?.viewControllers = [mainView]
+                        
+                        Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
+                            response in
+                            if response.succeed {
+                                
+                                UserDefaults.standard.set(true, forKey: "loggedIn")
+                                UserDefaults.standard.synchronize()
+                                if let mainView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                                    mainView.currentUser = User(json: response.data)
+                                    self.navigationController?.viewControllers = [mainView]
+                                }
                             }
-                        }
-                        else {
+                            else {
+                                self.present(Alert().confirmAlert(title: "בעיה בהתחברות", message: ""), animated: true, completion: nil)
+                            }
                             
                         }
-                        
                     }
                 })
             }

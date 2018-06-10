@@ -11,18 +11,15 @@ import Firebase
 import Alamofire
 import SwiftyJSON
 import GoogleSignIn
+import SwiftSpinner
 
 
 typealias JSON = [String: Any]
 
-enum ErrorThrow: Error {
-    case notFount
-}
-
 class Service {
     
     static let shared = Service()
-    
+    var start = false
     
     private init() {}
     
@@ -30,31 +27,16 @@ class Service {
     
     func connectToServer(path: String, method: HTTPMethod, params: [String: AnyObject], completion: @escaping (responseData) -> Void) {
         
-        let alert: UIAlertView = UIAlertView(title: activityMessage(path: path), message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = UIViewController().view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        alert.show();
-      
-       /* let alert: UIAlertController = UIAlertController(title: activityMessage(path: path), message: "אנא המתן...", preferredStyle: .alert)
-        alert.addTextField { (text) in
-            text.isHidden = true
+        if !self.start {
+            SwiftSpinner.show(activityMessage(path: path))
         }
-        UIApplication.top()?.present(alert, animated: true, completion: nil)
-        */
+        self.start = false
+        
         guard let url = URL(string: "https://us-central1-firebase-swimmingcompetitions.cloudfunctions.net/\(path)") else {
-                        alert.dismiss(withClickedButtonIndex: -1, animated: true)
-            //alert.dismiss(animated: true, completion: nil)
-                        return
-            
+            SwiftSpinner.hide()
+            return
         }
         Alamofire.request(url, method: method, parameters: params).responseJSON { (response) in
-        //alert.dismiss(animated: true, completion: nil)
-            alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
             switch(response.result) {
             case .success(let json):
@@ -62,26 +44,30 @@ class Service {
                 do {
                     let getData = try responseData(json: json)
                     completion(getData)
-                } catch {
-                    print("hh")
-                }
-                
+                } catch {}
+                SwiftSpinner.hide()
                 break;
                 
             case .failure(let error):
-                    print(error)
-                    let alert = self.systemErrorMessage(data: error._code)
-                    //UIApplication.top()?.present(alert, animated: true, completion: nil)
+                    SwiftSpinner.show(duration: 4.0, title: self.systemErrorMessage(data: error._code), animated: false)
+                    
                     break;
             }
         }
     }
+
     
     func activityMessage(path: String) -> String {
         var message = ""
         switch(path) {
         case "logIn":
             message = "מתחבר";
+            break;
+        case "getUser":
+            message = "מתחבר";
+            break;
+        case "updateFirebaseUser":
+            message = "שומר נתונים";
             break;
         case "getCompetitions":
             message = "טוען תחרויות";
@@ -105,32 +91,26 @@ class Service {
             message = "מבטל הרשמה לתחרות";
             break;
         default:
-            message = "";
+            message = "אנא המתן";
             break;
         }
         return message
     }
     
-    func systemErrorMessage(data: Int) -> UIAlertController {
-        var title = ""
+    
+    func systemErrorMessage(data: Int) -> String {
         var message = ""
         
         switch(data) {
         case -1009:
-            title = "בעיה בחיבור הרשת";
-            message = "בדוק שהינך מחובר לרשת ואתחל את האפליקציה";
+            message = "בעיה בחיבור הרשת";
             break;
         default:
-            title = "שגיאת מערכת";
-            message = "אתחל את האפליקציה ונסה שוב";
+            message = "שגיאת מערכת";
+            break;
         }
         
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-            
-        }))
-        return alert
+        return message
     }
     
     func errorMessage(data: NSError) -> UIAlertController {
@@ -152,11 +132,11 @@ class Service {
                 break;
             default:
                 title = "שגיאה";
-                message = "error";
+                message = "לא ניתן להתחבר";
         }
 
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
         return alert
@@ -180,10 +160,7 @@ class Service {
         }
         
     }
-    
-    func firebaseSignIn(email: String, password: String) {
-        
-    }
+
     
     func signOut() {
         //Sign out from firebase user

@@ -91,7 +91,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
             }))
             self.present(alert, animated: true, completion: nil)
         } else if DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! < Int((currentCompetition?.fromAge)!)! || DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! > Int((currentCompetition?.toAge)!)! {
-            self.present(Alert().confirmAlert(title: "\(DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))!)", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
+            self.present(Alert().confirmAlert(title: "", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
         }
         else {
             
