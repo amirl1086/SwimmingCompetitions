@@ -7,14 +7,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,10 +21,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +31,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 
-public class ViewInRealTimeActivity extends LoadingDialog implements AsyncResponse {
+public class ViewInRealTimeActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -65,14 +59,11 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
-
             this.db = FirebaseDatabase.getInstance();
-
             this.liveResults = new ArrayList<>();
             this.listView = findViewById(R.id.live_results_list);
 
             getCompetitionInProgress();
-
             setUpSidebar();
         }
         else {
@@ -110,10 +101,11 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
                     Iterator<String> competitionIds = dataObj.keys();
                     String competitionId = competitionIds.next();
                     this.competition = new Competition(dataObj.getJSONObject(competitionId));
-
+                    showToast("נא המתן לתוצאות");
                     setUpLiveView();
                 }
                 else {
+                    hideProgressDialog();
                     showToast("אין כרגע תחרות שמתקיימת");
                 }
             }
@@ -127,6 +119,7 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         }
 
         hideProgressDialog();
+
     }
 
     private void setUpLiveView() {
@@ -135,7 +128,6 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                showProgressDialog("מעדכן נתונים");
                 PersonalResult currPersonalResult = dataSnapshot.getValue(PersonalResult.class);
                 addResultToLiveList(currPersonalResult);
                 hideProgressDialog();
@@ -178,19 +170,25 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if(this.fbUser == null) {
             switchToLogInActivity();
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if(this.fbUser == null) {
-            switchToLogInActivity();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        if(this.currentUser.getType().equals("coach")) {
+            getMenuInflater().inflate(R.menu.coach_competitions_tool_bar_menu, menu);
         }
+        else if(this.currentUser.getType().equals("student") || this.currentUser.getType().equals("parent")) {
+            getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        }
+
+        return true;
     }
 
     @Override
@@ -251,24 +249,12 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -290,19 +276,25 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         startActivity(intent);
     }
 
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewInRealTimeActivity() {
+    public void switchToViewInRealTimeActivity() {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    private void switchToViewStatisticsActivity() {
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewMediaActivity() {
+        Intent intent = new Intent(this, ViewMediaActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToViewStatisticsActivity() {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
@@ -320,33 +312,9 @@ public class ViewInRealTimeActivity extends LoadingDialog implements AsyncRespon
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToViewMediaActivity() {
-        Intent intent = new Intent(this, ViewMediaActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

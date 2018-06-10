@@ -5,7 +5,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
+public class MyChildrenActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -71,11 +70,6 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
         }
     }
 
-    private void switchToLogInActivity() {
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public void processFinish(String result) {
         try {
@@ -95,6 +89,13 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
                     ChildrenAdapter childrenListAdapter = new ChildrenAdapter(this, R.layout.child_list_item, this.children);
                     ListView listView = findViewById(R.id.children_list);
                     listView.setAdapter(childrenListAdapter);
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            switchToViewStatisticsActivity(children.get(position).getUid());
+                        }
+                    });
                 }
                 else {
                     showToast("אין לך ילדים רשומים, לחץ על הוסף ילד לחשבון");
@@ -114,14 +115,6 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
 
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(this.fbUser == null) {
-            switchToLogInActivity();
-        }
     }
 
     @Override
@@ -197,24 +190,12 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
                         break;
                     }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -229,14 +210,25 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
     }
 
     public void switchToAddChildToParentActivity(View view) {
-        Intent googleRegIntent = new Intent(this, AddChildToParentActivity.class);
-        googleRegIntent.putExtra("currentUser", this.currentUser);
-        startActivity(googleRegIntent);
+        Intent intent = new Intent(this, AddChildToParentActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
     }
 
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
+    private void switchToLogInActivity() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchToViewInRealTimeActivity() {
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
@@ -246,15 +238,16 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
         startActivity(intent);
     }
 
-    private void switchToViewInRealTimeActivity() {
-        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+    public void switchToViewStatisticsActivity() {
+        Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    private void switchToViewStatisticsActivity() {
+    public void switchToViewStatisticsActivity(String uid) {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("childId", uid);
         startActivity(intent);
     }
 
@@ -270,27 +263,9 @@ public class MyChildrenActivity extends LoadingDialog implements AsyncResponse {
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

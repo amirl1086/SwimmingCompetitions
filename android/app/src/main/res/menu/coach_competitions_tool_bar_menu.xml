@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/back_to_home"
-        android:icon="@drawable/ic_home"
+        android:id="@+id/add_new_competition"
+        android:icon="@drawable/ic_add"
         android:orderInCategory="10"
-        android:title="@string/back_to_home_btn"
+        android:title="@string/add_new_competition"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/add_new_competition"
-        android:icon="@drawable/ic_add"
+        android:id="@+id/back_to_home"
+        android:icon="@drawable/ic_home"
         android:orderInCategory="10"
         android:title="@string/back_to_home_btn"
         app:showAsAction="always" />

@@ -22,19 +22,25 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class GoogleRegisterActivity extends LoadingDialog implements AsyncResponse {
+public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseAuth mAuth;
     private JSON_AsyncTask jsonAsyncTaskPost;
 
     private EditText firstName;
+    private EditText token;
+    private String tokenText;
     private EditText lastName;
     private TextView dateView;
-    private EditText phoneNumber;
     private int year, month, day;
     private String registerType;
     private Spinner spinner;
+    private String serverToken;
+    private String firstNameText;
+    private String lastNameText;
+    private String genderText;
+    private String birthDateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +48,32 @@ public class GoogleRegisterActivity extends LoadingDialog implements AsyncRespon
         setContentView(R.layout.activity_google_register);
 
         Intent intent = getIntent();
-        if(intent.hasExtra("currentUser")) {
-            this.currentUser = (User) intent.getSerializableExtra("currentUser");
-            this.mAuth = FirebaseAuth.getInstance();
+        if(intent.hasExtra("userData")) {
+            try {
+                JSONObject userData = new JSONObject(intent.getStringExtra("userData"));
+                this.serverToken = userData.getString("token");
+                this.currentUser = new User(userData);
+                this.mAuth = FirebaseAuth.getInstance();
 
-            this.spinner = findViewById(R.id.register_gender);
-            this.firstName = findViewById(R.id.register_first_name);
-            this.firstName.setText(this.currentUser.getFirstName());
-            this.lastName = findViewById(R.id.register_last_name);
-            this.lastName.setText(this.currentUser.getLastName());
-            this.phoneNumber = findViewById(R.id.mobile_phone_number);
-            this.registerType = intent.getStringExtra("registerType");
-            Button birthDateButton = findViewById(R.id.register_birth_date);
+                this.spinner = findViewById(R.id.register_gender);
+                this.firstName = findViewById(R.id.register_first_name);
+                this.firstName.setText(this.currentUser.getFirstName());
+                this.lastName = findViewById(R.id.register_last_name);
+                this.lastName.setText(this.currentUser.getLastName());
+                this.registerType = intent.getStringExtra("registerType");
+                this.token = findViewById(R.id.register_token);
+                Button birthDateButton = findViewById(R.id.register_birth_date);
 
-            if (this.registerType.equals("parent")) {
-                birthDateButton.setVisibility(View.GONE);
-                this.spinner.setVisibility(View.GONE);
+                if (this.registerType.equals("parent")) {
+                    birthDateButton.setVisibility(View.GONE);
+                    this.spinner.setVisibility(View.GONE);
+                }
+                else {
+                    initParticipantUser();
+                }
             }
-            else {
-                initParticipantUser();
+            catch (Exception e) {
+
             }
         }
         else {
@@ -141,42 +154,100 @@ public class GoogleRegisterActivity extends LoadingDialog implements AsyncRespon
     }
 
     public void updateFirebaseUser(View view) {
-        String firstNameText = this.firstName.getText().toString();
-        String lastNameText = this.lastName.getText().toString();
-        String genderText = "", birthDateText = "";
+        if(isValid()) {
+            JSONObject registerData = new JSONObject();
+            try {
+                registerData.put("urlSuffix", "/updateFirebaseUser");
+                registerData.put("httpMethod", "POST");
+                registerData.put("uid", this.currentUser.getUid());
+                registerData.put("firstName", this.firstNameText);
+                registerData.put("lastName", this.lastNameText);
+                registerData.put("gender", this.genderText);
+                registerData.put("birthDate", this.birthDateText);
+                registerData.put("type", this.registerType);
 
-        if (this.registerType.equals("student")) {
-            birthDateText = dateView.getText().toString();
-            genderText = spinner.getSelectedItem().toString();
-        }
-        String phoneNumberText = this.phoneNumber.getText().toString();
+                if(this.currentUser != null) {
+                    registerData.put("joinToCompetition", true);
+                }
 
-        JSONObject registerData = new JSONObject();
-        try {
-            registerData.put("urlSuffix", "/updateFirebaseUser");
-            registerData.put("httpMethod", "POST");
-            registerData.put("phoneNumber", phoneNumberText);
-            registerData.put("uid", this.currentUser.getUid());
-            registerData.put("firstName", firstNameText);
-            registerData.put("lastName", lastNameText);
-            registerData.put("gender", genderText);
-            registerData.put("birthDate", birthDateText);
-            registerData.put("type", this.registerType);
+                this.jsonAsyncTaskPost = new JSON_AsyncTask();
+                this.jsonAsyncTaskPost.delegate = this;
 
-            if(this.currentUser != null) {
-                registerData.put("joinToCompetition", true);
+                showProgressDialog("נרשם למערכת...");
+
+                this.jsonAsyncTaskPost.execute(registerData.toString());
+            }
+            catch (JSONException e) {
+                showToast("שגיאה בתהליך שמירת הפרטים, נסה לאתחל את האפליקציה");
             }
         }
-        catch (JSONException e) {
-            showToast("שגיאה בתהליך שמירת הפרטים, נסה לאתחל את האפליקציה");
+    }
+
+    public boolean isValid() {
+        this.firstNameText = this.firstName.getText().toString();
+        this.lastNameText = this.lastName.getText().toString();
+
+        if (this.registerType.equals("student")) {
+            this.birthDateText = dateView.getText().toString();
+            this.genderText = spinner.getSelectedItem().toString();
+        }
+        DateUtils dateUtils = new DateUtils();
+
+        this.firstNameText = this.firstName.getText().toString();
+        if(this.firstNameText.isEmpty()) {
+            this.firstName.setError("חובה למלא שם פרטי");
+            return false;
+        }
+        this.lastNameText = this.lastName.getText().toString();
+        if(this.lastNameText.isEmpty()) {
+            this.lastName.setError("חובה למלא שם משפחה");
+            return false;
+        }
+        this.genderText = "";
+        this.birthDateText = "";
+
+        if (this.registerType.equals("student")) {
+
+            this.birthDateText = dateView.getText().toString();
+                int participantAge = dateUtils.getAgeByDate(this.birthDateText);
+                if(participantAge < 4) {
+                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 4");
+                    return false;
+                }
+                else if(participantAge > 18) {
+                    this.dateView.setError("הגיל המקסימלי להשתתפות הוא 18");
+                    return false;
+                }
+                else {
+                    this.dateView.setError(null);
+                }
+
+            this.genderText = this.spinner.getSelectedItem().toString();
+            if(this.genderText.equals("בחר מגדר")) {
+                TextView errorText = (TextView) this.spinner.getSelectedView();
+                errorText.setError("");
+                errorText.setTextColor(Color.RED);
+                errorText.setText("חובה לבחור מגדר");
+                return false;
+            }
+            this.genderText = this.spinner.getSelectedItem().toString().equals("זכר") ? "male" : "female";
         }
 
-        this.jsonAsyncTaskPost = new JSON_AsyncTask();
-        this.jsonAsyncTaskPost.delegate = this;
+        this.tokenText = this.token.getText().toString();
+        if(this.tokenText.isEmpty()) {
+            this.token.setError("חובה למלא מפתח מוצר, פנה למאמן לקבלתו");
+            return false;
+        }
+        if(this.tokenText.length() != 12) {
+            this.token.setError("אורך מפתח המוצר חייב להיות 12 תווים");
+            return false;
+        }
+        if(!this.tokenText.equals(this.serverToken)) {
+            this.token.setError("מפתח המוצר שהזמנת שגוי, פנה למנהל לקבלתו");
+            return false;
+        }
 
-        showProgressDialog("נרשם למערכת...");
-
-        this.jsonAsyncTaskPost.execute(registerData.toString());
+        return true;
     }
 
 

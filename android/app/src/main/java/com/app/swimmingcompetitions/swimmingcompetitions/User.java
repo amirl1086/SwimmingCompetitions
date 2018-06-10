@@ -27,13 +27,13 @@ public class User implements Serializable {
     }
 
     public User(JSONObject userJson) throws JSONException{
-        this.uid = userJson.getString("uid");
-        this.firstName = userJson.getString("firstName");
-        this.lastName = userJson.getString("lastName");
-        this.birthDate = userJson.getString("birthDate");
-        this.email = userJson.getString("email");
-        this.gender = userJson.getString("gender");
-        this.type = userJson.getString("type");
+        this.uid = (userJson.has("uid")) ? userJson.getString("uid") : "";
+        this.firstName = (userJson.has("firstName")) ? userJson.getString("firstName") : "";
+        this.lastName = (userJson.has("lastName")) ? userJson.getString("lastName") : "";
+        this.birthDate = (userJson.has("birthDate")) ? userJson.getString("birthDate") : "";
+        this.email = (userJson.has("email")) ? userJson.getString("email") : "";
+        this.gender = (userJson.has("gender")) ? userJson.getString("gender") : "";
+        this.type = (userJson.has("type")) ? userJson.getString("type") : "";
     }
 
     public JSONObject getJSON_Object() {

@@ -28,20 +28,55 @@ public class DateUtils {
     public String getShortDate(String dateTime) {
         String[] arrDateTime = dateTime.split(" ");
         String[] arrDate = arrDateTime[0].split("/");
+        if(Integer.valueOf(arrDate[1]) < 10) {
+            arrDate[1] = "0" + arrDate[1];
+        }
+        if(Integer.valueOf(arrDate[2]) < 10) {
+            arrDate[2] = "0" + arrDate[2];
+        }
         return arrDate[1] + "/" + arrDate[2];
     }
 
     public String getFullDate(String dateTime) {
         return dateTime.split(" ")[0];
     }
+    public String getCompleteDate(String dateStr){
+        return getCompleteDate(stringToCalendar(dateStr));
+    }
 
-    public String getCompleteDate(Calendar calendar) {
-        int hours = calendar.get(Calendar.HOUR);
-        if(calendar.get(Calendar.AM_PM) == Calendar.AM) {
+    public String getCompleteDate(Calendar date){
+        int hours = date.get(Calendar.HOUR);
+        if(date.get(Calendar.AM_PM) == Calendar.PM) {
             hours += 12;
         }
-        int minutes = calendar.get(Calendar.MINUTE);
-        return "מתקיימת ב: " + getDate(calendar) + ",   בשעה - " + hours + ":" + minutes;
+
+        int minutes = date.get(Calendar.MINUTE);
+        String minutesStr = (minutes < 10) ? "0" + String.valueOf(minutes) : String.valueOf(minutes);
+
+        String result = "";
+
+        long currentDateTime = date.getTimeInMillis();
+        System.out.println("date currentDateTime " + date.get(Calendar.DAY_OF_MONTH) + " " + date.get(Calendar.MONTH) + " " + date.get(Calendar.YEAR));
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.MONTH, today.get(Calendar.MONTH) + 1);
+        System.out.println("date TODAY " + today.get(Calendar.DAY_OF_MONTH) + " " + today.get(Calendar.MONTH) + " " + today.get(Calendar.YEAR));
+
+        if(currentDateTime < today.getTimeInMillis()) {
+            result +=  "התקיימה ב - ";
+        }
+        else {
+            result +=  "תתקיים ב - ";
+        }
+        result += getDate(date) + ", בשעה - " + hours + ":" + minutesStr;
+        return result;
+    }
+
+    public boolean isDatePassed(String dateStr) {
+        Calendar date = stringToCalendar(dateStr);
+        long currentDateTime = date.getTimeInMillis();
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.MONTH, today.get(Calendar.MONTH) + 1);
+        return currentDateTime < today.getTimeInMillis();
     }
 
     public String getHebrewDate(Calendar calendar) {
@@ -68,7 +103,7 @@ public class DateUtils {
 
         String[] dateArr = birthDateArr[0].split("/");
         int day = Integer.valueOf(dateArr[0]);
-        int month = Integer.valueOf(dateArr[1]) - 1;
+        int month = Integer.valueOf(dateArr[1]);
         int year = Integer.valueOf(dateArr[2]);
 
         calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -81,7 +116,6 @@ public class DateUtils {
 
         calendar.set(Calendar.HOUR_OF_DAY, hours);
         calendar.set(Calendar.MINUTE, minutes);
-
         return calendar;
     }
 
@@ -91,7 +125,7 @@ public class DateUtils {
 
         String[] dateArr = birthDateArr[0].split("/");
         int day = Integer.valueOf(dateArr[0]);
-        int month = Integer.valueOf(dateArr[1]) - 1;
+        int month = Integer.valueOf(dateArr[1]);
         int year = Integer.valueOf(dateArr[2]);
 
         calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -119,7 +153,7 @@ public class DateUtils {
 
         String[] dateArr = birthDateArr[0].split("/");
         int day = Integer.valueOf(dateArr[0]);
-        int month = Integer.valueOf(dateArr[1]) - 1;
+        int month = Integer.valueOf(dateArr[1]);
         int year = Integer.valueOf(dateArr[2]);
         Calendar calendar = Calendar.getInstance(); /*Calendar.(year, month, day, hours, minutes);*/
 
@@ -133,11 +167,17 @@ public class DateUtils {
     }
 
     public String getDate(Calendar calendar) {
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int month = calendar.get(Calendar.MONTH);
+        if(month == 0) {
+            month = 12;
+        }
         int year = calendar.get(Calendar.YEAR);
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        return day + "/" + month + "/" + year;
+        String dayStr = (day < 10) ? "0" + String.valueOf(day) : String.valueOf(day);
+        String monthStr = (month < 10) ? "0" + String.valueOf(month) : String.valueOf(month);
+
+        return dayStr + "/" + monthStr + "/" + year;
     }
 
     public int getAgeByDate(String birthDate){
@@ -145,7 +185,7 @@ public class DateUtils {
 
         String[] dateArr = birthDateArr[0].split("/");
         int day = Integer.valueOf(dateArr[0]);
-        int month = Integer.valueOf(dateArr[1]) - 1;
+        int month = Integer.valueOf(dateArr[1]);
         int year = Integer.valueOf(dateArr[2]);
         Calendar dob = Calendar.getInstance(); /*Calendar.(year, month, day, hours, minutes);*/
 

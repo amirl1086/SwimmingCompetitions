@@ -1,7 +1,5 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
-interface AsyncResponse {
-
+interface HttpAsyncResponse {
     void processFinish(String result);
-
 }

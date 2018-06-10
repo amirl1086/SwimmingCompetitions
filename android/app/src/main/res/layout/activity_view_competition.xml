@@ -32,12 +32,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/competition_name"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
@@ -47,11 +47,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal"
                 android:weightSum="11">
-
+<!--
                 <TextView
                     android:id="@+id/take_place_on_date"
                     android:layout_width="wrap_content"
@@ -60,19 +60,18 @@
                     android:text="@string/take_place_in_date"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp" />-->
 
                 <TextView
                     android:id="@+id/date_of_competition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="11"
                     android:hint="@string/date_of_competition"
-                    android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:textSize="22sp" />
-
+<!--
                 <TextView
                     android:id="@+id/on_time"
                     android:layout_width="wrap_content"
@@ -91,28 +90,28 @@
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="22sp" />-->
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/participants_for_iteration"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="@string/participants_for_iteration"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/num_of_participants_for_competition"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="22sp" />
@@ -121,23 +120,23 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/distance_and_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="@string/distance_and_style"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/distance_of_competition"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="22sp"
                     android:layout_marginStart="10dp" />
@@ -145,7 +144,7 @@
                 <TextView
                     android:id="@+id/meters"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:text="@string/meters"
@@ -155,7 +154,7 @@
                 <TextView
                     android:id="@+id/style_of_competition"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="22sp" />
@@ -164,8 +163,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -194,7 +193,7 @@
 
                 <Button
                     android:id="@+id/register_edit_btn"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/register"
@@ -205,7 +204,7 @@
 
                 <Button
                     android:id="@+id/register_temporary_user_btn"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
@@ -218,7 +217,7 @@
 
                 <Button
                     android:id="@+id/start_competition"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"

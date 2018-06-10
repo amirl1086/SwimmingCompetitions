@@ -1,32 +1,29 @@
 package com.app.swimmingcompetitions.swimmingcompetitions;
 
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
 import java.util.Calendar;
 
-public class AddChildToParentActivity extends LoadingDialog implements AsyncResponse {
+
+public class AddChildToParentActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private TextView dateView;
     private EditText email;
     private int year, month, day;
     private User currentUser;
     private JSON_AsyncTask jsonAsyncTaskPost;
+    private String currentCallout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +114,8 @@ public class AddChildToParentActivity extends LoadingDialog implements AsyncResp
         catch (JSONException e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-            System.out.println("AddChildToParentActivity addChildToParent Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("AddChildToParentActivity addChildToParent Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
     }
 

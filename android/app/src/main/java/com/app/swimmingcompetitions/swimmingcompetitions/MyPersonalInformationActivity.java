@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,14 +26,11 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
-public class MyPersonalInformationActivity extends LoadingDialog implements AsyncResponse {
+public class MyPersonalInformationActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;
@@ -51,7 +47,6 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     private int year, month, day;
 
     private Spinner genderSpinner;
-
     private String genderText;
     private String firstNameText;
     private String lastNameText;
@@ -82,8 +77,9 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         this.lastName = findViewById(R.id.edit_last_name);
         this.genderSpinner = findViewById(R.id.edit_gender);
         this.dateView = findViewById(R.id.birth_date_view);
-
         Button birthDateButton = findViewById(R.id.edit_birth_date);
+
+        this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
 
         if(!this.currentUser.getType().equals("student")) {
             birthDateButton.setVisibility(View.GONE);
@@ -108,8 +104,6 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
     }
 
     private void initParticipantUser() {
-        this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
-
         ArrayAdapter<String> genderSpinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
             @Override
@@ -344,24 +338,12 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
                         switchToViewInRealTimeActivity();
                         break;
                     }
-                    case R.id.my_personal_info_nav_item: {
-                        switchToMyPersonalInformationActivity();
-                        break;
-                    }
-                    case R.id.my_children_nav_item: {
-                        switchToMyChildrenActivity();
-                        break;
-                    }
-                    case R.id.change_email_nav_item: {
-                        switchToChangeEmailActivity();
-                        break;
-                    }
-                    case R.id.change_password_nav_item: {
-                        switchToChangePasswordActivity();
-                        break;
-                    }
                     case R.id.media_nav_item: {
                         switchToViewMediaActivity();
+                        break;
+                    }
+                    case R.id.settings_nav_item: {
+                        switchToMySettingsActivity();
                         break;
                     }
                     case R.id.log_out_nav_item: {
@@ -380,25 +362,25 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         startActivity(intent);
     }
 
+    public void switchToViewInRealTimeActivity() {
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToMySettingsActivity() {
+        Intent intent = new Intent(this, MySettingsActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
     public void switchToViewMediaActivity() {
         Intent intent = new Intent(this, ViewMediaActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 
-    public void switchToHomePageActivity() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewInRealTimeActivity() {
-        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    private void switchToViewStatisticsActivity() {
+    public void switchToViewStatisticsActivity() {
         Intent intent = new Intent(this, ViewStatisticsActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
@@ -416,27 +398,9 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Asyn
         startActivity(intent);
     }
 
-    public void switchToMyPersonalInformationActivity() {
-        Intent intent = new Intent(this, MyPersonalInformationActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToMyChildrenActivity() {
-        Intent intent = new Intent(this, MyChildrenActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangePasswordActivity() {
-        Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
-        startActivity(intent);
-    }
-
-    public void switchToChangeEmailActivity() {
-        Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+    public void switchToHomePageActivity() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

@@ -11,19 +11,16 @@ public class LoadingDialog extends AppCompatActivity {
     public ProgressDialog mProgressDialog;
 
     public void showProgressDialog(String message) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(message);
-            mProgressDialog.setCanceledOnTouchOutside(false);
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
+        this.mProgressDialog = new ProgressDialog(this);
+        this.mProgressDialog.setMessage(message);
+        this.mProgressDialog.setCanceledOnTouchOutside(false);
+        this.mProgressDialog.setIndeterminate(true);
+        this.mProgressDialog.show();
     }
 
     public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (this.mProgressDialog != null && this.mProgressDialog.isShowing()) {
+            this.mProgressDialog.dismiss();
         }
     }
 

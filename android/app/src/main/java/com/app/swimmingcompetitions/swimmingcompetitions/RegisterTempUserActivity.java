@@ -4,12 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,7 +22,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class RegisterTempUserActivity extends LoadingDialog implements AsyncResponse {
+public class RegisterTempUserActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
     private FirebaseUser fbUser;

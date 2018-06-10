@@ -3,7 +3,8 @@ const admin = require('firebase-admin');
 const firebase = require('firebase');
 const functions = require('firebase-functions');
 const serviceAccount = require("./firebase-swimmingcompetitions-firebase-adminsdk-by0h1-3444f4cabe.json");
-
+const authentication = require('./auth/auth.js');
+const firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 /* APP SETTINGS INITIALIZING */
 const config = {
@@ -22,8 +23,6 @@ admin.initializeApp({
   databaseURL: config.databaseURL
 });
 
-const authentication = require('./auth/auth.js');
-const firebaseDB_Service = require('./utils/firebaseDB_Service.js');
 
 
 
@@ -34,7 +33,7 @@ exports.addNewUser = functions.https.onRequest((request, response) => {
 });
 
 exports.getUser = functions.https.onRequest((request, response) => {
-	authentication.getUser(request.body.currentUserUid, response);
+	authentication.getUser(request.body.currentUserUid, response, null);
 });
 
 exports.logIn = functions.https.onRequest((request, response) => {
@@ -49,18 +48,6 @@ exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.updateFirebaseUser(request.body, response);
 });
 
-exports.getCompetitionInProgress = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.getCompetitionInProgress(response);
-});
-
-
-
-
-
-
-
-/* ================================== */
-
 
 
 
@@ -68,6 +55,10 @@ exports.getCompetitionInProgress = functions.https.onRequest((request, response)
 /* ================================ */
 exports.getCompetitions = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.getCompetitions(request.body, response);
+});
+
+exports.getCompetitionInProgress = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getCompetitionInProgress(response);
 });
 
 exports.setNewCompetition = functions.https.onRequest((request, response) => {
@@ -94,14 +85,6 @@ exports.initCompetitionForIterations = functions.https.onRequest((request, respo
 	firebaseDB_Service.initCompetitionForIterations(request.body, response);
 });
 
-exports.getUsersByParentId = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.getUsersByParentId(request.body, response);
-});
-
-exports.addChildToParent = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.addChildToParent(request.body, response);
-});
-
 exports.getPersonalResults = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.getPersonalResultsByCompetitionId(request.body, response);
 });
@@ -109,31 +92,30 @@ exports.getPersonalResults = functions.https.onRequest((request, response) => {
 exports.cancelRegistration = functions.https.onRequest((request, response) => {
 	firebaseDB_Service.cancelRegistration(request.body, response);
 });
+
+
+
+
+/* PARENTS FUNCTIONS LISTENERS */
 /* ================================ */
+exports.getUsersByParentId = functions.https.onRequest((request, response) => {
+	authentication.getUsersByParentId(request.body, response);
+});
+
+exports.addChildToParent = functions.https.onRequest((request, response) => {
+	authentication.addChildToParent(request.body, response);
+});
 
 
-//db manipulation
-/*  exports.resetCompetitions = functions.https.onRequest((request, response) => {
-	let db = admin.database();
-	let collectionRef = db.ref('competitions');
 
-	collectionRef.on('value', (snapshot) => {
-		let competitions = snapshot.val();
-		for (let compId in competitions) {
-			for (let userId in competitions[compId].participants) {
-				competitions[compId].participants[userId].competed = 'false';
-			}
-			competitions[compId].isDone = 'false';
-			competitions[compId].inProgress = 'false';
-			delete competitions[compId].currentParticipants;
-		}
-		collectionRef.update(competitions);
 
-		collectionRef = db.ref('personalResults');
-		collectionRef.remove();
+/* MEDIA FUNCTIONS LISTENERS */
+/* ================================ */
+exports.addNewMedia = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.addNewMedia(request.body, response);
+});
 
-		response.send('success\n');
-	}, (error) => {
-		response.send('error ', error, '\n');
-	});
-}); */
+exports.getMediaByCompetitionId = functions.https.onRequest((request, response) => {
+	firebaseDB_Service.getMediaByCompetitionId(request.body, response);
+});
+/* ================================ */
