@@ -77,8 +77,9 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Http
         this.lastName = findViewById(R.id.edit_last_name);
         this.genderSpinner = findViewById(R.id.edit_gender);
         this.dateView = findViewById(R.id.birth_date_view);
-
         Button birthDateButton = findViewById(R.id.edit_birth_date);
+
+        this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
 
         if(!this.currentUser.getType().equals("student")) {
             birthDateButton.setVisibility(View.GONE);
@@ -103,8 +104,6 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Http
     }
 
     private void initParticipantUser() {
-        this.genders = new String[]{"בחר מגדר", "זכר", "נקבה"};
-
         ArrayAdapter<String> genderSpinnerListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genders) {
 
             @Override

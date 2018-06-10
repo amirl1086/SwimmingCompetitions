@@ -43,8 +43,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
 
     private static final int RC_SIGN_IN = 100;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
@@ -77,13 +76,11 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         //this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    @Override
-    public void onClick(View v) {
+    @Override public void onClick(View v) {
         googleSignIn();
     }
-
-    @Override
-    public void onResume() {
+    @Override public void onBackPressed() { }
+    @Override public void onResume() {
         super.onResume();
         redirectUser();
     }
@@ -112,8 +109,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         }
     }
 
-    @Override
-    public void processFinish(String result) {
+    @Override public void processFinish(String result) {
         switch (this.currentCallout) {
             case "getUser": {
                 handleGetUser(result);
@@ -155,7 +151,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 JSONObject userData = response.getJSONObject("data");
                 this.currentUser = new User(userData);
                 if(this.currentUser.getType().isEmpty()) {
-                    switchToGoogleRegisterActivity();
+                    switchToGoogleRegisterActivity(userData);
                 }
                 else {
                     switchToHomePageActivity();
@@ -252,8 +248,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -300,9 +295,9 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         startActivity(intent);
     }
 
-    public void switchToGoogleRegisterActivity() {
+    public void switchToGoogleRegisterActivity(JSONObject userData) {
         Intent intent = new Intent(this, PreRegisterActivity.class);
-        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("userData", userData.toString());
         startActivity(intent);
     }
 

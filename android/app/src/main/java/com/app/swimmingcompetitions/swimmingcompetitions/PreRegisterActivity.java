@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONObject;
+
 public class PreRegisterActivity extends AppCompatActivity {
 
-    private User currentUser;
-    private FirebaseAuth mAuth;
+    private JSONObject userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,18 +22,31 @@ public class PreRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pre_register);
 
         Intent intent = getIntent();
-        if(intent.hasExtra("currentUser")) {
-            this.currentUser = (User) intent.getSerializableExtra("currentUser");
-            this.mAuth = FirebaseAuth.getInstance();
+        if(intent.hasExtra("userData")) {
+            try {
+                this.userData = new JSONObject(intent.getStringExtra("userData"));
+            }
+            catch (Exception e) {
+                showToast("שגיאה באתחול מסך ההרשמה, נסה לאתחל את האפליקציה");
+                System.out.println("LogInActivity logInWithIdToken Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
+            }
         }
+        else {
+            switchToLogInActivity();
+        }
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void switchToRegisterActivity(final View view) {
         String buttonName = view.getId() == R.id.parent_btn ? "parent" : "student";
 
-        if(this.currentUser != null) {
+        if(this.userData != null) {
             Intent googleRegIntent = new Intent(this, GoogleRegisterActivity.class);
-            googleRegIntent.putExtra("currentUser", this.currentUser);
+            googleRegIntent.putExtra("userData", this.userData.toString());
             googleRegIntent.putExtra("registerType", buttonName);
             startActivity(googleRegIntent);
         }

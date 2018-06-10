@@ -39,12 +39,7 @@ public class HomePageActivity extends LoadingDialog {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if(this.fbUser == null) {
-            switchToLogInActivity();
-        }
-    }
+    public void onBackPressed() { }
 
     @Override
     public void onResume() {

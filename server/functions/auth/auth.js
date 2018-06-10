@@ -12,20 +12,29 @@ module.exports =  {
 		    getUser(currentUid, null, (sucess, result) => {
 		    	if(sucess) {
 		    		if(!result) {
-		    			var userParams = { 
-		    				'firstName': decodedToken.name.substr(0, decodedToken.name.indexOf(' ')),
-		    				'lastName': decodedToken.name.substr(decodedToken.name.indexOf(' ') + 1),
-		    				'email': decodedToken.email,
-		    				'uid': currentUid
-		    			};
-		    			addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
-							if(success) {
-								utilities.sendResponse(response, null, result); 
-							}
-							else {
-								utilities.sendResponse(response, result, null);
-							}
+						let db = admin.database();
+						let tokenRef = db.ref('token/');
+
+						tokenRef.on('value', (snapshot) => {
+							var userParams = { 
+								'firstName': decodedToken.name.substr(0, decodedToken.name.indexOf(' ')),
+								'lastName': decodedToken.name.substr(decodedToken.name.indexOf(' ') + 1),
+								'email': decodedToken.email,
+								'token': snapshot.val()
+							};
+							addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
+								if(success) {
+									utilities.sendResponse(response, null, result); 
+								}
+								else {
+									utilities.sendResponse(response, result, null);
+								}
+							});
+						}, (error) => {
+
 						});
+					
+						
 		    		}
 		    		else {
 		    			utilities.sendResponse(response, null, result);
@@ -48,27 +57,42 @@ module.exports =  {
 	addNewFirebaseUser: (params, response) => {
 		//create new user in with credantials
 		console.log('params ', params);
-		var newUser = {
-			'email': params.email,
-		  	'password': params.password,
-			'displayName': params.firstName + ' ' + params.lastName
-		}
 
-		admin.auth().createUser(newUser).then((userRecord) => {
-			console.log('firebaseUser ', userRecord);
-			//utilities.sendResponse(response, null, userRecord);
-			addNewUser(userRecord, params, (success, result) => { 
-				if(success) {
-					utilities.sendResponse(response, null, result); 
+		let db = admin.database();
+		let tokenRef = db.ref('token');
+		console.log('asd', tokenRef);
+		
+		tokenRef.on('value', (snapshot) => {
+			console.log('snapshot', snapshot, '\n\n\n\n\n' + snapshot.val());
+			if(params.token === snapshot.val()) {
+				var newUser = {
+					'email': params.email,
+					  'password': params.password,
+					'displayName': params.firstName + ' ' + params.lastName
 				}
-				else {
-					utilities.sendResponse(response, result, null);
-				}
-			});
-		})
-		.catch((error) => {
-			console.log('addNewFirebaseUser error: ', error);
-			utilities.sendResponse(response, error, null);
+		
+				admin.auth().createUser(newUser).then((userRecord) => {
+					console.log('firebaseUser ', userRecord);
+					//utilities.sendResponse(response, null, userRecord);
+					addNewUser(userRecord, params, (success, result) => { 
+						if(success) {
+							utilities.sendResponse(response, null, result); 
+						}
+						else {
+							utilities.sendResponse(response, result, null);
+						}
+					});
+				})
+				.catch((error) => {
+					console.log('addNewFirebaseUser error: ', error);
+					utilities.sendResponse(response, error, null);
+				});
+			}
+			else {
+				utilities.sendResponse(response, {'message': 'token_dont_match'}, null);
+			}
+		}, (error) => {
+			utilities.sendResponse(response, error, null);ß
 		});
 	},
 
@@ -136,7 +160,7 @@ let getCollectionByFilter = (collectionName, filter, value, callback) => {
 	}, (error) => {
 		callback(false, error);
 	});
-}
+};	
 
 let getUser = (uid, response, callback) => {
 	let db = admin.database();
@@ -165,15 +189,8 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 	let usersRef = db.ref('users/' + firebaseUser.uid);
 
 	//create the user object
-	usersRef.set({
-		'uid': firebaseUser.uid,
-		'email': userParams.email,
-		'firstName': userParams.firstName,
-		'lastName': userParams.lastName,
-		'birthDate': userParams.birthDate || '',
-		'gender': userParams.gender || '',
-		'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
-	});
+	let userObject = Object.assign(firebaseUser, userParams);
+	usersRef.set(userObject);
 
 	//insert to database
 	usersRef.on('value', (snapshot) => {
@@ -189,3 +206,30 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 		callback(false, error);
 	});
 };
+
+
+// //db manipulation
+// exports.resetCompetitions = functions.https.onRequest((request, response) => {
+// 	let db = admin.database();
+// 	let collectionRef = db.ref('competitions');
+
+// 	collectionRef.on('value', (snapshot) => {
+// 		let competitions = snapshot.val();
+// 		for (let compId in competitions) {
+// 			for (let userId in competitions[compId].participants) {
+// 				competitions[compId].participants[userId].competed = 'false';
+// 			}
+// 			competitions[compId].isDone = 'false';
+// 			competitions[compId].inProgress = 'false';
+// 			delete competitions[compId].currentParticipants;
+// 		}
+// 		collectionRef.update(competitions);
+
+// 		collectionRef = db.ref('personalResults');
+// 		collectionRef.remove();
+
+// 		response.send('success\n');
+// 	}, (error) => {
+// 		response.send('error ', error, '\n');
+// 	});
+// });
