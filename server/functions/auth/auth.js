@@ -60,14 +60,12 @@ module.exports =  {
 
 		let db = admin.database();
 		let tokenRef = db.ref('token');
-		console.log('asd', tokenRef);
 		
 		tokenRef.on('value', (snapshot) => {
-			console.log('snapshot', snapshot, '\n\n\n\n\n' + snapshot.val());
 			if(params.token === snapshot.val()) {
 				var newUser = {
 					'email': params.email,
-					  'password': params.password,
+					'password': params.password,
 					'displayName': params.firstName + ' ' + params.lastName
 				}
 		
@@ -189,7 +187,15 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 	let usersRef = db.ref('users/' + firebaseUser.uid);
 
 	//create the user object
-	let userObject = Object.assign(firebaseUser, userParams);
+	let userObject = {
+		'uid': firebaseUser.uid,
+		'email': userParams.email,
+		'firstName': userParams.firstName,
+		'lastName': userParams.lastName,
+		'birthDate': userParams.birthDate || '',
+		'gender': userParams.gender || '',
+		'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
+	};
 	usersRef.set(userObject);
 
 	//insert to database
