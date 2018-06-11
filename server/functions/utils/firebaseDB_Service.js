@@ -23,30 +23,6 @@ module.exports = {
 		});
 	},
 
-	updateFirebaseUser: (params, response) => {
-		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
-		    let db = admin.database();
-			let usersRef = db.ref('users/' + params.uid);
-
-			usersRef.update({
-				'firstName': params.firstName,
-				'lastName': params.lastName,
-				'birthDate': params.birthDate || '',
-				'gender': params.gender || '',
-				'type': params.type
-			});
-
-			usersRef.on('value', (snapshot) => {
-				utilities.sendResponse(response, null, snapshot.val());
-			}, (error) => {
-				utilities.sendResponse(response, error, null);
-			});
-		})
-		.catch((error) => {
-		    console.log("Error updating user:", error);
-		});
-	},
-
 	addExistingUserToCompetition: (params, response) => {
 		console.log('addExistingUserToCompetition params ', params);
 		getCollectionByFilter('users', 'email', params.email, (success, result) => {
@@ -74,8 +50,6 @@ module.exports = {
 			}
 		});
 	},
-
-
 
 	setNewCompetition: (competitionParams, response) => {
 		let db = admin.database();
@@ -136,8 +110,6 @@ module.exports = {
 				let personalResults = result;
 				let statisticsResults = [];
 				let selectedCompetitions = new Set();
-				console.log('getParticipantStatistics result ', personalResults);
-				console.log('getParticipantStatistics selectedCompetitions ', selectedCompetitions);
 
 				//create the array of scores by competition id
 				for(let competitionId in personalResults) {
@@ -151,12 +123,8 @@ module.exports = {
 				//retreive the competitions data to assign it by styles and years
 				getCollectionByName('competitions', (success, result) => {
 					if(success) {
-						//map to list and list to map to reduce runtime for searching 
-						let competitions = result;
-						//let filteredCompetitions = utilities.listToMap(competitions.filter((competition) => selectedCompetitions.has(competition.id)), 'id');
-
-						//attach the competition object to the correct place in the array
-						for(let i in statisticsResults) {
+						let competitions = result; //map to list and list to map to reduce runtime for searching 
+						for(let i in statisticsResults) { //attach the competition object to the correct place in the array
 							statisticsResults[i].competition = competitions[statisticsResults[i].competition];
 						}
 
@@ -171,8 +139,7 @@ module.exports = {
 			else {
 				utilities.sendResponse(response, result, null);
 			}
-
-		})
+		});
 	},
 
 	getPersonalResultsByCompetitionId: (params, response) => {
@@ -181,8 +148,13 @@ module.exports = {
 
 		getCompetitionResults(competition, (success, result) => {
 			if(success) {
-				let resultsAgeMap = filters.sortPersonalResults(competition, result);
-				utilities.sendResponse(response, null, resultsAgeMap);
+				if(reuslt) {
+					let resultsAgeMap = filters.sortPersonalResults(competition, result);
+					utilities.sendResponse(response, null, resultsAgeMap);
+				}
+				else {
+					utilities.sendResponse(response, {'message': 'no_results'}, null);
+				}
 			}
 			else {
 				utilities.sendResponse(response, result, null);

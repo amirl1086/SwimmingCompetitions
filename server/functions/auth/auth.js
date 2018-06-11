@@ -45,18 +45,38 @@ module.exports =  {
 		getUser(uid, response, callback);
 	},
 
+	updateFirebaseUser: (params, response) => {
+		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
+		    let db = admin.database();
+			let usersRef = db.ref('users/' + params.uid);
+
+			usersRef.update({
+				'firstName': params.firstName,
+				'lastName': params.lastName,
+				'birthDate': params.birthDate || '',
+				'gender': params.gender || '',
+				'type': params.type
+			});
+
+			usersRef.on('value', (snapshot) => {
+				utilities.sendResponse(response, null, snapshot.val());
+			}, (error) => {
+				utilities.sendResponse(response, error, null);
+			});
+		})
+		.catch((error) => {
+		    console.log("Error updating user:", error);
+		});
+	},
+
 	addNewFirebaseUser: (params, response) => {
-		//create new user in with credantials
-		console.log('params ', params);
-		var newUser = {
+		var newUser = { //create new user in with credantials
 			'email': params.email,
 		  	'password': params.password,
 			'displayName': params.firstName + ' ' + params.lastName
 		}
 
 		admin.auth().createUser(newUser).then((userRecord) => {
-			console.log('firebaseUser ', userRecord);
-			//utilities.sendResponse(response, null, userRecord);
 			addNewUser(userRecord, params, (success, result) => { 
 				if(success) {
 					utilities.sendResponse(response, null, result); 

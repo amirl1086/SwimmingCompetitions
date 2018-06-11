@@ -45,7 +45,7 @@ exports.updateUserDetails = functions.https.onRequest((request, response) => {
 });
 
 exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
-	firebaseDB_Service.updateFirebaseUser(request.body, response);
+	authentication.updateFirebaseUser(request.body, response);
 });
 
 
