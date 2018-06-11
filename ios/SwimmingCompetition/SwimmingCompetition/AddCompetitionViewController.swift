@@ -10,6 +10,7 @@ import UIKit
 
 protocol dataProtocol {
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String)
+    func dataSelected(competition: Competition)
 }
 
 class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
@@ -178,14 +179,19 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                         if self.isEdit {
                             self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numberTextField.text!)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
                         } else {
-                            if (self.parent as? CompetitionsViewController) != nil {
+                            var competition : Competition!
+                            let compData = response.data
+                            competition = Competition(json: compData, id: compData["id"] as! String)
+                           
+                            self.delegate?.dataSelected(competition: competition)
+                            /*if (self.parent as? CompetitionsViewController) != nil {
                                 let parentView = self.parent as! CompetitionsViewController
                                 var competition : Competition!
                                 let compData = response.data
                                 competition = Competition(json: compData, id: compData["id"] as! String)
                                 parentView.competitions.append(competition)
                                 parentView.tableView.reloadData()
-                            }
+                            }*/
                            
                         }
                         _ = self.navigationController?.popViewController(animated: true)

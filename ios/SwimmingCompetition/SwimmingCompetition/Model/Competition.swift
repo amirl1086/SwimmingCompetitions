@@ -20,18 +20,29 @@ class Competition {
     var toAge: String
     var participants = [Participant]()
     var currentParticipants = [Participant]()
+    var isDone: Bool
     
     init(json: JSON, id: String) {
         let name = json["name"] as? String
         let activityDate = json["activityDate"] as? String
         let swimmingStyle = json["swimmingStyle"] as? String
-        let length = json["length"] as? String
-        let numOfParticipants = json["numOfParticipants"] as? String
+        var length = json["length"] as? String
+        if length == nil {
+            length = String(json["length"] as! Int)
+        }
+        var numOfParticipants = json["numOfParticipants"] as? String
+        if numOfParticipants == nil {
+            numOfParticipants = String(json["numOfParticipants"] as! Int)
+        }
         let fromAge = json["fromAge"] as? String
         let toAge = json["toAge"] as? String
         let id = id
         let participants = json["participants"] as? JSON
         let currentParticipants = json["currentParticipants"] as? JSON
+        var isDone:Bool = false
+        if(json["isDone"] as? String == "true" || json["isDone"] as? String == "1" || json["isDone"] as? Bool == true) {
+            isDone = true
+        }
         
         
         
@@ -45,6 +56,7 @@ class Competition {
         self.id = id
         self.participants = []
         self.currentParticipants = []
+        self.isDone = isDone
         
         if participants != nil {
             for part in participants! {

@@ -17,6 +17,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         var femaleResults:[Participant]!
     }
 
+    var menu_vc: MenuViewController!
+    
+    var currentUser: User!
+    
     var array = [Result]()
     var data:JSON = [:]
     var controllerType = ""
@@ -36,12 +40,21 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         if controllerType == "results" {
             getResults()
         } else if controllerType == "realTime" {
-            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
-                let data = snapshot.value as! JSON
-                let participant = Participant(json: data, id: "")
-                self.realTimeArray.insert(participant, at: 0)
-                print(snapshot)
-                self.tableView.reloadData()
+            self.title = "צפייה בזמן אמת"
+            initMenuBar()
+            Service.shared.connectToServer(path: "getCompetitionInProgress", method: .post, params: [:]) { (response) in
+                if response.succeed {
+                    for data in response.data {
+                        var competition : Competition!
+                        let compData = response.data[data.0] as! JSON
+                        competition = Competition(json: compData, id: data.0)
+                        self.competition = competition
+                        self.tableView.reloadData()
+                    }
+                    self.getRealTimeResults()
+                } else {
+                    self.present(Alert().confirmAlert(title: "", message: "לא נמצאה תחרות"), animated: true, completion: nil)
+                }
             }
         } else {
             setCompetitionResults()
@@ -61,11 +74,15 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func getRealTimeResults() {
-        Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
-            let data = snapshot.value as! JSON
-            let participant = Participant(json: data, id: "")
-            self.realTimeArray.insert(participant, at: 0)
-            self.tableView.reloadData()
+        if self.competition != nil {
+            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
+                let data = snapshot.value as! JSON
+                let participant = Participant(json: data, id: "")
+                self.realTimeArray.insert(participant, at: 0)
+                self.tableView.reloadData()
+            }
+        } else {
+            self.present(Alert().confirmAlert(title: "", message: "אין תחרות לצפיה"), animated: true, completion: nil)
         }
     }
     
@@ -247,7 +264,16 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if controllerType == "realTime" {
-            return nil
+            let view = UIView()
+            view.backgroundColor = UIColor.black
+            let label = UILabel()
+            label.text = self.competition != nil ? self.competition.name : ""
+            label.textAlignment = .center
+            label.font = label.font.withSize(25)
+            label.textColor = UIColor.white
+            label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
+            view.addSubview(label)
+            return view
         }
         
         let view = UIView()
@@ -267,6 +293,31 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
+    }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
     }
   
 }

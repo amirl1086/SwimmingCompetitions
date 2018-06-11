@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import SwiftSpinner
 
 class SettingsViewController: UIViewController {
     
@@ -35,10 +36,16 @@ class SettingsViewController: UIViewController {
         self.backgroundView.frame = self.view.bounds
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        initMenuBar()
+    }
+    
     @IBAction func editPersonalDetails(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let registerView = sb.instantiateViewController(withIdentifier: "registerId") as? RegisterViewController {
             registerView.currentUser = self.currentUser
+            registerView.delegate = self
             self.navigationController?.pushViewController(registerView, animated: true)
         }
     }
@@ -64,11 +71,14 @@ class SettingsViewController: UIViewController {
             alert.dismiss(animated: false, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+            
             if alert.textFields![1].text != alert.textFields![2].text {
                 alert.message = "הסיסמאות החדשות אינן תואמות"
                 self.present(alert, animated: true, completion: nil)
             } else {
+                SwiftSpinner.show("אנא המתן")
                 Auth.auth().signIn(withEmail: self.currentUser.email, password: alert.textFields![0].text!, completion: { (user, error) in
+                    SwiftSpinner.hide()
                     if error != nil {
                         alert.message = "סיסמא נוכחית אינה נכונה"
                         self.present(alert, animated: true, completion: nil)
@@ -78,7 +88,7 @@ class SettingsViewController: UIViewController {
                             var message = ""
                             if error != nil {
                                 title = "שגיאה"
-                                message = "הסיסמא לא שונתה, נסה שוב"
+                                message = "סיסמא לא שונתה"
                             } else {
                                 message = "הסיסמא שונתה בהצלחה"
                             }
@@ -120,5 +130,13 @@ class SettingsViewController: UIViewController {
         
         self.menu_vc.view.removeFromSuperview()
     }
+    
+}
+
+extension SettingsViewController: userProtocol {
+    func dataChanged(user: User) {
+        self.currentUser = user
+    }
+    
     
 }

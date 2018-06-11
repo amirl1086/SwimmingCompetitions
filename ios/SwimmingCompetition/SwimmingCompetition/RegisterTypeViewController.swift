@@ -14,6 +14,7 @@ class RegisterTypeViewController: UIViewController {
     //user type
     var type = String()
     var googleUser: GIDGoogleUser! = nil
+    var token = ""
     
     var backgroundView: UIImageView!
     
@@ -45,6 +46,7 @@ class RegisterTypeViewController: UIViewController {
             let passData = segue.destination as! RegisterViewController
             passData.userType = type
             if (googleUser != nil) {
+                passData.token = self.token
                 passData.googleUser = self.googleUser
                 passData.isGoogleRegister = true
             }

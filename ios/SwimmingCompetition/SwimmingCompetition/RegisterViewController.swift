@@ -11,18 +11,25 @@ import Firebase
 import GoogleSignIn
 import SwiftSpinner
 
+protocol userProtocol {
+    func dataChanged(user: User)
+}
+
 class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     var currentUser: User!
+    var delegate: userProtocol?
+    
+    var token = ""
     
     @IBOutlet var scrollView: UIScrollView!
     
     //===== Text fields =====//
+    @IBOutlet weak var genderTitle: UILabel!
     @IBOutlet var gender: UISegmentedControl!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var birthDate: UITextField!
-    @IBOutlet weak var phoneNumber: UITextField!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var passwordConfirmation: UITextField!
@@ -50,13 +57,11 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         firstName.delegate = self
         lastName.delegate = self
         birthDate.delegate = self
-        phoneNumber.delegate = self
         email.delegate = self
         password.delegate = self
         passwordConfirmation.delegate = self
         productNumber.delegate = self
-        productNumber.isHidden = true
-       
+        
         activeTextField = firstName
         
         if isGoogleRegister {
@@ -71,8 +76,11 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         if currentUser != nil {
             self.title = "פרטים אישיים"
+            self.userType = self.currentUser.type
             cancelEditDetails()
         }
+        
+        changeRegisterView()
         
         // Do any additional setup after loading the view, typically from a nib.
         backgroundView = UIImageView(frame: self.view.bounds)
@@ -99,15 +107,15 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLayoutSubviews() {
         
         backgroundView.frame = self.view.bounds
-        
+        print(email.frame.origin.y)
         firstName.bottomLineBorder()
         lastName.bottomLineBorder()
         birthDate.bottomLineBorder()
-        phoneNumber.bottomLineBorder()
         email.bottomLineBorder()
         password.bottomLineBorder()
         passwordConfirmation.bottomLineBorder()
         productNumber.bottomLineBorder()
+
     }
     
     @objc func cancelEditDetails() {
@@ -120,7 +128,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         } else {
             self.gender.selectedSegmentIndex = 1
         }
-        self.phoneNumber.text = self.currentUser.phoneNumber
         
         self.email.isEnabled = false
         self.email.textColor = UIColor.darkGray
@@ -130,8 +137,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         self.lastName.textColor = UIColor.darkGray
         self.birthDate.isEnabled = false
         self.birthDate.textColor = UIColor.darkGray
-        self.phoneNumber.isEnabled = false
-        self.phoneNumber.textColor = UIColor.darkGray
         self.gender.isEnabled = false
         self.gender.tintColor = UIColor.darkGray
         
@@ -141,6 +146,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         self.confirmButton.isHidden = true
         self.password.isHidden = true
         self.passwordConfirmation.isHidden = true
+        self.productNumber.isHidden = true
     }
     
     @objc func editDetails() {
@@ -156,8 +162,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         self.lastName.textColor = UIColor.black
         self.birthDate.isEnabled = true
         self.birthDate.textColor = UIColor.black
-        self.phoneNumber.isEnabled = true
-        self.phoneNumber.textColor = UIColor.black
         self.gender.isEnabled = true
         self.gender.tintColor = UIColor.blue
         
@@ -191,18 +195,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     //function for change the register view accorting to user type
     func changeRegisterView() {
         if userType == "parent" {
-            
-            (firstName.frame.origin, email.frame.origin) = (email.frame.origin, firstName.frame.origin)
-            (lastName.frame.origin, password.frame.origin) = (password.frame.origin, lastName.frame.origin)
-            (birthDate.frame.origin, passwordConfirmation.frame.origin) = (passwordConfirmation.frame.origin, birthDate.frame.origin)
-            (phoneNumber.frame.origin, productNumber.frame.origin) = (productNumber.frame.origin, phoneNumber.frame.origin)
-            
-            firstName.isHidden = true
-            lastName.isHidden = true
-            birthDate.isHidden = true
-            phoneNumber.isHidden = true
-            confirmButton.frame.origin = CGPoint(x: 150, y: 300)
-            
+            self.genderTitle.isHidden = true
+            self.gender.isHidden = true
+            self.birthDate.isHidden = true
         }
     }
     
@@ -212,8 +207,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         var genderToSend = ""
         if gender.titleForSegment(at: gender.selectedSegmentIndex)! == "זכר" {
             genderToSend = "male"
-        }
-        else {
+        } else {
             genderToSend = "female"
         }
         
@@ -221,20 +215,21 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             "uid": Auth.auth().currentUser != nil ? Auth.auth().currentUser!.uid : "",
             "firstName": firstName.text!,
             "lastName": lastName.text!,
-            "birthDate": birthDate.text!,
-            "phoneNumber": phoneNumber.text!,
+            "birthDate": birthDate.text != nil ? birthDate.text! : "",
             "gender": genderToSend,
             "email": email.text!,
             "password": password.text != nil ? password.text! : "",
             "passwordConfirmation": passwordConfirmation.text != nil ? passwordConfirmation.text! : "",
-            "type": userType
+            "type": userType,
+            "token": self.productNumber.text!
             ] as [String: AnyObject]
         
         if isGoogleRegister {
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" {
+            if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
-            }
-            else {
+            } else if self.token != self.productNumber.text {
+                self.present(Alert().confirmAlert(title: "מפתח המוצר לא נכון", message: "נא לפנות למנהל"), animated: true, completion: nil)
+            } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                     if response.succeed {
@@ -257,20 +252,25 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             }
         } else if self.currentUser != nil {
             parameters["type"] = self.currentUser.type as AnyObject
-            if firstName.text == "" || lastName.text == "" || birthDate.text == ""{
+            if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     if response.succeed {
                         self.present(Alert().confirmAlert(title: "", message: "הפרטים נשמרו בהצלחה"), animated: true, completion: nil)
-                        
+                        let user = User(json: response.data)
+                        self.currentUser = user
+                        self.delegate?.dataChanged(user: self.currentUser)
+                        self.cancelEditDetails()
+                    } else {
+                        self.present(Alert().confirmAlert(title: "שגיאה", message: "פרטים לא נשמרו"), animated: true, completion: nil)
                     }
                 }
             }
             
         } else {
             
-            if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
+            if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || password.text == "" || passwordConfirmation.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             }
             else if password.text != passwordConfirmation.text {
@@ -278,7 +278,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             }
             else {
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
-                    
+                    print(response)
                     if response.succeed {
                         let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
@@ -308,29 +308,30 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                         
                     }
                     else {
+                        var title = "שגיאה"
                         var message = ""
-                        switch(response.data["code"] as! String) {
-                        case "auth/email-already-exists":
-                            message = "כתובת אימייל כבר קיימת"
-                            break;
-                        case "auth/internal-error":
-                            message = "מספר הטלפון לא תקין"
-                            break;
-                        case "auth/invalid-password":
-                            message = "סיסמא חייבת להכיל לפחות 6 תוים"
-                            break;
-                        case "auth/invalid-email":
-                            message = "כתובת אימייל לא חוקית"
-                            break;
-                        default:
-                            message = "שגיאה"
-                            break;
+                        if ((response.data["message"] as? String) != nil) {
+                            switch(response.data["message"] as! String) {
+                            case "token_dont_match":
+                                title = "מפתח מוצר לא נכון"
+                                message = "אנא פנה למנהל"
+                                break
+                            case "The email address is already in use by another account.":
+                                message = "כתובת אימייל כבר קיימת"
+                                break;
+                            case "The password must be a string with at least 6 characters.":
+                                message = "סיסמא חייבת להכיל לפחות 6 תוים"
+                                break;
+                            case "The email address is improperly formatted.":
+                                message = "כתובת אימייל לא חוקית"
+                                break;
+                            default:
+                                message = response.data["message"] as! String
+                                break
+                            }
                         }
-                        let alert = UIAlertController(title: "שגיאה", message: message, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                            alert.dismiss(animated: true, completion: nil)
-                        }))
-                        self.present(alert, animated: true, completion: nil)
+                        self.present(Alert().confirmAlert(title: title, message: message), animated: true, completion: nil)
+                        
                     }
                 }
                 

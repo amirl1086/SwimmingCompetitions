@@ -111,7 +111,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
                     self.removeAnimate()
                 })
             } else {
-                self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
             }
         }
     }

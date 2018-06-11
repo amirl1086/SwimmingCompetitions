@@ -61,12 +61,12 @@ class IterationViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         backgroundView.frame = self.view.bounds
         
-        let width: Int = (Int(self.view.frame.width)/iterationNumber) - 10
+        let width: Int = (Int(self.view.frame.width)/self.competition.currentParticipants.count) - 10
         var start: Int = 0
         var count = 1
         
         for view in subviews {
-            view.frame = CGRect(x: start, y: Int(view.frame.origin.y), width: width, height: 30)
+            view.frame = CGRect(x: start, y: Int(view.frame.origin.y), width: width, height: ((view as? UIButton) != nil) ? 50 : 30)
             
             if count == 3 {
                 start += width + 10
@@ -268,6 +268,7 @@ class IterationViewController: UIViewController {
                 
                 let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
                 self.navigationItem.rightBarButtonItem = resultsButton
+                self.competition.currentParticipants.removeAll()
                 self.startNewIteration()
                 self.jsonData = response.data
                 

@@ -25,6 +25,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
+        tableView.separatorStyle = .none
        
         // Do any additional setup after loading the view.
     }
@@ -107,12 +108,17 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             break
         case "צפייה בזמן אמת":
-            if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+            if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
+                resultsView.currentUser = self.currentUser
+                resultsView.controllerType = "realTime"
+                 self.navigationController?.viewControllers = [resultsView]
+            }
+            /*if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.controllerType = "realTime"
                 competitionsView.pathString = "getCompetitionInProgress"
                 competitionsView.currentUser = self.currentUser
                 self.navigationController?.viewControllers = [competitionsView]
-            }
+            }*/
             break
         case "הילדים שלי":
             if let myChildrenView = sb.instantiateViewController(withIdentifier: "myChildrenId") as? MyChildrenViewController {
@@ -139,9 +145,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             break
         case "תמונות וסרטונים":
-            if let filesView = sb.instantiateViewController(withIdentifier: "filesId") as? FilesViewController {
-                self.navigationController?.viewControllers = [filesView]
+            if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+                competitionsView.currentUser = self.currentUser
+                competitionsView.controllerType = "files"
+                self.navigationController?.viewControllers = [competitionsView]
             }
+            
+            /*if let filesView = sb.instantiateViewController(withIdentifier: "filesId") as? FilesViewController {
+                self.navigationController?.viewControllers = [filesView]
+            }*/
             break
         default:
             break
