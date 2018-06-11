@@ -310,7 +310,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
                     else {
                         showToast("החשבון נוצר בהצלחה");
                         User newUser = new User(dataObj);
-                        switchToMainMenuActivity(newUser);
+                        switchToHomePageActivity(newUser);
                     }
                 }
                 else {
@@ -337,7 +337,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public void switchToMainMenuActivity(User currentUser) {
+    public void switchToHomePageActivity(User currentUser) {
         Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
