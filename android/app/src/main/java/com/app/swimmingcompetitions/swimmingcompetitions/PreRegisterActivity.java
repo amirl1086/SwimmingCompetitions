@@ -32,9 +32,6 @@ public class PreRegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        else {
-            switchToLogInActivity();
-        }
     }
 
     public void showToast(String message) {
@@ -55,10 +52,5 @@ public class PreRegisterActivity extends AppCompatActivity {
             regIntent.putExtra("registerType", buttonName);
             startActivity(regIntent);
         }
-    }
-
-    private void switchToLogInActivity() {
-        Intent intent = new Intent(this, LogInActivity.class);
-        startActivity(intent);
     }
 }
