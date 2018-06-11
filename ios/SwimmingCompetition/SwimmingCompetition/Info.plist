@@ -45,6 +45,8 @@
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Michrophone</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

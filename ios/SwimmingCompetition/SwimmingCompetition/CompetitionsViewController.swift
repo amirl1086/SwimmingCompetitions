@@ -53,7 +53,7 @@ class CompetitionsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getCompetitionsData()
+        self.tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -79,20 +79,6 @@ class CompetitionsViewController: UIViewController {
     
     func getCompetitionsData() {
         
-        /*var alert: UIAlertView = UIAlertView(title: "טוען תחרויות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
-        
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = self.view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        
-        alert.show();*/
-        
         var parameters = [
             "currentUser": [
                 "uid":currentUser.uid,
@@ -103,7 +89,7 @@ class CompetitionsViewController: UIViewController {
         if currentUser.type == "student" {
             parameters["filters"] = "age" as AnyObject
         }
-     
+       
         Service.shared.connectToServer(path: self.pathString, method: .post, params: parameters) { (response) in
             var compArray = [Competition]()
             print(response)
@@ -119,7 +105,6 @@ class CompetitionsViewController: UIViewController {
             //self.competitions.sort(by: {formatDate.date(from:$0.activityDate)! > formatDate.date(from:$1.activityDate)!})
             
             self.tableView.reloadData()
-            //alert.dismiss(withClickedButtonIndex: -1, animated: true)
             
         }
     }

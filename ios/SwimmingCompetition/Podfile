@@ -11,11 +11,13 @@ target 'SwimmingCompetition' do
     pod 'Firebase/Core'
     pod 'Firebase/Auth'
     pod 'Firebase/Database'
+    pod 'Firebase/Storage'
     pod 'SwiftyJSON'
     pod 'Alamofire'
     pod 'GoogleSignIn'
     pod 'Google'
     pod 'Charts'
+    pod 'SwiftSpinner'
 
 
   target 'SwimmingCompetitionTests' do

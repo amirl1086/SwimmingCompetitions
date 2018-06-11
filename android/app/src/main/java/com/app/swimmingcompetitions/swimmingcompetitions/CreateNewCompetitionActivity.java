@@ -173,10 +173,6 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements HttpA
         this.fromAge = this.fromAgePicker.getValue();
         this.toAge = this.toAgePicker.getValue();
 
-/*
-        this.newCompetition = new Competition(id, this.competitionNameText, activityDateText + " " + activityTimeText ,
-                swimmingStyleText, numOfParticipantsNum, this.fromAge, this.toAge, iterationLengthNum);*/
-
         return true;
     }
 

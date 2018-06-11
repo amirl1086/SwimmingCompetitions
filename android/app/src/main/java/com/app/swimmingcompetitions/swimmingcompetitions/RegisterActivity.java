@@ -28,6 +28,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
     private EditText lastName;
     private EditText email;
     private EditText password;
+    private EditText token;
     private EditText passwordConfirmation;
     private TextView dateView;
     private int year, month, day;
@@ -37,6 +38,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
     private User currentUser;
     private String firstNameText;
     private String lastNameText;
+    private String tokenText;
     private String genderText;
     private String birthDateText;
     private String eMailText;
@@ -67,10 +69,13 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
         this.email = findViewById(R.id.register_email);
         this.password = findViewById(R.id.register_password);
         this.passwordConfirmation = findViewById(R.id.register_password_confirmation);
+        this.dateView = findViewById(R.id.birth_date_view);
+        this.token = findViewById(R.id.register_token);
         Button birthDateButton = findViewById(R.id.register_birth_date);
 
         if (this.registerType.equals("parent")) {
             birthDateButton.setVisibility(View.GONE);
+            this.dateView.setVisibility(View.GONE);
             this.spinner.setVisibility(View.GONE);
         }
         else { //initialize date picker for date of birth
@@ -101,7 +106,6 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
         spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
 
-        this.dateView = findViewById(R.id.birth_date_view);
         Calendar calendar = Calendar.getInstance();
         this.year = calendar.get(Calendar.YEAR);
 
@@ -114,6 +118,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
     public void createFirebaseUser(View view) {
         if(isValid()) {
             try {
+                showProgressDialog("נרשם למערכת...");
                 JSONObject registerData = new JSONObject();
                 registerData.put("urlSuffix", "/addNewUser");
                 registerData.put("httpMethod", "POST");
@@ -124,20 +129,21 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
                 registerData.put("gender", this.genderText);
                 registerData.put("birthDate", this.birthDateText);
                 registerData.put("type", this.registerType);
+                registerData.put("token", this.tokenText);
                 if(this.currentUser != null) {
                     registerData.put("joinToCompetition", true);
                 }
                 this.jsonAsyncTaskPost = new JSON_AsyncTask();
                 this.jsonAsyncTaskPost.delegate = this;
 
-                showProgressDialog("נרשם למערכת...");
-
                 this.jsonAsyncTaskPost.execute(registerData.toString());
 
             }
             catch (JSONException e) {
+                hideProgressDialog();
                 showToast("שגיאה בתהליך ההרשמה, נסה לאתחל את האפליקציה");
-                System.out.println("RegisterActivity Exception " + e.getStackTrace());
+                System.out.println("ViewCompetitionActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
 
         }
@@ -186,7 +192,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
                     return false;
                 }
                 else if(participantAge > 18) {
-                    this.dateView.setError("הגיל המינימלי להשתתפות הוא 18");
+                    this.dateView.setError("הגיל המקסימלי להשתתפות הוא 18");
                     return false;
                 }
                 else {
@@ -232,6 +238,15 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
         }
         if(!this.passwordConfirmationText.equals(this.passwordText)) {
             this.passwordConfirmation.setError("סיסמא לא תואמת");
+            return false;
+        }
+        this.tokenText = this.token.getText().toString();
+        if(this.tokenText.isEmpty()) {
+            this.token.setError("חובה למלא מפתח מוצר, פנה למאמן לקבלתו");
+            return false;
+        }
+        if(this.tokenText.length() != 12) {
+            this.token.setError("אורך מפתח המוצר חייב להיות 12 תווים");
             return false;
         }
 
@@ -288,18 +303,27 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
                 JSONObject response = new JSONObject(result);
                 JSONObject dataObj = response.getJSONObject("data");
 
-                if(this.currentUser != null) {
-                    switchToViewCompetitionActivity(dataObj);
+                if(response.getBoolean("success")) {
+                    if(this.currentUser != null) {
+                        switchToViewCompetitionActivity(dataObj);
+                    }
+                    else {
+                        showToast("החשבון נוצר בהצלחה");
+                        User newUser = new User(dataObj);
+                        switchToHomePageActivity(newUser);
+                    }
                 }
                 else {
-                    showToast("החשבון נוצר בהצלחה");
-                    User newUser = new User(dataObj);
-                    switchToMainMenuActivity(newUser);
+                    if(dataObj.getString("message").equals("token_dont_match")) {
+                        showToast("מפתח המוצר שהזנת שגוי, אנא פנה למאמן לקבלתו");
+                    }
                 }
             }
             catch (Exception e) {
+                hideProgressDialog();
                 showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
-                System.out.println("RegisterActivity Exception " + e.getMessage());
+                System.out.println("ViewCompetitionActivity onCreate Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
         else {
@@ -313,7 +337,7 @@ public class RegisterActivity extends LoadingDialog implements HttpAsyncResponse
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public void switchToMainMenuActivity(User currentUser) {
+    public void switchToHomePageActivity(User currentUser) {
         Intent intent = new Intent(this, HomePageActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);

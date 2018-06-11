@@ -90,15 +90,15 @@
             android:textSize="22sp" />
 
         <EditText
-            android:id="@+id/mobile_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="25dp"
-            android:digits="0123456789+"
-            android:hint="@string/mobile_phone_number"
-            android:inputType="phone"
-            android:textAlignment="center"
+            android:id="@+id/register_token"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:hint="@string/register_token"
+            android:inputType="textPersonName"
             android:textSize="22sp" />
+
 
         <Button
             android:id="@+id/update_btn"

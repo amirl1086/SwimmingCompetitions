@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import SwiftSpinner
 
 class RegisterViewController: UIViewController, UITextFieldDelegate {
     
@@ -63,6 +64,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             self.lastName.text = googleUser.profile.familyName != nil ? googleUser.profile.familyName! : ""
             self.email.text = googleUser.profile.email != nil ? googleUser.profile.email! : ""
             self.email.isEnabled = false
+            self.email.textColor = UIColor.darkGray
+            self.password.isHidden = true
+            self.passwordConfirmation.isHidden = true
         }
         
         if currentUser != nil {
@@ -228,47 +232,49 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         if isGoogleRegister {
             if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" {
-                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             }
             else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
-                    
+                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                    if response.succeed {
+                        UserDefaults.standard.set(true, forKey: "loggedIn")
+                        UserDefaults.standard.synchronize()
+                        /*self.present(Alert().confirmAlert(title: "", message: "נרשמת למערכת בהצלחה"), animated: true, completion: nil)*/
+                        if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                            mainView.currentUser = User(json: response.data)
+                            self.navigationController?.viewControllers = [mainView]
+                        }
+                    } else {
+                        UserDefaults.standard.set(false, forKey: "loggedIn")
+                        UserDefaults.standard.synchronize()
+                        
+                        if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
+                            self.navigationController?.viewControllers = [loginView]
+                        }
+                    }
                 }
             }
         } else if self.currentUser != nil {
             parameters["type"] = self.currentUser.type as AnyObject
             if firstName.text == "" || lastName.text == "" || birthDate.text == ""{
-                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     if response.succeed {
+                        self.present(Alert().confirmAlert(title: "", message: "הפרטים נשמרו בהצלחה"), animated: true, completion: nil)
                         
                     }
                 }
             }
             
         } else {
+            
             if firstName.text == "" || lastName.text == "" || birthDate.text == "" || email.text == "" || password.text == "" || passwordConfirmation.text == ""{
-                let alert = UIAlertController(title: nil, message: "נא למלא את שדות החובה", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             }
             else if password.text != passwordConfirmation.text {
-                let alert = UIAlertController(title: nil, message: "הסיסמאות אינן תואמות", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                    alert.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "הסיסמאות אינן תואמות"), animated: true, completion: nil)
             }
             else {
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
@@ -277,13 +283,20 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                         let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                             alert.dismiss(animated: true, completion: nil)
+                            SwiftSpinner.show("מתחבר")
                             Auth.auth().signIn(withEmail: self.email.text!, password: self.password.text!, completion: { (user, error) in
+                                SwiftSpinner.hide()
+                                let sb = UIStoryboard(name: "Main", bundle: nil)
                                 if error != nil {
-                                    
+                                    UserDefaults.standard.set(false, forKey: "loggedIn")
+                                    UserDefaults.standard.synchronize()
+                                    if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
+                                        self.navigationController?.viewControllers = [loginView]
+                                    }
                                 } else {
                                     UserDefaults.standard.set(true, forKey: "loggedIn")
                                     UserDefaults.standard.synchronize()
-                                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                                    
                                     if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
                                         mainView.currentUser = User(json: response.data)
                                         self.navigationController?.viewControllers = [mainView]

@@ -148,7 +148,7 @@ module.exports = {
 
 		getCompetitionResults(competition, (success, result) => {
 			if(success) {
-				if(reuslt) {
+				if(result) {
 					let resultsAgeMap = filters.sortPersonalResults(competition, result);
 					utilities.sendResponse(response, null, resultsAgeMap);
 				}

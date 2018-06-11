@@ -139,30 +139,17 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func addCompetitionButton(_ sender: Any) {
-        /*var alert: UIAlertView = UIAlertView(title: "שומר תחרות", message: "אנא המתן...", delegate: nil, cancelButtonTitle: nil);
         
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 50, y: 10, width: 37, height: 37)) as UIActivityIndicatorView
-        loadingIndicator.center = self.view.center;
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating();
-        
-        alert.setValue(loadingIndicator, forKey: "accessoryView")
-        loadingIndicator.startAnimating()
-        
-        alert.show();*/
         if self.nameTextField.text == "" || self.styleTextField.text == "" || self.numberTextField.text == "" || self.dateTextField.text == "" || self.agesTextField.text == "" {
-            let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
+            
+            self.present(Alert().confirmAlert(title: "", message: "חובה למלא את כל השדות!"), animated: true, completion: nil)
+        } else if self.fromAge > self.toAge {
+            self.present(Alert().confirmAlert(title: "", message: "טווח הגילאים אינו תקין"), animated: true, completion: nil)
         }
         else {
             var parameters = [
                 "activityDate": dateToSend,
-                "length": Float(self.range),
+                "length": self.range,
                 "name": self.nameTextField.text!,
                 "numOfParticipants": self.numberTextField.text!,
                 "swimmingStyle": self.style,
@@ -179,7 +166,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                 
                 var message = ""
                 if response.succeed {
-                    message = "התחרות נוספה בהצלחה"
+                    message = "התחרות נשמרה בהצלחה"
                 }
                 else {
                     message = "התחרות לא נוספה"
@@ -190,12 +177,22 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                     if response.succeed {
                         if self.isEdit {
                             self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numberTextField.text!)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
+                        } else {
+                            if (self.parent as? CompetitionsViewController) != nil {
+                                let parentView = self.parent as! CompetitionsViewController
+                                var competition : Competition!
+                                let compData = response.data
+                                competition = Competition(json: compData, id: compData["id"] as! String)
+                                parentView.competitions.append(competition)
+                                parentView.tableView.reloadData()
+                            }
+                           
                         }
                         _ = self.navigationController?.popViewController(animated: true)
                     }
                 }))
                 self.present(alert, animated: true, completion: nil)
-                //alert.dismiss(withClickedButtonIndex: -1, animated: true)
+            
                 
                 
             }
@@ -255,7 +252,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
             }
             self.range = range
             self.style = style
-            styleTextField.text = "\(range) מטר \(style)"
+            styleTextField.text = "\(range) מטר \(style)" 
         }
         else if pickerView == self.agesTextField.inputView {
             var fromAge = rangePicker[pickerView.selectedRow(inComponent: 1)]

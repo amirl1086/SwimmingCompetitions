@@ -54,7 +54,6 @@ class CompetitionDetailsViewController: UIViewController {
         
         if userExist() {
             joinButtonOutlet.setTitle("בטל רישום", for: .normal)
-            joinButtonOutlet.backgroundColor = UIColor.red
             joinButtonOutlet.tag = 1
         }
         
@@ -114,10 +113,16 @@ class CompetitionDetailsViewController: UIViewController {
                 Service.shared.connectToServer(path: "cancelRegistration", method: .post, params: parameters, completion: { (response) in
                     if response.succeed {
                         sender.setTitle("הירשם", for: .normal)
-                        sender.backgroundColor = UIColor.green
+                        for i in 0...self.currentCompetition.participants.count {
+                            if self.currentCompetition.participants[i].uid == self.currentUser.uid {
+                                self.currentCompetition.participants.remove(at: i)
+                                break
+                            }
+                        }
+                        self.present(Alert().confirmAlert(title: "", message: "הרשמה בוטלה"), animated: true, completion: nil)
                     }
                     else {
-                        
+                        self.present(Alert().confirmAlert(title: "שגיאה", message: "לא בוטלה ההרשמה"), animated: true, completion: nil)
                     }
                 })
                 alert.dismiss(animated: true, completion: nil)
@@ -129,11 +134,20 @@ class CompetitionDetailsViewController: UIViewController {
         }
         
         else {
-            sender.setTitle("בטל רישום", for: .normal)
-            sender.backgroundColor = UIColor.red
-            sender.tag = 1
+            
             
             Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters, completion: { (response) in
+                if response.succeed {
+                    sender.setTitle("בטל רישום", for: .normal)
+                    sender.tag = 1
+                    var participant : Participant!
+                    let data = response.data
+                    participant = Participant(json: data, id: data["uid"] as! String)
+                    self.currentCompetition.participants.append(participant)
+                    self.present(Alert().confirmAlert(title: "", message: "הרשמה בוצעה בהצלחה"), animated: true, completion: nil)
+                } else {
+                    self.present(Alert().confirmAlert(title: "שגיאה", message: "לא בוצעה הרשמה"), animated: true, completion: nil)
+                }
                 
             })
         }
@@ -161,19 +175,10 @@ class CompetitionDetailsViewController: UIViewController {
             self.view.addSubview(popOverVC.view)
             popOverVC.didMove(toParentViewController: self)
         }))
-        alert.addAction(UIAlertAction(title: "משתמש חדש", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
         alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
         self.present(alert, animated: true, completion: nil)
-        
-        /*let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tempRegID") as! TempRegPopUpViewController
-        self.addChildViewController(popOverVC)
-        popOverVC.view.frame = self.view.frame
-        self.view.addSubview(popOverVC.view)
-        popOverVC.didMove(toParentViewController: self)*/
         
     }
     
@@ -214,9 +219,6 @@ class CompetitionDetailsViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                     sender.setTitle("צפה בתוצאות", for: .normal)
                     sender.tag = 1
-                    //let resultsButton = UIBarButtonItem(title: "תוצאות", style: .plain, target: self, action: #selector(self.goToResults))
-                    //self.navigationItem.rightBarButtonItem = resultsButton
-                    
                     self.jsonData = response.data
                     
                 }
@@ -229,10 +231,6 @@ class CompetitionDetailsViewController: UIViewController {
                         iterationView.competition = competition
                         self.navigationController?.pushViewController(iterationView, animated: true)
                     }
-                    
-                    //let iterationView = IterationViewController()
-                    //iterationView.competition = competition
-                    //self.performSegue(withIdentifier: "goToStartCompetition", sender: self)
                 }
             })
         } else {
