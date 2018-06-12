@@ -55,8 +55,6 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
     private FirebaseStorage storage;
     private Uri currentPictureUri;
 
-    private static final int TOTAL_IMAGE_WIDTH = 50;
-    private static final int TOTAL_IMAGE_HEIGHT = 50;
     private static final int ACTION_IMAGE_CAPTURE = 1;
     private static final int REQUEST_VIDEO_CAPTURE = 2;
 
@@ -109,11 +107,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
                 requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
-            this.imageGrid.post(new Runnable(){
-                @Override public void run(){
-                    getMediaByCompetitionId();
-                }
-            });
+            getMediaByCompetitionId();
         }
         else {
             switchToLogInActivity();
@@ -137,7 +131,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
     private void getMediaByCompetitionId() {
         try {
             JSONObject data = new JSONObject();
-            showProgressDialog("טוען את התמונות והסרטונים של התחרות שנבחרה...");
+            showProgressDialog("טוען את התמונות של התחרות שנבחרה...");
 
             this.currentCallout = "getMediaByCompetitionId";
 
@@ -198,7 +192,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
     }
 
     private void handleMediaReceived(String result) {
-        int totalWidth = this.imageGrid.getWidth();
+/*        int totalWidth = this.imageGrid.getWidth();
         int pictureWidth = TOTAL_IMAGE_WIDTH, pictureHeight = TOTAL_IMAGE_HEIGHT;
 
         if(totalWidth < TOTAL_IMAGE_WIDTH * 3) {
@@ -212,7 +206,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
                     break;
                 }
             }
-        }
+        }*/
 
         if (result != null) {
             try {
@@ -223,8 +217,8 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
                     Iterator<String> mediaIds = dataObj.keys();
                     while(mediaIds.hasNext()) {
                         JSONObject currMedia = new JSONObject(dataObj.get(mediaIds.next()).toString());
-                        currMedia.put("width", pictureWidth);
-                        currMedia.put("height", pictureHeight);
+                        /*currMedia.put("width", pictureWidth);
+                        currMedia.put("height", pictureHeight);*/
                         this.mediaList.add(currMedia);
                     }
 
@@ -234,18 +228,18 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
                 }
                 else {
                     if(dataObj.getString("message").equals("no_media")) {
-                        showToast("לא קיימים תמונות וסרטונים עבור התחרות שנבחרה");
+                        showToast("לא קיימות תמונות עבור התחרות שנבחרה");
                     }
                 }
             }
             catch (Exception e) {
-                showToast("שגיאה בעיבוד התמונות והסרטונים, נסה לאתחל את האפליקציה");
+                showToast("שגיאה בעיבוד התמונות, נסה לאתחל את האפליקציה");
                 System.out.println("ViewCompetitionMediaActivity handleMediaReceived Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
                 e.printStackTrace();
             }
         }
         else {
-            showToast("שגיאה בשליפת התמונות והסרטונים מהמערכת, נסה לאתחל את האפליקציה");
+            showToast("שגיאה בשליפת התמונות מהמערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();
@@ -437,10 +431,10 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
                 launchCamera();
                 return true;
             }
-            case R.id.video_camera: {
+/*            case R.id.video_camera: {
                 launchVideoCamera();
                 return true;
-            }
+            }*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -457,7 +451,7 @@ public class ViewCompetitionMediaActivity extends LoadingDialog implements HttpA
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("תמונות וסרטונים");
+        toolbar.setTitle("תמונות משותפות");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();

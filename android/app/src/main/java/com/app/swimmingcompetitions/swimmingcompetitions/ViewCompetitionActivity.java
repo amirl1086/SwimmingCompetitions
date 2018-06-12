@@ -63,20 +63,20 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
                 }
 
                 switch(this.currentUser.getType()) {
-                    case "coach": {
+
+                    case "coach":
                         handleCouchView();
                         break;
-                    }
-                    case "student": {
+
+                    case "student":
                         handleStudentView(participants);
                         break;
-                    }
-                    case "parent": {
+
+                    case "parent":
                         handleParentView();
                         break;
-                    }
-                }
 
+                }
                 if(this.dateUtils.isDatePassed(this.selectedCompetition.getActivityDate())) {
                     this.registerEditBtn.setText("צפה בתוצאות");
                     this.registerEditBtn.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +89,9 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
 
                     if(this.currentUser.getType().equals("coach")) {
                         this.startCompetitionBtn.setVisibility(View.GONE);
+                    }
+                    else if(this.currentUser.getType().equals("parent")) {
+                        this.registerEditBtn.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -130,11 +133,13 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
     }
 
     private void handleParentView() {
-        this.registerOtherUserBtn.setText("רשום מתחרה אחר");
+        this.registerEditBtn.setVisibility(View.GONE);
+        this.startCompetitionBtn.setVisibility(View.GONE);
+        this.registerOtherUserBtn.setText("רשום jמתחרה");
     }
 
     private void handleStudentView(ArrayList<Participant> participants) {
-        this.startCompetitionBtn.setVisibility(View.INVISIBLE);
+        this.startCompetitionBtn.setVisibility(View.GONE);
 
         if(this.selectedCompetition.isCurrentUserRegistered(this.currentUser, participants)) {
             this.registerEditBtn.setText("בטל רישום לתחרות");
@@ -164,7 +169,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
                 switchToCreateNewCompetitionActivityEditMode();
             }
         });
-        this.registerOtherUserBtn.setText("רשום מתחרה אחר");
+        this.registerOtherUserBtn.setText("רשום מתחרה");
     }
 
     private void handleNewParticipantAdded(ArrayList<Participant> participants, String participantJson) throws Exception {
@@ -273,29 +278,48 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
         if(result != null) {
             try {
                 JSONObject response = new JSONObject(result);
-                JSONObject dataObj = response.getJSONObject("data");
+                JSONObject dataObj = null;
+                if(!response.isNull("data")) {
+                    dataObj = response.getJSONObject("data");
+                }
+
                 if(response.getBoolean("success")) {
                     switch (this.currentCallout) {
-                        case "initCompetitionForIterations": {
+
+                        case "initCompetitionForIterations":
                             handleInitCompetitionResult(dataObj);
                             break;
-                        }
-                        case "getPersonalResults": {
+
+                        case "getPersonalResults":
                             switchToViewCompetitionResultsActivity(dataObj);
                             break;
-                        }
-                        case "joinToCompetition": {
+
+                        case "joinToCompetition":
                             handleJoinToCompetitionResult();
                             break;
-                        }
-                        case "cancelRegistration": {
+
+                        case "cancelRegistration":
                             handleCancelRegistrationResult();
                             break;
-                        }
+
                     }
                 }
-                else if(dataObj.getString("message").equals("no_results")){
-                    showToast("התחרות הסתיימה ללא תוצאות, אנא פנה למאמן לפרטים נוספים");
+                else if(dataObj != null){
+                    String message = dataObj.getString("message");
+                    switch (message) {
+                        case "no_results":
+                            if(this.currentUser.getType().equals("coach")) {
+                                showToast("התחרות הסתיימה ללא תוצאות");
+                            }
+                            else {
+                                showToast("התחרות הסתיימה ללא תוצאות, אנא פנה למאמן לפרטים נוספים");
+                            }
+                            break;
+
+                        case "no_participants":
+                            showToast("עדיין לא נרשמו מתחרים לתחרות זו");
+                            break;
+                    }
                 }
             }
             catch (Exception e) {
@@ -356,7 +380,7 @@ public class ViewCompetitionActivity extends LoadingDialog implements HttpAsyncR
                 joinToCompetition();
             }
         });
-        showToast("הרישום הוסר בהצלחה");
+        showToast("הרישום שלך לתחרות הוסר בהצלחה");
     }
 
 

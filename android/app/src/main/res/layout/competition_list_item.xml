@@ -2,24 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:layoutDirection="rtl"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
     android:cacheColorHint="@android:color/transparent"
     android:orientation="vertical"
     tools:context="com.app.swimmingcompetitions.swimmingcompetitions.ViewCompetitionsActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_width="fill_parent"
+
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1">
 
         <TextView
             android:id="@+id/competition_list_item_name"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -29,15 +32,16 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1">
 
         <TextView
             android:id="@+id/competition_list_item_date"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -48,14 +52,14 @@
 
     <LinearLayout
         android:weightSum="13"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="גילאים:"
+            android:layout_height="wrap_content"
+            android:text="@string/ages"
             android:layout_weight="2"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -64,8 +68,9 @@
         <TextView
             android:id="@+id/competition_list_item_ages"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="false"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -73,7 +78,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:text=","
             android:layout_weight="1"
             android:textAlignment="center"
@@ -82,8 +87,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="סגנון:"
+            android:layout_height="wrap_content"
+            android:text="@string/style"
             android:layout_weight="2"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -92,7 +97,7 @@
         <TextView
             android:id="@+id/competition_list_item_style"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_weight="2"
             android:textColor="@color/black"
@@ -100,17 +105,18 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text=", אורך המקצים: "
+            android:layout_height="wrap_content"
+            android:text="@string/lengths_of_iterations"
             android:layout_weight="2"
             android:textAlignment="center"
+            android:singleLine="false"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/competition_list_item_length"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -118,7 +124,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:text="מטרים"
             android:layout_weight="2"
             android:textAlignment="center"

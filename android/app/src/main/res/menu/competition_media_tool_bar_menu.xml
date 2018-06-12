@@ -9,14 +9,13 @@
         android:orderInCategory="10"
         android:title="@string/add_new_competition"
         app:showAsAction="always" />
-        app:showAsAction="always" />
 
-    <item
+<!--    <item
         android:id="@+id/video_camera"
         android:icon="@drawable/ic_video_camera"
         android:orderInCategory="10"
         android:title="@string/add_new_competition"
-        app:showAsAction="always" />
+        app:showAsAction="always" />-->
 
     <item
         android:id="@+id/back_to_home"

@@ -47,6 +47,7 @@
     <TextView
         android:id="@+id/females_participants"
         android:layout_width="fill_parent"
+        android:layoutDirection="rtl"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textDirection="rtl"

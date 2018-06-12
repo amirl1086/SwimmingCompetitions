@@ -9,6 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,6 +33,11 @@ public class HomePageActivity extends LoadingDialog {
             this.currentUser = (User) intent.getSerializableExtra("currentUser");
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
+            RelativeLayout tokenButton = findViewById(R.id.token_btn);
+
+            if(!this.currentUser.getType().equals("coach")) {
+                tokenButton.setVisibility(View.GONE);
+            }
 
             if(this.currentUser.getType().isEmpty()) {
                 switchToGoogleRegisterActivity();
@@ -134,6 +142,17 @@ public class HomePageActivity extends LoadingDialog {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
+    }
+
+    public void displayToken(View v) {
+        showToast("המפתח " + this.currentUser.getToken() + " הודבק בלוח ההעתקה (Clipboard), הדבק אותו היכן שברצונך");
+        Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void switchToGoogleRegisterActivity() {

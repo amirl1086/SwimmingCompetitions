@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -60,6 +61,9 @@ public class ChangePasswordActivity extends LoadingDialog {
                         showToast("שינוי הסיסמא התבצע בהצלחה!");
                     }
                     else {
+                        hideProgressDialog();
+                        String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                        System.out.println("ChangePasswordActivity changePassword Error, \nCode: " + errorCode);
                         showToast("הסיסמא שהזנת לא חוקית, השינוי נכשל");
                     }
                 }

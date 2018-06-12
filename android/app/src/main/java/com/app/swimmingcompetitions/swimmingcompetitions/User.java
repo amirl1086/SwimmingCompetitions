@@ -15,8 +15,9 @@ public class User implements Serializable {
     private String email;
     private String gender;
     private String type;
+    private String token;
 
-    public User(String uid, String firstName, String lastName, String birthDate, String email, String gender, String type) {
+    public User(String uid, String firstName, String lastName, String birthDate, String email, String gender, String type, String token) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,6 +25,7 @@ public class User implements Serializable {
         this.email = email;
         this.gender = gender;
         this.type = type;
+        this.token = token;
     }
 
     public User(JSONObject userJson) throws JSONException{
@@ -34,6 +36,7 @@ public class User implements Serializable {
         this.email = (userJson.has("email")) ? userJson.getString("email") : "";
         this.gender = (userJson.has("gender")) ? userJson.getString("gender") : "";
         this.type = (userJson.has("type")) ? userJson.getString("type") : "";
+        this.token = (userJson.has("token")) ? userJson.getString("token") : "";
     }
 
     public JSONObject getJSON_Object() {
@@ -103,5 +106,13 @@ public class User implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

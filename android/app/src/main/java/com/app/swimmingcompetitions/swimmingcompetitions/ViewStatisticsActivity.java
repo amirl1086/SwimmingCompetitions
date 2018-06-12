@@ -77,7 +77,8 @@ public class ViewStatisticsActivity extends LoadingDialog implements HttpAsyncRe
             setUpSidebar();
 
             if(intent.hasExtra("childId")) {
-                getParticipantStatistics(intent.getStringExtra("childId"));
+                String childId = intent.getStringExtra("childId");
+                getParticipantStatistics(childId);
             }
             else {
                 getParticipantStatistics(this.currentUser.getUid());
@@ -106,7 +107,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements HttpAsyncRe
 
                 if(dataList.length() == 0) {
                     this.graphView.setVisibility(View.GONE);
-                    showToast("לא קיימות תחרויות בהן השתתפת");
+                    showToast("לא קיימות תחרויות להצגה בגרף");
                 }
                 for(int i = 0; i < dataList.length(); i++) {
                     JSONObject obj = dataList.getJSONObject(i);
