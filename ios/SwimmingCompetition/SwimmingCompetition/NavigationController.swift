@@ -23,7 +23,7 @@ class NavigationController: UINavigationController {
         view.addSubview(imageView)
         
         if (Auth.auth().currentUser != nil && UserDefaults.standard.bool(forKey: "loggedIn")) {
-            print("******** is logged in *********")
+            
             UserDefaults.standard.set(true, forKey: "loggedIn")
             UserDefaults.standard.synchronize()
             let sb = UIStoryboard(name: "Main", bundle: nil)

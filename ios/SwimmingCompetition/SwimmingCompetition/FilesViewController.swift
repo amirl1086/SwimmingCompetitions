@@ -256,7 +256,7 @@ extension FilesViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         self.getDataFromUrl(url: URL(string: self.mediaArray[indexPath.row].url)!) { (data, response, error) in
             DispatchQueue.main.async() {
-                print(response!)
+               
                 cell.activity.stopAnimating()
                 self.mediaArray[indexPath.row].data = data!
                 if self.mediaArray[indexPath.row].contentType == "image/jpeg" {

@@ -184,10 +184,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
     }
 
     func validateBirthDate(birthDate:String, fromAge: Int, toAge: Int) -> Bool {
-        print(birthDate)
-        print(DateConvert().getHowOld(date: birthDate)!)
-        print(fromAge)
-        print(toAge)
+        
         if DateConvert().getHowOld(date: birthDate)! < fromAge || DateConvert().getHowOld(date: birthDate)! > toAge {
             return false
         }

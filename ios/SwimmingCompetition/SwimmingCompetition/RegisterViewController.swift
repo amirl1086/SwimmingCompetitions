@@ -20,7 +20,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     var currentUser: User!
     var delegate: userProtocol?
     
-    var token = ""
     
     @IBOutlet var scrollView: UIScrollView!
     
@@ -107,7 +106,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLayoutSubviews() {
         
         backgroundView.frame = self.view.bounds
-        print(email.frame.origin.y)
+        
         firstName.bottomLineBorder()
         lastName.bottomLineBorder()
         birthDate.bottomLineBorder()
@@ -227,9 +226,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             parameters["token"] = self.productNumber.text! as AnyObject
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
-            } /*else if self.token != self.productNumber.text {
-                self.present(Alert().confirmAlert(title: "מפתח מוצר לא נכון", message: "נא לפנות לאחראי"), animated: true, completion: nil)
-            }*/ else {
+            } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                     if response.succeed {
@@ -291,7 +288,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             }
             
         } else {
-            
+            parameters["token"] = self.productNumber.text! as AnyObject
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || password.text == "" || passwordConfirmation.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             }
@@ -300,7 +297,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             }
             else {
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
-                    print(response)
+                    
                     if response.succeed {
                         let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in

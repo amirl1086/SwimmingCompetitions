@@ -16,7 +16,7 @@ import SwiftSpinner
 
 class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDelegate, GIDSignInUIDelegate {
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        print("hhhhh")
+        
     }
     
     @IBOutlet weak var logo: UIImageView!

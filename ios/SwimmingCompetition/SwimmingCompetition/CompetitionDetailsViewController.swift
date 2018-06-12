@@ -207,34 +207,38 @@ class CompetitionDetailsViewController: UIViewController {
     
     @IBAction func startCompetitionButton(_ sender: UIButton) {
         if sender.tag == 0 {
-            print("thissss iss the id")
-            print(currentCompetition.getId())
+            
             let param = [
                 "competitionId": currentCompetition.getId()
                 ] as [String:AnyObject]
             
             Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
-                if response.data["type"] as? String == "resultsMap" {
-                    let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
-                        alert.dismiss(animated: true, completion: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                    sender.setTitle("צפה בתוצאות", for: .normal)
-                    sender.tag = 1
-                    self.jsonData = response.data
-                    
-                }
-                else {
-                    var competition: Competition!
-                    let data = response.data
-                    let sb = UIStoryboard(name: "Main", bundle: nil)
-                    competition = Competition(json: data, id: self.currentCompetition.getId())
-                    if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
-                        iterationView.competition = competition
-                        self.navigationController?.pushViewController(iterationView, animated: true)
+                if response.succeed {
+                    if response.data["type"] as? String == "resultsMap" {
+                        let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
+                            alert.dismiss(animated: true, completion: nil)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                        sender.setTitle("צפה בתוצאות", for: .normal)
+                        sender.tag = 1
+                        self.jsonData = response.data
+                        
                     }
+                    else {
+                        var competition: Competition!
+                        let data = response.data
+                        let sb = UIStoryboard(name: "Main", bundle: nil)
+                        competition = Competition(json: data, id: self.currentCompetition.getId())
+                        if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
+                            iterationView.competition = competition
+                            self.navigationController?.pushViewController(iterationView, animated: true)
+                        }
+                    }
+                } else {
+                    self.present(Alert().confirmAlert(title: "", message: "אין מתחרים רשומים לתחרות זו"), animated: true, completion: nil)
                 }
+                
             })
         } else {
             let sb = UIStoryboard(name: "Main", bundle: nil)
@@ -254,7 +258,7 @@ extension CompetitionDetailsViewController: dataProtocol {
     
     
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String) {
-        print("im here")
+        
         self.currentCompetition.setName(name: name)
         self.currentCompetition.setActivityDate(activityDate: activityDate)
         self.currentCompetition.setSwimmingStyle(swimmingStyle: swimmingStyle)

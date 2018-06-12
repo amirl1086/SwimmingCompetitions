@@ -13,7 +13,7 @@ import GoogleSignIn
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     /* Labels array for the menu bar */
-    var menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","תמונות וסרטונים","הגדרות","התנתק"]
+    var menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","תמונות","הגדרות","התנתק"]
     
     var currentUser: User!
     
@@ -73,7 +73,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         case "סטטיסטיקות":
             cell.menuIcon.image = UIImage(named: "statisticIcon.png")
             break
-        case "תמונות וסרטונים":
+        case "תמונות":
             cell.menuIcon.image = UIImage(named: "filesIcon.png")
             break
         default:
@@ -148,7 +148,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.navigationController?.viewControllers = [statisticsView]
             }
             break
-        case "תמונות וסרטונים":
+        case "תמונות":
             if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
                 competitionsView.currentUser = self.currentUser
                 competitionsView.controllerType = "files"

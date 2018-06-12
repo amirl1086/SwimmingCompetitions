@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
-        mainLabel.text = "\(currentUser.firstName) שלום"
+        mainLabel.text = "שלום \(currentUser.firstName)"
         
         initMenuBar()
        
@@ -69,7 +69,7 @@ class MainViewController: UIViewController {
         
         self.menu_vc.view.removeFromSuperview()
     }
-    @IBAction func scoreButton(_ sender: Any) {
+    @IBAction func scoreButton(_ sender: UIButton) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
             competitionsView.currentUser = self.currentUser
