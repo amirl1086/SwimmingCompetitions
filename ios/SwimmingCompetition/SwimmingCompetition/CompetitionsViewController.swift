@@ -100,6 +100,9 @@ class CompetitionsViewController: UIViewController {
             self.tableView.reloadData()
             alert.dismiss(animated: true, completion: nil)
         }))
+        alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
         if sender.tag == 0 {
             sender.tag = 1
         } else {

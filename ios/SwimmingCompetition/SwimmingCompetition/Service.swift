@@ -132,7 +132,7 @@ class Service {
                 break;
             default:
                 title = "שגיאה";
-                message = "לא ניתן להתחבר";
+                message = "";
         }
 
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -146,7 +146,7 @@ class Service {
         
         Auth.auth().signIn(with: credential) { (user, error) in
             if error != nil {
-                print("error: \(error!)")
+                //print("error: \(error!)")
             } else {
                 user?.getIDToken(completion: { (token, error) in
                     if error != nil {
@@ -183,7 +183,7 @@ struct responseData {
     
     init(json: JSON) throws {
         if (json["data"] as? NSMutableArray) != nil {
-            print(json["data"]!)
+            //print(json["data"]!)
         }
         let jsonData = json
         let result = json["data"] as? JSON

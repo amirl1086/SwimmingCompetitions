@@ -143,6 +143,63 @@ class SettingsViewController: UIViewController {
         
         self.menu_vc.view.removeFromSuperview()
     }
+    @IBAction func updateEmailButton(_ sender: Any) {
+        let alert = UIAlertController(title: "שינוי אימייל", message: "", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.textAlignment = .center
+            textField.placeholder = "כתובת אימייל נוכחית"
+        }
+        alert.addTextField { (textField) in
+            textField.textAlignment = .center
+            textField.placeholder = "סיסמא"
+            textField.isSecureTextEntry = true
+        }
+        alert.addTextField { (textField) in
+            textField.textAlignment = .center
+            textField.placeholder = "כתובת אימייל חדשה"
+        }
+        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+            if alert.textFields![0].text! != self.currentUser.email {
+                alert.message = "נא להזין כתובת אימייל של המשתמש הנוכחי"
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                SwiftSpinner.show("אנא המתן")
+                Auth.auth().signIn(withEmail: alert.textFields![0].text!, password: alert.textFields![1].text!, completion: { (user, error) in
+                    SwiftSpinner.hide()
+                    if error != nil {
+                        let errorAlert: UIAlertController = Service.shared.errorMessage(data: error! as NSError)
+                        
+                        self.present(errorAlert, animated: true, completion: nil)
+                    } else {
+                        SwiftSpinner.show("אנא המתן")
+                        Auth.auth().currentUser?.updateEmail(to: alert.textFields![2].text!, completion: { (error) in
+                            SwiftSpinner.hide()
+                            
+                            if error != nil {
+                                let errorAlert: UIAlertController = Service.shared.errorMessage(data: error! as NSError)
+                                
+                                self.present(errorAlert, animated: true, completion: nil)
+                            } else {
+                                let newEmail = alert.textFields![2].text!
+                                self.currentUser.email = newEmail
+                                let userRef = Database.database().reference(withPath: "users/\(self.currentUser.uid)")
+                                userRef.updateChildValues(["email": self.currentUser.email])
+                                alert.dismiss(animated: true, completion: nil)
+                                self.present(Alert().confirmAlert(title: "", message: "כתובת אימייל שונתה בהצלחה"), animated: true, completion: nil)
+                            }
+                        })
+                    }
+                })
+                
+            }
+            
+        }))
+        alert.addAction(UIAlertAction(title: "ביטול", style: .cancel, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     
 }
 

@@ -95,7 +95,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         ] as [String: AnyObject]
         Service.shared.connectToServer(path: "getPersonalResults", method: .post, params: parameters) { (response) in
             if response.succeed {
-                print(response)
+                
                 self.data = response.data
                 self.setCompetitionResults()
                 self.tableView.reloadData()
