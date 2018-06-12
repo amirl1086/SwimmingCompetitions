@@ -66,7 +66,7 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                     for (int i = 0; i < malesResultsJson.length(); i++) {
                         malesResults.add(malesResultsJson.getJSONObject(i));
                         Participant currParticipant = new Participant(malesResultsJson.getJSONObject(i));
-                        participantsStr.append(i + 1).append(". ").append(currParticipant.getScore()).append(", ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append("\n");
+                        participantsStr.append(i + 1).append(". ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append(" - ").append(currParticipant.getScore()).append(" שניות").append("\n");
                     }
                     malesListView.setText(participantsStr);
                 }
@@ -87,7 +87,7 @@ public class AgeResultAdapter extends ArrayAdapter<JSONObject> {
                     for (int i = 0; i < femalesResultsJson.length(); i++) {
                         femalesResults.add(femalesResultsJson.getJSONObject(i));
                         Participant currParticipant = new Participant(femalesResultsJson.getJSONObject(i));
-                        participantsStr.append(i + 1).append(". ").append(currParticipant.getScore()).append(", ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append("\n");
+                        participantsStr.append(i + 1).append(". ").append(currParticipant.getFirstName()).append(" ").append(currParticipant.getLastName()).append(" - ").append(currParticipant.getScore()).append(" שניות").append("\n");
                     }
                     femalesListView.setText(participantsStr);
                 }

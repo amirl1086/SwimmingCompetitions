@@ -53,6 +53,7 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements HttpAs
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
 
+            this.dateUtils = new DateUtils();
             this.listView = findViewById(R.id.competitions_list);
 
             setUpSidebar();

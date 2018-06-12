@@ -40,10 +40,6 @@ exports.logIn = functions.https.onRequest((request, response) => {
 	authentication.logIn(request.body.idToken, response);
 });
 
-exports.updateUserDetails = functions.https.onRequest((request, response) => {
-	authentication.updateUserDetails(request.body, response);
-});
-
 exports.updateFirebaseUser = functions.https.onRequest((request, response) => {
 	authentication.updateFirebaseUser(request.body, response);
 });

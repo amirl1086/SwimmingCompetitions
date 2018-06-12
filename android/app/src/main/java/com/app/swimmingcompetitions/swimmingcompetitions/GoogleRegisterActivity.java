@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,6 @@ import java.util.Calendar;
 public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncResponse {
 
     private User currentUser;
-    private FirebaseAuth mAuth;
     private JSON_AsyncTask jsonAsyncTaskPost;
 
     private EditText firstName;
@@ -36,7 +36,6 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
     private int year, month, day;
     private String registerType;
     private Spinner spinner;
-    private String serverToken;
     private String firstNameText;
     private String lastNameText;
     private String genderText;
@@ -48,12 +47,9 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
         setContentView(R.layout.activity_google_register);
 
         Intent intent = getIntent();
-        if(intent.hasExtra("userData")) {
+        if(intent.hasExtra("currentUser")) {
             try {
-                JSONObject userData = new JSONObject(intent.getStringExtra("userData"));
-                this.serverToken = userData.getString("token");
-                this.currentUser = new User(userData);
-                this.mAuth = FirebaseAuth.getInstance();
+                this.currentUser = (User) intent.getSerializableExtra("currentUser");
 
                 this.spinner = findViewById(R.id.register_gender);
                 this.firstName = findViewById(R.id.register_first_name);
@@ -62,18 +58,22 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
                 this.lastName.setText(this.currentUser.getLastName());
                 this.registerType = intent.getStringExtra("registerType");
                 this.token = findViewById(R.id.register_token);
+                this.dateView = findViewById(R.id.birth_date_view);
                 Button birthDateButton = findViewById(R.id.register_birth_date);
 
                 if (this.registerType.equals("parent")) {
                     birthDateButton.setVisibility(View.GONE);
                     this.spinner.setVisibility(View.GONE);
+                    this.dateView.setVisibility(View.GONE);
                 }
                 else {
                     initParticipantUser();
                 }
             }
-            catch (Exception e) {
-
+            catch(Exception e) {
+                showToast("שגיאה ביצירת עמוד ההרשמה של גוגל, נסה לאתחל את האפליקציה");
+                System.out.println("GoogleRegisterActivity onCreate Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
         else {
@@ -112,7 +112,7 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
         spinnerListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         this.spinner.setAdapter(spinnerListAdapter);
 
-        this.dateView = findViewById(R.id.birth_date_view);
+
         Calendar calendar = Calendar.getInstance();
         this.year = calendar.get(Calendar.YEAR);
 
@@ -142,6 +142,8 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
         }
         catch (JSONException e) {
             showToast("שגיאה בקריאת התשובה מהמערכת, נסה לאתחל את האפליקציה");
+            System.out.println("GoogleRegisterActivity processFinish Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
 
         hideProgressDialog();
@@ -162,6 +164,7 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
                 registerData.put("uid", this.currentUser.getUid());
                 registerData.put("firstName", this.firstNameText);
                 registerData.put("lastName", this.lastNameText);
+                registerData.put("token", this.tokenText);
                 registerData.put("gender", this.genderText);
                 registerData.put("birthDate", this.birthDateText);
                 registerData.put("type", this.registerType);
@@ -179,6 +182,8 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
             }
             catch (JSONException e) {
                 showToast("שגיאה בתהליך שמירת הפרטים, נסה לאתחל את האפליקציה");
+                System.out.println("GoogleRegisterActivity updateFirebaseUser Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
     }
@@ -240,10 +245,6 @@ public class GoogleRegisterActivity extends LoadingDialog implements HttpAsyncRe
         }
         if(this.tokenText.length() != 12) {
             this.token.setError("אורך מפתח המוצר חייב להיות 12 תווים");
-            return false;
-        }
-        if(!this.tokenText.equals(this.serverToken)) {
-            this.token.setError("מפתח המוצר שהזמנת שגוי, פנה למנהל לקבלתו");
             return false;
         }
 

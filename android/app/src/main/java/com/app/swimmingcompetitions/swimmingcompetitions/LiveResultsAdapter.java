@@ -35,7 +35,7 @@ public class LiveResultsAdapter extends ArrayAdapter {
         participantName.setText(currentResult.getFirstName() + " " + currentResult.getLastName());
 
         TextView participantScore = listItem.findViewById(R.id.participant_score);
-        participantScore.setText(currentResult.getScore());
+        participantScore.setText(currentResult.getScore() + " שניות");
 
         return listItem;
     }

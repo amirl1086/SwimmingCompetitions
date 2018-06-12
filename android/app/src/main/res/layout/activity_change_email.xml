@@ -33,7 +33,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
-        android:hint="@string/confirmation_email"
+        android:hint="@string/new_email"
         android:inputType="textEmailAddress"
         android:textSize="22sp" />
 
@@ -43,7 +43,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
-        android:hint="@string/new_email"
+        android:hint="@string/confirmation_email"
         android:inputType="textEmailAddress"
         android:textSize="22sp" />
 

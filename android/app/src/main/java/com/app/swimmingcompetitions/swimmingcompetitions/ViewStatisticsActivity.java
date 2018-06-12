@@ -105,6 +105,7 @@ public class ViewStatisticsActivity extends LoadingDialog implements HttpAsyncRe
                 JSONArray dataList = response.getJSONArray("data");
 
                 if(dataList.length() == 0) {
+                    this.graphView.setVisibility(View.GONE);
                     showToast("לא קיימות תחרויות בהן השתתפת");
                 }
                 for(int i = 0; i < dataList.length(); i++) {

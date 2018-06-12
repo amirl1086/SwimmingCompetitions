@@ -145,10 +145,12 @@ module.exports = {
 	getPersonalResultsByCompetitionId: (params, response) => {
 		let competition = JSON.parse(params.competition);
 		let competitionId = competition.id;
-
+		console.log('compId ', competitionId);
 		getCompetitionResults(competition, (success, result) => {
+			console.log('success ', success);
+			console.log('result ', result);
 			if(success) {
-				if(result) {
+				if(result && Object.keys(result).length) {
 					let resultsAgeMap = filters.sortPersonalResults(competition, result);
 					utilities.sendResponse(response, null, resultsAgeMap);
 				}

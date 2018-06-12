@@ -59,18 +59,24 @@ module.exports =  {
 		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
 			let usersRef = db.ref('users/' + params.uid);
-			
+			let user = {
+				'firstName': params.firstName,
+				'lastName': params.lastName,
+				'birthDate': params.birthDate || '',
+				'gender': params.gender || '',
+				'type': params.type
+			};
 			if (params.token) {
 				let tokenRef = db.ref('token/');
 				
 				tokenRef.on('value', (snapshot) => {
 					if (params.token === snapshot.val()) {
-						usersRef.update({
-							'firstName': params.firstName,
-							'lastName': params.lastName,
-							'birthDate': params.birthDate || '',
-							'gender': params.gender || '',
-							'type': params.type
+
+						usersRef.update(user);
+						usersRef.on('value', (snapshot) => {
+							utilities.sendResponse(response, null, snapshot.val());
+						}, (error) => {
+							utilities.sendResponse(response, error, null);
 						});
 					}
 					else {
@@ -81,25 +87,16 @@ module.exports =  {
 				});
 			}
 			else {
-				usersRef.update({
-					'firstName': params.firstName,
-					'lastName': params.lastName,
-					'birthDate': params.birthDate || '',
-					'gender': params.gender || '',
-					'type': params.type
+				usersRef.update(user);
+				usersRef.on('value', (snapshot) => {
+					utilities.sendResponse(response, null, snapshot.val());
+				}, (error) => {
+					utilities.sendResponse(response, error, null);
 				});
-
 			}
-
-			
-			usersRef.on('value', (snapshot) => {
-				utilities.sendResponse(response, null, snapshot.val());
-			}, (error) => {
-				utilities.sendResponse(response, error, null);
-			});
 		})
 		.catch((error) => {
-		    console.log("Error updating user:", error);
+		    utilities.sendResponse(response, error, null);
 		});
 	},
 
@@ -218,7 +215,13 @@ let getUser = (uid, response, callback) => {
 			callback(true, snapshot.val());
 		}
 		else {
-			utilities.sendResponse(response, null, snapshot.val()); 
+			let result = snapshot.val();
+			if(result) {
+				utilities.sendResponse(response, null, result); 
+			}
+			else {
+				utilities.sendResponse(response, result, null); 
+			}
 		}
 	}, (error) => {
 		if(callback) {
