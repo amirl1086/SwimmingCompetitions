@@ -59,19 +59,20 @@ module.exports =  {
 		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
 			let usersRef = db.ref('users/' + params.uid);
-			
+			let user = {
+				'firstName': params.firstName,
+				'lastName': params.lastName,
+				'birthDate': params.birthDate || '',
+				'gender': params.gender || '',
+				'type': params.type
+			};
 			if (params.token) {
 				let tokenRef = db.ref('token/');
 				
 				tokenRef.on('value', (snapshot) => {
 					if (params.token === snapshot.val()) {
-						usersRef.update({
-							'firstName': params.firstName,
-							'lastName': params.lastName,
-							'birthDate': params.birthDate || '',
-							'gender': params.gender || '',
-							'type': params.type
-						});
+
+						usersRef.update(user);
 						usersRef.on('value', (snapshot) => {
 							utilities.sendResponse(response, null, snapshot.val());
 						}, (error) => {
@@ -86,19 +87,12 @@ module.exports =  {
 				});
 			}
 			else {
-				usersRef.update({
-					'firstName': params.firstName,
-					'lastName': params.lastName,
-					'birthDate': params.birthDate || '',
-					'gender': params.gender || '',
-					'type': params.type
-				});
+				usersRef.update(user);
 				usersRef.on('value', (snapshot) => {
 					utilities.sendResponse(response, null, snapshot.val());
 				}, (error) => {
 					utilities.sendResponse(response, error, null);
 				});
-
 			}
 		})
 		.catch((error) => {
