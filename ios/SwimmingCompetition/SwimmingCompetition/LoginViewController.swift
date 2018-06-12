@@ -45,7 +45,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         activeTextField = emailTextFiled
      
         /* Set the logo image */
-        self.logo.image = UIImage(named: "logo.png")
+        self.logo.image = UIImage(named: "logo4.png")
         
         /* Set the background */
         backgroundView = UIImageView(frame: self.view.bounds)
