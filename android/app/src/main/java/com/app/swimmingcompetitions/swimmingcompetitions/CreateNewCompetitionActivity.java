@@ -179,8 +179,8 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements HttpA
     private void setUpEditMode() {
         DateUtils dateUtils = new DateUtils();
 
-        Calendar competitionDate = dateUtils.dateToCalendar(new Date(this.selectedCompetition.getActivityDate()));
-        showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH) + 1, competitionDate.get(Calendar.DAY_OF_MONTH));
+        Calendar competitionDate = dateUtils.stringToCalendar(this.selectedCompetition.getActivityDate());
+        showDate(competitionDate.get(Calendar.YEAR), competitionDate.get(Calendar.MONTH), competitionDate.get(Calendar.DAY_OF_MONTH));
         showTime(competitionDate.get(Calendar.HOUR_OF_DAY), competitionDate.get(Calendar.MINUTE));
 
         this.competitionName.setText(this.selectedCompetition.getName());
@@ -323,7 +323,17 @@ public class CreateNewCompetitionActivity extends LoadingDialog implements HttpA
     }
 
     private void showTime(int hourOfDay, int minutes) {
-        this.timeView.setText(new StringBuilder().append(hourOfDay).append(":").append(minutes));
+        StringBuilder str = new StringBuilder();
+        if(hourOfDay < 10) {
+            str.append("0");
+        }
+        str.append(hourOfDay);
+        str.append(":");
+        if(minutes < 10) {
+            str.append("0");
+        }
+        str.append(minutes);
+        this.timeView.setText(str);
     }
 
     @Override

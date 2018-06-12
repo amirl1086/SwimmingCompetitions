@@ -38,7 +38,6 @@ public class ViewPersonalResultsActivity extends LoadingDialog implements HttpAs
     private int lastSelectedFilter;
     private DateUtils dateUtils;
     private ArrayList<Competition> competitions;
-    private Competition selectedCompetition;
     private ListView listView;
     private CompetitionAdapter competitionsListAdapter;
 

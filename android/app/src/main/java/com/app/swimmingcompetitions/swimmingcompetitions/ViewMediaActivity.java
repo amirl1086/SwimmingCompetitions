@@ -173,7 +173,7 @@ public class ViewMediaActivity extends LoadingDialog implements HttpAsyncRespons
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("צפה במדיה לפי תחרות");
+        toolbar.setTitle("צלם וצפה בתמונות לפי תחרות");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();

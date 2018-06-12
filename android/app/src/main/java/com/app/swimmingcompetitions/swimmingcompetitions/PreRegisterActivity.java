@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class PreRegisterActivity extends AppCompatActivity {
 
-    private JSONObject userData;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +22,9 @@ public class PreRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pre_register);
 
         Intent intent = getIntent();
-        if(intent.hasExtra("userData")) {
+        if(intent.hasExtra("currentUser")) {
             try {
-                this.userData = new JSONObject(intent.getStringExtra("userData"));
+                this.currentUser = (User) intent.getSerializableExtra("currentUser");
             }
             catch (Exception e) {
                 showToast("שגיאה באתחול מסך ההרשמה, נסה לאתחל את האפליקציה");
@@ -41,9 +41,9 @@ public class PreRegisterActivity extends AppCompatActivity {
     public void switchToRegisterActivity(final View view) {
         String buttonName = view.getId() == R.id.parent_btn ? "parent" : "student";
 
-        if(this.userData != null) {
+        if(this.currentUser != null) {
             Intent googleRegIntent = new Intent(this, GoogleRegisterActivity.class);
-            googleRegIntent.putExtra("userData", this.userData.toString());
+            googleRegIntent.putExtra("currentUser", this.currentUser);
             googleRegIntent.putExtra("registerType", buttonName);
             startActivity(googleRegIntent);
         }

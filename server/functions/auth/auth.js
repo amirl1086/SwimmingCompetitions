@@ -59,6 +59,7 @@ module.exports =  {
 		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
 			let usersRef = db.ref('users/' + params.uid);
+
 			let user = {
 				'firstName': params.firstName,
 				'lastName': params.lastName,
@@ -66,6 +67,7 @@ module.exports =  {
 				'gender': params.gender || '',
 				'type': params.type
 			};
+
 			if (params.token) {
 				let tokenRef = db.ref('token/');
 				
@@ -83,10 +85,13 @@ module.exports =  {
 						utilities.sendResponse(response, {'message': 'token_dont_match'}, null);
 					}
 				}, (error) => {
-
+					utilities.sendResponse(response, error, null);
 				});
 			}
 			else {
+				if(params.email) {
+					user.email = params.email;
+				}
 				usersRef.update(user);
 				usersRef.on('value', (snapshot) => {
 					utilities.sendResponse(response, null, snapshot.val());
@@ -230,7 +235,6 @@ let getUser = (uid, response, callback) => {
 		else {
 			utilities.sendResponse(response, error, null); 
 		}
-		
 	});
 };
 
@@ -265,30 +269,3 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 		callback(false, error);
 	});
 };
-
-
-// //db manipulation
-// exports.resetCompetitions = functions.https.onRequest((request, response) => {
-// 	let db = admin.database();
-// 	let collectionRef = db.ref('competitions');
-
-// 	collectionRef.on('value', (snapshot) => {
-// 		let competitions = snapshot.val();
-// 		for (let compId in competitions) {
-// 			for (let userId in competitions[compId].participants) {
-// 				competitions[compId].participants[userId].competed = 'false';
-// 			}
-// 			competitions[compId].isDone = 'false';
-// 			competitions[compId].inProgress = 'false';
-// 			delete competitions[compId].currentParticipants;
-// 		}
-// 		collectionRef.update(competitions);
-
-// 		collectionRef = db.ref('personalResults');
-// 		collectionRef.remove();
-
-// 		response.send('success\n');
-// 	}, (error) => {
-// 		response.send('error ', error, '\n');
-// 	});
-// });

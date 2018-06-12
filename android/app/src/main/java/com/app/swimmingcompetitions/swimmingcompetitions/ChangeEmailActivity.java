@@ -72,14 +72,19 @@ public class ChangeEmailActivity extends LoadingDialog implements HttpAsyncRespo
                         hideProgressDialog();
                         String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
                         switch (errorCode) {
-                            case "ERROR_EMAIL_ALREADY_IN_USE": {
+
+                            case "ERROR_EMAIL_ALREADY_IN_USE":
                                 showToast("כתובת האימייל שנבחרה נמצאת בשימוש, אנא בחר כתובת שונה");
                                 break;
-                            }
-                            case "ERROR_REQUIRES_RECENT_LOGIN": {
+
+                            case "ERROR_REQUIRES_RECENT_LOGIN":
                                 showToast("לא בוצע חיבור מאובטח מזה זמן מה, אנא התנתק והתחבר מחדש כדי לבצע פעולה זו");
                                 break;
-                            }
+
+                            default:
+                                showToast("שינוי כתובת האימייל נכשל, אנא התנתק והתחבר מחדש כדי לבצע פעולה זו");
+                                break;
+
                         }
                     }
                 }

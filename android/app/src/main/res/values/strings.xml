@@ -84,7 +84,7 @@
     <string name="name_sort_text">מיון לפי שם</string>
     <string name="register_existing_user">מתחרה קיים</string>
     <string name="search_by_email_and_birth_date">חפש לפי אימייל ותאריך לידה</string>
-    <string name="media_nav_item">תמונות וסרטונים</string>
+    <string name="media_nav_item">תמונות משותפות</string>
     <string name="choose_style_and_length">בחר סגנון ומרחק</string>
     <string name="the_chosen_competitions">התחרויות שנבחרו</string>
     <string name="score">תוצאה:</string>
@@ -97,5 +97,7 @@
     <string name="new_password">סיסמא חדשה</string>
     <string name="new_email">אימייל חדש</string>
     <string name="confirmation_email">אימות אימייל</string>
+    <string name="style">סגנון:</string>
+    <string name="lengths_of_iterations">, אורך המקצים:</string>
 
 </resources>

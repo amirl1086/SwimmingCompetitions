@@ -59,6 +59,7 @@ public class DateUtils {
         System.out.println("date currentDateTime " + date.get(Calendar.DAY_OF_MONTH) + " " + date.get(Calendar.MONTH) + " " + date.get(Calendar.YEAR));
         Calendar today = Calendar.getInstance();
         today.set(Calendar.MONTH, today.get(Calendar.MONTH) + 1);
+        today.set(Calendar.DAY_OF_YEAR, today.get(Calendar.DAY_OF_YEAR) - 1);
         System.out.println("date TODAY " + today.get(Calendar.DAY_OF_MONTH) + " " + today.get(Calendar.MONTH) + " " + today.get(Calendar.YEAR));
 
         if(currentDateTime < today.getTimeInMillis()) {
@@ -76,6 +77,7 @@ public class DateUtils {
         long currentDateTime = date.getTimeInMillis();
         Calendar today = Calendar.getInstance();
         today.set(Calendar.MONTH, today.get(Calendar.MONTH) + 1);
+        today.set(Calendar.DAY_OF_YEAR, today.get(Calendar.DAY_OF_YEAR) - 1);
         return currentDateTime < today.getTimeInMillis();
     }
 
@@ -208,10 +210,11 @@ public class DateUtils {
         System.out.println(today.get(Calendar.YEAR));
 
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+        int todayDay = today.get(Calendar.DAY_OF_YEAR);
+        int dobDay = dob.get(Calendar.DAY_OF_YEAR);
+/*        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
             age--;
-        }
+        }*/
 
         Integer ageInt = age;
         return ageInt;

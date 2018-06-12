@@ -55,14 +55,14 @@ public class ImageAdapter extends BaseAdapter {
         imageView = listItem.findViewById(R.id.image_view);
 
 
-        imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
+        //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         try {
-            System.out.println("width " + this.mediaList.get(position).getInt("width"));
-            System.out.println("height " + this.mediaList.get(position).getInt("height"));
+            /*System.out.println("width " + this.mediaList.get(position).getInt("width"));
+            System.out.println("height " + this.mediaList.get(position).getInt("height"));*/
             Glide.with(imageView.getContext())
                     .load(this.mediaList.get(position).getString("url"))
-                    .apply(new RequestOptions().override(this.mediaList.get(position).getInt("width"), this.mediaList.get(position).getInt("height")).fitCenter())
+                    /*.apply(new RequestOptions().override(this.mediaList.get(position).getInt("width"), this.mediaList.get(position).getInt("height")).fitCenter())*/
                     .into(imageView);
         }
         catch(Exception e) {

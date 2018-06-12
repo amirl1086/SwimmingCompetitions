@@ -135,7 +135,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Http
     public void updateUserDetails(View view) {
         if(isValid()) {
             try {
-                showProgressDialog("שומר את הפרטי המשתמש...");
+                showProgressDialog("מעדכן את הפרטים שלך...");
 
                 JSONObject data = new JSONObject();
                 data.put("urlSuffix", "/updateFirebaseUser");
@@ -168,7 +168,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Http
                 JSONObject dataObj = response.getJSONObject("data");
 
                 this.currentUser = new User(dataObj);
-                showToast("הפרטים נשמרו בהצלחה");
+                showToast("הפרטים עודכנו בהצלחה");
                 switchToHomePageActivity();
             }
             catch (Exception e) {
@@ -177,7 +177,7 @@ public class MyPersonalInformationActivity extends LoadingDialog implements Http
             }
         }
         else {
-            showToast("שגיאה בשמירת הפרטים במערכת, נסה לאתחל את האפליקציה");
+            showToast("שגיאה בעדכון הפרטים במערכת, נסה לאתחל את האפליקציה");
         }
 
         hideProgressDialog();

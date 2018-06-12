@@ -38,12 +38,6 @@ public class ViewImageActivity extends LoadingDialog implements bitmapAsyncRespo
             this.fbUser = this.mAuth.getCurrentUser();
 
             this.imageView = findViewById(R.id.image_view);
-
-            //urlImageToBitmap(intent.getStringExtra("imageUrl"));
-
-
-            //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             try {
                 Glide.with(imageView.getContext()).load(intent.getStringExtra("imageUrl")).into(imageView);
             }
