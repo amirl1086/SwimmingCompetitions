@@ -128,13 +128,18 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         if(result != null) {
             try {
                 JSONObject response = new JSONObject(result);
-                JSONObject userData = response.getJSONObject("data");
-                this.currentUser = new User(userData);
-                switchToHomePageActivity();
+                if (response.getBoolean("success")) {
+                    JSONObject userData = response.getJSONObject("data");
+                    this.currentUser = new User(userData);
+                    switchToHomePageActivity();
+                }
+                else {
+                    showToast("שגיאה בשחזור המידע שלך, נסה להתחבר מחדש");
+                }
             }
             catch(Exception e) {
-                showToast("שגיאה בשחזור המידע שלך, נסה לאתחל את האפליקציה");
-                System.out.println("LogInActivity processFinish Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
+                showToast("שגיאה בשחזור המידע שלך, נסה להתחבר מחדש");
+                System.out.println("LogInActivity handleGetUser Exception, \nMassage:" + e.getMessage() + "\nStack Trace:\n");
                 e.printStackTrace();
             }
         }
@@ -151,7 +156,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
                 JSONObject userData = response.getJSONObject("data");
                 this.currentUser = new User(userData);
                 if(this.currentUser.getType().isEmpty()) {
-                    switchToGoogleRegisterActivity(userData);
+                    switchToGoogleRegisterActivity();
                 }
                 else {
                     switchToHomePageActivity();
@@ -295,9 +300,9 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
         startActivity(intent);
     }
 
-    public void switchToGoogleRegisterActivity(JSONObject userData) {
+    public void switchToGoogleRegisterActivity() {
         Intent intent = new Intent(this, PreRegisterActivity.class);
-        intent.putExtra("userData", userData.toString());
+        intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }
 

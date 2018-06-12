@@ -16,8 +16,8 @@
 
         <TextView
             android:id="@+id/children_list_header"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="עדכון פרטים נוספים"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -57,23 +57,23 @@
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <TextView
                 android:id="@+id/birth_date_view"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="22sp" />
 
             <Button
                 android:id="@+id/register_birth_date"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/register_birth_date"
                 android:onClick="setDate"
@@ -102,12 +102,12 @@
 
         <Button
             android:id="@+id/update_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_marginTop="15dp"
             android:onClick="updateFirebaseUser"
-            android:text="@string/save_details"
+            android:text="@string/confirm"
             android:textAlignment="center"
             android:textSize="25sp"
             android:theme="@style/AppTheme.TransparentButton" />

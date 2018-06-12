@@ -31,7 +31,12 @@ public class HomePageActivity extends LoadingDialog {
             this.mAuth = FirebaseAuth.getInstance();
             this.fbUser = this.mAuth.getCurrentUser();
 
-            setUpSidebar();
+            if(this.currentUser.getType().isEmpty()) {
+                switchToGoogleRegisterActivity();
+            }
+            else {
+                setUpSidebar();
+            }
         }
         else {
             switchToLogInActivity();
@@ -127,6 +132,12 @@ public class HomePageActivity extends LoadingDialog {
 
     public void switchToViewInRealTimeActivity(View v) {
         Intent intent = new Intent(this, ViewInRealTimeActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        startActivity(intent);
+    }
+
+    public void switchToGoogleRegisterActivity() {
+        Intent intent = new Intent(this, PreRegisterActivity.class);
         intent.putExtra("currentUser", this.currentUser);
         startActivity(intent);
     }

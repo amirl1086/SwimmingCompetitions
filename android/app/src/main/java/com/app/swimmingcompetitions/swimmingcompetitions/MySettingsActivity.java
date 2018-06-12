@@ -72,7 +72,7 @@ public class MySettingsActivity extends AppCompatActivity {
         this.navigationView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("הילדים שלי");
+        toolbar.setTitle("הגדרות");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();

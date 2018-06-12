@@ -47,7 +47,7 @@ public class PersonalResult {
     }
 
     public String getScore() {
-        return (this.score != null && this.score.length() > 4) ? this.score.substring(0, 3) : this.score;
+        return (this.score != null && this.score.length() > 4) ? this.score.substring(0, this.score.indexOf('.') + 2) : this.score;
     }
 
     public void setScore(String score) {
@@ -80,6 +80,11 @@ public class PersonalResult {
 
     public Calendar getTimeStamp() throws Exception {
         DateUtils dateUtils = new DateUtils();
+        if(this.timeStamp == null || this.timeStamp.isEmpty()) {
+            Calendar lastPlaceDate = Calendar.getInstance();
+            lastPlaceDate.add(Calendar.DAY_OF_MONTH, -1);
+            return lastPlaceDate;
+        }
         return dateUtils.strTimeStampToCalendar(this.timeStamp);
     }
 

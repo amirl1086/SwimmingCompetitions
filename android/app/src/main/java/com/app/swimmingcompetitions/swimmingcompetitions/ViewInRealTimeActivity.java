@@ -86,7 +86,8 @@ public class ViewInRealTimeActivity extends LoadingDialog implements HttpAsyncRe
         catch (Exception e) {
             hideProgressDialog();
             showToast("שגיאה ביצירת הבקשה למערכת, נסה לאתחל את האפליקציה");
-            System.out.println("ViewInRealTimeActivity getCompetitionInProgress Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("ViewInRealTimeActivity getCompetitionInProgress Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+            e.printStackTrace();
         }
     }
 
@@ -111,7 +112,8 @@ public class ViewInRealTimeActivity extends LoadingDialog implements HttpAsyncRe
             }
             catch (Exception e) {
                 showToast("שגיאה ביצירה של רשימת התוצאות, נסה לאתחל את האפליקציה");
-                System.out.println("ViewInRealTimeActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                System.out.println("ViewInRealTimeActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                e.printStackTrace();
             }
         }
         else {
@@ -157,7 +159,8 @@ public class ViewInRealTimeActivity extends LoadingDialog implements HttpAsyncRe
                 }
                 catch (Exception e) {
                     showToast("שגיאה במיון התוצאות, נסה לאתחל את האפליקציה");
-                    System.out.println("ViewInRealTimeActivity processFinish Exception \nMessage: " + e.getMessage() + "\nStack Trace: " + Arrays.toString(e.getStackTrace()));
+                    System.out.println("ViewInRealTimeActivity addResultToLiveList Exception \nMessage: " + e.getMessage() + "\nStack Trace:\n");
+                    e.printStackTrace();
                     return 0;
                 }
 

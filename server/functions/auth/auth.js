@@ -62,6 +62,7 @@ module.exports =  {
 			usersRef.update({
 				'firstName': params.firstName,
 				'lastName': params.lastName,
+				'email': params.email || userRecord.email,
 				'birthDate': params.birthDate || '',
 				'gender': params.gender || '',
 				'type': params.type
@@ -74,7 +75,7 @@ module.exports =  {
 			});
 		})
 		.catch((error) => {
-		    console.log("Error updating user:", error);
+		    utilities.sendResponse(response, error, null);
 		});
 	},
 
@@ -193,7 +194,13 @@ let getUser = (uid, response, callback) => {
 			callback(true, snapshot.val());
 		}
 		else {
-			utilities.sendResponse(response, null, snapshot.val()); 
+			let result = snapshot.val();
+			if(result) {
+				utilities.sendResponse(response, null, result); 
+			}
+			else {
+				utilities.sendResponse(response, result, null); 
+			}
 		}
 	}, (error) => {
 		if(callback) {
