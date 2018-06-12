@@ -87,7 +87,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         formatDate.dateFormat = "dd/MM/YYYY"
         
         if firstName.text == "" || lastName.text == "" {
-            let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: "נא למלא את כל השדות", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
             }))

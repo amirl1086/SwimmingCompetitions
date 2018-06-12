@@ -220,16 +220,16 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             "email": email.text!,
             "password": password.text != nil ? password.text! : "",
             "passwordConfirmation": passwordConfirmation.text != nil ? passwordConfirmation.text! : "",
-            "type": userType,
-            "token": self.productNumber.text!
+            "type": userType
             ] as [String: AnyObject]
         
         if isGoogleRegister {
+            parameters["token"] = self.productNumber.text! as AnyObject
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || productNumber.text == "" {
-                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
-            } else if self.token != self.productNumber.text {
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
+            } /*else if self.token != self.productNumber.text {
                 self.present(Alert().confirmAlert(title: "מפתח מוצר לא נכון", message: "נא לפנות לאחראי"), animated: true, completion: nil)
-            } else {
+            }*/ else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                     if response.succeed {
@@ -243,17 +243,39 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                     } else {
                         UserDefaults.standard.set(false, forKey: "loggedIn")
                         UserDefaults.standard.synchronize()
-                        
-                        if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
-                            self.navigationController?.viewControllers = [loginView]
+                        var title = ""
+                        var message = ""
+                        if ((response.data["message"] as? String) != nil) {
+                            switch(response.data["message"] as! String) {
+                            case "token_dont_match":
+                                title = "מפתח מוצר לא נכון"
+                                message = "נא לפנות לאחראי"
+                                break
+                            case "The email address is already in use by another account.":
+                                message = "כתובת אימייל כבר קיימת"
+                                break;
+                            case "The password must be a string with at least 6 characters.":
+                                message = "סיסמא חייבת להכיל לפחות 6 תוים"
+                                break;
+                            case "The email address is improperly formatted.":
+                                message = "כתובת אימייל לא חוקית"
+                                break;
+                            default:
+                                message = response.data["message"] as! String
+                                break
+                            }
                         }
+                        self.present(Alert().confirmAlert(title: title, message: message), animated: true, completion: nil)
+                        /*if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
+                            self.navigationController?.viewControllers = [loginView]
+                        }*/
                     }
                 }
             }
         } else if self.currentUser != nil {
             parameters["type"] = self.currentUser.type as AnyObject
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") {
-                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     if response.succeed {
@@ -271,7 +293,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         } else {
             
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || password.text == "" || passwordConfirmation.text == "" || productNumber.text == "" {
-                self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             }
             else if password.text != passwordConfirmation.text {
                 self.present(Alert().confirmAlert(title: "", message: "הסיסמאות אינן תואמות"), animated: true, completion: nil)

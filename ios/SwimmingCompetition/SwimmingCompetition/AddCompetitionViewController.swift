@@ -143,7 +143,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         
         if self.nameTextField.text == "" || self.styleTextField.text == "" || self.numberTextField.text == "" || self.dateTextField.text == "" || self.agesTextField.text == "" {
             
-            self.present(Alert().confirmAlert(title: "", message: "חובה למלא את כל השדות!"), animated: true, completion: nil)
+            self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
         } else if self.fromAge > self.toAge {
             self.present(Alert().confirmAlert(title: "", message: "טווח הגילאים אינו תקין"), animated: true, completion: nil)
         }

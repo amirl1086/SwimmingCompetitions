@@ -78,7 +78,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         
         if email.text == "" || birthDate.text == "" {
             
-            self.present(Alert().confirmAlert(title: "", message: "חובה למלא את השדות"), animated: true, completion: nil)
+            self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
         } else {
             
             if ((self.senderView as? CompetitionDetailsViewController) != nil) {

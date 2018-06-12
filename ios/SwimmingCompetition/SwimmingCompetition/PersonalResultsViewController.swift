@@ -30,6 +30,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBOutlet weak var tableView: UITableView!
     
+    var backgroundView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,17 +62,15 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             setCompetitionResults()
         }
         
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
         self.tableView.backgroundColor = UIColor.clear
        
-        
-        
-        
-        
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
     }
     
     func getRealTimeResults() {
@@ -79,6 +79,9 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 let data = snapshot.value as! JSON
                 let participant = Participant(json: data, id: "")
                 self.realTimeArray.insert(participant, at: 0)
+                let formatDate = DateFormatter()
+                formatDate.dateFormat = "dd/MM/yyyy HH:mm:ss"
+                self.realTimeArray.sort(by: {(formatDate.date(from:$0.timeStamp) != nil ? formatDate.date(from:$0.timeStamp)! : Date()) > (formatDate.date(from:$1.timeStamp) != nil ? formatDate.date(from:$1.timeStamp)! : Date())})
                 self.tableView.reloadData()
             }
         } else {
@@ -271,7 +274,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             label.textAlignment = .center
             label.font = label.font.withSize(25)
             label.textColor = UIColor.white
-            label.frame = CGRect(x: (self.view.frame.width/2)-75, y: 5, width: 150, height: 35)
+            label.frame = CGRect(x: 0, y: 5, width: self.view.frame.width, height: 35)
             view.addSubview(label)
             return view
         }

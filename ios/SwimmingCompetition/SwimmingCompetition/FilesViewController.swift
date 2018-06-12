@@ -20,7 +20,7 @@ struct Media {
 }
 
 
-class FilesViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class FilesViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var collectionView: UICollectionView!
     
     let avPlayerView = AVPlayerViewController()
@@ -41,27 +41,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         
         getMedia()
 
-        /*let movie: URL? = URL(string: "https://firebasestorage.googleapis.com/v0/b/firebase-swimmingcompetitions.appspot.com/o/videos%2F187364?alt=media&token=09bab603-a20d-4dde-8f9a-742b61abaab2")
-        if let url = movie {
-            self.avPlayer = AVPlayer(url: url)
-            self.avPlayerView.player = self.avPlayer
-        }*/
-        
-        
-        
-        /*self.image.image = videoSnapshot(filePath: "https://firebasestorage.googleapis.com/v0/b/firebase-swimmingcompetitions.appspot.com/o/Movie%2Fjustapic.mov?alt=media&token=12b846aa-3772-471e-b27a-36e1657cbf64")*/
-        
-        /*videoSnapshot(filePath: "https://firebasestorage.googleapis.com/v0/b/firebase-swimmingcompetitions.appspot.com/o/Movie%2Fjustapic.mov?alt=media&token=12b846aa-3772-471e-b27a-36e1657cbf64") { (result) in
-            let time = CMTime(seconds: 1, preferredTimescale: 60)
-            
-            do {
-                let imageRef = try result.copyCGImage(at: time, actualTime: nil)
-                //self.image.image =  UIImage(cgImage: imageRef)
-            } catch let error as Error {
-                print("problem \(error)")
-                
-            }
-        }*/
+       
         
         self.collectionView.backgroundColor = UIColor.clear
         self.backgroundView = UIImageView(frame: self.view.bounds)
@@ -81,22 +61,13 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         generator.appliesPreferredTrackTransform = true
        
         completion(generator)
-        
-        /*let time = CMTime(seconds: 1, preferredTimescale: 60)
-        
-        do {
-            let imageRef = try generator.copyCGImage(at: time, actualTime: nil)
-            return UIImage(cgImage: imageRef)
-        } catch let error as Error {
-            print("problem")
-            return nil
-        }*/
+       
     }
     
     func fromGalery() {
         let image = UIImagePickerController()
         image.delegate = self
-        image.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
+        image.mediaTypes = [kUTTypeImage as String]
         image.sourceType = UIImagePickerControllerSourceType.photoLibrary
         image.allowsEditing = false
         self.present(image, animated: true) {
@@ -107,7 +78,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
     func fromCamera() {
         let image = UIImagePickerController()
         image.delegate = self
-        image.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
+        image.mediaTypes = [kUTTypeImage as String]
         image.sourceType = UIImagePickerControllerSourceType.camera
         image.allowsEditing = false
         self.present(image, animated: true) {
@@ -116,9 +87,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     @objc func addMedia() {
-        /*self.present(self.avPlayerView, animated: true) {
-         self.avPlayerView.player?.play()
-         }*/
+       
         let alert = UIAlertController(title: "בחר אפשרות", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "גלריה", style: .default, handler: { (action) in
             
@@ -293,14 +262,15 @@ extension FilesViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 if self.mediaArray[indexPath.row].contentType == "image/jpeg" {
                     cell.imageView.image = UIImage(data: data!)
                 } else {
-                    cell.imageView.image = self.getSnapshotFromVideo(path: self.mediaArray[indexPath.row].url) //UIImage(named: "play.png")
+                    cell.imageView.image = UIImage(named: "play.png")
+                    
+                    //self.getSnapshotFromVideo(path: self.mediaArray[indexPath.row].url)
                 }
                 
                 cell.isUserInteractionEnabled = true
             }
            
         }
-        //cell.imageView.image = UIImage(named: self.mediaArray[indexPath.row] + ".jpg")
         return cell
     }
     
@@ -327,7 +297,8 @@ extension FilesViewController: UICollectionViewDelegate, UICollectionViewDataSou
             }
         }
         
-        
     }
+    
+ 
 }
 

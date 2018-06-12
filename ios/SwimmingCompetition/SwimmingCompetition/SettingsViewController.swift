@@ -21,6 +21,7 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         initMenuBar()
         
+        getProductNumber()
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")
         self.view.insertSubview(self.backgroundView, at: 0)
@@ -39,6 +40,18 @@ class SettingsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         initMenuBar()
+    }
+    
+    func getProductNumber() {
+        if self.currentUser.type == "coach" {
+            let tokenButton = UIBarButtonItem(title: "מפתח מוצר", style: .plain, target: self, action: #selector(getToken))
+            self.navigationItem.leftBarButtonItem = tokenButton
+        }
+    }
+    
+    @objc func getToken() {
+        UIPasteboard.general.string = self.currentUser.token
+        self.present(Alert().confirmAlert(title: "מפתח המוצר הועתק ללוח", message: ""), animated: true, completion: nil)
     }
     
     @IBAction func editPersonalDetails(_ sender: Any) {

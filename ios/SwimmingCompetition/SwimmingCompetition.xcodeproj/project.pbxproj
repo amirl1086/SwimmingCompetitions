@@ -19,6 +19,7 @@
 		3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3027DA97203C9D3F009D8A17 /* Participant.swift */; };
 		30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */; };
 		30291371205B3E8D00D293F2 /* CompetitionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */; };
+		302E603A20CFDCDE0057987D /* DesignableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302E603920CFDCDE0057987D /* DesignableButton.swift */; };
 		303DB12E20BECA0B00894800 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303DB12D20BECA0B00894800 /* PopUpViewController.swift */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
@@ -89,6 +90,7 @@
 		3027DA97203C9D3F009D8A17 /* Participant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionTableViewCell.xib; sourceTree = "<group>"; };
+		302E603920CFDCDE0057987D /* DesignableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableButton.swift; sourceTree = "<group>"; };
 		303DB12D20BECA0B00894800 /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 			children = (
 				30541B602002D9940080CC58 /* stll-swimming-logo.gif */,
 				306C959C1FF27C6200A0D266 /* RoundButton.swift */,
+				302E603920CFDCDE0057987D /* DesignableButton.swift */,
 				3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */,
 				30453E741FF263D7008FF6F3 /* Swift+Gif.swift */,
 			);
@@ -655,6 +658,7 @@
 				30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */,
 				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
 				300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */,
+				302E603A20CFDCDE0057987D /* DesignableButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
