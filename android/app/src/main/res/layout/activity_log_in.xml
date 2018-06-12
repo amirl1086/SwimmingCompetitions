@@ -16,23 +16,12 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/log_in_header"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold|italic" />
-
         <ImageView
             android:id="@+id/app_logo_img"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo3" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
