@@ -69,5 +69,35 @@ class MainViewController: UIViewController {
         
         self.menu_vc.view.removeFromSuperview()
     }
-  
+    @IBAction func scoreButton(_ sender: Any) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+            competitionsView.currentUser = self.currentUser
+            competitionsView.controllerType = "results"
+            self.navigationController?.viewControllers = [competitionsView]
+        }
+    }
+    @IBAction func competitionsButton(_ sender: Any) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
+            competitionsView.currentUser = self.currentUser
+            self.navigationController?.viewControllers = [competitionsView]
+        }
+    }
+    @IBAction func settingsButton(_ sender: Any) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let settingsView = sb.instantiateViewController(withIdentifier: "settingsId") as? SettingsViewController {
+            settingsView.currentUser = self.currentUser
+            self.navigationController?.viewControllers = [settingsView]
+        }
+    }
+    @IBAction func realTimeButton(_ sender: Any) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {
+            resultsView.currentUser = self.currentUser
+            resultsView.controllerType = "realTime"
+            self.navigationController?.viewControllers = [resultsView]
+        }
+    }
+    
 }

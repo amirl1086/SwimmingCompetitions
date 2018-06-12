@@ -23,6 +23,8 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
        
         firstName.delegate = self
         lastName.delegate = self
+        firstName.autocorrectionType = .no
+        lastName.autocorrectionType = .no
         activeTextField = firstName
         
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
@@ -85,7 +87,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         formatDate.dateFormat = "dd/MM/YYYY"
         
         if firstName.text == "" || lastName.text == "" {
-            let alert = UIAlertController(title: nil, message: "חובה למלא את כל השדות!", preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: "נא למלא את כל השדות", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
             }))
@@ -111,8 +113,12 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
                 ] as [String:AnyObject]
             
             Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters) { (response) in
-                //alert.dismiss(withClickedButtonIndex: -1, animated: true)
                 self.removeAnimate()
+                if response.succeed {
+                    self.present(Alert().confirmAlert(title: "", message: "הרשמה בוצעה בהצלחה"), animated: true, completion: nil)
+                } else {
+                    self.present(Alert().confirmAlert(title: "שגיאה", message: "הרשמה לא בוצעה"), animated: true, completion: nil)
+                }
             }
         }
         

@@ -96,8 +96,18 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         cell.label.text = "\(self.currentUser.children[indexPath.row].firstName)"
         cell.layer.backgroundColor = UIColor.clear.cgColor
         cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor.clear
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let statisticView = sb.instantiateViewController(withIdentifier: "statisticsId") as? StatisticsViewController {
+            statisticView.currentUser = self.currentUser.children[indexPath.row]
+            statisticView.isChild = true
+            self.navigationController?.pushViewController(statisticView, animated: true)
+        }
     }
     
     func initMenuBar() {

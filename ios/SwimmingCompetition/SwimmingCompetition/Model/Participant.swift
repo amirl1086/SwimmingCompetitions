@@ -18,6 +18,7 @@ class Participant {
     var score:String
     var uid: String
     var rank: Int
+    var timeStamp: String
     
     init(json: JSON, id: String) {
         let firstName = json["firstName"] as? String
@@ -28,7 +29,7 @@ class Participant {
         if(json["competed"] as? String == "true" || json["competed"] as? String == "1" || json["competed"] as? Bool == true) {
             competed = true
         }
-        
+        let timeStamp = json["timeStamp"] as? String
         let score = json["score"] as? String
         let uid = id
             
@@ -41,6 +42,7 @@ class Participant {
         self.score = score != nil ? score! : ""
         self.uid = uid
         self.rank = 0
+        self.timeStamp = timeStamp != nil ? timeStamp! : ""
     }
     
     func setCompeted(competed:Bool) {

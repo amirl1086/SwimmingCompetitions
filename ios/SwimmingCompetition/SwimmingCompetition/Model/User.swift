@@ -18,6 +18,7 @@ struct User {
     var type:String
     var phoneNumber:String
     var uid:String
+    var token:String
     var children = [User]()
     
     init(json: JSON) {
@@ -29,6 +30,7 @@ struct User {
         let type = json["type"] as? String
         let phoneNumber = json["phoneNumber"] as? String
         let uid = json["uid"] as? String
+        let token = json["token"] as? String
         let children = json["children"] as? JSON
         
         self.firstName = firstName != nil ? firstName! : ""
@@ -39,25 +41,11 @@ struct User {
         self.type = type != nil ? type! : ""
         self.phoneNumber = phoneNumber != nil ? phoneNumber! : ""
         self.uid = uid != nil ? uid! : ""
+        self.token = token != nil ? token! : ""
         self.children = []
         
         
         
     }
-    
-    /*var firstName: String = ""
-    var lastName: String = ""
-    var birthDate: String = ""
-    var gender: String = ""
-    var email: String = ""
-    var type: String = ""
-    
-    init(firstName: String, lastName: String, birthDate: String, gender: String, email: String, type: String) {
-        self.firstName = firstName
-        self.lastName = lastName
-        self.birthDate = birthDate
-        self.gender = gender
-        self.email = email
-        self.type = type
-    }*/
+  
 }

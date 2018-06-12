@@ -12,11 +12,14 @@
 		3001846420BBF733001BD831 /* MyChildrenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846320BBF733001BD831 /* MyChildrenViewController.swift */; };
 		3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */; };
 		300613B91FF428BF0016E325 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300613B81FF428BF0016E325 /* Service.swift */; };
+		300977F720CCEB0500373F63 /* FilesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300977F620CCEB0500373F63 /* FilesCollectionViewCell.swift */; };
+		300977F920CCF3B900373F63 /* FilesDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300977F820CCF3B900373F63 /* FilesDetailsViewController.swift */; };
 		300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300B12F220B2AE1F003F6711 /* SettingsViewController.swift */; };
 		3019617C1FE8076D00046300 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3019617B1FE8076C00046300 /* GoogleService-Info.plist */; };
 		3027DA98203C9D3F009D8A17 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3027DA97203C9D3F009D8A17 /* Participant.swift */; };
 		30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */; };
 		30291371205B3E8D00D293F2 /* CompetitionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */; };
+		302E603A20CFDCDE0057987D /* DesignableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302E603920CFDCDE0057987D /* DesignableButton.swift */; };
 		303DB12E20BECA0B00894800 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303DB12D20BECA0B00894800 /* PopUpViewController.swift */; };
 		30453E751FF263D7008FF6F3 /* Swift+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30453E741FF263D7008FF6F3 /* Swift+Gif.swift */; };
 		3047BC781FE832EC00995F92 /* RegisterTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */; };
@@ -80,11 +83,14 @@
 		3001846320BBF733001BD831 /* MyChildrenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChildrenViewController.swift; sourceTree = "<group>"; };
 		3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildrenTableViewCell.swift; sourceTree = "<group>"; };
 		300613B81FF428BF0016E325 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		300977F620CCEB0500373F63 /* FilesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesCollectionViewCell.swift; sourceTree = "<group>"; };
+		300977F820CCF3B900373F63 /* FilesDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesDetailsViewController.swift; sourceTree = "<group>"; };
 		300B12F220B2AE1F003F6711 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		3019617B1FE8076C00046300 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3027DA97203C9D3F009D8A17 /* Participant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionTableViewCell.xib; sourceTree = "<group>"; };
+		302E603920CFDCDE0057987D /* DesignableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableButton.swift; sourceTree = "<group>"; };
 		303DB12D20BECA0B00894800 /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
+				300977F620CCEB0500373F63 /* FilesCollectionViewCell.swift */,
 				3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */,
 				30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */,
 				3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */,
@@ -191,6 +198,7 @@
 			children = (
 				30541B602002D9940080CC58 /* stll-swimming-logo.gif */,
 				306C959C1FF27C6200A0D266 /* RoundButton.swift */,
+				302E603920CFDCDE0057987D /* DesignableButton.swift */,
 				3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */,
 				30453E741FF263D7008FF6F3 /* Swift+Gif.swift */,
 			);
@@ -232,6 +240,7 @@
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
 				304855B920C517D200F6A8EE /* StatisticsViewController.swift */,
 				3001846320BBF733001BD831 /* MyChildrenViewController.swift */,
+				300977F820CCF3B900373F63 /* FilesDetailsViewController.swift */,
 				300B12F220B2AE1F003F6711 /* SettingsViewController.swift */,
 				30010C1320B4030F0064F27A /* MenuViewController.swift */,
 				3049BAB12074D7A800B1D3B8 /* TempRegPopUpViewController.swift */,
@@ -623,7 +632,9 @@
 				30F8B3FC20C65AEE00D751FD /* StatisticsTableViewCell.swift in Sources */,
 				3001846620BBF754001BD831 /* ChildrenTableViewCell.swift in Sources */,
 				30010C1420B4030F0064F27A /* MenuViewController.swift in Sources */,
+				300977F920CCF3B900373F63 /* FilesDetailsViewController.swift in Sources */,
 				306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */,
+				300977F720CCEB0500373F63 /* FilesCollectionViewCell.swift in Sources */,
 				304855BA20C517D200F6A8EE /* StatisticsViewController.swift in Sources */,
 				300613B91FF428BF0016E325 /* Service.swift in Sources */,
 				30FE9AB81FE72C5200201A20 /* LoginViewController.swift in Sources */,
@@ -647,6 +658,7 @@
 				30F220C0205E0A9E00A1E5F0 /* Date.swift in Sources */,
 				30FE9A871FE72BB900201A20 /* AppDelegate.swift in Sources */,
 				300B12F320B2AE1F003F6711 /* SettingsViewController.swift in Sources */,
+				302E603A20CFDCDE0057987D /* DesignableButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,7 +834,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4KXQ38ULTS;
 				INFOPLIST_FILE = SwimmingCompetition/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.swimmingcompetition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -843,7 +855,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4KXQ38ULTS;
 				INFOPLIST_FILE = SwimmingCompetition/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.swimmingcompetition;
 				PRODUCT_NAME = "$(TARGET_NAME)";

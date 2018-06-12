@@ -15,6 +15,12 @@ class StatisticsViewController: UIViewController {
         var competition: Competition!
         var score: String!
     }
+    
+    struct pickerResult {
+        var style: String
+        var length: [String]
+    }
+    var pickerArray = [pickerResult]()
     //var pickerView = UIPickerView()
     @IBOutlet weak var pickerView: UIPickerView!
     @IBOutlet weak var toolbarPicker: UIToolbar!
@@ -32,22 +38,29 @@ class StatisticsViewController: UIViewController {
     var menu_vc: MenuViewController!
     
     var currentUser: User!
+    var isChild = false
     
     var backgroundView: UIImageView!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         toolbarPicker.isHidden = true
         tableView.delegate = self
         tableView.dataSource = self
-        
+        pickerView.delegate = self
+        pickerView.dataSource = self
         pickerView.isHidden = true
         pickerView.backgroundColor = UIColor.lightGray
         let button = UIBarButtonItem(title: "בחר", style: .done, target: self, action: #selector(pickerViewStart))
-        self.navigationItem.leftBarButtonItem = button
+        if isChild {
+            self.navigationItem.rightBarButtonItem = button
+        } else {
+            self.navigationItem.leftBarButtonItem = button
+            initMenuBar()
+        }
         
-        setChart(self.array.count)
-        initMenuBar()
         getData()
         
         self.tableView.backgroundColor = UIColor.clear
@@ -76,11 +89,35 @@ class StatisticsViewController: UIViewController {
                     let newCompetition = Competition(json: jsonCompetition, id: jsonCompetition["id"] as! String)
                     let score = jsonData["score"] as! String
                     self.array.append(statisticResult(competition: newCompetition, score: score))
-                    self.tableView.reloadData()
-                    print(self.array.count)
+                    
                 }
+                if self.array.isEmpty {
+                    self.present(Alert().confirmAlert(title: "", message: "לא נמצאו תוצאות"), animated: true, completion: nil)
+                }
+                self.setPickerValue()
+                self.tableView.reloadData()
+            } else {
+                self.present(Alert().confirmAlert(title: "שגיאה", message: "לא ניתן להשיג מידע"), animated: true, completion: nil)
             }
           
+        }
+    }
+    
+    func setPickerValue() {
+        for result in self.array {
+            if self.pickerArray.contains(where: { (picker) -> Bool in
+                return picker.style == result.competition.swimmingStyle
+            }) {
+                for i in 0..<self.pickerArray.count {
+                    if self.pickerArray[i].style == result.competition.swimmingStyle {
+                        if !self.pickerArray[i].length.contains(result.competition.length) {
+                            self.pickerArray[i].length.append(result.competition.length)
+                        }
+                    }
+                }
+            } else {
+                self.pickerArray.append(pickerResult(style: result.competition.swimmingStyle, length: [result.competition.length]))
+            }
         }
     }
     
@@ -90,20 +127,22 @@ class StatisticsViewController: UIViewController {
         let values = (0..<count).map { (i) -> ChartDataEntry in
             formatDate.dateFormat = "dd/MM/yyyy HH:mm"
             let oldDate = formatDate.date(from: self.filteredArray[i].competition.activityDate)
-            formatDate.dateFormat = "dd/MM/yyyy"
+            formatDate.dateFormat = "MM/yyyy"
             let newDate = formatDate.string(from: oldDate!)
             dateArray.append(newDate)
             return ChartDataEntry(x: Double(i), y: Double(self.filteredArray[i].score)!)
             
         }
         let set1 = LineChartDataSet(values: values, label: "תוצאות")
+        set1.setColor(UIColor.black)
         let data = LineChartData(dataSet: set1)
-        
         self.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: dateArray)
         self.lineChartView.xAxis.granularity = 1
+       
         self.lineChartView.data = data
         self.lineChartView.chartDescription?.text = ""
         self.lineChartView.tintColor = UIColor.black
+        set1.circleHoleColor = UIColor.black
     }
     
     
@@ -133,15 +172,18 @@ class StatisticsViewController: UIViewController {
     }
     
     @objc func pickerViewStart() {
-        pickerView.delegate = self
-        pickerView.dataSource = self
+        
+        pickerView.reloadAllComponents()
         pickerView.isHidden = !pickerView.isHidden
         toolbarPicker.isHidden = !toolbarPicker.isHidden
     }
 
     @IBAction func confirmButton(_ sender: Any) {
-        print("push")
-        self.titleTable.text = "\(self.rangeToShow) מטר \(self.styleToShow)"
+        pickerView.reloadAllComponents()
+        if !self.array.isEmpty {
+            self.titleTable.text = "\(self.rangeToShow) מטר \(self.styleToShow)"
+        }
+        
         pickerView.isHidden = true
         toolbarPicker.isHidden = true
         self.filteredArray.removeAll()
@@ -176,30 +218,44 @@ extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if component == 0 {
-            return self.style.count
+        if self.array.count != 0 {
+            if component == 0 {
+                return self.pickerArray.count
+            } else {
+                let selected = pickerView.selectedRow(inComponent: 0)
+                return self.pickerArray[selected].length.count
+            }
         }
-        return self.range.count
+        return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if component == 0 {
-            return self.style[row]
+        
+        if self.array.count != 0 {
+            if component == 0 {
+                self.styleToShow = self.pickerArray[row].style
+                return self.pickerArray[row].style
+            } else {
+                let selected = pickerView.selectedRow(inComponent: 0)
+                self.rangeToShow = self.pickerArray[selected].length[row]
+                return self.pickerArray[selected].length[row]
+            }
         }
-        return String(self.range[row])
+        return "אין פרטים להציג"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        var styleString = style[pickerView.selectedRow(inComponent: 0)]
-        var rangeString = range[pickerView.selectedRow(inComponent: 1)]
-        if component == 0 {
-            styleString = style[row]
+        
+        if self.array.count != 0 {
+            pickerView.reloadComponent(1)
+            var selectedStyle = pickerView.selectedRow(inComponent: 0)
+            var selectedLength = pickerView.selectedRow(inComponent: 1)
+            let styleString = self.pickerArray[selectedStyle].style
+            let rangeString = self.pickerArray[selectedStyle].length[selectedLength]
+            self.rangeToShow = String(rangeString)
+            self.styleToShow = styleString
         }
-        else {
-            rangeString = range[row]
-        }
-        self.rangeToShow = String(rangeString)
-        self.styleToShow = styleString
+        
     }
     
 }

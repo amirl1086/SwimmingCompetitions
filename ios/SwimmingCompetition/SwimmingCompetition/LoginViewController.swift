@@ -12,10 +12,11 @@ import Alamofire
 import SwiftyJSON
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDelegate, GIDSignInUIDelegate {
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-    
+        print("hhhhh")
     }
     
     @IBOutlet weak var logo: UIImageView!
@@ -37,10 +38,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     override func viewDidLoad() {
   
         super.viewDidLoad()
-        
+        Service.shared.start = false
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
-        
        
         activeTextField = emailTextFiled
      
@@ -61,9 +61,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         GIDSignIn.sharedInstance().signOut()
         
         /* Set the sign in with google method and create the button */
-        GIDSignIn.sharedInstance().uiDelegate = self
+        /*GIDSignIn.sharedInstance().uiDelegate = self
         signInWithGooogleButton = GIDSignInButton(frame: CGRect(origin: CGPoint(x: 0, y: self.loginButton.frame.origin.y + self.loginButton.frame.height + 20), size: CGSize(width: 100, height: 50)))
-        scrollView.addSubview(signInWithGooogleButton)
+        scrollView.addSubview(signInWithGooogleButton)*/
         scrollView.isScrollEnabled = true
         scrollView.isUserInteractionEnabled = true
         
@@ -71,8 +71,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     
     override func viewDidLayoutSubviews() {
         backgroundView.frame = self.view.bounds
-        signInWithGooogleButton.center.x = self.view.center.x
+        //signInWithGooogleButton.center.x = self.view.center.x
         emailTextFiled.bottomLineBorder()
+        passwordTextFiled.bottomLineBorder()
     }
  
     /* For remove the observer of the keayboard */
@@ -123,7 +124,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         textField.resignFirstResponder()
         return true
     }
-   
+    @IBAction func googleButton(_ sender: Any) {
+        //GIDSignIn.sharedInstance().delegate = self
+        Service.shared.start = false
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
     /* The confirm button for login */
     @IBAction func loginButton(_ sender: AnyObject) {
         self.view.endEditing(true)
@@ -170,6 +177,34 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     }
     
     
+    @IBAction func forgotPasswordButton(_ sender: UIButton) {
+        let alert = UIAlertController(title: "שכחתי סיסמא", message: "", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "כתובת אימייל"
+            textField.textAlignment = .center
+        }
+        alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+            
+            if alert.textFields![0].text! != "" {
+                SwiftSpinner.show("אנא המתן")
+                Auth.auth().sendPasswordReset(withEmail: alert.textFields![0].text!, completion: { (error) in
+                    SwiftSpinner.hide()
+                    if error != nil {
+                        alert.message = "וודא/י שכתובת האימייל נכונה"
+                        self.present(alert, animated: true, completion: nil)
+                    } else {
+                        alert.dismiss(animated: true, completion: nil)
+                        self.present(Alert().confirmAlert(title: "", message: "נשלחה הודעה לכתובת האימייל"), animated: true, completion: nil)
+                    }
+                })
+            }
+            
+        }))
+        alert.addAction(UIAlertAction(title: "ביטול", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     
   
     

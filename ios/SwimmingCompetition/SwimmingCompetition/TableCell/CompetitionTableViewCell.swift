@@ -15,7 +15,8 @@ class CompetitionTableViewCell: UITableViewCell {
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var ages: UILabel!
-  
+    @IBOutlet weak var style: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

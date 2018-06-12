@@ -22,6 +22,7 @@ module.exports =  {
 								'email': decodedToken.email,
 								'token': snapshot.val()
 							};
+							console.log(snapshot.val());
 							addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
 								if(success) {
 									utilities.sendResponse(response, null, result); 
@@ -58,21 +59,47 @@ module.exports =  {
 		admin.auth().updateUser(params.uid, { displayName: params.firstName + ' ' + params.lastName }).then((userRecord) => {
 		    let db = admin.database();
 			let usersRef = db.ref('users/' + params.uid);
+			
+			if (params.token) {
+				let tokenRef = db.ref('token/');
+				
+				tokenRef.on('value', (snapshot) => {
+					if (params.token === snapshot.val()) {
+						usersRef.update({
+							'firstName': params.firstName,
+							'lastName': params.lastName,
+							'birthDate': params.birthDate || '',
+							'gender': params.gender || '',
+							'type': params.type
+						});
+						usersRef.on('value', (snapshot) => {
+							utilities.sendResponse(response, null, snapshot.val());
+						}, (error) => {
+							utilities.sendResponse(response, error, null);
+						});
+					}
+					else {
+						utilities.sendResponse(response, {'message': 'token_dont_match'}, null);
+					}
+				}, (error) => {
 
-			usersRef.update({
-				'firstName': params.firstName,
-				'lastName': params.lastName,
-				'email': params.email || userRecord.email,
-				'birthDate': params.birthDate || '',
-				'gender': params.gender || '',
-				'type': params.type
-			});
+				});
+			}
+			else {
+				usersRef.update({
+					'firstName': params.firstName,
+					'lastName': params.lastName,
+					'birthDate': params.birthDate || '',
+					'gender': params.gender || '',
+					'type': params.type
+				});
+				usersRef.on('value', (snapshot) => {
+					utilities.sendResponse(response, null, snapshot.val());
+				}, (error) => {
+					utilities.sendResponse(response, error, null);
+				});
 
-			usersRef.on('value', (snapshot) => {
-				utilities.sendResponse(response, null, snapshot.val());
-			}, (error) => {
-				utilities.sendResponse(response, error, null);
-			});
+			}
 		})
 		.catch((error) => {
 		    utilities.sendResponse(response, error, null);
@@ -228,6 +255,7 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 		'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
 	};
 	usersRef.set(userObject);
+	
 
 	//insert to database
 	usersRef.on('value', (snapshot) => {

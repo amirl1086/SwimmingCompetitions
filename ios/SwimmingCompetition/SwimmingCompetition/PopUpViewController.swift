@@ -78,7 +78,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         
         if email.text == "" || birthDate.text == "" {
             
-            self.present(Alert().confirmAlert(title: "", message: "חובה למלא את השדות"), animated: true, completion: nil)
+            self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
         } else {
             
             if ((self.senderView as? CompetitionDetailsViewController) != nil) {
@@ -111,7 +111,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
                     self.removeAnimate()
                 })
             } else {
-                self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
             }
         }
     }

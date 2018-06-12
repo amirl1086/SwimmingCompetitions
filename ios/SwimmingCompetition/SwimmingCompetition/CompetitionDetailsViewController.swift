@@ -45,12 +45,15 @@ class CompetitionDetailsViewController: UIViewController {
         
 
         nameLabel.text = currentCompetition.name
-        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = "\(DateConvert().getDate(fullDate: currentCompetition.activityDate)) ביום \(DateConvert().getWeekDay(fullDate: currentCompetition.activityDate)) בשעה \(DateConvert().getHour(fullDate: currentCompetition.activityDate))"
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
         
-        
+        if currentCompetition.isDone {
+            joinButtonOutlet.isHidden = true
+            tempJoinButtonOutlet.isHidden = true
+        }
         
         if userExist() {
             joinButtonOutlet.setTitle("בטל רישום", for: .normal)
@@ -70,7 +73,7 @@ class CompetitionDetailsViewController: UIViewController {
         super.viewDidAppear(animated)
         
         nameLabel.text = currentCompetition.name
-        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = "\(DateConvert().getDate(fullDate: currentCompetition.activityDate)) ביום \(DateConvert().getWeekDay(fullDate: currentCompetition.activityDate)) בשעה \(DateConvert().getHour(fullDate: currentCompetition.activityDate))"
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
@@ -246,7 +249,12 @@ class CompetitionDetailsViewController: UIViewController {
 }
 
 extension CompetitionDetailsViewController: dataProtocol {
+    func dataSelected(competition: Competition) {
+    }
+    
+    
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String) {
+        print("im here")
         self.currentCompetition.setName(name: name)
         self.currentCompetition.setActivityDate(activityDate: activityDate)
         self.currentCompetition.setSwimmingStyle(swimmingStyle: swimmingStyle)

@@ -17,6 +17,10 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         var femaleResults:[Participant]!
     }
 
+    var menu_vc: MenuViewController!
+    
+    var currentUser: User!
+    
     var array = [Result]()
     var data:JSON = [:]
     var controllerType = ""
@@ -25,6 +29,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     var realTimeArray = [Participant]()
     
     @IBOutlet weak var tableView: UITableView!
+    
+    var backgroundView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,36 +42,50 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         if controllerType == "results" {
             getResults()
         } else if controllerType == "realTime" {
-            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
-                let data = snapshot.value as! JSON
-                let participant = Participant(json: data, id: "")
-                self.realTimeArray.insert(participant, at: 0)
-                print(snapshot)
-                self.tableView.reloadData()
+            self.title = "צפייה בזמן אמת"
+            initMenuBar()
+            Service.shared.connectToServer(path: "getCompetitionInProgress", method: .post, params: [:]) { (response) in
+                if response.succeed {
+                    for data in response.data {
+                        var competition : Competition!
+                        let compData = response.data[data.0] as! JSON
+                        competition = Competition(json: compData, id: data.0)
+                        self.competition = competition
+                        self.tableView.reloadData()
+                    }
+                    self.getRealTimeResults()
+                } else {
+                    self.present(Alert().confirmAlert(title: "", message: "לא נמצאה תחרות"), animated: true, completion: nil)
+                }
             }
         } else {
             setCompetitionResults()
         }
         
-        let imageView = UIImageView(frame: self.view.bounds)
-        imageView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
-        self.view.insertSubview(imageView, at: 0)
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
+        self.backgroundView = UIImageView(frame: self.view.bounds)
+        self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
+        self.view.insertSubview(self.backgroundView, at: 0)
         self.tableView.backgroundColor = UIColor.clear
        
-        
-        
-        
-        
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.backgroundView.frame = self.view.bounds
     }
     
     func getRealTimeResults() {
-        Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
-            let data = snapshot.value as! JSON
-            let participant = Participant(json: data, id: "")
-            self.realTimeArray.insert(participant, at: 0)
-            self.tableView.reloadData()
+        if self.competition != nil {
+            Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
+                let data = snapshot.value as! JSON
+                let participant = Participant(json: data, id: "")
+                self.realTimeArray.insert(participant, at: 0)
+                let formatDate = DateFormatter()
+                formatDate.dateFormat = "dd/MM/yyyy HH:mm:ss"
+                self.realTimeArray.sort(by: {(formatDate.date(from:$0.timeStamp) != nil ? formatDate.date(from:$0.timeStamp)! : Date()) > (formatDate.date(from:$1.timeStamp) != nil ? formatDate.date(from:$1.timeStamp)! : Date())})
+                self.tableView.reloadData()
+            }
+        } else {
+            self.present(Alert().confirmAlert(title: "", message: "אין תחרות לצפיה"), animated: true, completion: nil)
         }
     }
     
@@ -247,7 +267,16 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if controllerType == "realTime" {
-            return nil
+            let view = UIView()
+            view.backgroundColor = UIColor.black
+            let label = UILabel()
+            label.text = self.competition != nil ? self.competition.name : ""
+            label.textAlignment = .center
+            label.font = label.font.withSize(25)
+            label.textColor = UIColor.white
+            label.frame = CGRect(x: 0, y: 5, width: self.view.frame.width, height: 35)
+            view.addSubview(label)
+            return view
         }
         
         let view = UIView()
@@ -267,6 +296,31 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
+    }
+    
+    func initMenuBar() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.menu_vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "menuId") as! MenuViewController
+        menu_vc.currentUser = self.currentUser
+        self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    }
+    
+    @objc func showMenu() {
+        
+        let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        self.addChildViewController(self.menu_vc)
+        self.menu_vc.view.frame = self.view.frame
+        self.view.addSubview(self.menu_vc.view)
+        self.menu_vc.didMove(toParentViewController: self)
+    }
+    
+    @objc func cancelMenu() {
+        let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        self.menu_vc.view.removeFromSuperview()
     }
   
 }
