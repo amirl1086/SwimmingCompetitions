@@ -38,7 +38,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     override func viewDidLoad() {
   
         super.viewDidLoad()
-        
+        Service.shared.start = false
         emailTextFiled.delegate = self
         passwordTextFiled.delegate = self
        
@@ -126,6 +126,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     }
     @IBAction func googleButton(_ sender: Any) {
         //GIDSignIn.sharedInstance().delegate = self
+        Service.shared.start = false
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signIn()
     }

@@ -58,10 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                     if response.data["uid"] == nil {
                         Service.shared.connectToServer(path: "logIn", method: .post, params: parameters, completion: { (response) in
                             if response.succeed {
+                                print(response.data)
                                 if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
                                     registerView.googleUser = googleUser
                                     if (response.data["token"] as? String) != nil {
                                         registerView.token = response.data["token"] as! String
+                                        
                                     }
                                     let root = self.window!.rootViewController as! UINavigationController
                                     root.pushViewController(registerView, animated: true)
@@ -73,6 +75,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                     } else if response.data["type"] as! String == "" {
                         if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
                             registerView.googleUser = googleUser
+                            print("tokkkkkkennnnn")
+                            print(response.data["token"] as! String)
+                            if (response.data["token"] as? String) != nil {
+                                registerView.token = response.data["token"] as! String
+                                
+                            }
                             let root = self.window!.rootViewController as! UINavigationController
                             root.pushViewController(registerView, animated: true)
                         }

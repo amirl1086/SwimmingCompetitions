@@ -28,11 +28,11 @@ class Competition {
         let swimmingStyle = json["swimmingStyle"] as? String
         var length = json["length"] as? String
         if length == nil {
-            length = String(json["length"] as! Int)
+            length = (json["length"] as? Int) != nil ? String(json["length"] as! Int) : ""
         }
         var numOfParticipants = json["numOfParticipants"] as? String
         if numOfParticipants == nil {
-            numOfParticipants = String(json["numOfParticipants"] as! Int)
+            numOfParticipants = (json["numOfParticipants"] as? Int) != nil ? String(json["numOfParticipants"] as! Int) : ""
         }
         let fromAge = json["fromAge"] as? String
         let toAge = json["toAge"] as? String
@@ -43,8 +43,7 @@ class Competition {
         if(json["isDone"] as? String == "true" || json["isDone"] as? String == "1" || json["isDone"] as? Bool == true) {
             isDone = true
         }
-        
-        
+       
         
         self.name = name != nil ? name! : ""
         self.activityDate = activityDate != nil ? activityDate! : ""

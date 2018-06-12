@@ -240,14 +240,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qsJ-BA-xeD">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qsJ-BA-xeD">
                                         <rect key="frame" x="49" y="134" width="100" height="100"/>
-                                        <color key="backgroundColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="100" id="bGQ-Gv-ugn"/>
                                             <constraint firstAttribute="height" constant="100" id="hUt-Nt-TV6"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Button" image="scoreMenu"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf8-fe-vc8">
                                         <rect key="frame" x="234" y="134" width="100" height="100"/>
@@ -2320,6 +2319,7 @@
     </scenes>
     <resources>
         <image name="googleIcon" width="48" height="48"/>
+        <image name="scoreMenu" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="jyO-eW-JIK"/>

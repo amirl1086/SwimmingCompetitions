@@ -194,7 +194,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     //function for change the register view accorting to user type
     func changeRegisterView() {
-        if userType == "parent" {
+        if userType == "parent" || userType == "coach" {
             self.genderTitle.isHidden = true
             self.gender.isHidden = true
             self.birthDate.isHidden = true
@@ -228,7 +228,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את שדות החובה"), animated: true, completion: nil)
             } else if self.token != self.productNumber.text {
-                self.present(Alert().confirmAlert(title: "מפתח המוצר לא נכון", message: "נא לפנות למנהל"), animated: true, completion: nil)
+                self.present(Alert().confirmAlert(title: "מפתח מוצר לא נכון", message: "נא לפנות לאחראי"), animated: true, completion: nil)
             } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     let sb = UIStoryboard(name: "Main", bundle: nil)
@@ -314,7 +314,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                             switch(response.data["message"] as! String) {
                             case "token_dont_match":
                                 title = "מפתח מוצר לא נכון"
-                                message = "אנא פנה למנהל"
+                                message = "נא לפנות לאחראי"
                                 break
                             case "The email address is already in use by another account.":
                                 message = "כתובת אימייל כבר קיימת"

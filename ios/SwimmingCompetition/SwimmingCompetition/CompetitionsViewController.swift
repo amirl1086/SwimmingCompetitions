@@ -37,7 +37,7 @@ class CompetitionsViewController: UIViewController {
         }
         
         getCompetitionsData()
-        
+        tableView.separatorStyle = .singleLine
         self.tableView.backgroundColor = UIColor.clear
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
@@ -206,14 +206,15 @@ extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource
         
         cell.layer.backgroundColor = UIColor.clear.cgColor
         cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor.clear
         //cell.cellView.layer.cornerRadius = cell.cellView.frame.height/4
         
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 230
-    }
+    /*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 250
+    }*/
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

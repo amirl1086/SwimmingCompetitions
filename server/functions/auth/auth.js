@@ -22,6 +22,7 @@ module.exports =  {
 								'email': decodedToken.email,
 								'token': snapshot.val()
 							};
+							console.log(snapshot.val());
 							addNewUser({ 'uid': currentUid }, userParams, (success, result) => { 
 								if(success) {
 									utilities.sendResponse(response, null, result); 
@@ -218,9 +219,11 @@ let addNewUser = (firebaseUser, userParams, callback) => {
 		'lastName': userParams.lastName,
 		'birthDate': userParams.birthDate || '',
 		'gender': userParams.gender || '',
-		'type': userParams.type || '' //can be 'parent', 'student' or 'coach'
+		'type': userParams.type || '', //can be 'parent', 'student' or 'coach'
+		'token': userParams.token
 	};
 	usersRef.set(userObject);
+	
 
 	//insert to database
 	usersRef.on('value', (snapshot) => {

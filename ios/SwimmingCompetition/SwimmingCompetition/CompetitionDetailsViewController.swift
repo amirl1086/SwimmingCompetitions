@@ -45,7 +45,7 @@ class CompetitionDetailsViewController: UIViewController {
         
 
         nameLabel.text = currentCompetition.name
-        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = "\(DateConvert().getDate(fullDate: currentCompetition.activityDate)) ביום \(DateConvert().getWeekDay(fullDate: currentCompetition.activityDate)) בשעה \(DateConvert().getHour(fullDate: currentCompetition.activityDate))"
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
@@ -73,7 +73,7 @@ class CompetitionDetailsViewController: UIViewController {
         super.viewDidAppear(animated)
         
         nameLabel.text = currentCompetition.name
-        dateLabel.text = DateConvert().getDate(fullDate: currentCompetition.activityDate)
+        dateLabel.text = "\(DateConvert().getDate(fullDate: currentCompetition.activityDate)) ביום \(DateConvert().getWeekDay(fullDate: currentCompetition.activityDate)) בשעה \(DateConvert().getHour(fullDate: currentCompetition.activityDate))"
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"

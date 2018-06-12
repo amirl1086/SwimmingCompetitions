@@ -13,7 +13,7 @@ import GoogleSignIn
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     /* Labels array for the menu bar */
-    let menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","סטטיסטיקות","תמונות וסרטונים","הילדים שלי","הגדרות","התנתק"]
+    var menuArray = ["ראשי","תחרויות","תוצאות","צפייה בזמן אמת","תמונות וסרטונים","הגדרות","התנתק"]
     
     var currentUser: User!
     
@@ -21,7 +21,11 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if currentUser.type == "student" {
+            self.menuArray.insert("סטטיסטיקות", at: 4)
+        } else {
+            self.menuArray.insert("הילדים שלי", at: 5)
+        }
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
