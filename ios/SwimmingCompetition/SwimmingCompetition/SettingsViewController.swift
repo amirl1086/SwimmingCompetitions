@@ -116,7 +116,7 @@ class SettingsViewController: UIViewController {
             }
         }))
         self.present(alert, animated: true, completion: nil)
-        //Auth.auth().currentUser?.updatePassword(to: <#T##String#>, completion: <#T##UserProfileChangeCallback?##UserProfileChangeCallback?##(Error?) -> Void#>)
+        
     }
     
     func initMenuBar() {

@@ -91,6 +91,7 @@
 		3029136E205B3E8D00D293F2 /* CompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		3029136F205B3E8D00D293F2 /* CompetitionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionTableViewCell.xib; sourceTree = "<group>"; };
 		302E603920CFDCDE0057987D /* DesignableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableButton.swift; sourceTree = "<group>"; };
+		302E603B20D083600057987D /* SwimmingCompetition.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwimmingCompetition.entitlements; sourceTree = "<group>"; };
 		303DB12D20BECA0B00894800 /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		30453E741FF263D7008FF6F3 /* Swift+Gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Gif.swift"; sourceTree = "<group>"; };
 		3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterTypeViewController.swift; sourceTree = "<group>"; };
@@ -230,6 +231,7 @@
 		30FE9A851FE72BB900201A20 /* SwimmingCompetition */ = {
 			isa = PBXGroup;
 			children = (
+				302E603B20D083600057987D /* SwimmingCompetition.entitlements */,
 				3029136D205B3D9400D293F2 /* TableCell */,
 				30EB50C62002D8A700517FE9 /* Design */,
 				30D9EBEF2001BEFC00A89A92 /* Model */,
@@ -383,6 +385,11 @@
 					30FE9A821FE72BB900201A20 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					30FE9A991FE72BBA00201A20 = {
 						CreatedOnToolsVersion = 9.1;
@@ -830,6 +837,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = SwimmingCompetition/SwimmingCompetition.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4KXQ38ULTS;
@@ -851,6 +859,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = SwimmingCompetition/SwimmingCompetition.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4KXQ38ULTS;

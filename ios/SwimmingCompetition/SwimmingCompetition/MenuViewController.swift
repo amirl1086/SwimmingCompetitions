@@ -117,12 +117,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 resultsView.controllerType = "realTime"
                  self.navigationController?.viewControllers = [resultsView]
             }
-            /*if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
-                competitionsView.controllerType = "realTime"
-                competitionsView.pathString = "getCompetitionInProgress"
-                competitionsView.currentUser = self.currentUser
-                self.navigationController?.viewControllers = [competitionsView]
-            }*/
+            
             break
         case "הילדים שלי":
             if let myChildrenView = sb.instantiateViewController(withIdentifier: "myChildrenId") as? MyChildrenViewController {

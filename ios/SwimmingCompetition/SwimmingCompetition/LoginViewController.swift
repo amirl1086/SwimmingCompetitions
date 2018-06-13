@@ -44,6 +44,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
        
         activeTextField = emailTextFiled
      
+        let guideButton = UIBarButtonItem(title: "מדריך למשתמש", style: .done, target: self, action: #selector(getUserGuide))
+        self.navigationItem.leftBarButtonItem = guideButton
+        
         /* Set the logo image */
         self.logo.image = UIImage(named: "logo4.png")
         
@@ -206,7 +209,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         self.present(alert, animated: true, completion: nil)
     }
     
-  
+    
+    @objc func getUserGuide() {
+        SwiftSpinner.show("טוען מסמך")
+        let fileRef = Storage.storage().reference().child("user_guide.pdf")
+        fileRef.downloadURL { (url, error) in
+            SwiftSpinner.hide()
+            if error != nil {
+                self.present(Alert().confirmAlert(title: "", message: "לא ניתן לטעון את המסמך"), animated: true, completion: nil)
+            } else {
+                if let url = url {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+    }
+    
     
 }
 
