@@ -68,8 +68,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(self.backgroundView, at: 0)
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "poolImage.jpg")!)
-        //navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
@@ -184,14 +183,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                             competition = Competition(json: compData, id: compData["id"] as! String)
                            
                             self.delegate?.dataSelected(competition: competition)
-                            /*if (self.parent as? CompetitionsViewController) != nil {
-                                let parentView = self.parent as! CompetitionsViewController
-                                var competition : Competition!
-                                let compData = response.data
-                                competition = Competition(json: compData, id: compData["id"] as! String)
-                                parentView.competitions.append(competition)
-                                parentView.tableView.reloadData()
-                            }*/
+                            
                            
                         }
                         _ = self.navigationController?.popViewController(animated: true)
