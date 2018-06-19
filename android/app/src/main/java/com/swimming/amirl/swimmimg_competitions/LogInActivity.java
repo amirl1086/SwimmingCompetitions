@@ -73,8 +73,6 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
 
         this.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-
-        //this.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     @Override public void onClick(View v) {
@@ -83,7 +81,7 @@ public class LogInActivity extends LoadingDialog implements View.OnClickListener
     @Override public void onBackPressed() { }
     @Override public void onResume() {
         super.onResume();
-        //redirectUser();
+        redirectUser();
     }
 
     private void redirectUser() {

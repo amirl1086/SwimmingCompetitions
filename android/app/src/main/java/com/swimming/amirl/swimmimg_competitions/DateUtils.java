@@ -25,12 +25,6 @@ public class DateUtils {
     public String getShortDate(String dateTime) {
         String[] arrDateTime = dateTime.split(" ");
         String[] arrDate = arrDateTime[0].split("/");
-        if(Integer.valueOf(arrDate[1]) < 10) {
-            arrDate[1] = "0" + arrDate[1];
-        }
-        if(Integer.valueOf(arrDate[2]) < 10) {
-            arrDate[2] = "0" + arrDate[2];
-        }
         return arrDate[1] + "/" + arrDate[2];
     }
 

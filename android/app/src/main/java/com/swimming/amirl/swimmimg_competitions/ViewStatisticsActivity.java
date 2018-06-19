@@ -184,7 +184,13 @@ public class ViewStatisticsActivity extends LoadingDialog implements HttpAsyncRe
 
             this.graphView.getViewport().setXAxisBoundsManual(true);
             this.graphView.getViewport().setMinX(0);
-            this.graphView.getViewport().setMaxX(3);
+            if(points.length > 2) {
+                this.graphView.getViewport().setMaxX(2);
+            }
+            else {
+                this.graphView.getViewport().setMaxX(points.length);
+            }
+
 
             //dateUtils.stringToCalendar(selectedStatistics.get(0).getCompetition().getActivityDate()).get(Calendar.YEAR)
 
@@ -289,7 +295,6 @@ public class ViewStatisticsActivity extends LoadingDialog implements HttpAsyncRe
                 if(position > 0) {
                     selectedSwimmingStyle = swimmingStyles[position];
                     setUpLengths();
-                    System.out.println("position " + position);
                 }
             }
 

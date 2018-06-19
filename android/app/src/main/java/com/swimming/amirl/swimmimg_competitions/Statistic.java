@@ -12,7 +12,7 @@ public class Statistic {
     }
 
     public String getScore() {
-        return this.score;
+        return this.score.indexOf('.') >= 0 ? this.score.substring(0, this.score.indexOf('.')) : this.score;
     }
 
     public void setScore(String score) {
