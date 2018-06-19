@@ -10,16 +10,19 @@ import UIKit
 import Charts
 
 class StatisticsViewController: UIViewController {
-
+    
+    /* Struct for the statistic results by competition and user's score */
     struct statisticResult {
         var competition: Competition!
         var score: String!
     }
     
+    /* Struct for the picker view by style and its length */
     struct pickerResult {
         var style: String
         var length: [String]
     }
+    
     var pickerArray = [pickerResult]()
     //var pickerView = UIPickerView()
     @IBOutlet weak var pickerView: UIPickerView!
@@ -31,7 +34,7 @@ class StatisticsViewController: UIViewController {
     
     var filteredArray = [statisticResult]()
     var array = [statisticResult]()
-    var titleArray = ["12/04/2018","12/05/2018","12/06/2018","12/07/2018","12/08/2018","12/09/2018"]
+    
     @IBOutlet weak var lineChartView: LineChartView!
     @IBOutlet weak var titleTable: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -43,7 +46,6 @@ class StatisticsViewController: UIViewController {
     var backgroundView: UIImageView!
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         toolbarPicker.isHidden = true
@@ -53,7 +55,9 @@ class StatisticsViewController: UIViewController {
         pickerView.dataSource = self
         pickerView.isHidden = true
         pickerView.backgroundColor = UIColor.lightGray
+        
         let button = UIBarButtonItem(title: "בחר", style: .done, target: self, action: #selector(pickerViewStart))
+        
         if isChild {
             self.navigationItem.rightBarButtonItem = button
         } else {
@@ -61,6 +65,7 @@ class StatisticsViewController: UIViewController {
             initMenuBar()
         }
         
+        /* get the statistic data */
         getData()
         
         self.tableView.backgroundColor = UIColor.clear
@@ -79,9 +84,11 @@ class StatisticsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /* Request the statistics data */
     func getData() {
         Service.shared.connectToServer(path: "getParticipantStatistics", method: .post, params: ["uid":currentUser.uid as AnyObject]) { (response) in
             if response.succeed {
+                /* get the result and push to array as a statisticResult object by competition and score */
                 let resultsData = response.jsonAll["data"]! as? NSArray
                 for data in resultsData! {
                     let jsonData = data as! JSON
@@ -91,11 +98,14 @@ class StatisticsViewController: UIViewController {
                     self.array.append(statisticResult(competition: newCompetition, score: score))
                     
                 }
+                /* if there is not data */
                 if self.array.isEmpty {
                     self.present(Alert().confirmAlert(title: "", message: "לא נמצאו תוצאות"), animated: true, completion: nil)
                 }
+
                 self.setPickerValue()
                 self.tableView.reloadData()
+                
             } else {
                 self.present(Alert().confirmAlert(title: "שגיאה", message: "לא ניתן להשיג מידע"), animated: true, completion: nil)
             }
@@ -103,6 +113,7 @@ class StatisticsViewController: UIViewController {
         }
     }
     
+    /* set the pickerArray by styles and lengths */
     func setPickerValue() {
         for result in self.array {
             if self.pickerArray.contains(where: { (picker) -> Bool in
@@ -121,10 +132,12 @@ class StatisticsViewController: UIViewController {
         }
     }
     
+    /* draw the graph when the user choose a style and length to show */
     func setChart(_ count: Int) {
         var dateArray = [String]()
         let formatDate = DateFormatter()
         let values = (0..<count).map { (i) -> ChartDataEntry in
+            /* sort by date */
             formatDate.dateFormat = "dd/MM/yyyy HH:mm"
             let oldDate = formatDate.date(from: self.filteredArray[i].competition.activityDate)
             formatDate.dateFormat = "MM/yyyy"
@@ -145,7 +158,7 @@ class StatisticsViewController: UIViewController {
         set1.circleHoleColor = UIColor.black
     }
     
-    
+    /* create side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -154,6 +167,7 @@ class StatisticsViewController: UIViewController {
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* action to show the side menu bar */
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -164,6 +178,7 @@ class StatisticsViewController: UIViewController {
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* action to close the side menu bar */
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -171,6 +186,7 @@ class StatisticsViewController: UIViewController {
         self.menu_vc.view.removeFromSuperview()
     }
     
+    /* action to show the style and lengh picker */
     @objc func pickerViewStart() {
         
         pickerView.reloadAllComponents()
@@ -178,6 +194,7 @@ class StatisticsViewController: UIViewController {
         toolbarPicker.isHidden = !toolbarPicker.isHidden
     }
 
+    /* action when the user choose styke and length and confirm for show */
     @IBAction func confirmButton(_ sender: Any) {
         pickerView.reloadAllComponents()
         if !self.array.isEmpty {
@@ -187,12 +204,14 @@ class StatisticsViewController: UIViewController {
         pickerView.isHidden = true
         toolbarPicker.isHidden = true
         self.filteredArray.removeAll()
+        /* push the correct data to filtered array to show the results */
         for result in self.array {
             if result.competition.getLength() == self.rangeToShow && result.competition.getSwimmingStyle() == self.styleToShow {
                 let data = statisticResult(competition: result.competition, score: result.score)
                 self.filteredArray.append(data)
             }
         }
+        /* sort the competitions by date */
         let formatDate = DateFormatter()
         formatDate.dateFormat = "dd/MM/yyyy HH:mm"
         self.filteredArray.sort(by: {formatDate.date(from:$0.competition.activityDate)! <	 formatDate.date(from:$1.competition.activityDate)!})
@@ -212,11 +231,14 @@ class StatisticsViewController: UIViewController {
 
 }
 
+/* the picker view functions */
 extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    /* the number of components for the picker */
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
     }
     
+    /* the number of rows in component */
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if self.array.count != 0 {
             if component == 0 {
@@ -229,6 +251,7 @@ extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource
         return 1
     }
     
+    /* the row titles */
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         if self.array.count != 0 {
@@ -244,6 +267,7 @@ extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource
         return "אין פרטים להציג"
     }
     
+    /* show the selected rows */
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         if self.array.count != 0 {
@@ -260,7 +284,10 @@ extension StatisticsViewController: UIPickerViewDelegate, UIPickerViewDataSource
     
 }
 
+/* the table view functions */
 extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    /* the number of rows for the table */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredArray.count
     }

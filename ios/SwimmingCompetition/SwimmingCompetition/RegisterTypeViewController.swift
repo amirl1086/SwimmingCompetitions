@@ -20,6 +20,7 @@ class RegisterTypeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /* if the user register with google */
         if googleUser != nil {
             self.present(Alert().confirmAlert(title: "נא להשלים את תהליך ההרשמה", message: ""), animated: true, completion: nil)
         }

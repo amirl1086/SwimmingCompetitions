@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/* Protocol for passing the data */
 protocol dataProtocol {
     func dataSelected(name: String, activityDate: String, swimmingStyle: String, length: String, numOfParticipants: String, fromAge: String, toAge: String)
     func dataSelected(competition: Competition)
@@ -33,6 +33,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var agesTextField: UITextField!
     var activeTextField: UITextField!
     
+    /* For editing */
     var isEdit: Bool = false
     var editedCompetitionId: String = ""
     var competitionName: String = ""
@@ -42,6 +43,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     var fromAge: Int = 0
     var toAge: Int = 0
     var dateToSend = ""
+    /************/
     
     var backgroundView: UIImageView!
     
@@ -56,6 +58,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         
         activeTextField = nameTextField
         
+        /* if the user edit the competition - set the current data */
         if isEdit {
             nameTextField.text = competitionName
             styleTextField.text = "\(range) מטר \(style)"
@@ -64,7 +67,9 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
             agesTextField.text = "מגיל \(fromAge) עד גיל \(toAge)"
         }
         
+        /* create the tool bar */
         toolBar()
+        
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
         self.view.insertSubview(self.backgroundView, at: 0)
@@ -117,7 +122,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    
+    /* set the text fields for picker view */
     @IBAction func styleTextBegin(_ sender: UITextField) {
         self.pickerViewStart()
         styleTextField.inputView = pickerView
@@ -137,12 +142,16 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     @IBAction func dateTextBegin(_ sender: UITextField) {
         dateTextField.inputView = datePicker
     }
+    /*****************************************/
     
+    /* the confirm button to add the competition */
     @IBAction func addCompetitionButton(_ sender: Any) {
-        
+        /* if the text fields are empty */
         if self.nameTextField.text == "" || self.styleTextField.text == "" || self.numberTextField.text == "" || self.dateTextField.text == "" || self.agesTextField.text == "" {
             
             self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
+            
+        /* else if - the toAge smaller than fromAge */
         } else if self.fromAge > self.toAge {
             self.present(Alert().confirmAlert(title: "", message: "טווח הגילאים אינו תקין"), animated: true, completion: nil)
         }
@@ -157,7 +166,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                 "toAge": self.toAge
                 ] as [String : AnyObject]
             if isEdit {
-                
+                /* If the competition is edited - send the id for update */
                 parameters["id"] = editedCompetitionId as AnyObject
             }
             
@@ -175,24 +184,24 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
                 alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                     alert.dismiss(animated: true, completion: nil)
                     if response.succeed {
+                        /* if isEdit - pass the data for update the view */
                         if self.isEdit {
                             self.delegate?.dataSelected(name: self.nameTextField.text!, activityDate: self.dateToSend, swimmingStyle: self.style, length: "\(self.range)", numOfParticipants: "\(self.numberTextField.text!)", fromAge: "\(self.fromAge)", toAge: "\(self.toAge)")
+                        /* add a new competition */
                         } else {
                             var competition : Competition!
                             let compData = response.data
                             competition = Competition(json: compData, id: compData["id"] as! String)
-                           
+                           /* pass the data to competitionsView for push the competition to the competitions array */
                             self.delegate?.dataSelected(competition: competition)
                             
-                           
                         }
+                        /* Pop to the last view */
                         _ = self.navigationController?.popViewController(animated: true)
                     }
                 }))
                 self.present(alert, animated: true, completion: nil)
             
-                
-                
             }
         }
         
@@ -200,8 +209,10 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+/* The table view functions */
 extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
+    /* the number of components for the picker view */
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if (pickerView == self.styleTextField.inputView || pickerView == self.agesTextField.inputView) {
             return 2
@@ -209,6 +220,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         return 1
     }
     
+    /* set the row for each component on the picker view */
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == self.styleTextField.inputView {
             if component == 0 {
@@ -223,6 +235,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         return rangePicker.count
     }
     
+    /* set the title for the row in the picker view */
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == self.styleTextField.inputView {
             if component == 0 {
@@ -237,7 +250,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         
     }
     
-    
+    /* show the selected value in the text field */
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == self.styleTextField.inputView {
             var style = stylePicker[pickerView.selectedRow(inComponent: 0)]
@@ -271,13 +284,16 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    /* start the picker view when text field begin */
     func pickerViewStart() {
         self.pickerView = UIPickerView()
         pickerView.delegate = self
         pickerView.dataSource = self
     }
     
+    /* create the tool bar for the picker view */
     func toolBar() {
+        /* set date in hebrew */
         datePicker.datePickerMode = .dateAndTime
         datePicker.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
         
@@ -294,6 +310,7 @@ extension AddCompetitionViewController: UIPickerViewDelegate, UIPickerViewDataSo
         agesTextField.inputAccessoryView = toolBar
     }
     
+    /* action for done button */
     @objc func doneClicked() {
         if dateTextField.inputView == datePicker {
             let formatDate = DateFormatter()

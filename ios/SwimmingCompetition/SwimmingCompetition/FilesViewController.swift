@@ -41,8 +41,6 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         
         getMedia()
 
-       
-        
         self.collectionView.backgroundColor = UIColor.clear
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "abstract_swimming_pool.jpg")//if its in images.xcassets
@@ -64,6 +62,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
        
     }
     
+    /* set photo from the galery of device */
     func fromGalery() {
         let image = UIImagePickerController()
         image.delegate = self
@@ -75,6 +74,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
     
+    /* set photo from the camera */
     func fromCamera() {
         let image = UIImagePickerController()
         image.delegate = self
@@ -86,6 +86,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
     
+    /* alert to choose galery or camera option for adding a photo */
     @objc func addMedia() {
        
         let alert = UIAlertController(title: "בחר אפשרות", message: nil, preferredStyle: .alert)
@@ -130,6 +131,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         self.dismiss(animated: true, completion: nil)
     }
     
+    /* upload the photo to firebase storage */
     func uploadToFirebase(data: Data) {
         let date = Date()
         let storageRef = Storage.storage().reference(withPath: "pics/\(date).jpg")
@@ -150,6 +152,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
     
+    /* upload the video to firebase storage */
     func uploadMovieToFirebase(data: URL) {
          let date = Date()
         let storageRef = Storage.storage().reference(withPath: "videos/\(date)")
@@ -176,6 +179,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
     }
     
 
+    /* upload the file data to database */
     func uploadToDB(contentType: String, url: URL) {
         let parameters = [
             "competitionId": self.currentCompetition.getId(),
@@ -203,6 +207,8 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
         // Pass the selected object to the new view controller.
     }
     */
+    
+    /* get the media */
     func getMedia() {
         let parameters = [
             "competitionId": self.currentCompetition.getId()
@@ -211,6 +217,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
             if response.succeed {
                 for data in response.data {
                     let activity = UIActivityIndicatorView(frame: CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0)) as UIActivityIndicatorView
+                    /* get the data of the media by the "contentType" and "url" */
                     let mediaData = response.data[data.0] as! JSON
                     let newMedia = Media(url: mediaData["url"] as! String, contentType: mediaData["contentType"] as! String, data: nil)
                     self.mediaArray.append(newMedia)
@@ -244,6 +251,7 @@ class FilesViewController: UIViewController, UINavigationControllerDelegate, UII
 
 }
 
+/* the collection functions */
 extension FilesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! FilesCollectionViewCell

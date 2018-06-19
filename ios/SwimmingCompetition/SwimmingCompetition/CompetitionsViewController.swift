@@ -30,13 +30,17 @@ class CompetitionsViewController: UIViewController {
         self.tableView.dataSource = self
         
         addButtonView()
+        
+        /* change view title */
         if controllerType == "results" {
             self.title = "בחר תחרות לצפייה בתוצאות"
         } else if controllerType == "files"  {
             self.title = "בחר תחרות לצפייה במדיה"
         }
         
+        /* get the competitions */
         getCompetitionsData()
+        
         tableView.separatorStyle = .singleLine
         self.tableView.backgroundColor = UIColor.clear
         self.backgroundView = UIImageView(frame: self.view.bounds)
@@ -74,10 +78,12 @@ class CompetitionsViewController: UIViewController {
         
     }
     
+    /* options to sort the competitions */
     @objc func sortCompetitions(_ sender: UIBarButtonItem) {
        
         let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
         
+        /* by date */
         alert.addAction(UIAlertAction(title: "מיין לפי תאריך", style: .default, handler: { (action) in
             let formatDate = DateFormatter()
             formatDate.dateFormat = "dd/MM/yyyy HH:mm"
@@ -85,16 +91,22 @@ class CompetitionsViewController: UIViewController {
             self.tableView.reloadData()
             alert.dismiss(animated: true, completion: nil)
         }))
+        
+        /* by name */
         alert.addAction(UIAlertAction(title: "מיין לפי שם", style: .default, handler: { (action) in
             self.competitions.sort(by: (sender.tag == 0 ? { $0.getName() < $1.getName() } : { $0.getName() > $1.getName() }))
             self.tableView.reloadData()
             alert.dismiss(animated: true, completion: nil)
         }))
+        
+        /* by age */
         alert.addAction(UIAlertAction(title: "מיין לפי גיל", style: .default, handler: { (action) in
             self.competitions.sort(by: (sender.tag == 0 ? { $0.getFromAge() < $1.getFromAge() } : { $0.getFromAge() > $1.getFromAge() }))
             self.tableView.reloadData()
             alert.dismiss(animated: true, completion: nil)
         }))
+        
+        /* by style */
         alert.addAction(UIAlertAction(title: "מיין לפי סגנון", style: .default, handler: { (action) in
             self.competitions.sort(by: (sender.tag == 0 ? { $0.getSwimmingStyle() < $1.getSwimmingStyle() } : { $0.getSwimmingStyle() > $1.getSwimmingStyle() }))
             self.tableView.reloadData()
@@ -111,6 +123,7 @@ class CompetitionsViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    /* go to add competition view */
     @objc func addCompetition(_ sender: UIBarButtonItem) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "addCompetitionID") as! AddCompetitionViewController
         viewController.delegate = self
@@ -128,12 +141,14 @@ class CompetitionsViewController: UIViewController {
             ]
         ] as [String: AnyObject]
         
+        /* add parameters for request the competitions that suitable for the user(if "student") */
         if currentUser.type == "student" {
             parameters["filters"] = "age" as AnyObject
         }
        
         Service.shared.connectToServer(path: "getCompetitions", method: .post, params: parameters) { (response) in
             if response.succeed {
+                /* get each competition and push to competitions array */
                 var compArray = [Competition]()
                 
                 for data in response.data {
@@ -142,11 +157,13 @@ class CompetitionsViewController: UIViewController {
                     competition = Competition(json: compData, id: data.0)
                     compArray.append(competition)
                 }
+                /* by default - sort by date */
                 let formatDate = DateFormatter()
                 formatDate.dateFormat = "dd/MM/yyyy HH:mm"
                 self.competitions = compArray
                 self.competitions.sort(by: {(formatDate.date(from:$0.activityDate) != nil ? formatDate.date(from:$0.activityDate)! : Date()) > (formatDate.date(from:$1.activityDate) != nil ? formatDate.date(from:$1.activityDate)! : Date())})
                 self.tableView.reloadData()
+                /* if there is no competitions to show */
                 if self.competitions.isEmpty {
                     self.present(Alert().confirmAlert(title: "", message: "לא נמצאו תחרויות להציג"), animated: true, completion: nil)
                 }
@@ -158,6 +175,7 @@ class CompetitionsViewController: UIViewController {
         }
     }
     
+    /* create the side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -166,6 +184,7 @@ class CompetitionsViewController: UIViewController {
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* show the side menu bar*/
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -176,6 +195,7 @@ class CompetitionsViewController: UIViewController {
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* cancel side menu bar*/
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -188,6 +208,7 @@ class CompetitionsViewController: UIViewController {
     
 }
 
+/* the table view functions */
 extension CompetitionsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {

@@ -63,6 +63,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         activeTextField = firstName
         
+        /* if the user register with google account */
         if isGoogleRegister {
             self.firstName.text = googleUser.profile.givenName != nil ? googleUser.profile.givenName! : ""
             self.lastName.text = googleUser.profile.familyName != nil ? googleUser.profile.familyName! : ""
@@ -73,6 +74,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             self.passwordConfirmation.isHidden = true
         }
         
+        /* if current user = personal details */
         if currentUser != nil {
             self.title = "פרטים אישיים"
             self.userType = self.currentUser.type
@@ -117,6 +119,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
 
     }
     
+    /* cancel edit details option */
     @objc func cancelEditDetails() {
         self.firstName.text = self.currentUser.firstName
         self.lastName.text = self.currentUser.lastName
@@ -148,6 +151,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         self.productNumber.isHidden = true
     }
     
+    /* edit details option - if current user != nil */
     @objc func editDetails() {
         
         let cancelEditButton = UIBarButtonItem(title: "בטל עריכה", style: .done, target: self, action: #selector(cancelEditDetails))
@@ -222,14 +226,20 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             "type": userType
             ] as [String: AnyObject]
         
+        /* if the user register with ggole account */
         if isGoogleRegister {
             parameters["token"] = self.productNumber.text! as AnyObject
+            
+            /* if the text fields are empty */
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             } else {
+                
+                /* the user alredy created - request for update details to complete the registration */
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                     if response.succeed {
+                        /* if succeed - go to main */
                         UserDefaults.standard.set(true, forKey: "loggedIn")
                         UserDefaults.standard.synchronize()
                         /*self.present(Alert().confirmAlert(title: "", message: "נרשמת למערכת בהצלחה"), animated: true, completion: nil)*/
@@ -238,6 +248,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                             self.navigationController?.viewControllers = [mainView]
                         }
                     } else {
+                        /* if not succeed - get the server or firebase error for show */
                         UserDefaults.standard.set(false, forKey: "loggedIn")
                         UserDefaults.standard.synchronize()
                         var title = ""
@@ -269,13 +280,19 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             }
+            
+            /* if the request is for update changing the details for logged in user */
         } else if self.currentUser != nil {
             parameters["type"] = self.currentUser.type as AnyObject
+            
+            /* if the text fields are empty */
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             } else {
                 Service.shared.connectToServer(path: "updateFirebaseUser", method: .post, params: parameters) { (response) in
                     if response.succeed {
+                        
+                        /* get updated user */
                         self.present(Alert().confirmAlert(title: "", message: "הפרטים נשמרו בהצלחה"), animated: true, completion: nil)
                         let user = User(json: response.data)
                         self.currentUser = user
@@ -287,32 +304,48 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 }
             }
             
+            /* if is regular register */
         } else {
             parameters["token"] = self.productNumber.text! as AnyObject
+            
+            /* if the text fields are empty */
             if firstName.text == "" || lastName.text == "" || (birthDate.text == "" && self.userType == "student") || email.text == "" || password.text == "" || passwordConfirmation.text == "" || productNumber.text == "" {
                 self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
             }
+                
+                /* if the passwords dont match */
             else if password.text != passwordConfirmation.text {
                 self.present(Alert().confirmAlert(title: "", message: "הסיסמאות אינן תואמות"), animated: true, completion: nil)
             }
             else {
+                
+                /* request to add a new user */
                 Service.shared.connectToServer(path: "addNewUser", method: .post, params: parameters) { (response) in
                     
                     if response.succeed {
                         let alert = UIAlertController(title: nil, message: "נרשמת למערכת בהצלחה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
                             alert.dismiss(animated: true, completion: nil)
+                            
                             SwiftSpinner.show("מתחבר")
+                            
+                            /* sign in with email and password to get the current firebase user */
                             Auth.auth().signIn(withEmail: self.email.text!, password: self.password.text!, completion: { (user, error) in
                                 SwiftSpinner.hide()
                                 let sb = UIStoryboard(name: "Main", bundle: nil)
+                                
+                                /* if error - go back to login view */
                                 if error != nil {
                                     UserDefaults.standard.set(false, forKey: "loggedIn")
                                     UserDefaults.standard.synchronize()
                                     if let loginView = sb.instantiateViewController(withIdentifier: "loginID") as? LoginViewController {
                                         self.navigationController?.viewControllers = [loginView]
                                     }
-                                } else {
+                                    
+                                    
+                                }
+                                /* else - go to main view */
+                                else {
                                     UserDefaults.standard.set(true, forKey: "loggedIn")
                                     UserDefaults.standard.synchronize()
                                     
@@ -326,6 +359,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                         self.present(alert, animated: true, completion: nil)
                         
                     }
+                        /* if not succeed - get the server or firebase error to show */
                     else {
                         var title = "שגיאה"
                         var message = ""

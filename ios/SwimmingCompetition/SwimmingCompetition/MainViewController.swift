@@ -44,7 +44,7 @@ class MainViewController: UIViewController {
         self.backgroundView.frame = self.view.bounds
     }
     
-    
+    /* create the side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -53,6 +53,7 @@ class MainViewController: UIViewController {
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* show theside menu bar */
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -63,12 +64,15 @@ class MainViewController: UIViewController {
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* cancel side menu bar */
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
         
         self.menu_vc.view.removeFromSuperview()
     }
+    
+    /* go to results view */
     @IBAction func scoreButton(_ sender: UIButton) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
@@ -77,6 +81,8 @@ class MainViewController: UIViewController {
             self.navigationController?.viewControllers = [competitionsView]
         }
     }
+    
+    /* go to competitions view */
     @IBAction func competitionsButton(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let competitionsView = sb.instantiateViewController(withIdentifier: "competitionsId") as? CompetitionsViewController {
@@ -84,6 +90,8 @@ class MainViewController: UIViewController {
             self.navigationController?.viewControllers = [competitionsView]
         }
     }
+    
+    /* go to settings view */
     @IBAction func settingsButton(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let settingsView = sb.instantiateViewController(withIdentifier: "settingsId") as? SettingsViewController {
@@ -91,6 +99,8 @@ class MainViewController: UIViewController {
             self.navigationController?.viewControllers = [settingsView]
         }
     }
+    
+    /* go to real time competition view */
     @IBAction func realTimeButton(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let resultsView = sb.instantiateViewController(withIdentifier: "resultsId") as? PersonalResultsViewController {

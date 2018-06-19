@@ -86,12 +86,14 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         let formatDate = DateFormatter()
         formatDate.dateFormat = "dd/MM/YYYY"
         
+        /* if the text fields are empty */
         if firstName.text == "" || lastName.text == "" {
             let alert = UIAlertController(title: nil, message: "נא למלא את כל השדות", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
                 alert.dismiss(animated: true, completion: nil)
             }))
             self.present(alert, animated: true, completion: nil)
+            /* if the age not suitable for the competition */
         } else if DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! < Int((currentCompetition?.fromAge)!)! || DateConvert().getHowOld(date: formatDate.string(from: birthDate.date))! > Int((currentCompetition?.toAge)!)! {
             self.present(Alert().confirmAlert(title: "", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
         }
@@ -125,6 +127,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    /* show the view */
     func showAnimate() {
         self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         self.view.alpha = 0.0
@@ -134,6 +137,7 @@ class TempRegPopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /* remove the view */
     func removeAnimate() {
         UIView.animate(withDuration: 0.25, animations: {
             self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)

@@ -56,7 +56,7 @@ class Service {
         }
     }
 
-    
+    /* activity messages for the spinner activity while connecting to the server */
     func activityMessage(path: String) -> String {
         var message = ""
         switch(path) {
@@ -97,7 +97,7 @@ class Service {
         return message
     }
     
-    
+    /* get system errors */
     func systemErrorMessage(data: Int) -> String {
         var message = ""
         
@@ -113,6 +113,7 @@ class Service {
         return message
     }
     
+    /* get firebase error */
     func errorMessage(data: NSError) -> UIAlertController {
         var title = ""
         var message = ""
@@ -142,6 +143,7 @@ class Service {
         return alert
     }
     
+    /* get the firebase user token */
     func firebaseAuthCredential(credential: AuthCredential, completion: @escaping (String) -> Void) {
         
         Auth.auth().signIn(with: credential) { (user, error) in
@@ -161,7 +163,7 @@ class Service {
         
     }
 
-    
+    /* sign out from firebase user */
     func signOut() {
         //Sign out from firebase user
         do {
@@ -175,7 +177,7 @@ class Service {
     }
 }
 
-
+/* struct for response data - data as json, succeed as bool */
 struct responseData {
     let jsonAll:JSON
     var data:JSON

@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         return true
     }
     
-    /* Function for sign in with google */
+    /* function for sign in with google */
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         
         if let error = error {
@@ -44,21 +44,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             guard let auth = user.authentication else {return}
             let credential = GoogleAuthProvider.credential(withIDToken: auth.idToken, accessToken: auth.accessToken)
             
-            /* Send credential to get the firebase token */
+            /* send credential to get the firebase token */
             Service.shared.firebaseAuthCredential(credential: credential) { (getToken) in
                 let parameters = [
                     "idToken": getToken
                     ] as [String: AnyObject]
-                /* Send request to get the user */
+                /* send request to get the user */
                 Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
                     Service.shared.start = false
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                  
-                    /* If null - the user not exist. Send request for login that create the user */
+                    /* if null - the user not exist. Send request for login to create the user */
                     if response.data["uid"] == nil {
                         Service.shared.connectToServer(path: "logIn", method: .post, params: parameters, completion: { (response) in
                             if response.succeed {
-                                
+                                /* if succeed go to register view */
                                 if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
                                     registerView.googleUser = googleUser
                                     
@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                             }
                         })
                       
-                      /* If the user exist and the type is empty - the user need to complete the register process */
+                      /* if the user exist and the type is empty - the user need to complete the register process */
                     } else if response.data["type"] as! String == "" {
                         if let registerView = sb.instantiateViewController(withIdentifier: "registerTypeId") as? RegisterTypeViewController {
                             registerView.googleUser = googleUser
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                             let root = self.window!.rootViewController as! UINavigationController
                             root.pushViewController(registerView, animated: true)
                         }
-                      /* Get the user's details ang go to the main controller */
+                      /* get the user's details and go to the main controller */
                     } else {
                         if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
                             UserDefaults.standard.set(true, forKey: "loggedIn")

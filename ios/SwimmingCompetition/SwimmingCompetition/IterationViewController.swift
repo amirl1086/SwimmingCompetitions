@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class IterationViewController: UIViewController {
 
+    /* array to add buttons and labels to the view */
     var subviews: [UIView] = []
     
     @IBOutlet weak var startButtonOutlet: RoundButton!
@@ -77,12 +78,14 @@ class IterationViewController: UIViewController {
         }
     }
     
+    /* actionto end the iteration and send the data */
     @IBAction func endIterationButton(_ sender: Any) {
         timer.invalidate()
         resetButton(sender)
         iterationIsDone()
     }
     
+    /* button to start the stoper */
     @IBAction func startButton(_ sender: UIButton) {
         if !validTimer {
             validTimer = true
@@ -102,6 +105,7 @@ class IterationViewController: UIViewController {
         
     }
     
+    /* update the timer */
     @objc func updateTimer() {
         fractions += 1
         if fractions == 100 {
@@ -113,6 +117,7 @@ class IterationViewController: UIViewController {
             seconds = 0
         }
         
+        /* show the time */
         let fractionsString = fractions > 9 ? "\(fractions)" : "0\(fractions)"
         let secondsString = seconds > 9 ? "\(seconds)" : "0\(seconds)"
         let minutesString = minutes > 9 ? "\(minutes)" : "0\(minutes)"
@@ -123,6 +128,7 @@ class IterationViewController: UIViewController {
         self.timeLabel.text = "\(minutesString):\(secondsString):\(fractionsString)"
     }
     
+    /* button for reset the time */
     @IBAction func resetButton(_ sender: Any) {
         startButtonOutlet.setTitle("התחל", for: .normal)
         startButtonOutlet.backgroundColor = .green
@@ -134,16 +140,18 @@ class IterationViewController: UIViewController {
     }
     
     
-    
+    /* create stop button and labels by the participants number */
     func createButtonsLabels() {
         let width: Int = (Int(self.view.frame.width)/self.competition.currentParticipants.count) - 10
         var start:Int = 0
         for i in 0...self.competition.currentParticipants.count-1 {
+            /* set the participant name label */
             let name = UILabel(frame: CGRect(x: start, y: Int(self.resetButtonOutlet.frame.origin.y + self.resetButtonOutlet.frame.height + 20), width: width, height: 30))
             name.text = "\(self.competition.currentParticipants[i].firstName) \(self.competition.currentParticipants[i].lastName)"
             name.textAlignment = .center
             self.scrollView.addSubview(name)
             
+            /* set the time label */
             let time = UILabel(frame: CGRect(x: start, y: Int(name.frame.origin.y+name.frame.height+10), width: width, height: 30))
             time.text = "00:00:00"
             time.textAlignment = .center
@@ -153,6 +161,7 @@ class IterationViewController: UIViewController {
             time.addGestureRecognizer(gestureRecognizer)
             self.scrollView.addSubview(time)
             
+            /* set the stop button */
             let button = UIButton(frame: CGRect(x: start, y: Int(time.frame.origin.y+time.frame.height+10), width: width, height: 50))
             button.backgroundColor = .red
             button.tag = i
@@ -160,7 +169,7 @@ class IterationViewController: UIViewController {
             button.addTarget(self, action: #selector(stopUserTimeButton), for: .touchUpInside)
             self.scrollView.addSubview(button)
             
-            
+            /* add to subviews */
             subviews.append(name)
             subviews.append(time)
             subviews.append(button)
@@ -191,6 +200,7 @@ class IterationViewController: UIViewController {
         }
     }
     
+    /* tap the label to show the participants name and his time */
     @objc func labelTapped(gesture : UITapGestureRecognizer) {
         let id = gesture.view!.tag
         let alert = UIAlertController(title: "\(String(describing: namesArray[id]!.text!))", message: "\(String(describing: timesArray[id]!.text!))", preferredStyle: .alert)
@@ -200,6 +210,7 @@ class IterationViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    /* remove all and create - labels ans buttons */
     func startNewIteration() {
         
         namesArray.removeAll()
@@ -226,8 +237,9 @@ class IterationViewController: UIViewController {
         }
     }
     
+    /* the iteration is done - send the data and get the next participants */
     func iterationIsDone() {
-    
+        /* create string od the data for as a json */
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.self.competition.currentParticipants.count {
@@ -254,11 +266,13 @@ class IterationViewController: UIViewController {
         }
         
         sendString += "}\",\"participants\":\"{\(participantsString)}\"}"
+        /*******************************/
         
         let param = ["competition":sendString] as [String:AnyObject]
         
-        
+        /* set the results - send to the server */
         Service.shared.connectToServer(path: "setCompetitionResults", method: .post, params: param) { (response) in
+            /* if there is no more participants and the competition is done */
             if response.data["type"] as? String == "resultsMap" {
                 let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
@@ -272,6 +286,7 @@ class IterationViewController: UIViewController {
                 self.startNewIteration()
                 self.jsonData = response.data
                 
+                /* else - set the new participants */
             } else {
                 var competition: Competition!
                 let data = response.data
