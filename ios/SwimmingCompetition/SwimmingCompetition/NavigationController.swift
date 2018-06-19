@@ -22,12 +22,14 @@ class NavigationController: UINavigationController {
         imageView.center = view.center
         view.addSubview(imageView)
         
+        /* if the user already logged in - go to main view. else - go to login view */
         if (Auth.auth().currentUser != nil && UserDefaults.standard.bool(forKey: "loggedIn")) {
             
             UserDefaults.standard.set(true, forKey: "loggedIn")
             UserDefaults.standard.synchronize()
             let sb = UIStoryboard(name: "Main", bundle: nil)
             if let mainView = sb.instantiateViewController(withIdentifier: "mainId") as? MainViewController {
+                /* get the user by uid and go to main view */
                 Service.shared.connectToServer(path: "getUser", method: .post, params: ["currentUserUid": "\(Auth.auth().currentUser!.uid)" as AnyObject]) { (response) in
                     if response.succeed {
                         imageView.removeFromSuperview()

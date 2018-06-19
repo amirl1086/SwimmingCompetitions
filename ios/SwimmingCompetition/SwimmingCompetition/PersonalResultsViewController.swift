@@ -11,6 +11,7 @@ import Firebase
 
 class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
+    /* Struct by age with male and female arrays */
     struct Result {
         var age: String!
         var maleResults:[Participant]!
@@ -23,6 +24,8 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
     
     var array = [Result]()
     var data:JSON = [:]
+    
+    /* the type of view controller */
     var controllerType = ""
     var competition: Competition!
     
@@ -73,6 +76,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.backgroundView.frame = self.view.bounds
     }
     
+    /* listener for competition in real time - to show the results */
     func getRealTimeResults() {
         if self.competition != nil {
             Database.database().reference().child("personalResults/\(competition.getId())").observe(.childAdded) { (snapshot) in
@@ -81,6 +85,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                 self.realTimeArray.insert(participant, at: 0)
                 let formatDate = DateFormatter()
                 formatDate.dateFormat = "dd/MM/yyyy HH:mm:ss"
+                /* sort the competitors by timeStamp */
                 self.realTimeArray.sort(by: {(formatDate.date(from:$0.timeStamp) != nil ? formatDate.date(from:$0.timeStamp)! : Date()) > (formatDate.date(from:$1.timeStamp) != nil ? formatDate.date(from:$1.timeStamp)! : Date())})
                 self.tableView.reloadData()
             }
@@ -89,6 +94,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    /* get the result for specific competition by id */
     func getResults() {
         let parameters = [
             "competition": "{\"id\":\"\(self.competition.getId())\"}"
@@ -106,25 +112,26 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    /* set the results after the "coach" finish with the iterations and go to results view */
     func setCompetitionResults() {
         for age in data {
+            /* for each age - sort by males and females */
             if age.0 != "type" {
                 var getAge = age.0
                 if Int(getAge) == nil {
                     getAge = "0"
                 }
-                
                 var maleArray = [Participant]()
                 var femaleArray = [Participant]()
                 
                 var allData = age.1 as! JSON
-                
+                /* get the male participants */
                 for male in allData["males"] as! NSArray{
                     let data = male as! JSON
                     let maleResult = Participant(json: data, id: "")
                     maleArray.append(maleResult)
                 }
-                
+                /* set the first places */
                 for i in 0..<maleArray.count {
                     if i == 0 {
                         maleArray[i].setRank(rank: 1)
@@ -136,13 +143,13 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
                         maleArray[i].setRank(rank: 3)
                     }
                 }
-                
+                /* get the female participants */
                 for female in allData["females"] as! NSArray {
                     let data = female as! JSON
                     let femaleResult = Participant(json: data, id: "")
                     femaleArray.append(femaleResult)
                 }
-                
+                /* set the first places */
                 for i in 0..<femaleArray.count {
                     if i == 0 {
                         femaleArray[i].setRank(rank: 1)
@@ -160,7 +167,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             }
             
         }
-        
+        /* sort by age */
         self.array = self.array.sorted(by: {Int($0.age)! < Int($1.age)!})
         if self.array.isEmpty {
             self.present(Alert().confirmAlert(title: "", message: "אין תוצאות להציג"), animated: true, completion: nil)
@@ -264,6 +271,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
+    /* the sctions. ages - for the results view. competition name - for the real time view */
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if controllerType == "realTime" {
@@ -298,6 +306,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         return 50
     }
     
+    /* create the side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -306,6 +315,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* show the side menu bar */
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -316,6 +326,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* cancel side menu bar */
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton

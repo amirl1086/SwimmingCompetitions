@@ -127,6 +127,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         textField.resignFirstResponder()
         return true
     }
+
+    /* google sign in button */
     @IBAction func googleButton(_ sender: Any) {
         //GIDSignIn.sharedInstance().delegate = self
         Service.shared.start = false
@@ -138,7 +140,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     @IBAction func loginButton(_ sender: AnyObject) {
         self.view.endEditing(true)
         
-        
+        /* sign in with email and password to firebase to get the token */
         Auth.auth().signIn(withEmail: emailTextFiled.text!, password: passwordTextFiled.text!) { (user, error) in
             
             if (error != nil) {
@@ -158,7 +160,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                         Service.shared.connectToServer(path: "logIn", method: .post, params: parameters) {
                             response in
                             if response.succeed {
-                                
+                                /* if login succedd - go to main view */
                                 UserDefaults.standard.set(true, forKey: "loggedIn")
                                 UserDefaults.standard.synchronize()
                                 if let mainView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainId") as? MainViewController {
@@ -179,7 +181,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
        
     }
     
-    
+    /* alert to recover password with email address */
     @IBAction func forgotPasswordButton(_ sender: UIButton) {
         let alert = UIAlertController(title: "שכחתי סיסמא", message: "", preferredStyle: .alert)
         alert.addTextField { (textField) in
@@ -209,7 +211,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         self.present(alert, animated: true, completion: nil)
     }
     
-    
+    /* show the user guide */
     @objc func getUserGuide() {
         SwiftSpinner.show("טוען מסמך")
         let fileRef = Storage.storage().reference().child("user_guide.pdf")

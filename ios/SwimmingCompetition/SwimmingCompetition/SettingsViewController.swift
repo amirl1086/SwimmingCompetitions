@@ -41,7 +41,7 @@ class SettingsViewController: UIViewController {
         super.viewDidAppear(true)
         initMenuBar()
     }
-    
+    /* show the product number button only for "coach" type */
     func getProductNumber() {
         if self.currentUser.type == "coach" {
             let tokenButton = UIBarButtonItem(title: "מפתח מוצר", style: .plain, target: self, action: #selector(getToken))
@@ -49,11 +49,13 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    /* copy the product number to clipboard */
     @objc func getToken() {
         UIPasteboard.general.string = self.currentUser.token
         self.present(Alert().confirmAlert(title: "מפתח המוצר הועתק ללוח", message: ""), animated: true, completion: nil)
     }
     
+    /* go to edit personal details */
     @IBAction func editPersonalDetails(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let registerView = sb.instantiateViewController(withIdentifier: "registerId") as? RegisterViewController {
@@ -63,6 +65,7 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    /* show alert for change the password */
     @IBAction func changePassword(_ sender: Any) {
         let alert = UIAlertController(title: "שינוי סיסמא", message: "", preferredStyle: .alert)
         alert.addTextField { (textField) in
@@ -84,7 +87,7 @@ class SettingsViewController: UIViewController {
             alert.dismiss(animated: false, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
-            
+            /* if the password dont match */
             if alert.textFields![1].text != alert.textFields![2].text {
                 alert.message = "הסיסמאות החדשות אינן תואמות"
                 self.present(alert, animated: true, completion: nil)
@@ -92,6 +95,7 @@ class SettingsViewController: UIViewController {
                 SwiftSpinner.show("אנא המתן")
                 Auth.auth().signIn(withEmail: self.currentUser.email, password: alert.textFields![0].text!, completion: { (user, error) in
                     SwiftSpinner.hide()
+                    /* if the current password is not true */
                     if error != nil {
                         alert.message = "סיסמא נוכחית אינה נכונה"
                         self.present(alert, animated: true, completion: nil)
@@ -119,6 +123,7 @@ class SettingsViewController: UIViewController {
         
     }
     
+    /* create the side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -127,6 +132,7 @@ class SettingsViewController: UIViewController {
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* show the side menu bar */
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -137,12 +143,15 @@ class SettingsViewController: UIViewController {
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* cancel side menu bar */
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
         
         self.menu_vc.view.removeFromSuperview()
     }
+    
+    /* alert for change the current email */
     @IBAction func updateEmailButton(_ sender: Any) {
         let alert = UIAlertController(title: "שינוי אימייל", message: "", preferredStyle: .alert)
         
@@ -160,11 +169,13 @@ class SettingsViewController: UIViewController {
             textField.placeholder = "כתובת אימייל חדשה"
         }
         alert.addAction(UIAlertAction(title: "אישור", style: .default, handler: { (action) in
+            /* if the email dont match to the email of the current user */
             if alert.textFields![0].text! != self.currentUser.email {
                 alert.message = "נא להזין כתובת אימייל של המשתמש הנוכחי"
                 self.present(alert, animated: true, completion: nil)
             } else {
                 SwiftSpinner.show("אנא המתן")
+                /* sign in first before changing the email */
                 Auth.auth().signIn(withEmail: alert.textFields![0].text!, password: alert.textFields![1].text!, completion: { (user, error) in
                     SwiftSpinner.hide()
                     if error != nil {
@@ -182,6 +193,7 @@ class SettingsViewController: UIViewController {
                                 self.present(errorAlert, animated: true, completion: nil)
                             } else {
                                 let newEmail = alert.textFields![2].text!
+                                /* set the new email and update on the database */
                                 self.currentUser.email = newEmail
                                 let userRef = Database.database().reference(withPath: "users/\(self.currentUser.uid)")
                                 userRef.updateChildValues(["email": self.currentUser.email])

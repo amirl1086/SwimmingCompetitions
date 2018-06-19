@@ -32,6 +32,8 @@ class CompetitionDetailsViewController: UIViewController {
         super.viewDidLoad()
         
         startCompetitionButtonOutlet.tag = 0
+        
+        /* hide button by the user type */
         if(currentUser.type == "coach"){
             joinButtonOutlet.isHidden = true
         } else if currentUser.type == "parent" {
@@ -43,18 +45,21 @@ class CompetitionDetailsViewController: UIViewController {
             startCompetitionButtonOutlet.isHidden = true
         }
         
-
+        /* set the competition data lables */
         nameLabel.text = currentCompetition.name
         dateLabel.text = "\(DateConvert().getDate(fullDate: currentCompetition.activityDate)) ביום \(DateConvert().getWeekDay(fullDate: currentCompetition.activityDate)) בשעה \(DateConvert().getHour(fullDate: currentCompetition.activityDate))"
         styleNrangeLabel.text = "\(currentCompetition.length) מטר \(currentCompetition.swimmingStyle)"
         numOfParticipantsLabel.text = "\(currentCompetition.numOfParticipants)"
         agesLabel.text = "לגילאי \(currentCompetition.fromAge) עד \(currentCompetition.toAge)"
+        /***********************************/
         
+        /* if competition isDone - hide the join buttons */
         if currentCompetition.isDone {
             joinButtonOutlet.isHidden = true
             tempJoinButtonOutlet.isHidden = true
         }
         
+        /* if user already joined to the competition */
         if userExist() {
             joinButtonOutlet.setTitle("בטל רישום", for: .normal)
             joinButtonOutlet.tag = 1
@@ -97,6 +102,7 @@ class CompetitionDetailsViewController: UIViewController {
         return false
     }
     
+    /* add the user to the competition */
     @IBAction func joinButton(_ sender: UIButton) {
         
         let parameters = [
@@ -138,7 +144,6 @@ class CompetitionDetailsViewController: UIViewController {
         
         else {
             
-            
             Service.shared.connectToServer(path: "joinToCompetition", method: .post, params: parameters, completion: { (response) in
                 if response.succeed {
                     sender.setTitle("בטל רישום", for: .normal)
@@ -157,6 +162,7 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    /* alert for other options to join the competition */
     @IBAction func joinTempUserButton(_ sender: UIButton) {
         let alert = UIAlertController(title: "בחר אפשרות רישום", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "משתמש זמני", style: .default, handler: { (action) in
@@ -185,6 +191,7 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    /* only for "coach" type - edit competition button */
     @IBAction func editCompetitionButton(_ sender: Any) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "addCompetitionID") as! AddCompetitionViewController
         viewController.delegate = self
@@ -205,15 +212,17 @@ class CompetitionDetailsViewController: UIViewController {
         
     }
     
+    /* only for "coach" type - start the competition's iteration */
     @IBAction func startCompetitionButton(_ sender: UIButton) {
         if sender.tag == 0 {
             
             let param = [
                 "competitionId": currentCompetition.getId()
                 ] as [String:AnyObject]
-            
+            /* request for init the competition */
             Service.shared.connectToServer(path: "initCompetitionForIterations", method: .post, params: param, completion: { (response) in
                 if response.succeed {
+                    /* if the competition is finished - change button to go the results view */
                     if response.data["type"] as? String == "resultsMap" {
                         let alert = UIAlertController(title: nil, message: "תחרות הסתיימה", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
@@ -225,6 +234,7 @@ class CompetitionDetailsViewController: UIViewController {
                         self.jsonData = response.data
                         
                     }
+                        /* get the data and go to iteration view */
                     else {
                         var competition: Competition!
                         let data = response.data

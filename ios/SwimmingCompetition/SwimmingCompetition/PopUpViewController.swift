@@ -31,6 +31,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         
         activeTextField = email
        
+        /* the input for birthDate textField as datePicker */
         birthDate.inputView = datePicker
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         showAnimate()
@@ -74,13 +75,15 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    
+    /* the confirm button */
     @IBAction func confirmButton(_ sender: Any) {
-        
+        /* if the text fields are empty */
         if email.text == "" || birthDate.text == "" {
             
             self.present(Alert().confirmAlert(title: "", message: "נא למלא את כל השדות"), animated: true, completion: nil)
         } else {
-            
+            /* go to function by the sender view controller */
             if ((self.senderView as? CompetitionDetailsViewController) != nil) {
                 addExistingUserToCompetition()
                 
@@ -91,10 +94,12 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
       
         
     }
+    /* remove the popUp view */
     @IBAction func cancelButton(_ sender: Any) {
         removeAnimate()
     }
     
+    /* function for MyChildrenViewController - add a child */
     func addChild() {
         let parameters = [
             "uid": self.currentUser.uid as AnyObject,
@@ -116,6 +121,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /* function for CompetitionDetailsViewController - to add exiting user to competition */
     func addExistingUserToCompetition() {
         let currentCompetition = (self.senderView as! CompetitionDetailsViewController).currentCompetition
         let parameters = [
@@ -124,6 +130,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
             "email": self.email.text as AnyObject,
             "birthDate": self.birthDate.text as AnyObject
             ] as [String:AnyObject]
+        /* if the user's age not suitable to the competition */
         if !validateBirthDate(birthDate: self.birthDate.text!, fromAge: Int((currentCompetition?.fromAge)!)!, toAge: Int((currentCompetition?.toAge)!)!) {
             self.present(Alert().confirmAlert(title: "", message: "גיל המשתמש אינו מתאים לתחרות"), animated: true, completion: nil)
         } else {
@@ -140,6 +147,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /* show the view */
     func showAnimate() {
         self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         self.view.alpha = 0.0
@@ -149,6 +157,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /* remove the view */
     func removeAnimate() {
         UIView.animate(withDuration: 0.25, animations: {
             self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
@@ -160,6 +169,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /* create tool bar for the picker view with done button */
     func toolBarPicker() {
         datePicker.datePickerMode = .date
         datePicker.locale = NSLocale(localeIdentifier: "he_IL") as Locale as Locale
@@ -173,7 +183,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         birthDate.inputAccessoryView = toolBar
 
     }
-    
+    /* action for done button */
     @objc func doneClicked() {
        
         let formatDate = DateFormatter()
@@ -183,6 +193,7 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
 
+    /* check validation for birthDate */
     func validateBirthDate(birthDate:String, fromAge: Int, toAge: Int) -> Bool {
         
         if DateConvert().getHowOld(date: birthDate)! < fromAge || DateConvert().getHowOld(date: birthDate)! > toAge {

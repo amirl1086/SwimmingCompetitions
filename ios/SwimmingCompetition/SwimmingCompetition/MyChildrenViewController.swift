@@ -17,6 +17,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
     var alert = UIAlertController()
     var currentUser: User!
     
+    /* the children array */
     var myChildren = [User]()
     
     var backgroundView: UIImageView!
@@ -25,9 +26,11 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         super.viewDidLoad()
         
         initMenuBar()
+        
         self.title = "הילדים שלי"
         let addButton = UIBarButtonItem(title: "הוסף ילד", style: .plain, target: self, action: #selector(self.addChild))
         self.navigationItem.leftBarButtonItem = addButton
+        
         getChildren()
         
         tableView.delegate = self
@@ -50,6 +53,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         // Dispose of any resources that can be recreated.
     }
     
+    /* request to get the children */
     func getChildren() {
         let parameters = [
             "value": self.currentUser.uid,
@@ -57,6 +61,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
             ] as [String:AnyObject]
         Service.shared.connectToServer(path: "getUsersByParentId", method: .post, params: parameters) { (response) in
             if response.succeed {
+                /* set each child object as a User and push to the children array */
                 for data in response.data {
                     var user : User!
                     let data = response.data[data.0] as! JSON
@@ -64,6 +69,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
                     self.currentUser.children.append(user)
                     self.tableView.reloadData()
                 }
+                /* if the children array is empty - no children to show */
                 if self.currentUser.children.isEmpty {
                     self.present(Alert().confirmAlert(title: "", message: "אין ילדים להצגה"), animated: true, completion: nil)
                 }
@@ -74,6 +80,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    /* add a new child */
     @objc func addChild() {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "popUpId") as! PopUpViewController
         self.addChildViewController(popOverVC)
@@ -101,6 +108,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
+    /* if childe selected - go to his statistic view */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         if let statisticView = sb.instantiateViewController(withIdentifier: "statisticsId") as? StatisticsViewController {
@@ -110,6 +118,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    /* create the side menu bar */
     func initMenuBar() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
@@ -118,6 +127,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         self.menu_vc.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
+    /* show the side menu bar */
     @objc func showMenu() {
         
         let rightButton = UIBarButtonItem(image: UIImage(named: "cancel.png"), style: .plain, target: self, action: #selector(cancelMenu))
@@ -128,6 +138,7 @@ class MyChildrenViewController: UIViewController, UITableViewDelegate, UITableVi
         self.menu_vc.didMove(toParentViewController: self)
     }
     
+    /* cancel side menu bar */
     @objc func cancelMenu() {
         let rightButton = UIBarButtonItem(image: UIImage(named: "menu.png"), style: .plain, target: self, action: #selector(showMenu))
         self.navigationItem.rightBarButtonItem = rightButton
