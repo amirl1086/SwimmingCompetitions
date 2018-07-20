@@ -115,3 +115,4 @@ exports.getMediaByCompetitionId = functions.https.onRequest((request, response) 
 	firebaseDB_Service.getMediaByCompetitionId(request.body, response);
 });
 /* ================================ */
+
