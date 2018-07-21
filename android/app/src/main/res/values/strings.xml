@@ -101,4 +101,6 @@
     <string name="lengths_of_iterations">, אורך המקצים:</string>
     <string name="user_guide">המדריך למשתמש</string>
     <string name="title_activity_view_statistics">ViewStatisticsActivity</string>
+    <string name="add_participants">הוסף מתחרים</string>
+    <string name="age">גיל - </string>
 </resources>

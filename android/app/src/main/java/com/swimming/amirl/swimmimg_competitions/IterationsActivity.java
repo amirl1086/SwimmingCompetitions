@@ -34,7 +34,7 @@ public class IterationsActivity extends LoadingDialog implements HttpAsyncRespon
     private ArrayList<Participant> currentParticipants;
 
     private TextView timeView;
-    private Button start, reset, endIterationButton;
+    private Button start, reset, endIterationButton, addParticipantsButton;
 
     private long millisecondTime, startTime, timeBuff, updateTime = 0L ;
     private int seconds, minutes, milliSeconds;
@@ -59,7 +59,7 @@ public class IterationsActivity extends LoadingDialog implements HttpAsyncRespon
             try {
                 this.selectedCompetition = (Competition) intent.getSerializableExtra("selectedCompetition");
                 this.allParticipants = this.selectedCompetition.getParticipants();
-                this.currentParticipants = this.selectedCompetition.getCurrentParticipants();
+                this.currentParticipants = new ArrayList<>();//this.selectedCompetition.getCurrentParticipants();
             }
             catch (Exception e) {
                 showToast("שגיאה באתחול התחרות למקצים, נסה לאתחל את האפליקציה");
@@ -83,10 +83,20 @@ public class IterationsActivity extends LoadingDialog implements HttpAsyncRespon
         this.start = findViewById(R.id.start_time_btn);
         this.reset = findViewById(R.id.reset_btn);
         this.endIterationButton = findViewById(R.id.end_iteration_btn);
+        this.addParticipantsButton = findViewById(R.id.add_participants_btn);
 
-        this.buttonsLayout.post(new Runnable(){
+        this.addParticipantsButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchToParticipantsSelectionActivity();
+                    }
+                }
+        );
+
+        /*this.buttonsLayout.post(new Runnable(){
             @Override public void run(){ setParticipantsView(); }
-        });
+        });*/
         this.start.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) { startClicked(); }
         });
@@ -96,6 +106,17 @@ public class IterationsActivity extends LoadingDialog implements HttpAsyncRespon
         this.endIterationButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) { endIterationClicked(view); }
         });
+
+        if(this.currentParticipants.size() > 0) {
+            this.addParticipantsButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void switchToParticipantsSelectionActivity() {
+        Intent intent = new Intent(this, ParticipantsSelectionActivity.class);
+        intent.putExtra("currentUser", this.currentUser);
+        intent.putExtra("selectedCompetition", this.selectedCompetition);
+        startActivity(intent);
     }
 
 

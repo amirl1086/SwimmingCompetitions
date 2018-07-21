@@ -13,13 +13,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
 public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     public HttpAsyncResponse delegate;
     private HttpURLConnection urlConnection;
@@ -27,8 +20,6 @@ public class JSON_AsyncTask extends AsyncTask<String, Void, String> {
     private InputStream inputStream;
     private BufferedWriter bufferedWriter;
     private BufferedReader bufferedReader;
-
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     protected String doInBackground(String... params) {

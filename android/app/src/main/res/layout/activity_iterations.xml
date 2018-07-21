@@ -49,6 +49,17 @@
             android:textSize="30sp"
             android:theme="@style/AppTheme.TransparentButton" />
 
+        <Button
+            android:id="@+id/add_participants_btn"
+            android:layout_width="220dp"
+            android:layout_marginTop="25dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="@string/add_participants"
+            android:textSize="30sp"
+            android:theme="@style/AppTheme.TransparentButton" />
+
 
         <GridLayout
             android:id="@+id/participant_names_layout"

@@ -12,6 +12,7 @@ class Participant implements Serializable {
     private String lastName;
     private String birthDate;
     private String score;
+    private Boolean selected;
 
     private String competed;
 
@@ -132,6 +133,14 @@ class Participant implements Serializable {
         jsonObject.put("competed", this.competed);
 
         return jsonObject;
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 }
 
