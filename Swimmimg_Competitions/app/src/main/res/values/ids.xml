@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="add_new_competition" type="id">new_competition</item>
-    <item name="name_sort" type="id">name_sort</item>
-    <item name="date_sort" type="id">date_sort</item>
-    <item name="style_sort" type="id">style_sort</item>
-    <item name="ages_sort" type="id">ages_sort</item>
-</resources>

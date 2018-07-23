@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/abstract_swimming_pool"
+    android:orientation="vertical"
+    android:weightSum="2"
+    tools:context=".PreRegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/student_btn"
+            android:layout_marginTop="100dp"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:onClick="switchToRegisterActivity"
+            android:text="@string/register_i_am_student_btn"
+            android:textSize="25sp"
+            android:theme="@style/AppTheme.TransparentButton" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/parent_btn"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:onClick="switchToRegisterActivity"
+            android:text="@string/register_i_am_parent_btn"
+            android:textSize="25sp"
+            android:theme="@style/AppTheme.TransparentButton" />
+
+    </LinearLayout>
+
+</LinearLayout>
