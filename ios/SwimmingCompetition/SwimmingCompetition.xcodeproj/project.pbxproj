@@ -32,6 +32,8 @@
 		3068F8DB200628CC009518AD /* AddCompetitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */; };
 		306C95991FF269AF00A0D266 /* stll-swimming-logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */; };
 		306C959D1FF27C6200A0D266 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306C959C1FF27C6200A0D266 /* RoundButton.swift */; };
+		3071C15B20F8CA5300C2AE5F /* ParticipantsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3071C15A20F8CA5300C2AE5F /* ParticipantsTableViewCell.swift */; };
+		3071C15D20F8CA5300C2AE5F /* ParticipantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3071C15C20F8CA5300C2AE5F /* ParticipantsViewController.swift */; };
 		3088FBC71FE8B2B200CA655A /* DesignableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */; };
 		308CB6A72066BC2B005565BA /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */; };
 		308CB6A82066BC2B005565BA /* ResultsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */; };
@@ -105,6 +107,8 @@
 		3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCompetitionViewController.swift; sourceTree = "<group>"; };
 		306C95981FF269AE00A0D266 /* stll-swimming-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "stll-swimming-logo.gif"; path = "../../../../../../.Trash/stll-swimming-logo.gif"; sourceTree = "<group>"; };
 		306C959C1FF27C6200A0D266 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
+		3071C15A20F8CA5300C2AE5F /* ParticipantsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsTableViewCell.swift; sourceTree = "<group>"; };
+		3071C15C20F8CA5300C2AE5F /* ParticipantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsViewController.swift; sourceTree = "<group>"; };
 		3088FBC61FE8B2B200CA655A /* DesignableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignableTextField.swift; sourceTree = "<group>"; };
 		308CB6A52066BC2B005565BA /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
 		308CB6A62066BC2B005565BA /* ResultsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResultsTableViewCell.xib; sourceTree = "<group>"; };
@@ -171,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				30010C1520B403450064F27A /* MenuTableViewCell.swift */,
+				3071C15A20F8CA5300C2AE5F /* ParticipantsTableViewCell.swift */,
 				300977F620CCEB0500373F63 /* FilesCollectionViewCell.swift */,
 				3001846520BBF754001BD831 /* ChildrenTableViewCell.swift */,
 				30F8B3FB20C65AEE00D751FD /* StatisticsTableViewCell.swift */,
@@ -238,6 +243,7 @@
 				30FE9A861FE72BB900201A20 /* AppDelegate.swift */,
 				3047BC771FE832EC00995F92 /* RegisterTypeViewController.swift */,
 				304C621720A839840073E490 /* NavigationController.swift */,
+				3071C15C20F8CA5300C2AE5F /* ParticipantsViewController.swift */,
 				303DB12D20BECA0B00894800 /* PopUpViewController.swift */,
 				3068F8DA200628CC009518AD /* AddCompetitionViewController.swift */,
 				304855B920C517D200F6A8EE /* StatisticsViewController.swift */,
@@ -648,7 +654,9 @@
 				30291370205B3E8D00D293F2 /* CompetitionTableViewCell.swift in Sources */,
 				303DB12E20BECA0B00894800 /* PopUpViewController.swift in Sources */,
 				305EAF532013F1420059C789 /* IterationViewController.swift in Sources */,
+				3071C15B20F8CA5300C2AE5F /* ParticipantsTableViewCell.swift in Sources */,
 				30C13D842011D71D000AAE4E /* Competition.swift in Sources */,
+				3071C15D20F8CA5300C2AE5F /* ParticipantsViewController.swift in Sources */,
 				30010C1620B403450064F27A /* MenuTableViewCell.swift in Sources */,
 				30FE9ABA1FE72C7B00201A20 /* RegisterViewController.swift in Sources */,
 				30F8B3FE20C6CA5000D751FD /* FilesViewController.swift in Sources */,

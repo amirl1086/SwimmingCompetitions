@@ -273,7 +273,7 @@ extension CompetitionsViewController: dataProtocol {
     }
     
     func dataSelected(competition: Competition) {
-        self.competitions.append(competition)
+        self.competitions.insert(competition, at: 0)
         self.tableView.reloadData()
     }
 }

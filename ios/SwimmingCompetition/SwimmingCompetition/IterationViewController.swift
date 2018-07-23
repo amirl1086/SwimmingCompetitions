@@ -46,6 +46,9 @@ class IterationViewController: UIViewController {
       
         startNewIteration()
     
+        let participantsButton = UIBarButtonItem(title: "בחר מתחרים", style: .plain, target: self, action: #selector(self.goToParticipantsList))
+        self.navigationItem.rightBarButtonItem = participantsButton
+        
         self.backgroundView = UIImageView(frame: self.view.bounds)
         self.backgroundView.image = UIImage(named: "iteration_screen.jpg")//if its in images.xcassets
         self.view.insertSubview(self.backgroundView, at: 0)
@@ -62,7 +65,7 @@ class IterationViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         backgroundView.frame = self.view.bounds
         
-        let width: Int = (Int(self.view.frame.width)/self.competition.currentParticipants.count) - 10
+        let width: Int = (Int(self.view.frame.width)/(self.competition.currentParticipants.count == 0 ? 1 : self.competition.currentParticipants.count)) - 10
         var start: Int = 0
         var count = 1
         
@@ -204,8 +207,23 @@ class IterationViewController: UIViewController {
     @objc func labelTapped(gesture : UITapGestureRecognizer) {
         let id = gesture.view!.tag
         let alert = UIAlertController(title: "\(String(describing: namesArray[id]!.text!))", message: "\(String(describing: timesArray[id]!.text!))", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "בשניות (80 = דקה ו20 שניות)"
+            textField.textAlignment = .center
+            textField.keyboardType = UIKeyboardType.decimalPad
+        }
         alert.addAction(UIAlertAction(title: "סגור", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "שנה תוצאה", style: .default, handler: { (action) in
+            if alert.textFields![0].text != "" && Double(alert.textFields![0].text!) != nil{
+                self.timesArray[id]?.text = "\(alert.textFields![0].text!)"
+                
+                self.competition.currentParticipants[id].setCompeted(competed: true)
+                self.competition.currentParticipants[id].score = "\(alert.textFields![0].text!)"
+                alert.dismiss(animated: true, completion: nil)
+            }
+            
         }))
         self.present(alert, animated: true, completion: nil)
     }
@@ -243,6 +261,11 @@ class IterationViewController: UIViewController {
         var sendString = "{\"id\":\"\(self.competition.id)\",\"numOfParticipants\":\"\(self.competition.numOfParticipants)\",\"activityDate\":\"\(self.competition.activityDate)\",\"name\":\"\(self.competition.name)\",\"fromAge\":\"\(self.competition.fromAge)\",\"length\":\"\(self.competition.length)\",\"swimmingStyle\":\"\(self.competition.swimmingStyle)\",\"toAge\":\"\(self.competition.toAge)\",\"currentParticipants\":\"{"
         
         for i in 0..<self.self.competition.currentParticipants.count {
+            for participants in competition.participants {
+                if participants.uid == self.competition.currentParticipants[i].uid {
+                    participants.competed = self.competition.currentParticipants[i].competed
+                }
+            }
             let id = self.competition.currentParticipants[i].uid
             let firstName = self.competition.currentParticipants[i].firstName
             let lastName = self.competition.currentParticipants[i].lastName
@@ -288,10 +311,11 @@ class IterationViewController: UIViewController {
                 
                 /* else - set the new participants */
             } else {
-                var competition: Competition!
+                /*var competition: Competition!
                 let data = response.data
                 competition = Competition(json: data, id: self.competition.getId())
-                self.competition = competition
+                self.competition = competition*/
+                self.competition.currentParticipants.removeAll()
                 self.startNewIteration()
             }
         }
@@ -301,5 +325,24 @@ class IterationViewController: UIViewController {
         performSegue(withIdentifier: "goToCompetitionResults", sender: self)
     }
     
+    @objc func goToParticipantsList() {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let participantsView = sb.instantiateViewController(withIdentifier: "participantsId") as? ParticipantsViewController {
+            participantsView.currentCompetition = self.competition
+            participantsView.delegate = self
+            self.navigationController?.pushViewController(participantsView, animated: true)
+        }
+    }
+    
 }
 
+extension IterationViewController: participantProtocol {
+    func setParticipants(participants: [Participant]) {
+      
+        self.competition.currentParticipants = participants
+        startNewIteration()
+        
+    }
+    
+    
+}

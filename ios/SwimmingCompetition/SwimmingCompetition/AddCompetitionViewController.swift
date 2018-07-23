@@ -18,7 +18,7 @@ class AddCompetitionViewController: UIViewController, UITextFieldDelegate {
     var delegate: dataProtocol?
     //The picker view object
     var pickerView = UIPickerView()
-    let stylePicker = ["חזה","גב","חתירה","חופשי"]
+    let stylePicker = ["חזה","גב","חתירה","חופשי","פרפר"]
     let rangePicker:[Int] = Array(0...100)
     let rangeSwimPicker:[Int] = Array(0...5)
     let datePicker = UIDatePicker()

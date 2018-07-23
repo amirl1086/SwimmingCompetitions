@@ -31,7 +31,7 @@ class Participant {
         }
         let timeStamp = json["timeStamp"] as? String
         let score = json["score"] as? String
-        let uid = id
+        let uid = json["uid"] as? String != nil ? json["uid"] as! String : id
             
         
         self.firstName = firstName != nil ? firstName! : ""

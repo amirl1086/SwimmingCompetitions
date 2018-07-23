@@ -204,7 +204,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             cell.name.text = "\(self.realTimeArray[indexPath.row].firstName) \(self.realTimeArray[indexPath.row].lastName)"
             cell.rankImage.isHidden = true
             cell.score.isHidden = false
-            cell.score.text = self.realTimeArray[indexPath.row].score
+            cell.score.text = "\(self.realTimeArray[indexPath.row].score) שניות"
             cell.layer.backgroundColor = UIColor.clear.cgColor
         } else {
             if indexPath.row == 0 {
@@ -222,7 +222,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             else if indexPath.row-1 < array[indexPath.section].maleResults.count {
                 cell.cellView.backgroundColor = UIColor.clear
                 cell.name.text = "\(array[indexPath.section].maleResults[indexPath.row-1].lastName) \(array[indexPath.section].maleResults[indexPath.row-1].firstName)"
-                cell.score.text = array[indexPath.section].maleResults[indexPath.row-1].score
+                cell.score.text = "\(array[indexPath.section].maleResults[indexPath.row-1].score) שניות"
                 cell.rankImage.image = UIImage(named: "\(array[indexPath.section].maleResults[indexPath.row-1].rank).png")
                 cell.rankImage.isHidden = false
                 cell.score.isHidden = false
@@ -246,7 +246,7 @@ class PersonalResultsViewController: UIViewController, UITableViewDelegate, UITa
             else {
                 cell.cellView.backgroundColor = UIColor.clear
                 cell.name.text = "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].lastName) \(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].firstName)"
-                cell.score.text = array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].score
+                cell.score.text = "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].score) שניות"
                 cell.rankImage.image = UIImage(named: "\(array[indexPath.section].femaleResults[indexPath.row-array[indexPath.section].maleResults.count-2].rank).png")
                 cell.rankImage.isHidden = false
                 cell.score.isHidden = false

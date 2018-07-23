@@ -116,7 +116,21 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
                     self.removeAnimate()
                 })
             } else {
-                self.present(Alert().confirmAlert(title: "", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+                var message = "שגיאה"
+                if ((response.data["message"] as? String) != nil) {
+                    switch(response.data["message"] as! String) {
+                    case "no_such_email":
+                        message = "אימייל לא קיים"
+                        break
+                    case "birth_date_dont_match":
+                        message = "תאריך לידה אינו מתאים"
+                        break
+                    default:
+                        message = "וודא שהזנת פרטים נכונים"
+                        break
+                    }
+                }
+                self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: message), animated: true, completion: nil)
             }
         }
     }
@@ -141,7 +155,21 @@ class PopUpViewController: UIViewController, UITextFieldDelegate {
                     })
                     
                 } else {
-                    self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: "וודא שהזנת פרטים נכונים"), animated: true, completion: nil)
+                    var message = "שגיאה"
+                    if ((response.data["message"] as? String) != nil) {
+                        switch(response.data["message"] as! String) {
+                        case "no_such_email":
+                            message = "אימייל לא קיים"
+                            break
+                        case "birth_date_dont_match":
+                            message = "תאריך לידה אינו מתאים"
+                            break
+                        default:
+                            message = "וודא שהזנת פרטים נכונים"
+                            break
+                        }
+                    }
+                    self.present(Alert().confirmAlert(title: "ההרשמה לא בוצעה", message: message), animated: true, completion: nil)
                 }
             }
         }

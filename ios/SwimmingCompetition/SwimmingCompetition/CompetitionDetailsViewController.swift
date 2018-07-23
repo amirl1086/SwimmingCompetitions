@@ -240,6 +240,7 @@ class CompetitionDetailsViewController: UIViewController {
                         let data = response.data
                         let sb = UIStoryboard(name: "Main", bundle: nil)
                         competition = Competition(json: data, id: self.currentCompetition.getId())
+                        competition.currentParticipants.removeAll()
                         if let iterationView = sb.instantiateViewController(withIdentifier: "iterationId") as? IterationViewController {
                             iterationView.competition = competition
                             self.navigationController?.pushViewController(iterationView, animated: true)

@@ -82,7 +82,7 @@ class Service {
             message = "מאתחל תחרות";
             break;
         case "setCompetitionResults":
-            message = "מחפש מתחרים";
+            message = "שומר נתונים";
             break;
         case "joinToCompetition":
             message = "מבצע הרשמה לתחרות";
